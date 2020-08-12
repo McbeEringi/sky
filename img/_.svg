@@ -1,0 +1,5 @@
+<svg style="filter:drop-shadow(0 0 4px #fea8)" xmlns="http://www.w3.org/2000/svg">
+	<path d="M0,0q0,28,28,28q-20,0,-20,-28l-8,0m12,0q0,28,16,28q-8,0,-8,-28l-8,0" stroke="#faa" fill="#f00" transform="translate(2 2)"/>
+	<path d="M14,0Q0,0,0,-14Q0,0,-14,0Q0,0,0,14Q0,0,14,0" stroke="#aaf" fill="#44f" transform="translate(38 22)"/>
+	<path d="M0,0q0,28,28,28q-20,0,-20,-28l-8,0m12,0q0,28,16,28q-8,0,-8,-28l-8,0" stroke="#faa" fill="#f00" transform="translate(74 2)scale(-1,1)"/>
+</svg>

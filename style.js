@@ -3,6 +3,7 @@ document.write('<style>\
 :root{font-family:"M PLUS Rounded 1c",sans-serif;background:#222;color:#fff;text-shadow:0 0 4px #222;word-wrap:break-word;}\
 #bg{position:fixed;top:0;left:0;z-index:-16;width:100vw;height:100vh;}\
 a:link,a:visited{color:#aef;}a:hover{color:#8af;}a:active{color:#48f;}\
+.flex{display:flex;justify-content:space-evenly;flex-wrap:wrap;align-items:flex-start;}\
 </style>');
 const e_bg =  document.createElement('div');
 e_bg.setAttribute('id','bg');
