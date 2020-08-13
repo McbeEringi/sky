@@ -18,7 +18,27 @@
 			米津玄師-LOSER <a download="loser.mid" href="audio/loser.mid">midi</a><br>
 			<audio src="audio/loser.mp3" controls>unsupported :(</audio><br><br>
 			Sky楽譜 NO.4 <a download href="audio/sky_ms4.mp3">mp3</a> <a download href="audio/sky_ms4.band">GarageBand(iOS)</a><br>
-			<audio src="audio/sky_ms4.mp3" controls>unsupported :(</audio><br>
+			<audio src="audio/sky_ms4.mp3" controls>unsupported :(</audio><br><br>
+			チャット改行 <br>
+			<button onclick="br();" id="br0a">\u2028</button>
 		</div>
+		<script>
+			function br() {
+				if(copy("\u2028"))br0a.innerText="copied!";
+				setTimeout(()=>br0a.innerText="\\u2028",1000);
+			}
+			function copy(str){
+				var tmp=document.createElement("div");
+				var pre=document.createElement("pre");
+				pre.style.webkitUserSelect="auto";pre.style.userSelect="auto";
+				tmp.appendChild(pre).textContent = str;
+				var s=tmp.style;s.position="fixed";s.right="200%";
+				document.body.appendChild(tmp);
+				document.getSelection().selectAllChildren(tmp);
+				var result=document.execCommand("copy");
+				document.body.removeChild(tmp);
+				return result;
+			}
+		</script>
 	</body>
 </html>
