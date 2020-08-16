@@ -14,7 +14,7 @@
 		<style>
 			@keyframes bob{0%{transform:scale(1,1);}100%{transform:scale(.9,.9);}}
 			@keyframes p{0%{transform:rotateY(0deg);}100%{transform:rotateY(360deg);}}
-			.kb{display:flex;flex-direction:column;background:linear-gradient(#0008,#0000 50px)}.kb>div{display:flex;flex-direction:row;justify-content:center;}
+			.kb{display:flex;flex-direction:column;background:linear-gradient(#0008,#0000 50px);touch-action:none;}.kb>div{display:flex;flex-direction:row;justify-content:center;}
 			.kb>div>div{width:70px;height:70px;background:#8888;margin:6.5px;flex-shrink:0;border-radius:16px;box-shadow:0 0 8px #8888;z-index:0;}
 			.kb>div>div::before{content:"";display:block;width:70px;height:70px;animation:bob 1.2s ease-in-out 0s infinite alternate;background-image:url(img/tex.png);background-size:560px auto;z-index:1;}
 			.kb>div>div:nth-child(2n  ):not(.c)::before{background-position:-70px 0;}
