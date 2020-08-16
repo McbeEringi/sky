@@ -40,13 +40,13 @@
 			#menucb{display:none;}
 			#menucb+label{position:fixed;top:0;right:0;width:100vw;height:100vh;display:none;}
 			#menucb:checked+label{display:block;}
-			#menucb+*+*+label{position:fixed;top:2px;right:2px;width:32px;height:32px;}
-			#menucb+*+*+label::before,#mico{content:"";position:absolute;top:0;left:0;width:32px;height:32px;background:url(img/tex.png);background-size:256px auto;transition:.4s;}
-			#menucb+*+*+label::before{opacity:0;background-position:-128px 0;}
+			#menucb+*+*+label{position:fixed;top:2px;right:2px;width:48px;height:48px;}
+			#menucb+*+*+label::before,#mico{content:"";position:absolute;top:0;left:0;width:48px;height:48px;background:url(img/tex.png);background-size:384px auto;transition:.4s;}
+			#menucb+*+*+label::before{opacity:0;background-position:-192px 0;}
 			#menucb:checked+*+*+label::before{opacity:1;}#menucb:checked+*+*+label>#mico{opacity:0;}
 			#menucb+*+div{position:fixed;top:0;right:-236px;width:236px;height:100vh;padding-top:36px;background:#8888;transition:.2s;overflow-y:scroll;}
 			#menucb:checked+*+div{right:0;}
-			#mico{background-position:0 -32px;}
+			#mico{background-position:0 -48px;}
 		</style>
 		<input type="checkbox" id="menucb">
 		<label for="menucb"></label>
