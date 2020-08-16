@@ -5,12 +5,13 @@
 		<title></title>
 	</head>
 	<body>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.43/Tone.js"></script>
 		<style>
 			@keyframes bob{0%{transform:scale(1,1);}100%{transform:scale(.9,.9);}}
 			@keyframes p{0%{transform:rotateY(0deg);}100%{transform:rotateY(360deg);}}
 			.kb{display:flex;flex-direction:column;}.kb>div{display:flex;flex-direction:row;justify-content:center;}
 			.kb>div>div{width:70px;height:70px;background:#8888;margin:6.5px;flex-shrink:0;border-radius:16px;box-shadow:0 0 8px #8888;}
-			.kb>div>div::before{content:"";display:block;width:70px;height:70px;animation:bob 1.2s ease-in-out 0s infinite alternate;background-image:url(img/instr_.png);background-size:210px auto;}
+			.kb>div>div::before{content:"";display:block;width:70px;height:70px;animation:bob 1.2s ease-in-out 0s infinite alternate;background-image:url(img/tex.png);background-size:560px auto;}
 			.kb>div>div:nth-child(2n  ):not(.c)::before{background-position:-70px 0;}
 			.kb>div>div:nth-child(2n-1):not(.c)::before{background-position:-140px 0;}
 
@@ -25,17 +26,55 @@
 			<div><div id="_-4" ></div><div id="_-2" ></div><div id="_0"  ></div><div id="_2"  ></div><div id="_3"   class="c"></div></div>
 		</div>
 		<div id="pkb" class="kb">
-			<div><div id="0_0"></div><div id="0_1"></div><div id="0_1"></div><div id="0_2"></div></div>
-			<div><div id="1_0"></div><div id="1_1"></div><div id="1_1"></div><div id="1_2"></div></div>
+			<div><div id="0_0"></div><div id="0_1"></div><div id="0_2"></div><div id="0_3"></div></div>
+			<div><div id="1_0"></div><div id="1_1"></div><div id="1_2"></div><div id="1_3"></div></div>
 		</div>
 		<pre id="log">log</pre>
+
+		<style>
+			#menucb{display:none;}
+			.menu{position:fixed;top:0;right:0;width:32px;height:32px;background:#8888}
+			#menucb:checked+.menu{width:100vw;height:100vh;}
+			.menu>div{position:absolute;right:0;width:32px;height:32px;transition:.5s;background:url(img/tex.png);background-size:256px auto;}
+			.menu>.ico{opacity:1;}#menucb:checked+.menu>.ico{opacity:0;}
+			.menu>.clo{opacity:0;background-position:-128px 0;}#menucb:checked+.menu>.clo{opacity:1;}
+		</style>
+		<input type="checkbox" id="menucb">
+		<label class="menu" for="menucb">
+			<div class="ico"></div>
+			<div class="clo"></div>
+		</label>
+
+
 		<script>
-			const keymap = {
+			var kbmode=0,sc=0;
+			const keymap = [{
 				"KeyR":"_-21","KeyT":"_-19","KeyY":"_-17","KeyU":"_-16","KeyI":"_-14",
 				"KeyF":"_-12","KeyG":"_-10","KeyH":"_-9" ,"KeyJ":"_-7" ,"KeyK":"_-5" ,
 				"KeyC":"_-4" ,"KeyV":"_-2" ,"KeyB":"_0"  ,"KeyN":"_2"  ,"KeyM":"_3"
+			},{
+				"KeyR":"0_0","KeyT":"0_1","KeyY":"0_2","KeyU":"0_3",
+				"KeyF":"1_0","KeyG":"1_1","KeyH":"1_2","KeyJ":"1_3"
+			}];
+			const synth = new Tone.Synth().toDestination();
+			function trigger(id) {
+				switch(kbmode){
+					case 0:
+						synth.triggerAttackRelease(440*Math.pow(2,(parseInt(id.slice(1))+sc)/12),'8n');
+						break;
+					case 1:
+						synth.triggerAttackRelease("C5","8n");
+						break;
+					default:
+						console.log("unknown id");
+				}
 			}
+
+
+			//animation & misc
 			document.querySelectorAll('.kb>div>div').forEach((e)=>{
+				e.addEventListener("touchstart",function(){trigger(this.id);},false);
+				e.addEventListener("mousedown" ,function(){trigger(this.id);},false);
 				e.addEventListener("touchstart",function(){
 					log.textContent+="\nt "+this.id;
 					this.classList.remove('pushed');void this.offsetWidth;this.classList.add('pushed','anm');
@@ -50,7 +89,7 @@
 				e.addEventListener("animationend",function(){this.classList.remove('anm');},false);
 			})
 			document.addEventListener('keydown',e=>{
-				if(keymap[e.code])document.getElementById(keymap[e.code]).dispatchEvent(new Event('mousedown'));
+				if(keymap[kbmode][e.code])document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('mousedown'));
 			},false);
 		</script>
 	</body>
