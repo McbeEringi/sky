@@ -45,7 +45,7 @@
 					this.classList.remove('pushed');void this.offsetWidth;this.classList.add('pushed','anm');
 					setTimeout(()=>this.classList.remove('pushed'),100);
 				},false);
-				e.addEventListener("touchend",function(e){this.classList.remove('pushed');},false);
+				e.addEventListener("touchend",function(e){this.classList.remove('pushed');e.preventDefault();},false);
 				e.addEventListener("touchcancel",function(){this.classList.remove('pushed');e.preventDefault();},false);
 				e.addEventListener("animationend",function(){this.classList.remove('anm');},false);
 			})
