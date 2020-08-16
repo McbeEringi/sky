@@ -23,8 +23,7 @@
 			.kb>div>div:nth-child(2n  ):not(.c)::after{background-position:-70px 0;}
 			.kb>div>div:nth-child(2n-1):not(.c)::after{background-position:-140px 0;}
 
-			.kb>div>div.pushed::before{transform:scale(.8);}
-			.kb>div>div.pushed::after{top:14px;left:14px;width:56px;height:56px;background-size:442px auto;}
+			.kb>div>div.pushed::before,.kb>div>div.pushed::after{transform:scale(.8);}
 			.kb>div>div:not(.pushed)::before,.kb>div>div:not(.pushed)::after{transition:.1s;}
 			.kb>div>div.anm::after{animation:p .4s ease-in-out;}
 		</style>
@@ -72,12 +71,9 @@
 			const synth = new Tone.Sampler(
 				{
 					"a2":"a2.mp3",
-					"a3":"a3.mp3",
-					"a4":"a4.mp3",
-					"a5":"a5.mp3",
-					"d#3":"ds3.mp3",
-					"d#4":"ds4.mp3",
-					"d#5":"ds5.mp3",
+					"d#3":"ds3.mp3","a3":"a3.mp3",
+					"d#4":"ds4.mp3","a4":"a4.mp3",
+					"d#5":"ds5.mp3","a5":"a5.mp3",
 					"d#6":"ds6.mp3"
 				},()=>log.textContent+="\nloaded","audio/instr/musicbox/").toDestination();
 			function trigger(id) {
