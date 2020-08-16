@@ -6,10 +6,12 @@
 	</head>
 	<body>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.43/Tone.js"></script>
+		<script src="style.js"></script>
 		<style>
+			body{overflow:hidden;margin:0;}
 			@keyframes bob{0%{transform:scale(1,1);}100%{transform:scale(.9,.9);}}
 			@keyframes p{0%{transform:rotateY(0deg);}100%{transform:rotateY(360deg);}}
-			.kb{display:flex;flex-direction:column;}.kb>div{display:flex;flex-direction:row;justify-content:center;}
+			.kb{display:flex;flex-direction:column;background:linear-gradient(#0008,#0000 50px)}.kb>div{display:flex;flex-direction:row;justify-content:center;}
 			.kb>div>div{width:70px;height:70px;background:#8888;margin:6.5px;flex-shrink:0;border-radius:16px;box-shadow:0 0 8px #8888;}
 			.kb>div>div::before{content:"";display:block;width:70px;height:70px;animation:bob 1.2s ease-in-out 0s infinite alternate;background-image:url(img/tex.png);background-size:560px auto;}
 			.kb>div>div:nth-child(2n  ):not(.c)::before{background-position:-70px 0;}
@@ -29,21 +31,25 @@
 			<div><div id="0_0"></div><div id="0_1"></div><div id="0_2"></div><div id="0_3"></div></div>
 			<div><div id="1_0"></div><div id="1_1"></div><div id="1_2"></div><div id="1_3"></div></div>
 		</div>
-		<pre id="log">log</pre>
 
 		<style>
 			#menucb{display:none;}
-			.menu{position:fixed;top:0;right:0;width:32px;height:32px;background:#8888}
-			#menucb:checked+.menu{width:100vw;height:100vh;}
-			.menu>div{position:absolute;right:0;width:32px;height:32px;transition:.5s;background:url(img/tex.png);background-size:256px auto;}
-			.menu>.ico{opacity:1;}#menucb:checked+.menu>.ico{opacity:0;}
-			.menu>.clo{opacity:0;background-position:-128px 0;}#menucb:checked+.menu>.clo{opacity:1;}
+			#menucb+label{position:fixed;top:0;right:0;width:100vw;height:100vh;display:none;}
+			#menucb:checked+label{display:block;}
+			#menucb+*+*+label{position:fixed;top:2px;right:2px;width:32px;height:32px;}
+			#menucb+*+*+label::before,#mico{content:"";position:absolute;top:0;left:0;width:32px;height:32px;background:url(img/tex.png);background-size:256px auto;transition:.4s;}
+			#menucb+*+*+label::before{opacity:0;background-position:-128px 0;}
+			#menucb:checked+*+*+label::before{opacity:1;}#menucb:checked+*+*+label>#mico{opacity:0;}
+			#menucb+*+div{position:fixed;top:0;right:-236px;width:236px;height:100vh;padding-top:36px;background:#8888;transition:.2s;overflow-y:scroll;}
+			#menucb:checked+*+div{right:0;}
+			#mico{background-position:0 -32px;}
 		</style>
 		<input type="checkbox" id="menucb">
-		<label class="menu" for="menucb">
-			<div class="ico"></div>
-			<div class="clo"></div>
-		</label>
+		<label for="menucb"></label>
+		<div>
+			aa
+		</div>
+		<label for="menucb"><div id="mico"></div></label>
 
 
 		<script>
@@ -76,11 +82,9 @@
 				e.addEventListener("touchstart",function(){trigger(this.id);},false);
 				e.addEventListener("mousedown" ,function(){trigger(this.id);},false);
 				e.addEventListener("touchstart",function(){
-					log.textContent+="\nt "+this.id;
 					this.classList.remove('pushed');void this.offsetWidth;this.classList.add('pushed','anm');
 				},false);
 				e.addEventListener("mousedown",function(){
-					log.textContent+="\nm "+this.id;
 					this.classList.remove('pushed');void this.offsetWidth;this.classList.add('pushed','anm');
 					setTimeout(()=>this.classList.remove('pushed'),100);
 				},false);
