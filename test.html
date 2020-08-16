@@ -16,13 +16,15 @@
 			@keyframes bob{0%{transform:scale(1,1);}100%{transform:scale(.9,.9);}}
 			@keyframes p{0%{transform:rotateY(0deg);}100%{transform:rotateY(360deg);}}
 			.kb{position:relative;left:50%;transform:translateX(-50%);touch-action:none;display:inline-block;}
-			.kb>div>div{width:70px;height:70px;background:#8888;margin:7px;flex-shrink:0;border-radius:16px;box-shadow:0 0 8px #8888;z-index:0;display:inline-block;vertical-align:top;}
-			.kb>div>div::before{content:"";display:block;width:70px;height:70px;animation:bob 1.2s ease-in-out 0s infinite alternate;background-image:url(img/tex.png);background-size:560px auto;z-index:1;}
-			.kb>div>div:nth-child(2n  ):not(.c)::before{background-position:-70px 0;}
-			.kb>div>div:nth-child(2n-1):not(.c)::before{background-position:-140px 0;}
+			.kb>div>div{position:relative;width:84px;height:84px;margin:0;flex-shrink:0;display:inline-block;vertical-align:top;}
+			.kb>div>div::before,.kb>div>div::after{content:"";display:block;position:absolute;top:7px;left:7px;width:70px;height:70px;}
+			.kb>div>div::before{background:#8888;border-radius:16px;z-index:0;}
+			.kb>div>div::after{animation:bob 1.2s ease-in-out 0s infinite alternate;background-image:url(img/tex.png);background-size:560px auto;z-index:1;}
+			.kb>div>div:nth-child(2n  ):not(.c)::after{background-position:-70px 0;}
+			.kb>div>div:nth-child(2n-1):not(.c)::after{background-position:-140px 0;}
 
-			.kb>div>div.pushed{transform:scale(.8,.8);}.kb>div>div:not(.pushed){transition:.1s;}
-			.kb>div>div.anm::before{animation:p .4s ease-in-out;transform:rotateY(0deg);}
+			.kb>div>div.pushed::before,.kb>div>div.pushed::after{transform:scale(.8,.8);}.kb>div>div:not(.pushed)::before,.kb>div>div:not(.pushed)::after{transition:.1s;}
+			.kb>div>div.anm::after{animation:p .4s ease-in-out;}
 		</style>
 
 		<div id="kb" class="kb">
@@ -55,7 +57,7 @@
 
 
 		<script>
-			var kbmode=0,sc=0;
+			var kbmode=0,sc=12;
 			const keymap = [{
 				"KeyR":"_-21","KeyT":"_-19","KeyY":"_-17","KeyU":"_-16","KeyI":"_-14",
 				"KeyF":"_-12","KeyG":"_-10","KeyH":"_-9" ,"KeyJ":"_-7" ,"KeyK":"_-5" ,
@@ -64,11 +66,21 @@
 				"KeyR":"0_0","KeyT":"0_1","KeyY":"0_2","KeyU":"0_3",
 				"KeyF":"1_0","KeyG":"1_1","KeyH":"1_2","KeyJ":"1_3"
 			}];
-			const synth = new Tone.Synth().toDestination();
+			const synth = new Tone.Sampler(
+				{
+					"a2":"a2.mp3",
+					"a3":"a3.mp3",
+					"a4":"a4.mp3",
+					"a5":"a5.mp3",
+					"d#3":"ds3.mp3",
+					"d#4":"ds4.mp3",
+					"d#5":"ds5.mp3",
+					"d#6":"ds6.mp3"
+				},()=>synth.triggerAttackRelease("C5"),"audio/instr/musicbox/").toDestination();
 			function trigger(id) {
 				switch(kbmode){
 					case 0:
-						synth.triggerAttackRelease(440*Math.pow(2,(parseInt(id.slice(1))+sc)/12),'8n');
+						synth.triggerAttackRelease(440*Math.pow(2,(parseInt(id.slice(1))+sc)/12));
 						break;
 					case 1:
 						synth.triggerAttackRelease("C5","8n");
