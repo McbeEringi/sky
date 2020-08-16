@@ -34,7 +34,7 @@
 			td div::before{content:"";display:block;position:absolute;width:70px;height:70px;animation:bob 1.2s ease-in-out 0s infinite alternate;background-image:url(img/instr_.png);background-size:210px auto;z-index:1;}
 			td:nth-child(2n) div:not(.c)::before{background-position:-70px 0;}
 			td:nth-child(2n-1) div:not(.c)::before{background-position:-140px 0;}
-			td div.on_{transform:scale(.8,.8);}td div:not(.on_){transition:.1s;}td div.on::before, td div.on::after{animation:on .4s ease-in-out;transform:rotateY(0deg);}
+			td div.on_{transform:scale(.8,.8);}td div:not(.on_){transition:.1s;}td div.on::before{animation:on .4s ease-in-out;transform:rotateY(0deg);}
 			@keyframes bob{0%{transform:scale(1,1);}100%{transform:scale(.9,.9);}}
 			@keyframes on{0%{transform:rotateY(0deg);}100%{transform:rotateY(360deg);}}
 			svg{position:absolute;bottom:18px;left:50%;transform:translate(-50%);filter:drop-shadow(0 0 2px #0008);}
