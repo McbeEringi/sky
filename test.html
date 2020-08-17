@@ -42,7 +42,8 @@
 			#menucb{display:none;}
 			#menucb+label{position:fixed;top:0;right:0;width:100vw;height:100vh;display:none;}
 			#menucb:checked+label{display:block;}
-			#menucb+*+*+label{position:fixed;top:2px;right:2px;width:48px;height:48px;}
+			#menucb+*+*+label{position:fixed;top:2px;right:2px;width:48px;height:48px;transition:.2s}
+			#menucb:checked+*+*+label{transform:rotateY(180deg);}
 			#menucb+*+*+label::before,#mico{content:"";position:absolute;top:0;left:0;width:48px;height:48px;background:url(img/tex.png);background-size:384px auto;transition:.4s;}
 			#menucb+*+*+label::before{opacity:0;background-position:-192px 0;}#mico{background-position:0 -48px;}
 			#menucb:checked+*+*+label::before{opacity:1;}#menucb:checked+*+*+label>#mico{opacity:0;}
@@ -50,11 +51,13 @@
 			#menucb:checked+*+div{right:0;opacity:1;}
 
 			.menu input[type=radio]{display:none;}.menu label{display:inline-block;vertical-align:top;}
-			.menu input[type=radio]+div{width:70px;height:70px;margin:7px;background:#4448 url(img/tex.png);background-size:560px auto;background-position:var(--bp);border-radius:16px;box-shadow:0 0 8px #6668;}
+			.menu input[type=radio]+div{width:70px;height:70px;margin:7px;background:#4448;border-radius:16px;box-shadow:0 0 8px #6668;}
+			.menu input[type=radio]+div::before{content:"";display:block;width:70px;height:70px;background:url(img/tex.png);background-size:560px auto;background-position:var(--bp);}
 			.menu input[type=radio]:disabled+div{opacity:.5;}
 			.menu input[type=radio]:checked+div{box-shadow:0 0 0 2px #fea inset,0 0 8px #fea4;}
+			.menu input[type=radio]:checked+div::before{transform:rotateY(360deg);transition:.5s;}
 		</style>
-		<input type="checkbox" id="menucb"><label for="menucb"></label>
+		<input type="checkbox" id="menucb" onchange="if(this.checked){sfx('click');sfx('open');}else sfx('close');"><label for="menucb"></label>
 		<div class="menu">
 			見た目だけです <br>
 			<form id="menu" onchange="set();">
@@ -83,6 +86,11 @@
 
 
 		<script>
+			const sfx_ = {
+				"open" :new Tone.Player("audio/open.mp3").toDestination(),
+				"close":new Tone.Player("audio/close.mp3").toDestination(),
+				"click":new Tone.Player("audio/click.mp3").toDestination()
+			},sfx = (i)=>sfx_[i].start();
 			var kbmode=0,sc=12;
 			const keymap = [{
 				"KeyR":"_-21","KeyT":"_-19","KeyY":"_-17","KeyU":"_-16","KeyI":"_-14",
@@ -103,6 +111,7 @@
 					pkb.style.opacity="1";pkb.style.pointerEvents="auto";
 				},"audio/instr/musicbox/").toDestination();
 			function set() {
+				sfx("click");
 				var pos = [menu.instr.value%8,Math.floor(menu.instr.value*.125+1)];
 				console.log("ico",pos);
 				mico.style.backgroundPosition=pos.map(x=>(x*-48)+"px").join(" ");
