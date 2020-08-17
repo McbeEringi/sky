@@ -51,13 +51,13 @@
 			.menu{position:fixed;top:0;right:-266px;width:252px;height:100vh;padding:48px 7px 0;background:#4448;opacity:0;box-shadow:0 0 8px #4448;transition:.2s;overflow-y:scroll;}
 			#menucb:checked+*+div{right:0;opacity:1;}
 
-			.menu input[type=radio]{display:none;}.menu label,.menu>div{display:inline-block;vertical-align:top;}
-			.menu input[type=radio]+div,.menu>div{width:70px;height:70px;margin:7px;background:#2228;border-radius:16px;box-shadow:0 0 8px #2228;}
-			.menu input[type=radio]+div::before,.menu>div::before{content:"";display:block;width:70px;height:70px;background:url(img/tex.png);background-size:560px auto;background-position:var(--bp);}
+			.menu input[type=radio]{display:none;}.menu label,.menu .grid{display:inline-block;vertical-align:top;}
+			.menu input[type=radio]+div,.menu .grid{width:70px;height:70px;margin:7px;background:#2228;border-radius:16px;box-shadow:0 0 8px #2228;}
+			.menu input[type=radio]+div::before,.menu .grid::before{content:"";display:block;width:70px;height:70px;background:url(img/tex.png);background-size:560px auto;background-position:var(--bp);}
 			.menu input[type=radio]:disabled+div{opacity:.5;}
 			.menu input[type=radio]:checked+div{box-shadow:0 0 0 2px #fea inset,0 0 8px #fea4;}
 			.menu input[type=radio]:checked+div::before{animation:flip .4s ease-in-out;}
-			.menu>div:active{transform:scale(.8);}.menu>div:not(:active){transition:.2s;}
+			.menu .grid{touch-action:none;}.menu .grid.button:active{transform:scale(.8);}.menu .grid.button:not(:active){transition:.2s;}
 		</style>
 		<input type="checkbox" id="menucb" onchange="if(this.checked){sfx('click');sfx('open');}else sfx('close');"><label for="menucb" style="pointer-events:none;"></label>
 		<div class="menu">
@@ -80,9 +80,11 @@
 				</label>
 			</form>
 			<hr>
-			<div ontouchstart="" style="--bp:-420px -0px;">
-			</div><div ontouchstart="">
-			</div><div ontouchstart="" style="--bp:-350px -0px;"></div>
+			<div id="sc_d">
+				      <div ontouchstart="" class="grid button" style="--bp:-420px -0px;">
+				</div><div class="grid">
+				</div><div ontouchstart="" class="grid button" style="--bp:-350px -0px;"></div>
+			</div>
 		</div>
 		<label for="menucb"><div id="mico"></div></label>
 
@@ -94,7 +96,7 @@
 			var synth,synth_,kbmode=0,sc=0;
 			const stdli = (a,b)=>{
 				var s={};
-				for(var i=a;i<=b;i++){
+				for(var i=a;i<=(b?b:(a+1));i++){
 					s["d#"+i]="ds"+i+".mp3";
 					s["a" +i]="a" +i+".mp3";
 				}
@@ -106,19 +108,19 @@
 				{"c4":"c4_.mp3","d4":"d4_.mp3","g4":"g4_.mp3","a4":"a4_.mp3"}
 			],instr_li=[//[baseurl, octave, map, (map2)]
 				["audio/instr/musicbox/",1,Object.assign({"a2":"a2.mp3","d#6":"ds6.mp3"},stdli(3,5))],
-				["audio/instr/harp/",-1,stdli(2,3)],
+				["audio/instr/harp/",-1,stdli(2)],
 				["audio/instr/percussion/",0,{"a3":"0.mp3","b3":"1.mp3","c4":"2.mp3","d4":"3.mp3","e4":"4.mp3","f4":"5.mp3","g4":"6.mp3","a4":"7.mp3"}],
-				["audio/instr/contrabass/",-2,stdli(1,2)],
-				["audio/instr/horn/",-2,stdli(1,2)],
+				["audio/instr/contrabass/",-2,stdli(1)],
+				["audio/instr/horn/",-2,stdli(1)],
 				["https://tonejs.github.io/audio/salamander/",0,{"d#3":"Ds4.mp3","a3":"A4.mp3","d#4":"Ds5.mp3","a4":"A5.mp3"}],
 				["audio/instr/bell1/",0].concat(blli),
 				["audio/instr/bell2/",0].concat(blli),
-				["audio/instr/flute/",0,stdli(3,4)],
-				["audio/instr/quena/",0,stdli(3,4)],
-				["audio/instr/guitar/",-1,stdli(2,3)],
+				["audio/instr/flute/",0,stdli(3)],
+				["audio/instr/quena/",0,stdli(3)],
+				["audio/instr/guitar/",-1,stdli(2)],
 				["audio/instr/ukulele/",-1,{"d#3":"ds3.mp3","a3":"a3.mp3"}],
 				["https://tonejs.github.io/audio/salamander/",1,{"d#4":"Ds5.mp3","a4":"A5.mp3","d#5":"Ds6.mp3","a5":"A6.mp3"}],
-				["audio/instr/glock/",1,stdli(4,5)]
+				["audio/instr/glock/",1,stdli(4)]
 			];
 			const keymap = [{
 				"KeyR":"_-9","KeyT":"_-7","KeyY":"_-5","KeyU":"_-4","KeyI":"_-2",
