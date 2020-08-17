@@ -11,6 +11,7 @@
 			:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;}
 			body{position:relative;overflow:hidden;margin:0;}
 			#bg::before{width:100%;height:64px;content:"";position:absolute;background:linear-gradient(#0008,#0000);}
+			hr{border:none;}hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		</style>
 
 		<style>
@@ -19,7 +20,7 @@
 			.kb{position:relative;left:50%;transform:translateX(-50%);touch-action:none;display:inline-block;pointer-events:none;opacity:.2;}
 			.kb>div>div{position:relative;width:84px;height:84px;margin:0;flex-shrink:0;display:inline-block;vertical-align:top;}
 			.kb>div>div::before,.kb>div>div::after{content:"";display:block;position:absolute;top:7px;left:7px;width:70px;height:70px;}
-			.kb>div>div::before{background:#6668;border-radius:16px;z-index:0;box-shadow:0 0 8px #6668;}
+			.kb>div>div::before{background:#2228;border-radius:16px;z-index:0;box-shadow:0 0 8px #2228;}
 			.kb>div>div::after{animation:bob 1.2s ease-in-out 0s infinite alternate;background-image:url(img/tex.png);background-size:560px auto;z-index:1;}
 			.kb>div>div:nth-child(2n  ):not(.c)::after{background-position:-70px 0;}
 			.kb>div>div:nth-child(2n-1):not(.c)::after{background-position:-140px 0;}
@@ -29,9 +30,9 @@
 			.kb>div>div.anm::after{animation:p .4s ease-in-out;}
 		</style>
 		<div id="kb" class="kb">
-			<div><div id="_-21" class="c"></div><div id="_-19"></div><div id="_-17"></div><div id="_-16"></div><div id="_-14"></div></div>
-			<div><div id="_-12"></div><div id="_-10"></div><div id="_-9"  class="c"></div><div id="_-7" ></div><div id="_-5" ></div></div>
-			<div><div id="_-4" ></div><div id="_-2" ></div><div id="_0"  ></div><div id="_2"  ></div><div id="_3"   class="c"></div></div>
+			<div><div id="_-9" class="c"></div><div id="_-7"></div><div id="_-5"></div><div id="_-4"></div><div id="_-2"></div></div>
+			<div><div id="_0"></div><div id="_2"></div><div id="_3"  class="c"></div><div id="_5" ></div><div id="_7" ></div></div>
+			<div><div id="_8" ></div><div id="_10" ></div><div id="_12"  ></div><div id="_14"  ></div><div id="_15"   class="c"></div></div>
 		</div>
 		<div id="pkb" class="kb" style="display:none;">
 			<div><div id="0_0"></div><div id="0_1"></div><div id="0_2"></div><div id="0_3"></div></div>
@@ -47,20 +48,20 @@
 			#menucb+*+*+label::before,#mico{content:"";position:absolute;top:0;left:0;width:48px;height:48px;background:url(img/tex.png);background-size:384px auto;transition:.4s;}
 			#menucb+*+*+label::before{opacity:0;background-position:-192px 0;}#mico{background-position:0 -48px;}
 			#menucb:checked+*+*+label::before{opacity:1;}#menucb:checked+*+*+label>#mico{opacity:0;}
-			.menu{position:fixed;top:0;right:-266px;width:252px;height:100vh;padding:48px 7px 0;background:#8888;opacity:0;box-shadow:0 0 8px #8888;transition:.2s;overflow-y:scroll;}
+			.menu{position:fixed;top:0;right:-266px;width:252px;height:100vh;padding:48px 7px 0;background:#4448;opacity:0;box-shadow:0 0 8px #4448;transition:.2s;overflow-y:scroll;}
 			#menucb:checked+*+div{right:0;opacity:1;}
 
-			.menu input[type=radio]{display:none;}.menu label{display:inline-block;vertical-align:top;}
-			.menu input[type=radio]+div{width:70px;height:70px;margin:7px;background:#4448;border-radius:16px;box-shadow:0 0 8px #6668;}
+			.menu input[type=radio]{display:none;}.menu label,.menu>div{display:inline-block;vertical-align:top;}
+			.menu input[type=radio]+div,.menu>div{width:70px;height:70px;margin:7px;background:#2228;border-radius:16px;box-shadow:0 0 8px #2228;}
 			.menu input[type=radio]+div::before{content:"";display:block;width:70px;height:70px;background:url(img/tex.png);background-size:560px auto;background-position:var(--bp);}
 			.menu input[type=radio]:disabled+div{opacity:.5;}
 			.menu input[type=radio]:checked+div{box-shadow:0 0 0 2px #fea inset,0 0 8px #fea4;}
 			.menu input[type=radio]:checked+div::before{transform:rotateY(360deg);transition:.4s;}
+
 		</style>
 		<input type="checkbox" id="menucb" onchange="if(this.checked){sfx('click');sfx('open');}else sfx('close');"><label for="menucb"></label>
 		<div class="menu">
-			見た目だけです <br>
-			<form id="menu" onchange="set();">
+			<form id="menu" onchange="set();sfx('click');">
 				        <label><input type="radio" name="instr" value="0"  checked ><div style="--bp:-0px   -70px ;"></div>
 				</label><label><input type="radio" name="instr" value="1"          ><div style="--bp:-70px  -70px ;"></div>
 				</label><label><input type="radio" name="instr" value="2"          ><div style="--bp:-140px -70px ;"></div>
@@ -78,6 +79,8 @@
 				</label><label><input type="radio" name="instr" value="14" disabled><div style="--bp:-420px -140px;"></div>
 				</label>
 			</form>
+			<hr>
+			<div></div><div></div><div></div>
 		</div>
 		<label for="menucb"><div id="mico"></div></label>
 
@@ -86,41 +89,80 @@
 
 
 		<script>
-			const sfx_={
-				"open" :new Tone.Player("audio/open.mp3" ).connect(new Tone.Volume(-10).toDestination()),
-				"close":new Tone.Player("audio/close.mp3").connect(new Tone.Volume(-30).toDestination()),
-				"click":new Tone.Player("audio/click.mp3").connect(new Tone.Volume(-10).toDestination())
+			var synth,synth_,kbmode=0,sc=0;
+			const stdli = (a,b)=>{
+				var s={};
+				for(var i=a;i<=b;i++){
+					s["d#"+i]="ds"+i+".mp3";
+					s["a" +i]="a" +i+".mp3";
+				}
+				return s;
 			};
-			const sfx = (i)=>sfx_[i].start();
-			var kbmode=0,sc=12;
+			const info = "Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander\n\nThis page uses cookie to store instruments settings.\n\nauthor:@SkyEringi\nMIT License";
+			const blli = [
+				{"c4":"c4.mp3","d4":"d4.mp3","g4":"g4.mp3","a4":"a4.mp3"},
+				{"c4":"c4_.mp3","d4":"d4_.mp3","g4":"g4_.mp3","a4":"a4_.mp3"}
+			],instr_li=[//[baseurl, octave, map, (map2)]
+				["audio/instr/musicbox/",1,Object.assign({"a2":"a2.mp3","d#6":"ds6.mp3"},stdli(3,5))],
+				["audio/instr/harp/",-1,stdli(2,3)],
+				["audio/instr/percussion/",0,{"a3":"0.mp3","b3":"1.mp3","c4":"2.mp3","d4":"3.mp3","e4":"4.mp3","f4":"5.mp3","g4":"6.mp3","a4":"7.mp3"}],
+				["audio/instr/contrabass/",-2,stdli(1,2)],
+				["audio/instr/horn/",-2,stdli(1,2)],
+				["https://tonejs.github.io/audio/salamander/",0,{"d#3":"Ds4.mp3","a3":"A4.mp3","d#4":"Ds5.mp3","a4":"A5.mp3"}],
+				["audio/instr/bell1/",0].concat(blli),
+				["audio/instr/bell2/",0].concat(blli),
+				["audio/instr/flute/",0,stdli(3,4)],
+				["audio/instr/quena/",0,stdli(3,4)],
+				["audio/instr/guitar/",-1,stdli(2,3)],
+				["audio/instr/ukulele/",-1,{"d#3":"ds3.mp3","a3":"a3.mp3"}],
+				["https://tonejs.github.io/audio/salamander/",1,{"d#4":"Ds5.mp3","a4":"A5.mp3","d#5":"Ds6.mp3","a5":"A6.mp3"}],
+				["audio/instr/glock/",1,stdli(4,5)]
+			];
 			const keymap = [{
-				"KeyR":"_-21","KeyT":"_-19","KeyY":"_-17","KeyU":"_-16","KeyI":"_-14",
-				"KeyF":"_-12","KeyG":"_-10","KeyH":"_-9" ,"KeyJ":"_-7" ,"KeyK":"_-5" ,
-				"KeyC":"_-4" ,"KeyV":"_-2" ,"KeyB":"_0"  ,"KeyN":"_2"  ,"KeyM":"_3"
+				"KeyR":"_-9","KeyT":"_-7","KeyY":"_-5","KeyU":"_-4","KeyI":"_-2",
+				"KeyF":"_0" ,"KeyG":"_2" ,"KeyH":"_3" ,"KeyJ":"_5" ,"KeyK":"_7" ,
+				"KeyC":"_8" ,"KeyV":"_10","KeyB":"_12","KeyN":"_14","KeyM":"_15"
 			},{
 				"KeyR":"0_0","KeyT":"0_1","KeyY":"0_2","KeyU":"0_3",
 				"KeyF":"1_0","KeyG":"1_1","KeyH":"1_2","KeyJ":"1_3"
 			}];
-			const synth = new Tone.Sampler({
-					"a2":"a2.mp3",
-					"d#3":"ds3.mp3","a3":"a3.mp3",
-					"d#4":"ds4.mp3","a4":"a4.mp3",
-					"d#5":"ds5.mp3","a5":"a5.mp3",
-					"d#6":"ds6.mp3"
-				},()=>{
-					 kb.style.opacity="1"; kb.style.pointerEvents="auto";
-					pkb.style.opacity="1";pkb.style.pointerEvents="auto";
-				},"audio/instr/musicbox/").toDestination();
 			function set() {
-				sfx("click");
-				var pos = [menu.instr.value%8,Math.floor(menu.instr.value*.125+1)];
-				console.log("ico",pos);
+				kb.style.opacity=".2";kb.style.pointerEvents="none";pkb.style.opacity=".2";pkb.style.pointerEvents="none";
+				//keyboard switch
+				switch(menu.instr.value){
+					case '2':case '6':case '7':case '14':
+						kbmode=1;
+						kb.style.display="none";pkb.style.display="inline-block";
+					case '2':
+						//disable sc
+					case '6':case '7':
+						synth_ = new Tone.Sampler(instr_li[menu.instr.value][4],()=>{},instr_li[menu.instr.value][0]).toDestination();
+						break;
+					case '2':case '14':
+						synth = new Tone.Sampler(instr_li[menu.instr.value][2],()=>{
+								 kb.style.opacity="1"; kb.style.pointerEvents="auto";
+								pkb.style.opacity="1";pkb.style.pointerEvents="auto";
+							},instr_li[menu.instr.value][0]).toDestination();
+						synth_ = synth;
+						break;
+					default:
+						kbmode=0;synth_=null;
+						pkb.style.display="none";kb.style.display="inline-block";
+						synth = new Tone.Sampler(instr_li[menu.instr.value][2],()=>{
+								 kb.style.opacity="1"; kb.style.pointerEvents="auto";
+								pkb.style.opacity="1";pkb.style.pointerEvents="auto";
+							},instr_li[menu.instr.value][0]).toDestination();
+				}
+
+				//ico
+				var pos = [menu.instr.value%8,Math.floor(menu.instr.value*.125+1)];console.log("ico",pos);
 				mico.style.backgroundPosition=pos.map(x=>(x*-48)+"px").join(" ");
 			}
 			function trigger(id) {
 				switch(kbmode){
 					case 0:
-						synth.triggerAttackRelease(440*Math.pow(2,(parseInt(id.slice(1))+sc)/12));
+						//C3~C5
+						synth.triggerAttackRelease(220*Math.pow(2,(parseInt(id.slice(1))+sc)/12+instr_li[menu.instr.value][1]));
 						break;
 					case 1:
 						synth.triggerAttackRelease("C5","8n");
@@ -132,6 +174,7 @@
 
 
 			//animation & misc
+			set();
 			document.querySelectorAll('.kb>div>div').forEach((e)=>{
 				e.addEventListener("touchstart",function(){trigger(this.id);},false);
 				e.addEventListener("mousedown" ,function(){trigger(this.id);},false);
@@ -147,7 +190,7 @@
 				e.addEventListener("animationend",function(){this.classList.remove('anm');},false);
 			})
 			document.addEventListener('keydown',e=>{
-				if(keymap[kbmode][e.code])document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('mousedown'));
+				if(keymap[kbmode][e.code]&&kb.style.opacity=="1")document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('mousedown'));
 			},false);
 
 			//fullscreen
@@ -159,6 +202,14 @@
 				if(doc.fullscreenElement||doc.mozFullScreenElement||doc.webkitFullscreenElement||doc.msFullscreenElement)exit.call(doc);
 				else init.call(docEl);
 			}
+
+			//sound fx
+			const sfx_={
+				"open" :new Tone.Player("audio/open.mp3" ).connect(new Tone.Volume(-10).toDestination()),
+				"close":new Tone.Player("audio/close.mp3").connect(new Tone.Volume(-30).toDestination()),
+				"click":new Tone.Player("audio/click.mp3").connect(new Tone.Volume(-10).toDestination())
+			};
+			const sfx = (i)=>sfx_[i].start();
 		</script>
 	</body>
 </html>
