@@ -51,13 +51,15 @@
 			.menu{position:fixed;top:0;right:-266px;width:252px;height:100vh;padding:48px 7px 0;background:#4448;opacity:0;box-shadow:0 0 8px #4448;transition:.2s;overflow-y:scroll;}
 			#menucb:checked+*+div{right:0;opacity:1;}
 
-			.menu input[type=radio]{display:none;}.menu label,.menu .grid{display:inline-block;vertical-align:top;}
+			.menu input[type=radio]{display:none;}.menu label,.menu .grid{display:inline-block;vertical-align:top;position:relative;}
 			.menu input[type=radio]+div,.menu .grid{width:70px;height:70px;margin:7px;background:#2228;border-radius:16px;box-shadow:0 0 8px #2228;}
 			.menu input[type=radio]+div::before,.menu .grid::before{content:"";display:block;width:70px;height:70px;background:url(img/tex.png);background-size:560px auto;background-position:var(--bp);}
 			.menu input[type=radio]:disabled+div{opacity:.5;}
 			.menu input[type=radio]:checked+div{box-shadow:0 0 0 2px #fea inset,0 0 8px #fea4;}
 			.menu input[type=radio]:checked+div::before{animation:flip .4s ease-in-out;}
-			.menu .grid{touch-action:none;}.menu .grid.button:active{transform:scale(.8);}.menu .grid.button:not(:active){transition:.2s;}
+			.menu .grid{touch-action:none;}.menu .grid.button:active::before{transform:scale(.8);}.menu .grid.button:not(:active)::before{transition:.2s;}
+
+			#scd_{position:absolute;top:0;left:0;width:100%;height:100%;background:url(img/tex.png);background-size:560px auto;background-position:-490px 0;transition:.2s;}
 		</style>
 		<input type="checkbox" id="menucb" onchange="if(this.checked){sfx('click');sfx('open');}else sfx('close');"><label for="menucb" style="pointer-events:none;"></label>
 		<div class="menu">
@@ -80,10 +82,10 @@
 				</label>
 			</form>
 			<hr>
-			<div id="sc_d">
-				      <div ontouchstart="" class="grid button" style="--bp:-420px -0px;">
-				</div><div class="grid">
-				</div><div ontouchstart="" class="grid button" style="--bp:-350px -0px;"></div>
+			<div id="scd">
+				      <div ontouchstart="" class="grid button" style="--bp:-420px -0px;" onclick="sc--;scale(1);">
+				</div><div class="grid" style="--bp:-140px -0px;filter:saturate(.3)" onclick="sc=0;scale(1);"><div id="scd_"></div>
+			</div><div ontouchstart="" class="grid button" style="--bp:-350px -0px;" onclick="sc++;scale(1);"></div>
 			</div>
 		</div>
 		<label for="menucb"><div id="mico"></div></label>
@@ -130,7 +132,7 @@
 				"KeyR":"0_0","KeyT":"0_1","KeyY":"0_2","KeyU":"0_3",
 				"KeyF":"1_0","KeyG":"1_1","KeyH":"1_2","KeyJ":"1_3"
 			}];
-			function set() {
+			function set(){
 				kb.style.opacity=".2";kb.style.pointerEvents="none";pkb.style.opacity=".2";pkb.style.pointerEvents="none";
 				//keyboard switch
 				switch(menu.instr.value){
@@ -162,7 +164,7 @@
 				var pos = [menu.instr.value%8,Math.floor(menu.instr.value*.125+1)];console.log("ico",pos);
 				mico.style.backgroundPosition=pos.map(x=>(x*-48)+"px").join(" ");
 			}
-			function trigger(id) {
+			function trigger(id){
 				switch(kbmode){
 					case 0:
 						//C3~C5
@@ -196,6 +198,19 @@
 			document.addEventListener('keydown',e=>{
 				if(keymap[kbmode][e.code]&&kb.style.opacity=="1")document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('mousedown'));
 			},false);
+
+			//scale
+			function scale(x){
+				scd_.style.transform="rotate("+(sc*30)+"deg)";
+				if(x){
+					if(menu.instr.value!='2')synth.triggerAttackRelease(220*Math.pow(2,(3+sc)/12+instr_li[menu.instr.value][1]));
+					if(kbmode==0){
+						setTimeout(()=>{synth.triggerAttackRelease(220*Math.pow(2,(7 +sc)/12+instr_li[menu.instr.value][1]))},50);
+						setTimeout(()=>{synth.triggerAttackRelease(220*Math.pow(2,(10+sc)/12+instr_li[menu.instr.value][1]))},100);
+					}
+				}
+			}
+			scale(0);
 
 			//fullscreen
 			function fsc(){
