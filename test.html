@@ -19,7 +19,7 @@
 			.kb{position:relative;left:50%;transform:translateX(-50%);touch-action:none;display:inline-block;}
 			.kb>div>div{position:relative;width:84px;height:84px;margin:0;flex-shrink:0;display:inline-block;vertical-align:top;}
 			.kb>div>div::before,.kb>div>div::after{content:"";display:block;position:absolute;top:7px;left:7px;width:70px;height:70px;}
-			.kb>div>div::before{background:#6668;border-radius:16px;z-index:0;box-shadow:0 0 8px #8888;}
+			.kb>div>div::before{background:#6668;border-radius:16px;z-index:0;box-shadow:0 0 8px #6668;}
 			.kb>div>div::after{animation:bob 1.2s ease-in-out 0s infinite alternate;background-image:url(img/tex.png);background-size:560px auto;z-index:1;}
 			.kb>div>div:nth-child(2n  ):not(.c)::after{background-position:-70px 0;}
 			.kb>div>div:nth-child(2n-1):not(.c)::after{background-position:-140px 0;}
@@ -50,24 +50,28 @@
 			#menucb:checked+*+div{right:0;opacity:1;}
 
 			.menu input[type=radio]{display:none;}.menu label{display:inline-block;vertical-align:top;}
-			.menu input[type=radio]+div{width:70px;height:70px;margin:7px;background:#4448;}
+			.menu input[type=radio]+div{width:70px;height:70px;margin:7px;background:#4448 url(img/tex.png);background-size:560px auto;background-position:var(--bp);border-radius:16px;box-shadow:0 0 8px #6668;}
+			.menu input[type=radio]:disabled+div{opacity:.5;}
+			.menu input[type=radio]:checked+div{box-shadow:0 0 0 2px #fea inset,0 0 8px #fea4;}
 		</style>
 		<input type="checkbox" id="menucb"><label for="menucb"></label>
 		<div class="menu">
-			test <br>
-			        <label><input type="radio" name="instr" value="0"  checked ><div style="--bp:-64px -64px;"></div>
-			</label><label><input type="radio" name="instr" value="1"  disabled><div style="--bp:-128px -64px;"></div>
-			</label><label><input type="radio" name="instr" value="2"          ><div style="--bp:-0px -128px;"></div>
-			</label><label><input type="radio" name="instr" value="3"          ><div style="--bp:-64px -128px;"></div>
-			</label><label><input type="radio" name="instr" value="4"          ><div style="--bp:-128px -128px;"></div>
-			</label><label><input type="radio" name="instr" value="5"  disabled><div style="--bp:-0px -192px;"></div>
-			</label><label><input type="radio" name="instr" value="6"  disabled><div style="--bp:-64px -192px;"></div>
-			</label><label><input type="radio" name="instr" value="7"          ><div style="--bp:-128px -192px;"></div>
-			</label><label><input type="radio" name="instr" value="8"  disabled><div style="--bp:-0px -256px;"></div>
-			</label><label><input type="radio" name="instr" value="9"          ><div style="--bp:-64px -256px;"></div>
-			</label><label><input type="radio" name="instr" value="10"         ><div style="--bp:-128px -256px;"></div>
-			</label><label><input type="radio" name="instr" value="11"         ><div style="--bp:-0px -320px;"></div>
-			</label><label><input type="radio" name="instr" value="12"         ><div style="--bp:-64px -320px;"></div>
+			見た目だけです <br>
+			        <label><input type="radio" name="instr" value="0"  checked ><div style="--bp:-0px   -70px ;"></div>
+			</label><label><input type="radio" name="instr" value="1"          ><div style="--bp:-70px  -70px ;"></div>
+			</label><label><input type="radio" name="instr" value="2"          ><div style="--bp:-140px -70px ;"></div>
+			</label><label><input type="radio" name="instr" value="3"          ><div style="--bp:-210px -70px ;"></div>
+			</label><label><input type="radio" name="instr" value="4"          ><div style="--bp:-280px -70px ;"></div>
+			</label><label><input type="radio" name="instr" value="5"          ><div style="--bp:-350px -70px ;"></div>
+			</label><label><input type="radio" name="instr" value="6"          ><div style="--bp:-420px -70px ;"></div>
+			</label><label><input type="radio" name="instr" value="7"          ><div style="--bp:-490px -70px ;"></div>
+			</label><label><input type="radio" name="instr" value="8"          ><div style="--bp:-0px   -140px;"></div>
+			</label><label><input type="radio" name="instr" value="9"          ><div style="--bp:-70px  -140px;"></div>
+			</label><label><input type="radio" name="instr" value="10"         ><div style="--bp:-140px -140px;"></div>
+			</label><label><input type="radio" name="instr" value="11"         ><div style="--bp:-210px -140px;"></div>
+			</label><label><input type="radio" name="instr" value="12"         ><div style="--bp:-280px -140px;"></div>
+			</label><label><input type="radio" name="instr" value="13"         ><div style="--bp:-350px -140px;"></div>
+			</label><label><input type="radio" name="instr" value="14" disabled><div style="--bp:-420px -140px;"></div>
 			</label>
 		</div>
 		<label for="menucb"><div id="mico"></div></label>
