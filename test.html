@@ -47,12 +47,12 @@
 			#menucb+*+*+label::before,#mico{content:"";position:absolute;top:0;left:0;width:48px;height:48px;background:url(img/tex.png);background-size:384px auto;transition:.4s;}
 			#menucb+*+*+label::before{opacity:0;background-position:-192px 0;}#mico{background-position:0 -48px;}
 			#menucb:checked+*+*+label::before{opacity:1;}#menucb:checked+*+*+label>#mico{opacity:0;}
-			.menu{position:fixed;top:0;right:-266px;width:252px;height:100vh;padding:48px 7px 0;background:#4448;opacity:0;box-shadow:0 0 8px #4448;transition:.2s;overflow-y:scroll;}
+			.menu{position:fixed;top:0;right:-266px;width:252px;height:calc(100vh - 48px);padding:48px 7px 0;background:#4448;opacity:0;box-shadow:0 0 8px #4448;transition:.2s;overflow-y:scroll;}
 			#menucb:checked+*+div{right:0;opacity:1;}
 
 			.menu input[type=radio]{display:none;}.menu label,.menu .grid{display:inline-block;vertical-align:top;position:relative;}
 			.menu input[type=radio]+div,.menu .grid{width:70px;height:70px;margin:7px;background:#2228;border-radius:16px;box-shadow:0 0 8px #2228;}
-			.menu input[type=radio]+div::before,.menu .grid::before{content:"";display:block;width:70px;height:70px;background:url(img/tex.png);background-size:560px auto;background-position:var(--bp);}
+			.menu input[type=radio]+div::before,.menu .grid::before{position:absolute;content:"";display:block;width:70px;height:70px;background:url(img/tex.png);background-size:560px auto;background-position:var(--bp);}
 			.menu input[type=radio]:disabled+div{opacity:.5;}
 			.menu input[type=radio]:checked+div{box-shadow:0 0 0 2px #fea inset,0 0 8px #fea4;}
 			.menu input[type=radio]:checked+div::before{animation:flip .4s ease-in-out;}
@@ -85,8 +85,9 @@
 			<div id="scd">
 				      <div ontouchstart="" class="grid button" style="--bp:-420px -0px;" onclick="sc--;scale(1);">
 				</div><div class="grid" style="--bp:-140px -0px;filter:saturate(.3)" onclick="sc=0;scale(1);"><div id="scd_"></div>
-			</div><div ontouchstart="" class="grid button" style="--bp:-350px -0px;" onclick="sc++;scale(1);"></div>
+				</div><div ontouchstart="" class="grid button" style="--bp:-350px -0px;" onclick="sc++;scale(1);"></div>
 			</div>
+			<div class="grid button" style="--bp:-210px -0px;position:absolute;bottom:7px;right:7px;" onclick="alert(info);"></div>
 		</div>
 		<label for="menucb"><div id="mico"></div></label>
 
@@ -94,7 +95,6 @@
 		<button onclick="fsc()">fullscreen</button>-->
 
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.43/Tone.js"></script>
 		<script>
 			var synth,synth_,kbmode=0,sc=0;
 			const stdli = (a,b)=>{
@@ -124,8 +124,7 @@
 				["audio/instr/ukulele/",-1,{"d#3":"ds3.mp3","a3":"a3.mp3"}],
 				["https://tonejs.github.io/audio/salamander/",1,{"d#4":"Ds5.mp3","a4":"A5.mp3","d#5":"Ds6.mp3","a5":"A6.mp3"}],
 				["audio/instr/glock/",1,stdli(4)]
-			];
-			const keymap = [{
+			],keymap = [{
 				"KeyR":"_-9","KeyT":"_-7","KeyY":"_-5","KeyU":"_-4","KeyI":"_-2",
 				"KeyF":"_0" ,"KeyG":"_2" ,"KeyH":"_3" ,"KeyJ":"_5" ,"KeyK":"_7" ,
 				"KeyC":"_8" ,"KeyV":"_10","KeyB":"_12","KeyN":"_14","KeyM":"_15"
@@ -134,6 +133,17 @@
 				"KeyF":"1_0","KeyG":"1_1","KeyH":"1_2","KeyJ":"1_3"
 			}];
 
+			/////fullscreen
+			function fsc(){
+				var doc=window.document,docEl=doc.documentElement;
+				var init=docEl.requestFullscreen||docEl.mozRequestFullScreen||docEl.webkitRequestFullScreen||docEl.msRequestFullscreen;
+				var exit=doc.exitFullscreen||doc.mozCancelFullScreen||doc.webkitExitFullscreen||doc.msExitFullscreen;
+				if(doc.fullscreenElement||doc.mozFullScreenElement||doc.webkitFullscreenElement||doc.msFullscreenElement)exit.call(doc);
+				else init.call(docEl);
+			}
+		</script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.43/Tone.js"></script>
+		<script>
 			/////fx
 			function setSynth(){
 				synth = new Tone.Sampler(instr_li[menu.instr.value][2],()=>{
@@ -165,7 +175,6 @@
 						pkb.style.display="none";kb.style.display="inline-block";
 						setSynth();
 				}
-
 				//ico
 				var pos = [menu.instr.value%8,Math.floor(menu.instr.value*.125+1)];console.log("ico",pos);
 				mico.style.backgroundPosition=pos.map(x=>(x*-48)+"px").join(" ");
@@ -218,16 +227,6 @@
 				}
 			}
 			scale(0);
-
-			/////fullscreen
-			function fsc(){
-				var doc=window.document,docEl=doc.documentElement;
-				var init=docEl.requestFullscreen||docEl.mozRequestFullScreen||docEl.webkitRequestFullScreen||docEl.msRequestFullscreen;
-				var exit=doc.exitFullscreen||doc.mozCancelFullScreen||doc.webkitExitFullscreen||doc.msExitFullscreen;
-
-				if(doc.fullscreenElement||doc.mozFullScreenElement||doc.webkitFullscreenElement||doc.msFullscreenElement)exit.call(doc);
-				else init.call(docEl);
-			}
 
 			/////sound fx
 			const sfx_={
