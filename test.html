@@ -86,10 +86,10 @@
 
 
 		<script>
-			const sfx_vol=new Tone.Volume(-10).toDestination(), sfx_={
-				"open" :new Tone.Player("audio/open.mp3").connect(sfx_vol),
-				"close":new Tone.Player("audio/close.mp3").connect(sfx_vol),
-				"click":new Tone.Player("audio/click.mp3").connect(sfx_vol)
+			const sfx_={
+				"open" :new Tone.Player("audio/open.mp3" ).connect(new Tone.Volume(-10).toDestination()),
+				"close":new Tone.Player("audio/close.mp3").connect(new Tone.Volume(-30).toDestination()),
+				"click":new Tone.Player("audio/click.mp3").connect(new Tone.Volume(-10).toDestination())
 			};
 			const sfx = (i)=>sfx_[i].start();
 			var kbmode=0,sc=12;
