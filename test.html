@@ -6,6 +6,7 @@
 	</head>
 	<body>
 		<script src="style.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.43/Tone.js"></script>
 		<style>
 			:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;}
 			body{position:relative;overflow:hidden;margin:0;}
@@ -142,9 +143,6 @@
 				if(doc.fullscreenElement||doc.mozFullScreenElement||doc.webkitFullscreenElement||doc.msFullscreenElement)exit.call(doc);
 				else init.call(docEl);
 			}
-		</script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.43/Tone.js"></script>
-		<script>
 			/////fx
 			function setSynth(){
 				synth = new Tone.Sampler(instr_li[menu.instr.value][2],()=>{
