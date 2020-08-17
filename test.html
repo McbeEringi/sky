@@ -16,7 +16,7 @@
 		<style>
 			@keyframes bob{0%{transform:scale(1);}100%{transform:scale(.9);}}
 			@keyframes p{0%{transform:rotateY(0deg);}100%{transform:rotateY(360deg);}}
-			.kb{position:relative;left:50%;transform:translateX(-50%);touch-action:none;display:inline-block;}
+			.kb{position:relative;left:50%;transform:translateX(-50%);touch-action:none;display:inline-block;pointer-events:none;opacity:.2;}
 			.kb>div>div{position:relative;width:84px;height:84px;margin:0;flex-shrink:0;display:inline-block;vertical-align:top;}
 			.kb>div>div::before,.kb>div>div::after{content:"";display:block;position:absolute;top:7px;left:7px;width:70px;height:70px;}
 			.kb>div>div::before{background:#6668;border-radius:16px;z-index:0;box-shadow:0 0 8px #6668;}
@@ -57,26 +57,28 @@
 		<input type="checkbox" id="menucb"><label for="menucb"></label>
 		<div class="menu">
 			見た目だけです <br>
-			        <label><input type="radio" name="instr" value="0"  checked ><div style="--bp:-0px   -70px ;"></div>
-			</label><label><input type="radio" name="instr" value="1"          ><div style="--bp:-70px  -70px ;"></div>
-			</label><label><input type="radio" name="instr" value="2"          ><div style="--bp:-140px -70px ;"></div>
-			</label><label><input type="radio" name="instr" value="3"          ><div style="--bp:-210px -70px ;"></div>
-			</label><label><input type="radio" name="instr" value="4"          ><div style="--bp:-280px -70px ;"></div>
-			</label><label><input type="radio" name="instr" value="5"          ><div style="--bp:-350px -70px ;"></div>
-			</label><label><input type="radio" name="instr" value="6"          ><div style="--bp:-420px -70px ;"></div>
-			</label><label><input type="radio" name="instr" value="7"          ><div style="--bp:-490px -70px ;"></div>
-			</label><label><input type="radio" name="instr" value="8"          ><div style="--bp:-0px   -140px;"></div>
-			</label><label><input type="radio" name="instr" value="9"          ><div style="--bp:-70px  -140px;"></div>
-			</label><label><input type="radio" name="instr" value="10"         ><div style="--bp:-140px -140px;"></div>
-			</label><label><input type="radio" name="instr" value="11"         ><div style="--bp:-210px -140px;"></div>
-			</label><label><input type="radio" name="instr" value="12"         ><div style="--bp:-280px -140px;"></div>
-			</label><label><input type="radio" name="instr" value="13"         ><div style="--bp:-350px -140px;"></div>
-			</label><label><input type="radio" name="instr" value="14" disabled><div style="--bp:-420px -140px;"></div>
-			</label>
+			<form id="menu" onchange="set();">
+				        <label><input type="radio" name="instr" value="0"  checked ><div style="--bp:-0px   -70px ;"></div>
+				</label><label><input type="radio" name="instr" value="1"          ><div style="--bp:-70px  -70px ;"></div>
+				</label><label><input type="radio" name="instr" value="2"          ><div style="--bp:-140px -70px ;"></div>
+				</label><label><input type="radio" name="instr" value="3"          ><div style="--bp:-210px -70px ;"></div>
+				</label><label><input type="radio" name="instr" value="4"          ><div style="--bp:-280px -70px ;"></div>
+				</label><label><input type="radio" name="instr" value="5"          ><div style="--bp:-350px -70px ;"></div>
+				</label><label><input type="radio" name="instr" value="6"          ><div style="--bp:-420px -70px ;"></div>
+				</label><label><input type="radio" name="instr" value="7"          ><div style="--bp:-490px -70px ;"></div>
+				</label><label><input type="radio" name="instr" value="8"          ><div style="--bp:-0px   -140px;"></div>
+				</label><label><input type="radio" name="instr" value="9"          ><div style="--bp:-70px  -140px;"></div>
+				</label><label><input type="radio" name="instr" value="10"         ><div style="--bp:-140px -140px;"></div>
+				</label><label><input type="radio" name="instr" value="11"         ><div style="--bp:-210px -140px;"></div>
+				</label><label><input type="radio" name="instr" value="12"         ><div style="--bp:-280px -140px;"></div>
+				</label><label><input type="radio" name="instr" value="13"         ><div style="--bp:-350px -140px;"></div>
+				</label><label><input type="radio" name="instr" value="14" disabled><div style="--bp:-420px -140px;"></div>
+				</label>
+			</form>
 		</div>
 		<label for="menucb"><div id="mico"></div></label>
 
-		<pre id="log">loading sounds…</pre>
+		<br>
 		<button onclick="fsc()">fullscreen</button>
 
 
@@ -90,14 +92,21 @@
 				"KeyR":"0_0","KeyT":"0_1","KeyY":"0_2","KeyU":"0_3",
 				"KeyF":"1_0","KeyG":"1_1","KeyH":"1_2","KeyJ":"1_3"
 			}];
-			const synth = new Tone.Sampler(
-				{
+			const synth = new Tone.Sampler({
 					"a2":"a2.mp3",
 					"d#3":"ds3.mp3","a3":"a3.mp3",
 					"d#4":"ds4.mp3","a4":"a4.mp3",
 					"d#5":"ds5.mp3","a5":"a5.mp3",
 					"d#6":"ds6.mp3"
-				},()=>log.textContent+="\nloaded","audio/instr/musicbox/").toDestination();
+				},()=>{
+					 kb.style.opacity="1"; kb.style.pointerEvents="auto";
+					pkb.style.opacity="1";pkb.style.pointerEvents="auto";
+				},"audio/instr/musicbox/").toDestination();
+			function set() {
+				var pos = [menu.instr.value%8,Math.floor(menu.instr.value*.125+1)];
+				console.log("ico",pos);
+				mico.style.backgroundPosition=pos.map(x=>(x*-48)+"px").join(" ");
+			}
 			function trigger(id) {
 				switch(kbmode){
 					case 0:
