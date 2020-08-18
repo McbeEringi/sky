@@ -6,7 +6,8 @@
 	</head>
 	<body>
 		<script src="style.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.43/Tone.js"></script>
+		<script src="https://tonejs.github.io/build/Tone.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
 		<style>
 			:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;}
 			body{position:relative;overflow:hidden;margin:0;}
@@ -135,15 +136,20 @@
 				"KeyF":"1_0","KeyG":"1_1","KeyH":"1_2","KeyJ":"1_3"
 			}];
 
-			/////fullscreen
-			function fsc(){
-				var doc=window.document,docEl=doc.documentElement;
-				var init=docEl.requestFullscreen||docEl.mozRequestFullScreen||docEl.webkitRequestFullScreen||docEl.msRequestFullscreen;
-				var exit=doc.exitFullscreen||doc.mozCancelFullScreen||doc.webkitExitFullscreen||doc.msExitFullscreen;
-				if(doc.fullscreenElement||doc.mozFullScreenElement||doc.webkitFullscreenElement||doc.msFullscreenElement)exit.call(doc);
-				else init.call(docEl);
+
+			/////save & load
+			const save = ()=>{Cookies.set('sc',sc,{expires:7,path:''});Cookies.set('instr',menu.instr.value,{expires:7,path:''});console.log("saved")}
+			function load(){
+				var c = [Cookies.get('sc'),Cookies.get('instr')];
+				if(c){
+					if(c[0])sc=parseInt(c[0]);
+					if(c[1])try{menu.instr[parseInt(c[1])].checked=true;}catch(e){console.log(e);}
+					console.log("loaded");
+				}
 			}
-			/////fx
+			load();
+
+			/////main fx
 			function setSynth(){
 				synth = new Tone.Sampler(instr_li[menu.instr.value][2],()=>{
 						 kb.style.opacity="1"; kb.style.pointerEvents="auto";
@@ -176,7 +182,8 @@
 						pkb.style.display="none";kb.style.display="inline-block";
 						setSynth();
 				}
-				//ico
+				save();
+				//icon
 				var pos = [menu.instr.value%8,Math.floor(menu.instr.value*.125+1)];console.log("ico",pos);
 				mico.style.backgroundPosition=pos.map(x=>(x*-48)+"px").join(" ");
 			}
@@ -195,11 +202,13 @@
 			}
 
 
-			/////animation & misc
+			/////main
 			set();
 			document.querySelectorAll('.kb>div>div').forEach((e)=>{
+				//sound
 				e.addEventListener("touchstart",function(){trigger(this.id);},false);
 				e.addEventListener("mousedown" ,function(){trigger(this.id);},false);
+				//animation
 				e.addEventListener("touchstart",function(){
 					this.classList.remove('pushed');void this.offsetWidth;this.classList.add('pushed','anm');
 				},false);
@@ -219,6 +228,7 @@
 			function scale(x){
 				scd_.style.transform="rotate("+(sc*30)+"deg)";
 				if(x){
+					save();
 					var now = Tone.now();
 					if(menu.instr.value!='2')synth.triggerAttackRelease(220*Math.pow(2,(3+sc)/12+instr_li[menu.instr.value][1]),"1m",now);
 					if(kbmode==0){
@@ -236,6 +246,15 @@
 				"click":new Tone.Player("audio/click.mp3").connect(new Tone.Volume(-10).toDestination())
 			};
 			const sfx = (i)=>sfx_[i].start();
+
+			/////fullscreen
+			/*function fsc(){
+				var doc=window.document,docEl=doc.documentElement;
+				var init=docEl.requestFullscreen||docEl.mozRequestFullScreen||docEl.webkitRequestFullScreen||docEl.msRequestFullscreen;
+				var exit=doc.exitFullscreen||doc.mozCancelFullScreen||doc.webkitExitFullscreen||doc.msExitFullscreen;
+				if(doc.fullscreenElement||doc.mozFullScreenElement||doc.webkitFullscreenElement||doc.msFullscreenElement)exit.call(doc);
+				else init.call(docEl);
+			}*/
 		</script>
 	</body>
 </html>
