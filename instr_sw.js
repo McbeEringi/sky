@@ -1,19 +1,23 @@
 //https://qiita.com/masanarih0ri/items/0845f312cff5c8d0ec60
 const STATIC_DATA = [
 	'instr.html',
-	'https://cdnjs.cloudflare.com/ajax/libs/tone/14.5.45/Tone.js',
-	'https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js',
-	'img/instr_.png',
+	'https://tonejs.github.io/build/Tone.js',
+	'https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js',
+	'img/tex.png',
 	'style.js',
-	'/audio/instr/harp/a2.mp3',
-	'/audio/instr/harp/a3.mp3',
-	'/audio/instr/harp/ds2.mp3',
-	'/audio/instr/harp/ds3.mp3'
+	'/audio/instr/musicbox/a2.mp3',
+	'/audio/instr/musicbox/a3.mp3',
+	'/audio/instr/musicbox/a4.mp3',
+	'/audio/instr/musicbox/a3.mp3',
+	'/audio/instr/musicbox/ds3.mp3'
+	'/audio/instr/musicbox/ds4.mp3',
+	'/audio/instr/musicbox/ds5.mp3',
+	'/audio/instr/musicbox/ds6.mp3',
 ];
 
-self.addEventListener('install', function(e) {
+self.addEventListener('install',function(e){
 	e.waitUntil(
-		caches.open('cache_v1').then(function(cache) {
+		caches.open('cache_v1').then(function(cache){
 			return cache.addAll(STATIC_DATA);
 		})
 	);
