@@ -38,12 +38,15 @@
 			return s;
 		};
 
-		const synth = new Tone.Sampler(stdli(2,5),()=>{Tone.Transport.start();},"audio/instr/musicbox/").toDestination();
+		const synth = new Tone.Sampler(stdli(2,5),()=>{
+			//Tone.Transport.start();
+		},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").toDestination();
 		const seq = new Tone.Sequence((time, note) => {
-			synth.triggerAttackRelease(note, "1m", time);
-			log.textContent+="\n"+time;//Tone.Time().toNotation();
+			note=note.split(',');
+			synth.triggerAttackRelease(note, "8n", time);
+			log.textContent+="\n"+note+"\t"+time;//Tone.Time().toNotation();
 			// subdivisions are given as subarrays
-		}, ["C4", ["E4", "D4", "E4"], "G4", ["A4", "G4"]]).start();
+		}, ["C4", ["E4", "D4", "E4"], "G4,D4", ["A4,E4", "G4,D4"]]).start();
 	</script>
 </body>
 </html>
