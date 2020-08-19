@@ -83,10 +83,11 @@
 			"D4,G3"
 		];*/
 		const seq = new Tone.Sequence((time, note) => {
-			note=note.split(',');
-			synth.triggerAttackRelease(note, "1m", time);
-			log.textContent+="\n"+note+"\t\t"+time;//Tone.Time().toNotation();
-			// subdivisions are given as subarrays
+			if(note){
+				note=note.split(',');
+				synth.triggerAttackRelease(note, "1m", time);
+				log.textContent+="\n"+note+"\t\t"+time;
+			}
 		}, scores).start();
 		Tone.Transport.bpm.value=parseFloat(bpm_.value);
 	</script>
