@@ -29,6 +29,7 @@
 	</div>
 
 	<script type="text/javascript">
+		var seq;
 		const mbxli = ()=>{var s={};for(var i=2;i<=5;i++){s["a"+i]="a"+i+".mp3";s["d#"+(i+1)]="ds"+(i+1)+".mp3";}return s;};
 		const synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").toDestination();
 		const scores =[
@@ -82,13 +83,17 @@
 			"B3",
 			"D4,G3"
 		];*/
-		const seq = new Tone.Sequence((time, note) => {
-			if(note){
-				note=note.split(',');
-				synth.triggerAttackRelease(note, "1m", time);
-				log.textContent+="\n"+note+"\t\t"+time;
-			}
-		}, scores).start();
+		function set(x){
+			if(seq)seq.dispose();
+			seq = new Tone.Sequence((time,note)=>{
+				if(note){
+					note=note.split(",");
+					synth.triggerAttackRelease(note,"1m",time);
+					log.textContent+="\n"+note+"\t\t"+time;
+				}
+			},x).start(0);
+		}
+		set(scores);
 		Tone.Transport.bpm.value=parseFloat(bpm_.value);
 	</script>
 </body>
