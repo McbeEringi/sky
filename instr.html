@@ -266,7 +266,7 @@
 
 			/////reload
 			document.addEventListener('visibilitychange',()=>{
-				if(document.visibilityState=='visible'){location.reload(false);console.log("become visible reloaded");}
+				if(document.visibilityState=='visible'){console.log("become visible");/*location.reload(false);*/}
 				if(document.visibilityState=='hidden')console.log("become hidden");
 			})
 
