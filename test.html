@@ -17,9 +17,9 @@
 <body>
 	<button onclick=" Tone.Transport.start()">start</button>
 	<button onclick=" Tone.Transport.pause()">pause</button>
-	<button onclick=" Tone.Transport.stop()">stop</button>
-	<input type="number" value="120" onchange="Tone.Transport.bpm.value=parseFloat(this.value)">
-
+	<button onclick=" Tone.Transport.stop()">stop</button><br>
+	bpm:<input type="number" value="120" onchange="Tone.Transport.bpm.value=parseFloat(this.value)">
+	<pre id="log"></pre>
 
 	<style>
 
@@ -41,6 +41,7 @@
 		const synth = new Tone.Sampler(stdli(2,5),()=>{Tone.Transport.start();},"audio/instr/musicbox/").toDestination();
 		const seq = new Tone.Sequence((time, note) => {
 			synth.triggerAttackRelease(note, "1m", time);
+			log.textContent+="\n"+time;//Tone.Time().toNotation();
 			// subdivisions are given as subarrays
 		}, ["C4", ["E4", "D4", "E4"], "G4", ["A4", "G4"]]).start();
 	</script>
