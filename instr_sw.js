@@ -8,14 +8,14 @@ const STATIC_DATA = [
 	'audio/click.mp3',
 	'audio/close.mp3',
 	'audio/open.mp3',
-	'audio/instr/musicbox/a2.mp3',
 	'audio/instr/musicbox/a3.mp3',
 	'audio/instr/musicbox/a4.mp3',
-	'audio/instr/musicbox/a3.mp3',
-	'audio/instr/musicbox/ds3.mp3'
+	'audio/instr/musicbox/a5.mp3',
+	'audio/instr/musicbox/a6.mp3',
 	'audio/instr/musicbox/ds4.mp3',
 	'audio/instr/musicbox/ds5.mp3',
 	'audio/instr/musicbox/ds6.mp3',
+	'audio/instr/musicbox/ds7.mp3'
 	'https://tonejs.github.io/audio/salamander/Ds4.mp3',
 	'https://tonejs.github.io/audio/salamander/A4.mp3',
 	'https://tonejs.github.io/audio/salamander/Ds5.mp3',
