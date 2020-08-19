@@ -266,7 +266,7 @@
 
 			/////reload
 			document.addEventListener('visibilitychange',()=>{
-				if(document.visibilityState=='visible'){Tone.start();console.log("become visible restarted");}
+				if(document.visibilityState=='visible'){location.reload(false);console.log("become visible reloaded");}
 				if(document.visibilityState=='hidden')console.log("become hidden");
 			})
 
