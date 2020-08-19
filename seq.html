@@ -2,33 +2,19 @@
 <html>
 <head>
   <meta charset="utf-8">
-	<title>Sky Sequencer</title>
-
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<link rel="icon" type="image/png" sizes="174x174" href="./favicon.png">
-
-	<script src="https://tonejs.github.io/build/Tone.js"></script>
-	<style type="text/css">
-		tone-transport {
-			margin-bottom: 10px;
-		}
-	</style>
+	<title>SkyEringi sky_sequencer</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 </head>
 <body>
-	<button onclick="Tone.start();Tone.Transport.start()">start</button>
-	<button onclick="Tone.Transport.pause()">pause</button>
-	<button onclick="Tone.Transport.stop()">stop</button><br>
+	<script src="https://tonejs.github.io/build/Tone.js"></script>
+
+
+	<button onclick="ptoggle()">⏯</button>
+	<button onclick="pstop()">⏹</button><br>
 	bpm:<input type="number" value="90" id="bpm_" onchange="Tone.Transport.bpm.value=parseFloat(this.value)">
 	<pre id="log"></pre>
 
-	<style>
-
-	</style>
-	<div class="">
-
-	</div>
-
-	<script type="text/javascript">
+	<script>
 		var seq;
 		const mbxli = ()=>{var s={};for(var i=2;i<=5;i++){s["a"+i]="a"+i+".mp3";s["d#"+(i+1)]="ds"+(i+1)+".mp3";}return s;};
 		const synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").toDestination();
@@ -83,6 +69,20 @@
 			"B3",
 			"D4,G3"
 		];*/
+
+
+
+		/////from button
+		function ptoggle(){
+			Tone.start();
+			if(Tone.Transport.state=='started')Tone.Transport.pause();
+			else Tone.Transport.start();
+		}
+		function pstop(){
+			Tone.Transport.stop();
+		}
+
+		/////Sequence
 		function set(x){
 			if(seq)seq.dispose();
 			seq = new Tone.Sequence((time,note)=>{
