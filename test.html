@@ -18,7 +18,7 @@
 	<button onclick="Tone.start();Tone.Transport.start()">start</button>
 	<button onclick="Tone.Transport.pause()">pause</button>
 	<button onclick="Tone.Transport.stop()">stop</button><br>
-	bpm:<input type="number" value="120" onchange="Tone.Transport.bpm.value=parseFloat(this.value)">
+	bpm:<input type="number" value="90" id="bpm_" onchange="Tone.Transport.bpm.value=parseFloat(this.value)">
 	<pre id="log"></pre>
 
 	<style>
@@ -32,6 +32,47 @@
 		const mbxli = ()=>{var s={};for(var i=2;i<=6;i++){s["a"+i]="a"+i+".mp3";s["d#"+(i+1)]="ds"+(i+1)+".mp3";}return s;};
 		const synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").toDestination();
 		const scores =[
+			"f3,a3,c4,e4,g4",
+			["e4,g4","f3,a3,c4"],
+			"e4,g4",
+			"f3,a3,c4,e4,g4",
+
+			"e3,b3,d4,e4,g4",
+			["d4,e4,b4","e3,b3"],
+			"d4,e4,b4",
+			"e3,b3,a4,c5",
+
+			"a3,c4",
+			["e4,g4","a3,c4"],
+			"e4,g4",
+			["a3,c4,e4,g4","d4,f4"],
+
+			["c3,g3","c4,e4"],
+			["","g3"],
+			["","g3"],
+			["c4,e4","g3"],
+
+			"f3,a3",
+			["c4","f3,a3"],
+			["c4,e4","f3,a3"],
+			["c4","b3,d4,e4"],
+
+			["e3","b3,d4"],
+			["","e3"],
+			["","e3"],
+			["b3,d4,e4","e3"],
+
+			"e3,a3",
+			["c4","c4"],
+			["","e3,a3"],
+			["c4","e3,a3"],
+
+			"c3,g3",
+			["c3","c3,e3"],
+			["","e3,g3"],
+			["g3,c4","c4,e4"]
+		];
+		/*[
 			"C4",
 			["E4", "D4", "E4"],
 			"G4,D4",
@@ -40,13 +81,14 @@
 			["C4","","D4"],
 			"B3",
 			"D4,G3"
-		];
+		];*/
 		const seq = new Tone.Sequence((time, note) => {
 			note=note.split(',');
 			synth.triggerAttackRelease(note, "1m", time);
-			log.textContent+="\n"+note+"\t"+time;//Tone.Time().toNotation();
+			log.textContent+="\n"+note+"\t\t"+time;//Tone.Time().toNotation();
 			// subdivisions are given as subarrays
 		}, scores).start();
+		Tone.Transport.bpm.value=parseFloat(bpm_.value);
 	</script>
 </body>
 </html>
