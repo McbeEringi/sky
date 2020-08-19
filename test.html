@@ -30,16 +30,23 @@
 
 	<script type="text/javascript">
 		const mbxli = ()=>{var s={};for(var i=2;i<=6;i++){s["a"+i]="a"+i+".mp3";s["d#"+(i+1)]="ds"+(i+1)+".mp3";}return s;};
-
-		const synth = new Tone.Sampler(mbxli(),()=>{
-			//Tone.Transport.start();
-		},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").toDestination();
+		const synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").toDestination();
+		const scores =[
+			"C4",
+			["E4", "D4", "E4"],
+			"G4,D4",
+			["A4,E4", "G4,D4"],
+			"E4",
+			["C4","","D4"],
+			"B3",
+			"D4,G3"
+		];
 		const seq = new Tone.Sequence((time, note) => {
 			note=note.split(',');
 			synth.triggerAttackRelease(note, "1m", time);
 			log.textContent+="\n"+note+"\t"+time;//Tone.Time().toNotation();
 			// subdivisions are given as subarrays
-		}, ["C4", ["E4", "D4", "E4"], "G4,D4", ["A4,E4", "G4,D4"]]).start();
+		}, scores).start();
 	</script>
 </body>
 </html>
