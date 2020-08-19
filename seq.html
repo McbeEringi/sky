@@ -14,14 +14,15 @@
 	<button onclick="pstop()">⏹</button><br>
 	bpm:<input type="number" value="90" id="bpm_" onchange="Tone.Transport.bpm.value=parseFloat(this.value)"><br>
 	scale:<input type="number" value="10" id="sc_" onchange="sc=Number(this.value)">
-	<pre id="log">from A3		time stamp
+	<pre id="log">from A3
+	time stamp
 	</pre>
 
 	<script>
 		var seq,sc=Number(sc_.value);
 		const url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']'));
 		const mbxli = ()=>{var s={};for(var i=2;i<=5;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;};
-		const synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").toDestination();
+		const synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination());
 		const scores = [
 			'-4,0,3,7,10',
 			['7,10','-4,0,3'],
@@ -84,7 +85,7 @@
 					note=note.split(',');
 					//synth.triggerAttackRelease(note,'1m',time);
 					synth.triggerAttackRelease(note.map(toHz),'1m',time);
-					log.textContent+='\n'+note+'\t\t'+time;
+					log.textContent=note+'\n\t'+time;
 				}
 			},x).start(0);
 			return seq;
