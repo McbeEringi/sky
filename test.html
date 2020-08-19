@@ -15,9 +15,9 @@
 	</style>
 </head>
 <body>
-	<button onclick=" Tone.Transport.start()">start</button>
-	<button onclick=" Tone.Transport.pause()">pause</button>
-	<button onclick=" Tone.Transport.stop()">stop</button><br>
+	<button onclick="Tone.start();Tone.Transport.start()">start</button>
+	<button onclick="Tone.Transport.pause()">pause</button>
+	<button onclick="Tone.Transport.stop()">stop</button><br>
 	bpm:<input type="number" value="120" onchange="Tone.Transport.bpm.value=parseFloat(this.value)">
 	<pre id="log"></pre>
 
@@ -29,16 +29,9 @@
 	</div>
 
 	<script type="text/javascript">
-		const stdli = (a,b)=>{
-			var s={};
-			for(var i=a;i<=(b?b:(a+1));i++){
-				s["a" +i]="a" +i+".mp3";
-				s["d#"+(i+1)]="ds"+(i+1)+".mp3";
-			}
-			return s;
-		};
+		const mbxli = ()=>{var s={};for(var i=2;i<=6;i++){s["a"+i]="a"+i+".mp3";s["d#"+(i+1)]="ds"+(i+1)+".mp3";}return s;};
 
-		const synth = new Tone.Sampler(stdli(2,5),()=>{
+		const synth = new Tone.Sampler(mbxli(),()=>{
 			//Tone.Transport.start();
 		},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").toDestination();
 		const seq = new Tone.Sequence((time, note) => {
