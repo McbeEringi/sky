@@ -264,6 +264,12 @@
 			};
 			const sfx = (i)=>sfx_[i].start();
 
+			/////reload
+			document.addEventListener('visibilitychange',()=>{
+				if(document.visibilityState=='visible')console.log("become visible");
+				if(document.visibilityState=='hidden')console.log("become hidden");
+			})
+
 			/////fullscreen
 			/*function fsc(){
 				var doc=window.document,docEl=doc.documentElement;
