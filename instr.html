@@ -130,20 +130,20 @@
 				{"c4":"c4.mp3","d4":"d4.mp3","g4":"g4.mp3","a4":"a4.mp3"},
 				{"c4":"c4_.mp3","d4":"d4_.mp3","g4":"g4_.mp3","a4":"a4_.mp3"}
 			],instr_li=[//[baseurl, octave, map, (map2)]
-				["audio/instr/musicbox/",2,Object.assign({"a3":"a3.mp3","d#7":"ds7.mp3"},stdli(4,6))],
-				["audio/instr/harp/",0,stdli(3)],
-				["audio/instr/percussion/",0,{"a3":"0.mp3","b3":"1.mp3","c4":"2.mp3","d4":"3.mp3","e4":"4.mp3","f4":"5.mp3","g4":"6.mp3","a4":"7.mp3"}],
-				["audio/instr/contrabass/",-1,stdli(2)],
-				["audio/instr/horn/",-1,stdli(2)],
-				["https://tonejs.github.io/audio/salamander/",1,{"d#4":"Ds4.mp3","a4":"A4.mp3","d#5":"Ds5.mp3","a5":"A5.mp3"}],
+				["audio/instr/musicbox/",1,Object.assign({"a3":"a3.mp3","d#7":"ds7.mp3"},stdli(4,6))],
+				["audio/instr/harp/",-1,stdli(3)],
+				["audio/instr/percussion/",-1,{"a3":"0.mp3","b3":"1.mp3","c4":"2.mp3","d4":"3.mp3","e4":"4.mp3","f4":"5.mp3","g4":"6.mp3","a4":"7.mp3"}],
+				["audio/instr/contrabass/",-2,stdli(2)],
+				["audio/instr/horn/",-2,stdli(2)],
+				["https://tonejs.github.io/audio/salamander/",0,{"d#4":"Ds4.mp3","a4":"A4.mp3","d#5":"Ds5.mp3","a5":"A5.mp3"}],
 				["audio/instr/bell1/",0].concat(blli),
 				["audio/instr/bell2/",0].concat(blli),
-				["audio/instr/flute/",1,stdli(4)],
-				["audio/instr/quena/",1,stdli(4)],
-				["audio/instr/guitar/",0,stdli(3)],
-				["audio/instr/ukulele/",0,{"d#4":"ds4.mp3","a4":"a4.mp3"}],
-				["https://tonejs.github.io/audio/salamander/",2,{"d#5":"Ds5.mp3","a5":"A5.mp3","d#6":"Ds6.mp3","a6":"A6.mp3"}],
-				["audio/instr/glock/",2,stdli(5)]
+				["audio/instr/flute/",0,stdli(4)],
+				["audio/instr/quena/",0,stdli(4)],
+				["audio/instr/guitar/",-1,stdli(3)],
+				["audio/instr/ukulele/",-1,{"d#4":"ds4.mp3","a4":"a4.mp3"}],
+				["https://tonejs.github.io/audio/salamander/",1,{"d#5":"Ds5.mp3","a5":"A5.mp3","d#6":"Ds6.mp3","a6":"A6.mp3"}],
+				["audio/instr/glock/",1,stdli(5)]
 			],keymap = [{
 				"KeyR":"_-9","KeyT":"_-7","KeyY":"_-5","KeyU":"_-4","KeyI":"_-2",
 				"KeyF":"_0" ,"KeyG":"_2" ,"KeyH":"_3" ,"KeyJ":"_5" ,"KeyK":"_7" ,
@@ -208,7 +208,7 @@
 				switch(kbmode){
 					case 0:
 						//C3~C5
-						synth.triggerAttackRelease(220*Math.pow(2,(parseInt(id.slice(1))+(scd.style.opacity=="1"?sc:0))/12+instr_li[menu.instr.value][1]));
+						synth.triggerAttackRelease(440*Math.pow(2,(parseInt(id.slice(1))+(scd.style.opacity=="1"?sc:0))/12+instr_li[menu.instr.value][1]));
 						break;
 					case 1:
 						synth.triggerAttackRelease("C5","8n");
