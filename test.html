@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+	<title>Step Sequencer</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="icon" type="image/png" sizes="174x174" href="./favicon.png">
+
+	<script src="https://tonejs.github.io/build/Tone.js"></script>
+	<style type="text/css">
+		tone-transport {
+			margin-bottom: 10px;
+		}
+	</style>
+</head>
+<body>
+	<button onclick=" Tone.Transport.start()">start</button>
+	<button onclick=" Tone.Transport.stop()">start</button>
+	<input type="number" value="120" onchange="Tone.Transport.bpm.value=parseFloat(this.value)">
+
+
+	<style>
+
+	</style>
+	<div class="">
+
+	</div>
+
+	<script type="text/javascript">
+		const stdli = (a,b)=>{
+			var s={};
+			for(var i=a;i<=(b?b:(a+1));i++){
+				s["a" +i]="a" +i+".mp3";
+				s["d#"+(i+1)]="ds"+(i+1)+".mp3";
+			}
+			return s;
+		};
+
+		const synth = new Tone.Sampler(stdli(2,5),()=>{Tone.Transport.start();},"audio/instr/musicbox/").toDestination();
+		const seq = new Tone.Sequence((time, note) => {
+			synth.triggerAttackRelease(note, "1m", time);
+			// subdivisions are given as subarrays
+		}, ["C4", ["E4", "D4", "E4"], "G4", ["A4", "G4"]]).start();
+	</script>
+</body>
+</html>
