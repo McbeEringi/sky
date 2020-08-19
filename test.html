@@ -36,7 +36,7 @@
 		},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").toDestination();
 		const seq = new Tone.Sequence((time, note) => {
 			note=note.split(',');
-			synth.triggerAttackRelease(note, "8n", time);
+			synth.triggerAttackRelease(note, "1m", time);
 			log.textContent+="\n"+note+"\t"+time;//Tone.Time().toNotation();
 			// subdivisions are given as subarrays
 		}, ["C4", ["E4", "D4", "E4"], "G4,D4", ["A4,E4", "G4,D4"]]).start();
