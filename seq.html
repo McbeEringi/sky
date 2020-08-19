@@ -18,7 +18,7 @@
 
 	<script>
 		var seq,sc=Number(sc_.value);
-		const mbxli = ()=>{var s={};for(var i=2;i<=5;i++){s["a"+i]="a"+i+".mp3";s["d#"+(i+1)]="ds"+(i+1)+".mp3";}return s;};
+		const mbxli = ()=>{var s={};for(var i=2;i<=5;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;};
 		const synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").toDestination();
 		const scores = [
 			"-4,0,3,7,10",
