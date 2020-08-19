@@ -207,7 +207,7 @@
 			function trigger(id){
 				switch(kbmode){
 					case 0:
-						//C3~C5
+						//C4~C6
 						synth.triggerAttackRelease(440*Math.pow(2,(parseInt(id.slice(1))+(scd.style.opacity=="1"?sc:0))/12+instr_li[menu.instr.value][1]));
 						break;
 					case 1:
@@ -265,10 +265,10 @@
 			const sfx = (i)=>sfx_[i].start();
 
 			/////reload
-			document.addEventListener('visibilitychange',()=>{
-				if(document.visibilityState=='visible'){console.log("become visible");/*location.reload(false);*/}
+			/*document.addEventListener('visibilitychange',()=>{
+				if(document.visibilityState=='visible'){console.log("become visible");location.reload(false);}
 				if(document.visibilityState=='hidden')console.log("become hidden");
-			})
+			})*/
 
 			/////fullscreen
 			/*function fsc(){
