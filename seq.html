@@ -85,7 +85,7 @@
 					note=note.split(',');
 					//synth.triggerAttackRelease(note,'1m',time);
 					synth.triggerAttackRelease(note.map(toHz),'1m',time);
-					log.textContent=note+'\n\t'+time;
+					log.textContent=`${note.map(x=>49+Number(x))}\n\t${time}`;
 				}
 			},x).start(0);
 			return seq;
