@@ -14,20 +14,29 @@
 	</style>
 
 
-	<button onclick="Tone.start();ptoggle()" class="grid bg" style="--bp:0px -64px;"></button><button onclick="pstop()"class="grid bg" style="--bp:-64px -64px;">
-	</button><input id="bpm_" class="grid bg" type="num" onchange="bpmpr(this);" style="--bp:-448px 0px;"></input><br>
-	<button onclick="sc--;sc_.textContent=sc;" class="grid bg" style="--bp:-384px 0px;"></button><button id="sc_" class="grid" onclick="sc=main.sc;sc_.textContent=sc;"></button><button onclick="sc++;sc_.textContent=sc;" class="grid bg" style="--bp:-320px 0px;"></button><br>
+	<button onclick="Tone.start();ptoggle()" class="grid bg" style="--bp:0px -64px;"></button><button onclick="pstop()"class="grid bg" style="--bp:-64px -64px;"></button><br>
+
+	<button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-384px 0px;">
+	</button><input id="bpm_" class="grid bg" type="num" onchange="bpmset();" style="--bp:-448px 0px;">
+	</input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-320px 0px;"></button><br>
+
+	<button onclick="main.sc--;sc_.value=main.sc;" class="grid bg" style="--bp:-384px 0px;">
+	</button><input id="sc_" class="grid bg" type="num" onchange="scset();" style="--bp:-128px -64px;">
+	</input><button onclick="main.sc++;sc_.value=main.sc;" class="grid bg" style="--bp:-320px 0px;"></button><br>
+
 	<pre id="log"></pre>
 
 	<script>
 		var seq,sc=Number(sc_.value),main;
 		const llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`\n${x}`;}
+		const scset=()=>{if(Number(sc_.value))main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);}
+		const bpmset=()=>{var tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);}
 		const url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']'));
 		const mbxli = ()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;};
 		const synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination());
 		const sample = {
 			"bpm":90,
-			"sc":10,
+			"sc":-2,
 			"scores":[
 				'-4,0,3,7,10',['7,10','-4,0,3'],'7,10','-4,0,3,7,10',
 				'-5,2,5,7,10',['5,7,14','-5,2'],'5,7,14','-5,2,12,15',
@@ -53,15 +62,9 @@
 		function pstop(){
 			Tone.Transport.stop();
 		}
-		function bpmpr(this_){
-			var tmp = Number(this_.value);
-			if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}
-			bpm_.value=Tone.Transport.bpm.value;
-			llog(bpm_.value);
-		}
 
 		/////Sequence
-		const toHz = (x)=>440*Math.pow(2,(Number(x)+sc)/12);
+		const toHz = (x)=>880*Math.pow(2,(Number(x)+main.sc)/12);//C5~C7
 		function set(x){
 			if(seq)seq.dispose();
 			seq = new Tone.Sequence((time,note)=>{
@@ -75,11 +78,10 @@
 			return seq;
 		}
 		set(main.scores);
-		sc=main.sc;
-		sc_.textContent=sc;
+		sc_.value=main.sc;
+		bpm_.value=main.bpm;
 		Tone.Transport.bpm.value=main.bpm;
-		bpm_.value=Tone.Transport.bpm.value;
-		Tone.Transport.timeSignature = [4, 4];
+		Tone.Transport.timeSignature=[4,4];
 
 		/////keyboard
 		document.addEventListener('keydown',e=>{
