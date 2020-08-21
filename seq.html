@@ -9,20 +9,27 @@
 	<script src="style.js"></script>
 	<script src="https://tonejs.github.io/build/Tone.js"></script>
 	<style>
+		body{margin:0;}
 		.grid{display:inline-block;width:64px;height:64px;margin:4px;background:#4448;color:#caf0f6;text-shadow:0 0 4px #688;border:none;border-radius:16px;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:24px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
 		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}
+
+		#disp{width:100vw;height:256px;background-image:url(img/15.png);background-size:auto 100%;image-rendering:pixelated;}
 	</style>
 
+	<div id="disp">
 
-	<button onclick="Tone.start();ptoggle()" class="grid bg" style="--bp:0px -64px;"></button><button onclick="pstop()"class="grid bg" style="--bp:-64px -64px;"></button><br>
+	</div>
+	<div>
+		<button onclick="Tone.start();ptoggle()" class="grid bg" style="--bp:0px -64px;"></button><button onclick="pstop()"class="grid bg" style="--bp:-64px -64px;"></button><br>
 
-	<button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-384px 0px;">
-	</button><input id="bpm_" class="grid bg" onchange="bpmset();" style="--bp:-448px 0px;">
-	</input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-320px 0px;"></button><br>
+		<button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-384px 0px;">
+		</button><input id="bpm_" class="grid bg" onchange="bpmset();" style="--bp:-448px 0px;">
+		</input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-320px 0px;"></button><br>
 
-	<button onclick="main.sc--;sc_.value=main.sc;" class="grid bg" style="--bp:-384px 0px;">
-	</button><input id="sc_" class="grid bg" onchange="scset();" style="--bp:-128px -64px;">
-	</input><button onclick="main.sc++;sc_.value=main.sc;" class="grid bg" style="--bp:-320px 0px;"></button><br>
+		<button onclick="main.sc--;sc_.value=main.sc;" class="grid bg" style="--bp:-384px 0px;">
+		</button><input id="sc_" class="grid bg" onchange="scset();" style="--bp:-128px -64px;">
+		</input><button onclick="main.sc++;sc_.value=main.sc;" class="grid bg" style="--bp:-320px 0px;"></button><br>
+	</div>
 
 	<pre id="log"></pre>
 
