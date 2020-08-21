@@ -27,7 +27,7 @@
 	<pre id="log"></pre>
 
 	<script>
-		var seq,sc=Number(sc_.value),main;
+		var seq0,seq1,sc=Number(sc_.value),main;
 		const llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`\n${x}`;}
 		const scset=()=>{if(Number(sc_.value))main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);}
 		const bpmset=()=>{var tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);}
@@ -37,17 +37,30 @@
 		const sample = {
 			"bpm":90,
 			"sc":-2,
-			"scores":[
-				'-4,0,3,7,10',['7,10','-4,0,3'],'7,10','-4,0,3,7,10',
-				'-5,2,5,7,10',['5,7,14','-5,2'],'5,7,14','-5,2,12,15',
+			"scores0":[
+				'7,10','7,10','7,10','7,10',
+				'7,10','7,14','7,14','12,15',
 
-				'0,3',['7,10','0,3'],'7,10',['0,3,7,10','5,8'],
-				['-9,-2','3,7'],['','-2'],['','-2'],['3,7','-2'],
+				'','7,10','7,10',['7,10','5,8'],
+				['','3,7'],'','','3,7',
 
-				'-4,0',['3','-4,0'],['3,7','-4,0'],['3','2,5,7'],
-				['-5','2,5'],['','-5'],['','-5'],['2,5,7','-5'],
+				'','3','3,7',['3','2,5,7'],
+				['','2,5'],'','','2,5,7',
 
-				'-5,0',['3','3,0'],['','-5,0'],['3','-5,0'],
+				'',['3','3,0'],'','3',
+				'','','',''
+			],
+			"scores1":[
+				'-4,0,3',['','-4,0,3'],'','-4,0,3',
+				'-5,2,5',['5','-5,2'],'5','-5,2',
+
+				'0,3',['','0,3'],'','0,3',
+				'-9,-2',['','-2'],['','-2'],['','-2'],
+
+				'-4,0',['','-4,0'],['','-4,0'],'',
+				['-5',''],['','-5'],['','-5'],['','-5'],
+
+				'-5,0','',['','-5,0'],['','-5,0'],
 				'-9,-2',['-9','-9,-5'],['','-5,-2'],['-2,3','3,7']
 			]
 		};
@@ -65,19 +78,18 @@
 
 		/////Sequence
 		const toHz = (x)=>880*Math.pow(2,(Number(x)+main.sc)/12);//C5~C7
-		function set(x){
-			if(seq)seq.dispose();
-			seq = new Tone.Sequence((time,note)=>{
+		function set(x,i){
+			if([seq0,seq1][i])[seq0,seq1][i].dispose();
+			[seq0,seq1][i] = new Tone.Sequence((time,note)=>{
 				if(note){
 					note=note.split(',');
-					//synth.triggerAttackRelease(note,'1m',time);
 					synth.triggerAttackRelease(note.map(toHz),'1m',time);
 					llog(`${note.map(x=>49+Number(x))}\n\t${Tone.Transport.position}`,1);
 				}
 			},x).start(0);
-			return seq;
 		}
-		set(main.scores);
+		set(main.scores0,0);
+		set(main.scores1,1);
 		sc_.value=main.sc;
 		bpm_.value=main.bpm;
 		Tone.Transport.bpm.value=main.bpm;
