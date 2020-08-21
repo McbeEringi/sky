@@ -28,13 +28,14 @@
 
 	<script>
 		var seq0,seq1,sc=Number(sc_.value),main;
-		const llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`\n${x}`;}
-		const scset=()=>{if(Number(sc_.value))main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);}
-		const bpmset=()=>{var tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);}
-		const url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']'));
-		const mbxli = ()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;};
-		const synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination());
-		const sample = {
+		const ver=[0,1,0],
+		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`\n${x}`;},
+		scset=()=>{if(Number(sc_.value))main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
+		bpmset=()=>{var tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
+		url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
+		mbxli = ()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
+		synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination()),
+		sample = {
 			"bpm":90,
 			"sc":-2,
 			"scores0":[
@@ -66,6 +67,7 @@
 		};
 
 		main=sample;
+		log.textContent=ver;
 
 		/////from button
 		function ptoggle(){
