@@ -9,16 +9,14 @@
 	<script src="style.js"></script>
 	<script src="https://tonejs.github.io/build/Tone.js"></script>
 	<style>
-		.grid,button{display:inline-block;width:64px;height:64px;margin:4px;background:#6668;color:#fff;text-shadow:0 0 4px #0008;border:none;border-radius:16px;box-shadow:0 0 8px #6668;text-align:center;vertical-align:middle;}
-		button,input{outline:none;font-size:24px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;}
+		.grid{display:inline-block;width:64px;height:64px;margin:4px;background:#6668;color:#fff;text-shadow:0 0 4px #0008;border:none;border-radius:16px;box-shadow:0 0 8px #6668;text-align:center;vertical-align:middle;outline:none;font-size:24px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;}
 		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}
 	</style>
 
 
-	<button onclick="Tone.start();ptoggle()">⏯
-	</button><button onclick="pstop()">⏹
-	</button><input id="bpm_" class="grid bg" type="num" onchange="bpmpr(this);" style="--bp:0px -64px;"></input><br>
-	<button onclick="sc--;sc_.textContent=sc;">-</button><button id="sc_" class="grid" onclick="sc=main.sc;sc_.textContent=sc;"></button><button onclick="sc++;sc_.textContent=sc;">+</button><br>
+	<button onclick="Tone.start();ptoggle()" class="grid bg" style="--bp:0px -64px;"></button><button onclick="pstop()"class="grid bg" style="--bp:-64px -64px;">
+	</button><input id="bpm_" class="grid bg" type="num" onchange="bpmpr(this);" style="--bp:-448px 0px;"></input><br>
+	<button onclick="sc--;sc_.textContent=sc;" class="grid bg" style="--bp:-384px 0px;"></button><button id="sc_" class="grid" onclick="sc=main.sc;sc_.textContent=sc;"></button><button onclick="sc++;sc_.textContent=sc;" class="grid bg" style="--bp:-320px 0px;"></button><br>
 	<pre id="log"></pre>
 
 	<script>
