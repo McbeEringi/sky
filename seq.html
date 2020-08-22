@@ -13,25 +13,23 @@
 		.grid{display:inline-block;width:64px;height:64px;margin:4px;background:#4448;color:#caf0f6;text-shadow:0 0 4px #688;border:none;border-radius:16px;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:24px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
 		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}
 
-		#disp{position:relative;width:100vw;height:240px;background-image:url(img/15.png);background-size:auto 100%;image-rendering:pixelated;overflow:scroll;}
+		#disp{position:relative;width:100vw;height:240px;background-image:url(img/15.png);background-size:auto 100%;image-rendering:pixelated;}
 		#disp *{position:absolute;line-height:16px;font-size:14px;}
-		.scores{}
+		#disp>div:first-child{width:100%;height:100%;overflow:scroll;}
 	</style>
 
 	<div id="disp">
-		<div class="scores">
+		<div>
 			<div id="disp0">
 				disp0
+				<br>scrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscroll
+				<br>scrollscroll
 			</div>
 			<div id="disp1">
 				disp1
 			</div>
-			<br>
-			scrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscroll
-			<br>
-			scrollscroll
 		</div>
-		<div style="position:fixed;opacity:.5;">
+		<div style="position:absolute;left:0;opacity:.5;">
 			C<br>B<br>A<br>G<br>F<br>E<br>D<br>
 			C<br>B<br>A<br>G<br>F<br>E<br>D<br>C
 		</div>
