@@ -15,4 +15,4 @@ const bgcol = [
 	"#192f60,#274a78"//night
 ],bgset=()=>bg.style.background=`linear-gradient(${bgcol[[3,0,1,1,2,3][Math.floor(Math.max(new Date().getHours()-1,0)*.25)]]})`;
 bgset();
-document.addEventListener('visibilitychange',()=>if(document.visibilityState=='visible')bgset())
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='visible')bgset();})
