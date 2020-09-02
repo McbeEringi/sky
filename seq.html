@@ -14,22 +14,19 @@
 		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}
 
 		#disp{position:relative;width:100vw;height:240px;background-image:url(img/15.png);background-size:auto 100%;image-rendering:pixelated;background-size:100% 100%;}
-		#disp *{position:absolute;line-height:16px;font-size:14px;}
+		#disp>*,#disp0,#disp1{position:absolute;line-height:16px;font-size:14px;}#disp0,#disp1{border-left:24px solid #0008;display:flex;}
 		#disp>div:first-child{width:100%;height:100%;overflow:scroll;}
+
+		.nWrapper{display:block;position:relative;width:16px;height:240px;border-left:1px solid;}
+		.nWrapper:nth-child(4n+1){border-color:#f88;}.nWrapper:last-child{width:0;}
 	</style>
 
 	<div id="disp">
 		<div>
-			<div id="disp0">
-				disp0
-				<br>scrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscrollscroll
-				<br>scrollscroll
-			</div>
-			<div id="disp1">
-				disp1
-			</div>
+			<div id="disp0">disp0</div>
+			<div id="disp1">disp1</div>
 		</div>
-		<div style="position:absolute;left:0;opacity:.5;pointer-events:none;">
+		<div style="opacity:.5;pointer-events:none;">
 			C<br>B<br>A<br>G<br>F<br>E<br>D<br>
 			C<br>B<br>A<br>G<br>F<br>E<br>D<br>C
 		</div>
@@ -114,6 +111,22 @@
 		}
 		set(main.scores0,0);
 		set(main.scores1,1);
+
+		function render(scores,e){
+			scores.map(x=>{
+				var div = document.createElement('div');
+				if(x){
+					//console.log(x.split(','));
+				}
+				div.classList.add('nWrapper');
+				e.insertBefore(div,e.lastChild);
+			})
+			var div=document.createElement('div');
+			div.classList.add('nWrapper');
+			e.insertBefore(div,e.lastChild);
+		}
+		render(main.scores0,disp0);
+
 		sc_.value=main.sc;
 		bpm_.value=main.bpm;
 		Tone.Transport.bpm.value=main.bpm;
