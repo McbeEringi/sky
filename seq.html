@@ -30,16 +30,20 @@
 		</div>
 		<div style="opacity:.5;pointer-events:none;width:8px;">CBAGFEDCBAGFEDC</div>
 	</div>
-	<div>
-		<button onclick="Tone.start();ptoggle()" class="grid bg" style="--bp:0px -64px;"></button><button onclick="pstop()"class="grid bg" style="--bp:-64px -64px;"></button><br>
-
-		<button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-384px 0px;">
-		</button><input id="bpm_" class="grid bg" onchange="bpmset();" style="--bp:-448px 0px;">
-		</input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-320px 0px;"></button><br>
-
-		<button onclick="main.sc--;sc_.value=main.sc;" class="grid bg" style="--bp:-384px 0px;">
-		</button><input id="sc_" class="grid bg" onchange="scset();" style="--bp:-128px -64px;">
-		</input><button onclick="main.sc++;sc_.value=main.sc;" class="grid bg" style="--bp:-320px 0px;"></button><br>
+	<div class="uipanel">
+		<div>
+			<button class="grid bg" style="--bp:-192px -64px;transform:rotateZ(180deg);">
+			</button><button onclick="Tone.start();ptoggle()" class="grid bg" style="--bp:0px -64px;"></button><button onclick="pstop()"class="grid bg" style="--bp:-64px -64px;">
+			</button><button class="grid bg" style="--bp:-192px -64px;"></button>
+		</div>
+		<div>
+			<button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-384px 0px;">
+			</button><input id="bpm_" class="grid bg" onchange="bpmset();" style="--bp:-448px 0px;"></input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-320px 0px;"></button>
+		</div>
+		<div>
+			<button onclick="main.sc--;sc_.value=main.sc;" class="grid bg" style="--bp:-384px 0px;">
+			</button><input id="sc_" class="grid bg" onchange="scset();" style="--bp:-128px -64px;"></input><button onclick="main.sc++;sc_.value=main.sc;" class="grid bg" style="--bp:-320px 0px;"></button>
+		</div>
 	</div>
 
 	<pre id="log"></pre>
