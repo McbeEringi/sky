@@ -89,7 +89,7 @@
 				</label><label><input type="radio" name="instr" value="3"          ><div style="--bp:-210px -70px ;"></div>
 				</label><label><input type="radio" name="instr" value="4"          ><div style="--bp:-280px -70px ;"></div>
 				</label><label><input type="radio" name="instr" value="5"          ><div style="--bp:-350px -70px ;"></div>
-				</label><label><input type="radio" name="instr" value="6"  disabled><div style="--bp:-420px -70px ;"></div>
+				</label><label><input type="radio" name="instr" value="6"          ><div style="--bp:-420px -70px ;"></div>
 				</label><label><input type="radio" name="instr" value="7"  disabled><div style="--bp:-490px -70px ;"></div>
 				</label><label><input type="radio" name="instr" value="8"          ><div style="--bp:-0px   -140px;"></div>
 				</label><label><input type="radio" name="instr" value="9"  disabled><div style="--bp:-70px  -140px;"></div>
@@ -136,7 +136,7 @@
 				["audio/instr/contrabass/",-2,stdli(2)],
 				["audio/instr/horn/",-2,stdli(2)],
 				["https://tonejs.github.io/audio/salamander/",0,{"d#4":"Ds4.mp3","a4":"A4.mp3","d#5":"Ds5.mp3","a5":"A5.mp3"}],
-				["audio/instr/bell1/",0].concat(blli),
+				["audio/instr/bell1/",0].concat([{"d#5":"ds5.mp3","a5":"a5.mp3"},{"d#5":"ds5_.mp3","a5":"a5_.mp3"}]),
 				["audio/instr/bell2/",0].concat(blli),
 				["audio/instr/flute/",0,stdli(4)],
 				["audio/instr/quena/",0,stdli(4)],
@@ -147,10 +147,10 @@
 				["audio/instr/harp/",-1,stdli(3)]
 			],pmap={
 				"2":[[0,1,2,3],[12,13,14,15]],
-				"6":[],
-				"7":[],
+				"6":[[3,5,10,12],[3,5,10,12]],
+				"7":[[3,5,10,12],[3,5,10,12]],
 				"14":[[-7,0,3,5],[8,10,12,15]]
-			},keymap = [{
+			},keymap=[{
 				"KeyR":"_-9","KeyT":"_-7","KeyY":"_-5","KeyU":"_-4","KeyI":"_-2",
 				"KeyF":"_0" ,"KeyG":"_2" ,"KeyH":"_3" ,"KeyJ":"_5" ,"KeyK":"_7" ,
 				"KeyC":"_8" ,"KeyV":"_10","KeyB":"_12","KeyN":"_14","KeyM":"_15"
@@ -194,7 +194,7 @@
 						break;
 					case '6':case '7':
 						setSynth();
-						synth_ = new Tone.Sampler(instr_li[menu.instr.value][4],()=>{},instr_li[menu.instr.value][0]).toDestination();
+						synth_ = new Tone.Sampler(instr_li[menu.instr.value][3],()=>{},instr_li[menu.instr.value][0]).toDestination();
 						break;
 					case '14':
 						setSynth();
