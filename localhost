@@ -1,8 +1,0 @@
-ps aux | grep Python | grep -v grep | awk '{ print "kill -15", $2 }' | sh
-cd `dirname $0`
-echo
-echo press ctrl-c to exit
-echo
-#(sleep 0.1;open http://0.0.0.0/) &
-python -m SimpleHTTPServer 80
-#php -S 0.0.0.0:80

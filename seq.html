@@ -14,17 +14,19 @@
 		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}
 
 		#disp{position:relative;width:100vw;height:240px;background-image:url(img/15.png);background-size:auto 100%;image-rendering:pixelated;background-size:100% 100%;}
-		#disp>*,#disp0,#disp1{position:absolute;line-height:16px;font-size:14px;}#disp0,#disp1{border-left:24px solid #0008;display:flex;}
+		#disp>*,#disp>div:first-child>*{position:absolute;line-height:16px;font-size:8px;}
 		#disp>div:first-child{width:100%;height:100%;overflow:scroll;}
+		#disp>div:first-child>*{border-left:24px solid #0008;display:flex;}
 
-		.nWrapper{display:block;position:relative;width:16px;height:240px;margin-left:1px;background-color:#0002;border-radius:4px;}
-		.nWrapper.b{background-color:#4442;}
+		.nWrapper{display:block;position:relative;width:16px;height:240px;margin-left:1px;border-radius:4px;}
+		#dispbg .nWrapper{background-color:#0002;}#dispbg .nWrapper.b{background-color:#4442;}
 	</style>
 
 	<div id="disp">
 		<div>
-			<div id="disp0">disp0</div>
-			<div id="disp1">disp1</div>
+			<div id="dispbg"></div>
+			<div id="disp0"></div>
+			<div id="disp1"></div>
 		</div>
 		<div style="opacity:.5;pointer-events:none;">
 			C<br>B<br>A<br>G<br>F<br>E<br>D<br>
@@ -113,17 +115,25 @@
 		set(main.scores1,1);
 
 		function render(scores,e){
+			dispbg.textContent=" ";e.textContent=" ";
 			scores.map((x,i)=>{
 				var div = document.createElement('div');
 				if(x){
 					//console.log(x.split(','));
 				}
 				div.classList.add('nWrapper');
-				if(i%4==0)div.classList.add('b');
+				div.textContent=i;
 				e.insertBefore(div,e.lastChild);
+
+				var dbg = document.createElement('div');
+				dbg.classList.add('nWrapper');
+				if(i%4==0)dbg.classList.add('b');
+				dbg.textContent=i;
+				dispbg.insertBefore(dbg,dispbg.lastChild);
 			})
 		}
 		render(main.scores0,disp0);
+		render(main.scores1,disp1);
 
 		sc_.value=main.sc;
 		bpm_.value=main.bpm;
