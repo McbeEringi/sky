@@ -132,7 +132,7 @@
 			],instr_li=[//[baseurl, octave, map, (map2)]
 				["audio/instr/musicbox/",1,Object.assign({"a3":"a3.mp3","d#7":"ds7.mp3"},stdli(4,6))],
 				["audio/instr/harp/",-1,stdli(3)],
-				["audio/instr/percussion/",-1,{"a3":"0.mp3","b3":"1.mp3","c4":"2.mp3","d4":"3.mp3","e4":"4.mp3","f4":"5.mp3","g4":"6.mp3","a4":"7.mp3"}],
+				["audio/instr/percussion/",-1,{"a3":"0.mp3","a#3":"1.mp3","b3":"2.mp3","c4":"3.mp3","a4":"4.mp3","a#4":"5.mp3","b4":"6.mp3","c5":"7.mp3"}],
 				["audio/instr/contrabass/",-2,stdli(2)],
 				["audio/instr/horn/",-2,stdli(2)],
 				["https://tonejs.github.io/audio/salamander/",0,{"d#4":"Ds4.mp3","a4":"A4.mp3","d#5":"Ds5.mp3","a5":"A5.mp3"}],
@@ -143,8 +143,14 @@
 				["audio/instr/guitar/",-1,stdli(3)],
 				["audio/instr/ukulele/",-1,{"d#4":"ds4.mp3","a4":"a4.mp3"}],
 				["https://tonejs.github.io/audio/salamander/",1,{"d#5":"Ds5.mp3","a5":"A5.mp3","d#6":"Ds6.mp3","a6":"A6.mp3"}],
-				["audio/instr/glock/",1,stdli(5)]
-			],keymap = [{
+				["audio/instr/glock/",1,stdli(5)],
+				["audio/instr/glock/",0,stdli(4)],
+			],pmap={
+				"2":[[0,1,2,3],[12,13,14,15]],
+				"6":[],
+				"7":[],
+				"14":[[-7,0,3,5],[8,10,12,15]]
+			},keymap = [{
 				"KeyR":"_-9","KeyT":"_-7","KeyY":"_-5","KeyU":"_-4","KeyI":"_-2",
 				"KeyF":"_0" ,"KeyG":"_2" ,"KeyH":"_3" ,"KeyJ":"_5" ,"KeyK":"_7" ,
 				"KeyC":"_8" ,"KeyV":"_10","KeyB":"_12","KeyN":"_14","KeyM":"_15"
@@ -211,7 +217,8 @@
 						synth.triggerAttackRelease(440*Math.pow(2,(parseInt(id.slice(1))+(scd.style.opacity=="1"?sc:0))/12+instr_li[menu.instr.value][1]));
 						break;
 					case 1:
-						synth.triggerAttackRelease("C5","8n");
+						if(id.substr(0,1)=='0')synth.triggerAttackRelease(440*Math.pow(2,(pmap[menu.instr.value][0][id.substr(-1)]+(scd.style.opacity=="1"?sc:0))/12+instr_li[menu.instr.value][1]));
+						else synth_.triggerAttackRelease(440*Math.pow(2,(pmap[menu.instr.value][1][id.substr(-1)]+(scd.style.opacity=="1"?sc:0))/12+instr_li[menu.instr.value][1]));
 						break;
 					default:
 						console.log("unknown id");
