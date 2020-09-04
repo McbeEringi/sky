@@ -127,6 +127,7 @@
 		}
 		function pstop(){
 			Tone.Transport.stop();
+			kbset('');
 		}
 
 		/////Sequence
@@ -153,7 +154,7 @@
 				if(e.previousElementSibling.checked==false)synth.triggerAttackRelease(toHz(i2n[i]));
 			}
 		})
-		function kbset(x,a){
+		function kbset(x){
 			x=x.split(',').map(x=>n2i[x]);
 			document.querySelectorAll('#kb input').forEach((e,i)=>{
 				e.checked=x.includes(String(i))
