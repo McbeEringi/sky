@@ -31,9 +31,9 @@
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;}#kb input{display:none;}#kb>div{height:33.3%;margin:0;}
 		#kb label{display:inline-block;width:20%;height:100%;position:relative;}
 		#kb label::before,#kb label::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
-		#kb label::before{background:#4448;transition:.02s;}#kb input:not(:checked)+label::before{transition:.2s;}
+		#kb label::before{background:#4448;z-index:1;transition:.02s;}#kb input:not(:checked)+label::before{transition:.2s;}
 		#kb input:checked+label::before{background:#feaa;transform:scale(.8);}
-		#kb label::after{background:url(img/seq.png);background-size:800%;transition:.4s;}#kb input:not(:checked)+label::after{transition:.01s;}
+		#kb label::after{background:url(img/seq.png);background-size:800%;z-index:2;transition:.4s;}#kb input:not(:checked)+label::after{transition:.01s;}
 		#kb label:nth-child(2n):not(.c)::after{background-position:-200% 0;}
 		#kb label:nth-child(4n):not(.c)::after{background-position:-100% 0;}
 		#kb input:checked+label::after{transform:rotateY(360deg)scale(.8);}
@@ -78,9 +78,9 @@
 	<pre id="log"></pre>
 
 	<script>
-		var seq0,seq1,sc=Number(sc_.value),main;
-		const ver=[0,1,0],
-		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
+		var seq0,seq1,sc=Number(sc_.value),main,kbl=[];
+		document.querySelectorAll('#kb label').forEach((e,i)=>kbl[i]=e);
+		const llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		scset=()=>{if(Number(sc_.value))main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
 		bpmset=()=>{var tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
 		url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
@@ -118,7 +118,7 @@
 		};
 
 		main=sample;
-		log.textContent=ver;
+		log.textContent='seq';
 
 		/////from button
 		function ptoggle(){
@@ -130,12 +130,12 @@
 		}
 
 		/////Sequence
-		const toHz = (x)=>880*Math.pow(2,(Number(x)+main.sc)/12);//C5~C7
+		const toHz = x=>880*Math.pow(2,(Number(x)+main.sc)/12);//C5~C7
 		function set(x,i){
 			if([seq0,seq1][i])[seq0,seq1][i].dispose();
 			[seq0,seq1][i] = new Tone.Sequence((time,note)=>{
 				if(note){
-					kbset(note,1);
+					kbset(note);
 					note=note.split(',');
 					synth.triggerAttackRelease(note.map(toHz),'1m',time);
 					llog(`${note.map(x=>49+Number(x))}\n${Tone.Transport.position}`,1);
@@ -145,14 +145,22 @@
 		set(main.scores0,0);
 		set(main.scores1,1);
 
+		/////Keyboard
+		const i2n=["-9","-7","-5","-4","-2","0","2","3","5","7","8","10","12","14","15"],
+		n2i={"-9":"0","-7":"1","-5":"2","-4":"3","-2":"4","0":"5","2":"6","3":"7","5":"8","7":"9","8":"10","10":"11","12":"12","14":"13","15":"14"};
+		kbl.map((e,i)=>{
+			e.onclick=()=>{
+				if(e.previousElementSibling.checked==false)synth.triggerAttackRelease(toHz(i2n[i]));
+			}
+		})
 		function kbset(x,a){
-			const kbmap={"-9":"0","-7":"1","-5":"2","-4":"3","-2":"4","0":"5","2":"6","3":"7","5":"8","7":"9","8":"10","10":"11","12":"12","14":"13","15":"14"};
-			x=x.split(',').map(x=>kbmap[x]);
+			x=x.split(',').map(x=>n2i[x]);
 			document.querySelectorAll('#kb input').forEach((e,i)=>{
-				e.checked=x.includes(String(i));
-				if(a)setTimeout(()=>e.checked=false,100);
+				e.checked=x.includes(String(i))
 			});
 		}
+
+
 		const render_core=(scores,e,b)=>{
 			scores.map((x,i)=>{
 				var div = document.createElement('div');
