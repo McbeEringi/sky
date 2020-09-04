@@ -10,19 +10,37 @@
 	<script src="https://tonejs.github.io/build/Tone.js"></script>
 	<style>
 		body{margin:0;user-select:none;-webkit-user-select:none;}*::-webkit-scrollbar{display:none;}
-		.grid{display:inline-block;width:64px;height:64px;margin:4px;background:#4448;color:#caf0f6;text-shadow:0 0 4px #688;border:none;border-radius:16px;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:24px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
-		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}
+		.clear_fix::after{content:"";clear:both;display:block;}
+	</style>
 
-		#disp{position:relative;width:100vw;height:240px;background-image:url(img/15.png);background-size:auto 100%;image-rendering:pixelated;background-size:100% 100%;}
-		#disp>*,#disp>div:first-child>*{position:absolute;line-height:16px;font-size:8px;}
-		#disp>div:first-child{width:100%;height:100%;overflow:scroll;}
-		#disp>div:first-child>*{padding:0 64px 0 16px;display:flex;}
-
+	<style>
+		.disppanel{position:relative;width:100vw;height:240px;background:#fff6 url(img/15.png);background-size:auto 100%;image-rendering:pixelated;background-size:100% 100%;}
+		.disppanel>*,.disppanel>div:first-child>*{position:absolute;line-height:16px;font-size:8px;}
+		.disppanel>div:first-child{width:100%;height:100%;overflow:scroll;}
+		.disppanel>div:first-child>*{padding:0 64px 0 16px;display:flex;}
 		.nWrapper{display:block;position:relative;width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;}
 		#dispbg .nWrapper{background-color:#0002;}#dispbg .nWrapper.b{background-color:#0004;}
 	</style>
+	<style>
+		.uipanel{float:left;clear:left;}
+		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#caf0f6;text-shadow:0 0 4px #688;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
+		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}
+	</style>
+	<style>
+		.kbpanel{position:relative;width:100%;max-width:360px;float:right;}.kbpanel:before{content:"";display:block;padding-top:60%;}
+		#kb{position:absolute;top:0;left:0;right:0;bottom:0;}#kb input{display:none;}#kb>div{height:33.3%;margin:0;}
+		#kb label{display:inline-block;width:20%;height:100%;position:relative;}
+		#kb label::before,#kb label::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
+		#kb label::before{background:#4448;transition:.02s;}#kb input:not(:checked)+label::before{transition:.2s;}
+		#kb input:checked+label::before{background:#feaa;transform:scale(.8);}
+		#kb label::after{background:url(img/seq.png);background-size:800%;transition:.4s;}#kb input:not(:checked)+label::after{transition:.01s;}
+		#kb label:nth-child(2n):not(.c)::after{background-position:-200% 0;}
+		#kb label:nth-child(4n):not(.c)::after{background-position:-100% 0;}
+		#kb input:checked+label::after{transform:rotateY(360deg)scale(.8);}
+	</style>
 
-	<div id="disp">
+
+	<div class="disppanel">
 		<div>
 			<div id="dispbg"></div>
 			<div id="disp0"></div>
@@ -30,19 +48,30 @@
 		</div>
 		<div style="opacity:.5;pointer-events:none;width:8px;">CBAGFEDCBAGFEDC</div>
 	</div>
-	<div class="uipanel">
-		<div>
-			<button class="grid bg" style="--bp:-192px -64px;transform:rotateZ(180deg);">
-			</button><button onclick="Tone.start();ptoggle()" class="grid bg" style="--bp:0px -64px;"></button><button onclick="pstop()"class="grid bg" style="--bp:-64px -64px;">
-			</button><button class="grid bg" style="--bp:-192px -64px;"></button>
+	<div class="clear_fix">
+		<div class="uipanel">
+			<div>
+				<button class="grid bg" style="--bp:-300% -100%;transform:rotateZ(180deg);">
+				</button><button onclick="Tone.start();ptoggle()" class="grid bg" style="--bp:0 -100%;"></button><button onclick="pstop()"class="grid bg" style="--bp:-100% -100%;">
+				</button><button class="grid bg" style="--bp:-300% -100%;"></button>
+			</div>
 		</div>
-		<div>
-			<button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-384px 0px;">
-			</button><input id="bpm_" class="grid bg" onchange="bpmset();" style="--bp:-448px 0px;"></input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-320px 0px;"></button>
+		<div class="kbpanel">
+			<div id="kb">
+				<div><input type="checkbox"id="kbb00"><label for="kbb00" class="c"></label><input type="checkbox"id="kbb01"><label for="kbb01"></label><input type="checkbox"id="kbb02"><label for="kbb02"></label><input type="checkbox"id="kbb03"><label for="kbb03"></label><input type="checkbox"id="kbb04"><label for="kbb04"></label></div>
+				<div><input type="checkbox"id="kbb10"><label for="kbb10"></label><input type="checkbox"id="kbb11"><label for="kbb11"></label><input type="checkbox"id="kbb12"><label for="kbb12" class="c"></label><input type="checkbox"id="kbb13"><label for="kbb13"></label><input type="checkbox"id="kbb14"><label for="kbb14"></label></div>
+				<div><input type="checkbox"id="kbb20"><label for="kbb20"></label><input type="checkbox"id="kbb21"><label for="kbb21"></label><input type="checkbox"id="kbb22"><label for="kbb22"></label><input type="checkbox"id="kbb23"><label for="kbb23"></label><input type="checkbox"id="kbb24"><label for="kbb24" class="c"></label></div>
+			</div>
 		</div>
-		<div>
-			<button onclick="main.sc--;sc_.value=main.sc;" class="grid bg" style="--bp:-384px 0px;">
-			</button><input id="sc_" class="grid bg" onchange="scset();" style="--bp:-128px -64px;"></input><button onclick="main.sc++;sc_.value=main.sc;" class="grid bg" style="--bp:-320px 0px;"></button>
+		<div class="uipanel">
+			<div>
+				<button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-600% 0;">
+				</button><input id="bpm_" class="grid bg" onchange="bpmset();" style="--bp:-700% 0;"></input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;"></button>
+			</div>
+			<div>
+				<button onclick="main.sc--;sc_.value=main.sc;" class="grid bg" style="--bp:-600% 0;">
+				</button><input id="sc_" class="grid bg" onchange="scset();" style="--bp:-200% -100%;"></input><button onclick="main.sc++;sc_.value=main.sc;" class="grid bg" style="--bp:-500% 0;"></button>
+			</div>
 		</div>
 	</div>
 
@@ -51,7 +80,7 @@
 	<script>
 		var seq0,seq1,sc=Number(sc_.value),main;
 		const ver=[0,1,0],
-		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`\n${x}`;},
+		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		scset=()=>{if(Number(sc_.value))main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
 		bpmset=()=>{var tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
 		url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
@@ -106,17 +135,25 @@
 			if([seq0,seq1][i])[seq0,seq1][i].dispose();
 			[seq0,seq1][i] = new Tone.Sequence((time,note)=>{
 				if(note){
+					kbset(note,1);
 					note=note.split(',');
 					synth.triggerAttackRelease(note.map(toHz),'1m',time);
-					llog(`${note.map(x=>49+Number(x))}\n\t${Tone.Transport.position}`,1);
+					llog(`${note.map(x=>49+Number(x))}\n${Tone.Transport.position}`,1);
 				}
 			},x).start(0);
 		}
 		set(main.scores0,0);
 		set(main.scores1,1);
 
-		function render(scores,e){
-			dispbg.textContent=" ";e.textContent=" ";
+		function kbset(x,a){
+			const kbmap={"-9":"0","-7":"1","-5":"2","-4":"3","-2":"4","0":"5","2":"6","3":"7","5":"8","7":"9","8":"10","10":"11","12":"12","14":"13","15":"14"};
+			x=x.split(',').map(x=>kbmap[x]);
+			document.querySelectorAll('#kb input').forEach((e,i)=>{
+				e.checked=x.includes(String(i));
+				if(a)setTimeout(()=>e.checked=false,100);
+			});
+		}
+		const render_core=(scores,e,b)=>{
 			scores.map((x,i)=>{
 				var div = document.createElement('div');
 				if(x){
@@ -128,13 +165,19 @@
 
 				var dbg = document.createElement('div');
 				dbg.classList.add('nWrapper');
-				if(i%4==0)dbg.classList.add('b');
+				if(b&&i%4==0)dbg.classList.add('b');
 				dbg.textContent=i+1;
 				dispbg.insertBefore(dbg,dispbg.lastChild);
 			})
+
+		}
+		function render(scores,e){
+			dispbg.textContent=" ";e.textContent=" ";
+			render_core(scores,e,1);
 		}
 		render(main.scores0,disp0);
 		render(main.scores1,disp1);
+
 
 		sc_.value=main.sc;
 		bpm_.value=main.bpm;
