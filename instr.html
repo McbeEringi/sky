@@ -17,11 +17,13 @@
 		<link rel="apple-touch-icon" href="img/ico_512.png">
 		<!--sw-->
 		<link rel="manifest" href="skymf.json">
+		<meta name="theme-color" content="#fea"/>
 		<script>
 			if('serviceWorker'in navigator)navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('sw registered',reg);});
 		</script>
 	</head>
 	<body>
+		<pre id="jswarn">Please enable JavaScript to use this app.</pre><script>jswarn.style.display='none';</script>
 		<script src="style.js"></script>
 		<script src="https://tonejs.github.io/build/Tone.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
