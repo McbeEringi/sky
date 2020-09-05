@@ -6,9 +6,8 @@ document.write(`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?f
 a:link,a:visited{color:#aef;}a:hover{color:#8af;}a:active{color:#48f;}
 .flex{display:flex;justify-content:space-evenly;flex-wrap:wrap;align-items:flex-start;}
 </style>`);
-const e_bg=document.createElement('div');e_bg.setAttribute('id','bg');
-const e_img=document.createElement('img');e_img.setAttribute('src','https://mcbeeringi.github.io/sky/img/sky.svg');e_bg.appendChild(e_img);
-document.body.appendChild(e_bg);
+const e_bg=document.createElement('div');e_bg.setAttribute('id','bg');document.body.appendChild(e_bg);
+document.addEventListener('readystatechange',e=>{if(e.target.readyState=='interactive'){const e_img=document.createElement('img');e_img.setAttribute('src','https://mcbeeringi.github.io/sky/img/sky.svg');e_bg.appendChild(e_img);}},false);
 const bgcol=[
 	"#fff1cf,#ced980",//morn
 	"#cce5f0,#ced980",//day

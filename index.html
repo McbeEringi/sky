@@ -9,10 +9,16 @@
 	<body>
 		<script src="style.js"></script>
 		<h1>Sky</h1>
-		楽器練習: <a href="instr.html">sky_instruments</a><br>
-		大キャン: <a href="info.html">sky_info</a><br>
-		物置: <a href="stuff.html">sky_stuff</a><br>
-		<br>
-		シーケンサー(開発中): <a href="seq.html">sky_sequencer (developing)</a>
+		<style>
+			:root{--bp:0;}
+			.links>a{background-size:300%;display:inline-block;width:150px;height:150px;margin:5px;border-radius:30px;line-height:320px;background-image:url(img/ico.png);background-position:var(--bp);text-align:center;transition:.2s;white-space:nowrap;}
+			.links>a:hover{transform:scale(1.05);filter:brightness(1.2)saturate(1.2);}
+		</style>
+		<div class="links">
+			<a href="instr.html" style="--bp:-100%;">sky_instruments</a>
+			<a href="info.html" style="--bp:-200%;">sky_info</a>
+			<a href="stuff.html">sky_stuff</a>
+			<a href="seq.html">sky_sequencer(indev)</a>
+		</div>
 	</body>
 </html>
