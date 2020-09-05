@@ -1,5 +1,5 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
-const cacheName='cache_v2',STATIC_DATA=[
+const cacheName='cache200905_0',STATIC_DATA=[
 	'instr.html',
 	'style.js',
 	'https://tonejs.github.io/build/Tone.js',
