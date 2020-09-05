@@ -20,7 +20,7 @@
 		<link rel="manifest" href="skymf.json">
 		<meta name="theme-color" content="#fea"/>
 		<script>
-			if('serviceWorker'in navigator)navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('[ServiceWorker] Registered',reg);});
+			if('serviceWorker'in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('[ServiceWorker] Registered',reg);});});
 		</script>
 	</head>
 	<body>

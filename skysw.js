@@ -2,6 +2,7 @@
 const cacheName='cache200905_0',STATIC_DATA=[
 	'instr.html',
 	'style.js',
+	'imgg/sky.svg',
 	'https://tonejs.github.io/build/Tone.js',
 	'https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js',
 	'img/tex.png',
