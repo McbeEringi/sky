@@ -1,4 +1,4 @@
-//https://qiita.com/masanarih0ri/items/0845f312cff5c8d0ec60
+//https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 const cacheName='cache_v1',STATIC_DATA=[
 	'instr.html',
 	'style.js',
