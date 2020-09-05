@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<title>sky_sequencer</title>
-	<meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 <body>
 	<script src="style.js"></script>
@@ -32,7 +32,7 @@
 		#kb label{display:inline-block;width:20%;height:100%;position:relative;}
 		#kb label::before,#kb label::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
 		#kb label::before{background:#4448;filter:drop-shadow(0 0 4px #444);transition:.02s;}#kb input:not(:checked)+label::before{transition:.2s;}
-		#kb input:checked+label::before{background:#feaa;filter:drop-shadow(0 0 4px #fea);transform:scale(.8);}
+		#kb input:checked+label::before{background:#fea8;filter:drop-shadow(0 0 4px #fea);transform:scale(.8);}
 		#kb label::after{background:url(img/seq.png);background-size:800%;transition:.4s;}#kb input:not(:checked)+label::after{transition:.01s;}
 		#kb label:nth-child(2n):not(.c)::after{background-position:-200% 0;}
 		#kb label:nth-child(4n):not(.c)::after{background-position:-100% 0;}

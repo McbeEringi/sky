@@ -2,7 +2,7 @@ document.write(`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?f
 <style>
 :root{background:#222;font-family:"M PLUS Rounded 1c",sans-serif;color:#fff;text-shadow:0 0 4px #222;word-wrap:break-word;}
 #bg{position:fixed;top:0;left:0;z-index:-16;width:100vw;height:100vh;transition:background 1s;}
-#bg>img{opacity:.5;height:100vmin;float:right;transform:translateX(25%);background:none;pointer-events:none;}
+#bg>img{opacity:.2;height:100vmin;float:right;transform:translateX(25%);background:none;pointer-events:none;}
 a:link,a:visited{color:#aef;}a:hover{color:#8af;}a:active{color:#48f;}
 .flex{display:flex;justify-content:space-evenly;flex-wrap:wrap;align-items:flex-start;}
 </style>`);
