@@ -16,7 +16,7 @@ const cacheName='cache200905_0',STATIC_DATA=[
 	'audio/instr/musicbox/ds7.mp3'
 ];
 
-self.addEventListener('install',function(e){
+self.addEventListener('install',(e)=>{
 	e.waitUntil(
 		caches.open(cacheName).then((cache)=>{
 			return cache.addAll(STATIC_DATA);
@@ -24,7 +24,7 @@ self.addEventListener('install',function(e){
 	);
 	console.log('[ServiceWorker] Install');
 });
-self.addEventListener('activate', (e) => {
+self.addEventListener('activate',(e)=>{
 	console.log('[ServiceWorker] Activate')
 	e.waitUntil(
 		caches.keys().then((keyList)=>{
@@ -39,9 +39,9 @@ self.addEventListener('fetch',(e)=>{
 		caches.match(e.request).then((r)=>{
 			console.log('[ServiceWorker] Fetching resource: '+e.request.url);
 			return r || fetch(e.request).then((response)=>{
-				return caches.open(cacheName).then((cache) => {
+				return caches.open(cacheName).then((cache)=>{
 					console.log('[ServiceWorker] Caching new resource: '+e.request.url);
-					cache.put(e.request, response.clone());
+					cache.put(e.request,response.clone());
 					return response;
 				});
 			});
