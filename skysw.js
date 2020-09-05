@@ -1,5 +1,5 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
-const cacheName='cache_v1',STATIC_DATA=[
+const cacheName='cache_v2',STATIC_DATA=[
 	'instr.html',
 	'style.js',
 	'https://tonejs.github.io/build/Tone.js',
@@ -12,13 +12,7 @@ const cacheName='cache_v1',STATIC_DATA=[
 	'audio/instr/musicbox/ds4.mp3',
 	'audio/instr/musicbox/ds5.mp3',
 	'audio/instr/musicbox/ds6.mp3',
-	'audio/instr/musicbox/ds7.mp3',
-	'https://tonejs.github.io/audio/salamander/Ds4.mp3',
-	'https://tonejs.github.io/audio/salamander/A4.mp3',
-	'https://tonejs.github.io/audio/salamander/Ds5.mp3',
-	'https://tonejs.github.io/audio/salamander/A5.mp3',
-	'https://tonejs.github.io/audio/salamander/Ds6.mp3',
-	'https://tonejs.github.io/audio/salamander/A6.mp3'
+	'audio/instr/musicbox/ds7.mp3'
 ];
 
 self.addEventListener('install',function(e){
