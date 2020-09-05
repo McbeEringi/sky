@@ -1,5 +1,5 @@
 //https://qiita.com/masanarih0ri/items/0845f312cff5c8d0ec60
-const STATIC_DATA = [
+const cacheName='cache_v1',STATIC_DATA=[
 	'instr.html',
 	'style.js',
 	'https://tonejs.github.io/build/Tone.js',
@@ -23,18 +23,35 @@ const STATIC_DATA = [
 
 self.addEventListener('install',function(e){
 	e.waitUntil(
-		caches.open('cache_v1').then(function(cache){
+		caches.open(cacheName).then((cache)=>{
 			return cache.addAll(STATIC_DATA);
 		})
 	);
 	console.log('[ServiceWorker] Install');
 });
-self.addEventListener('activate', function(e){console.log('[ServiceWorker] Activate');});
-self.addEventListener('fetch', function(e) {
-	console.log(e.request.url);
+self.addEventListener('activate', (e) => {
+	console.log('[ServiceWorker] Activate')
+	e.waitUntil(
+		caches.keys().then((keyList) => {
+					return Promise.all(keyList.map((key) => {
+				if(key !== cacheName) {
+					return caches.delete(key);
+				}
+			}));
+		})
+	);
+});
+self.addEventListener('fetch',(e)=>{
 	e.respondWith(
-		caches.match(e.request).then(function(response) {
-			return response || fetch(e.request);
+		caches.match(e.request).then((r)=>{
+			console.log('[ServiceWorker] Fetching resource: '+e.request.url);
+			return r || fetch(e.request).then((response)=>{
+				return caches.open(cacheName).then((cache) => {
+					console.log('[ServiceWorker] Caching new resource: '+e.request.url);
+					cache.put(e.request, response.clone());
+					return response;
+				});
+			});
 		})
 	);
 });
