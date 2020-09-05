@@ -32,11 +32,9 @@ self.addEventListener('install',function(e){
 self.addEventListener('activate', (e) => {
 	console.log('[ServiceWorker] Activate')
 	e.waitUntil(
-		caches.keys().then((keyList) => {
-					return Promise.all(keyList.map((key) => {
-				if(key !== cacheName) {
-					return caches.delete(key);
-				}
+		caches.keys().then((keyList)=>{
+			return Promise.all(keyList.map((key)=>{
+				if(key !== cacheName){return caches.delete(key);}
 			}));
 		})
 	);
