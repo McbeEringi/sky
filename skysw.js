@@ -12,7 +12,7 @@ const cacheName='cache_v1',STATIC_DATA=[
 	'audio/instr/musicbox/ds4.mp3',
 	'audio/instr/musicbox/ds5.mp3',
 	'audio/instr/musicbox/ds6.mp3',
-	'audio/instr/musicbox/ds7.mp3'
+	'audio/instr/musicbox/ds7.mp3',
 	'https://tonejs.github.io/audio/salamander/Ds4.mp3',
 	'https://tonejs.github.io/audio/salamander/A4.mp3',
 	'https://tonejs.github.io/audio/salamander/Ds5.mp3',
