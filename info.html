@@ -6,7 +6,12 @@
 		<title>sky_info</title>
 		<meta name="Description" content="Sky treasure candle">
 		<link rel="shortcut icon" type="image/x-icon" href="sky.ico">
+		<!--sw-->
 		<link rel="manifest" href="skymf.json">
+		<meta name="theme-color" content="#fea"/>
+		<script>
+			if('serviceWorker'in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('[ServiceWorker] Registered',reg);});});
+		</script>
 	</head>
 	<body>
 		<script src="style.js"></script>
