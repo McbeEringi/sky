@@ -16,7 +16,7 @@
 		</style>
 
 
-		<pre id="time">現在時刻: loading…<br>サーバー時刻: loading…</pre>
+		<pre id="time">current time: loading…<br> server time : loading…</pre>
 		<hr>
 		<h2>本日分</h2>
 		<pre id="today">loading…</pre>
@@ -74,14 +74,14 @@
 				return  "大キャンドル:	"+c_dic[c_pat_[0]][0]+"\n		"+c_dic[c_pat_[0]][c_pat_[1]+1].join(", ")+
 					//"大キャンドル:	"+c_dic[c_pat_[0]][0]+"\n		"+c_dic[c_pat_[0]][c_pat_[1]+1].join(", ")+
 					//"\nデイリー:	"+
-					"\n\nオフィス:	"+(dt%7==5?"ねこ":(dt%7==6?"宇宙":"特になし"));
+					"\n\nオフィス:	"+(dt%7==5?"ねこ🐈":(dt%7==6?"宇宙🛰":"特になし"));
 			}
 			var hbuf = null;
 			setTimeout(()=>setInterval(()=>{
 				var date = new Date();
-				time.textContent = "現在時刻: "+date.toLocaleString();
+				time.textContent = "current time: "+date.toLocaleString();
 				date.setMinutes(date.getMinutes()-420+date.getTimezoneOffset());
-				time.textContent += "\nサーバー時刻: "+date.toLocaleString();
+				time.textContent += "\n server time : "+date.toLocaleString();
 				if(hbuf!=date.getHours()){
 					hbuf = date.getHours();
 					console.log("exe");
