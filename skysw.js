@@ -1,18 +1,18 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache200906_1',STATIC_DATA=[
-	'index.html',
+const cacheName='cache200906_2',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg',
 
+	//index
+	'index.html','img/ico.png',
 	//info
 	'info.html',
-	'00.JPG','01.JPG','02.JPG',
-	'10.JPG','11.JPG','12.JPG',
-	'20.JPG','21.JPG',
-	'30.JPG','31.JPG','32.JPG',
-	'40.JPG','41.JPG',
-
+	'img/candle/00.JPG','img/candle/01.JPG','img/candle/02.JPG',
+	'img/candle/10.JPG','img/candle/11.JPG','img/candle/12.JPG',
+	'img/candle/20.JPG','img/candle/21.JPG',
+	'img/candle/30.JPG','img/candle/31.JPG','img/candle/32.JPG',
+	'img/candle/40.JPG','img/candle/41.JPG',
 	//instr
 	'instr.html',
 	'https://tonejs.github.io/build/Tone.js',
