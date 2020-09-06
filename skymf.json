@@ -13,7 +13,7 @@
 			"purpose": "any maskable"
 		}],
 	"scope":"/sky/",
-	"start_url":"instr.html",
+	"start_url":"index.html?pwa=1",
 	"display":"fullscreen",
 	"theme_color":"#fea",
 	"background_color":"#444"
