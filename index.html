@@ -34,7 +34,10 @@
 		</div>
 		<script>
 			var urlq={};location.search.substr(1).split('&').map(x=>x.split('=')).map(x=>urlq[x[0]]=x[1]);console.log(urlq);
-			if(urlq.pwa)document.querySelectorAll('.nopwa').forEach(e=>{e.style.pointerEvents='none';e.style.filter='grayscale(1)opacity(.3)';});
+			if(urlq.pwa){
+				document.querySelectorAll('a').forEach(e=>e.href=e.href+'?pwa=1');
+				document.querySelectorAll('.nopwa').forEach(e=>{e.style.pointerEvents='none';e.style.filter='grayscale(1)opacity(.3)';});
+			}
 		</script>
 	</body>
 </html>

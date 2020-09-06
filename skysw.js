@@ -5,16 +5,16 @@ const cacheName='cache200906_3',STATIC_DATA=[
 	'img/sky.svg',
 
 	//index
-	'index.html?pwa=1','img/ico.png',
+	'index.html?pwa=0','img/ico.png',
 	//info
-	'info.html',
+	'info.html?pwa=1',
 	'img/candle/00.JPG','img/candle/01.JPG','img/candle/02.JPG',
 	'img/candle/10.JPG','img/candle/11.JPG','img/candle/12.JPG',
 	'img/candle/20.JPG','img/candle/21.JPG',
 	'img/candle/30.JPG','img/candle/31.JPG','img/candle/32.JPG',
 	'img/candle/40.JPG','img/candle/41.JPG',
 	//instr
-	'instr.html',
+	'instr.html?pwa=1',
 	'https://tonejs.github.io/build/Tone.js',
 	'https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js',
 	'img/tex.png',

@@ -13,8 +13,8 @@
 			"purpose": "any maskable"
 		}],
 	"scope":"/sky/",
-	"start_url":"index.html?pwa=1",
+	"start_url":"index.html?pwa=0",
 	"display":"fullscreen",
 	"theme_color":"#fea",
-	"background_color":"#444"
+	"background_color":"#222"
 }
