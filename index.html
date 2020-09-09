@@ -23,9 +23,11 @@
 		<h1>Sky</h1>
 		<style>
 			:root{--bp:0;}
-			.links>a{background-size:300%;display:inline-block;width:150px;height:150px;margin:5px;border-radius:20%;background-image:url(img/ico.png);background-position:var(--bp);text-align:center;transition:.2s;white-space:nowrap;}
-			.links>a::before{content:"";display:block;height:150px;}
-			.links>a:hover{transform:scale(1.05);filter:brightness(1.2)saturate(1.2);}
+			.links>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;}
+			@media(max-width:504px){.links{text-align:center;}}
+			.links>a::before{content:"";display:block;height:150px;background-size:300%;border-radius:20%;background-image:url(img/ico.png);background-position:var(--bp);}
+			.links>a:hover{transform:scale(1.05);filter:brightness(1.2)saturate(1.2)drop-shadow(0 0 8px #fea);}
+			.links>a:active{transform:scale(.9)rotateY(360deg);filter:brightness(1.2)saturate(1.2)drop-shadow(0 0 8px #fea);}
 		</style>
 		<div class="links">
 			<a href="instr.html" style="--bp:-100%;">sky_instruments</a>
