@@ -23,16 +23,18 @@
 		<h1>Sky</h1>
 		<style>
 			:root{--bp:0;}
-			.links>a{background-size:300%;display:inline-block;width:150px;height:150px;margin:5px;border-radius:20%;line-height:320px;background-image:url(img/ico.png);background-position:var(--bp);text-align:center;transition:.2s;white-space:nowrap;}
+			.links>a{background-size:300%;display:inline-block;width:150px;height:150px;margin:5px;border-radius:20%;background-image:url(img/ico.png);background-position:var(--bp);transition:.2s;}
+			.links>a::before{content:attr(name);position:relative;top:150px;display:inline-block;text-decoration:underline;text-align:center;width:150px;}
 			.links>a:hover{transform:scale(1.05);filter:brightness(1.2)saturate(1.2);}
 		</style>
 		<div class="links">
-			<a href="instr.html" style="--bp:-100%;">sky_instruments</a>
-			<a href="info.html" style="--bp:-200%;">sky_info</a>
-			<a href="stuff.html" class="nopwa">sky_stuff</a>
-			<a href="seq.html" class="nopwa">sky_sequencer(indev)</a>
+			<a href="instr.html" style="--bp:-100%;" name="sky_instruments"></a>
+			<a href="info.html" style="--bp:-200%;" name="sky_info"></a>
+			<a href="stuff.html" name="sky_stuff" class="nopwa"></a>
+			<a href="seq.html" name="sky_sequencer(indev)" class="nopwa"></a>
 		</div>
 		<script>
+			document.querySelectorAll('a').forEach(e=>e.ontouchstart=()=>{});
 			if(urlq.pwa){
 				document.querySelectorAll('a').forEach(e=>e.href=e.href+'?pwa=1');
 				document.querySelectorAll('.nopwa').forEach(e=>{e.style.pointerEvents='none';e.style.filter='grayscale(1)opacity(.3)';});
