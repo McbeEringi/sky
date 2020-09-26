@@ -71,6 +71,7 @@
 		</div>
 	</div>
 
+	<input type="number" value="2" min="0" max="2" step="1" onchange="main=sample[this.value];set(main);">
 	<pre id="log"></pre>
 
 	<script>
@@ -84,8 +85,7 @@
 		synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination()),
 		sample = [
 			{
-				"bpm":90,
-				"sc":-2,
+				"bpm":90,"sc":-2,"ts":4,
 				"scores":[
 					'-4,0,3,7,10',['7,10','-4,0,3'],'7,10','-4,0,3,7,10',
 					'-5,2,5,7,10',['5,7,14','-5,2'],'5,7,14','-5,2,12,15',
@@ -100,8 +100,7 @@
 					'-9,-2',['-9','-9,-5'],['','-5,-2'],['-2,3','3,7']
 				]
 			},{
-				"bpm":130,
-				"sc":0,
+				"bpm":130,"sc":0,"ts":4,
 				"scores":[
 					'-4','-2','3','-4',
 					'-2','2','-2','0',
@@ -110,8 +109,7 @@
 					'','','',''
 				]
 			},{
-				"bpm":108,
-				"sc":0,
+				"bpm":108,"sc":0,"ts":4,
 				"scores":[
 					'3,7','','-2','-4',
 
@@ -144,7 +142,7 @@
 
 		/////Sequence
 		const toHz = x=>880*Math.pow(2,(Number(x)+main.sc)/12);//C5~C7
-		function set(x){
+		function setScores(x){
 			if(seq)seq.dispose();
 			seq = new Tone.Sequence((time,note)=>{
 				if(note){
@@ -155,9 +153,8 @@
 				}
 			},x).start(0);
 		}
-		set(main.scores,0);
 
-		/////Keyboard
+		/////Keys
 		const i2n=["-9","-7","-5","-4","-2","0","2","3","5","7","8","10","12","14","15"],
 		n2i={"-9":"0","-7":"1","-5":"2","-4":"3","-2":"4","0":"5","2":"6","3":"7","5":"8","7":"9","8":"10","10":"11","12":"12","14":"13","15":"14"};
 		kbl.map((e,i)=>{
@@ -172,7 +169,7 @@
 			});
 		}
 
-
+		/////render
 		const render=(scores)=>{
 			disp.textContent=" ";
 			scores.map((x,i)=>{
@@ -187,13 +184,13 @@
 			})
 
 		}
-		render(main.scores);
 
 
-		sc_.value=main.sc;
-		bpm_.value=main.bpm;
-		Tone.Transport.bpm.value=main.bpm;
-		Tone.Transport.timeSignature=[4,4];
+		const set=(x)=>{
+			setScores(x.scores);render(x.scores);
+			sc_.value=x.sc;bpm_.value=x.bpm;Tone.Transport.bpm.value=x.bpm;Tone.Transport.timeSignature=[x.ts,4];
+		}
+		set(main);
 
 		/////keyboard
 		document.addEventListener('keydown',e=>{
