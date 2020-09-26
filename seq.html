@@ -71,7 +71,7 @@
 		</div>
 	</div>
 
-	<input type="number" value="2" min="0" max="2" step="1" onchange="main=sample[this.value];set(main);">
+	<input type="number" value="2" min="0" max="2" step="1" onchange="main=sample[this.value];set();">
 	<pre id="log"></pre>
 
 	<script>
@@ -154,7 +154,7 @@
 			if(seq)seq.dispose();
 			seq = new Tone.Sequence((time,note)=>{
 				if(note){
-					kbset(note);
+					kbset('');kbset(note);
 					note=note.split(',');
 					synth.triggerAttackRelease(note.map(toHz),'1m',time);
 					llog(`${note.map(x=>49+Number(x)+main.sc)}\n${Tone.Transport.position}`,1);
@@ -173,7 +173,8 @@
 		function kbset(x){
 			x=x.split(',').map(x=>n2i[x]);
 			document.querySelectorAll('#kb input').forEach((e,i)=>{
-				e.checked=x.includes(String(i))
+				//e.checked=false;void e.offsetWidth;
+				e.checked=x.includes(String(i));
 			});
 		}
 
@@ -194,11 +195,11 @@
 		}
 
 
-		const set=(x)=>{
-			setScores(x.scores);render(x.scores);
-			sc_.value=x.sc;bpm_.value=x.bpm;Tone.Transport.bpm.value=x.bpm;Tone.Transport.timeSignature=[x.ts,4];
+		const set=()=>{
+			setScores(main.scores);render(main.scores);
+			sc_.value=main.sc;bpm_.value=main.bpm;Tone.Transport.bpm.value=main.bpm;Tone.Transport.timeSignature=[main.ts,4];
 		}
-		set(main);
+		set();
 
 		/////keyboard
 		document.addEventListener('keydown',e=>{
