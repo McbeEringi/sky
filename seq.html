@@ -190,12 +190,11 @@
 							x.split(',').map(e=>{
 								var note = document.createElement('p');
 								note.style.bottom=(Number(n2i[e])*16)+'px';
+								note.classList.add(e);
 								div.appendChild(note);
 							});
 							break;
-						case'object':
-							render(x,div,0);
-							break;
+						case'object':render(x,div,0);break;
 					}
 				}
 				div.classList.add('nWrapper');
