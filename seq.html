@@ -78,7 +78,7 @@
 		var seq,sc=Number(sc_.value),main,kbl=[];
 		document.querySelectorAll('#kb label').forEach((e,i)=>kbl[i]=e);
 		const llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
-		scset=()=>{if(Number(sc_.value))main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
+		scset=()=>{if(Number(sc_.value)||sc_.value=='0')main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
 		bpmset=()=>{var tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
 		url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli = ()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -125,7 +125,7 @@
 					'3,7','7,10','7,10','5,8'
 				]
 			},{
-				"bpm":90,"sc":0,"ts":4,"name":"前前前世",
+				"bpm":90,"sc":-1,"ts":4,"name":"前前前世",
 				"scores":[
 					'-7,-2,2,5',['','-7,-2'],['','-7,-2,0,3'],['0,3','-7,-2,0,3'],
 
@@ -135,7 +135,7 @@
 			}
 		];
 
-		main=sample[0];
+		main=sample[3];
 		log.textContent='seq';
 
 		/////from button
