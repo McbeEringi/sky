@@ -38,7 +38,7 @@
 			document.querySelectorAll('a').forEach(e=>e.ontouchstart=()=>{});
 			if(urlq.pwa){
 				document.querySelectorAll('a').forEach(e=>e.href=e.href+'?pwa=1');
-				document.querySelectorAll('.nopwa').forEach(e=>{e.style.pointerEvents='none';e.style.filter='grayscale(1)opacity(.3)';});
+				document.querySelectorAll('.nopwa').forEach(e=>e.style.display='none');
 			}
 		</script>
 	</body>
