@@ -44,6 +44,8 @@
 				大キャンドル参考元: <a href="https://twitter.com/sky_tea11/status/1234038235149426689/photo/1">ティー様</a>
 			</div>
 		</div>
+		ここから先の内容については保証し兼ねます <br>
+		現在当ページで扱っているアルゴリズムでは対応し切れていないようです
 		<hr>
 		<h2>本日分</h2>
 		<pre id="today">loading…</pre>
@@ -87,7 +89,7 @@
 			];
 			var img=[];
 			function main(date) {
-				var dt = date.getDate(),dy=date.getDay(),h=date.getHours(),c_pat_=c_pat(dt);
+				var dt = date.getDate(),c_pat_=c_pat(dt);
 				img = "img/candle/"+c_pat_.join('')+".JPG";
 				return  "大キャンドル:	"+c_dic[c_pat_[0]][0]+"\n		"+c_dic[c_pat_[0]][c_pat_[1]+1].join(", ")+
 					//"大キャンドル:	"+c_dic[c_pat_[0]][0]+"\n		"+c_dic[c_pat_[0]][c_pat_[1]+1].join(", ")+

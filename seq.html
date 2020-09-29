@@ -12,7 +12,6 @@
 </head>
 <body>
 	<script src="style.js"></script>
-	<script src="https://tonejs.github.io/build/Tone.js"></script>
 	<style>
 		body{margin:0;user-select:none;-webkit-user-select:none;}*::-webkit-scrollbar{display:none;}
 		.clear_fix::after{content:"";clear:both;display:block;}
@@ -77,6 +76,8 @@
 	0~3<input type="number" min="0" max="2" step="1" onchange="main=sample[this.value];set();">
 	<pre id="log"></pre>
 
+	<script src="https://tonejs.github.io/build/Tone.js"></script>
+	<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js"></script>
 	<script>
 		var seq,sc=Number(sc_.value),main,kbl=[];
 		document.querySelectorAll('#kb label').forEach((e,i)=>kbl[i]=e);
@@ -209,7 +210,7 @@
 
 
 		const set=()=>{
-			setScores(main.scores);render(main.scores,disp,1);
+			setScores(main.scores);requestIdleCallback(render(main.scores,disp,1));
 			sc_.value=main.sc;bpm_.value=main.bpm;Tone.Transport.bpm.value=main.bpm;Tone.Transport.timeSignature=[main.ts,4];llog(main.name);
 		}
 		set();
