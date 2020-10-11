@@ -26,7 +26,7 @@
 		<style>
 			:root{tab-size:4em;font-size:16px;}
 			pre{white-space:pre-wrap;font-family:'M PLUS Rounded 1c',sans-serif;}
-			img{width:100%;max-width:512px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='0' y='32' font-family='monospace' font-size='32' fill='%23fff'%3ENO IMAGE%3C/text%3E%3C/svg%3E") #8888;}
+			img{width:100%;max-width:512px;background:#8888;}
 			input[type=checkbox]{display:none;}input[type=checkbox]+div{background:#8888;}input[type=checkbox]:not(:checked)+div{display:none;}label{display:block;margin:8px 0;}.clear_fix::after{content:"";clear:both;display:block;}
 		</style>
 
@@ -57,8 +57,7 @@
 
 		<script>
 			const c_pat = x=>[x%5,Math.floor((x-1)/5)%[3,3,2,3,2][x%5]];
-			//	9/ 26:10 27:21 28:31 29:41 30:02
-			//	10/ 01:10 02:20 03:30 04:40 05:00 06:11 07:21 08:31 
+			//	9/ 26:10 27:21 28:31 29:41 30:02	10/ 01:10 02:20 03:30 04:40 05:00 06:11 07:21 08:31 09:41 10:01 11:12
 			//		const c_pat2 = (x)=>[[(x-1)%5,(Math.floor((x-1)/5)+Math.floor((x-2)/5)+1)%[2,3,3,2,3][x%5]],[x%5,(Math.floor((x-1)/5)+Math.floor(x/5))%[3,3,2,3,2][x%5]]];
 			//		//7月///(1:0010,2:1120,3:2130,)4:31(40),5:4101,6:0210?,7:12?20,8:2132,9:3040,10:4101?,11:(01)11,12:1020,13:2131,14:3240,15:4100,16:0212,17:1120
 			const c_dic =[
@@ -91,11 +90,10 @@
 			var img=[];
 			function main(date) {
 				var dt = date.getDate(),c_pat_=c_pat(dt);
-				img = "img/candle/"+c_pat_.join('')+".JPG";
-				return  "大キャンドル:	"+c_dic[c_pat_[0]][0]+"\n		"+c_dic[c_pat_[0]][c_pat_[1]+1].join(", ")+
-					//"大キャンドル:	"+c_dic[c_pat_[0]][0]+"\n		"+c_dic[c_pat_[0]][c_pat_[1]+1].join(", ")+
-					//"\nデイリー:	"+
-					"\n\nオフィス:	"+(dt%7==5?"ねこ 🐈":(dt%7==6?"宇宙 🛰":"特になし"));
+				img = `img/candle/${c_pat_.join('')}.JPG`;
+				return `大キャンドル:\t${c_dic[c_pat_[0]][0]}\n\t\t${c_dic[c_pat_[0]][c_pat_[1]+1].join(", ")}
+
+オフィス:\t${(dt%7==5?"ねこ 🐈":(dt%7==6?"宇宙 🛰":"特になし"))}`;
 			}
 			var hbuf = null;
 			setTimeout(()=>setInterval(()=>{
