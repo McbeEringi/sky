@@ -73,7 +73,12 @@
 		</div>
 	</div>
 
-	0~3<input type="number" min="0" max="2" step="1" onchange="main=sample[this.value];set();">
+	<select onchange="main=sample[this.value];set();">
+		<option value="0">新宝島</option>
+		<option value="1">LINE</option>
+		<option value="2" selected>\ｵﾌﾛｶﾞﾜｷﾏｼﾀ/</option>
+		<option value="3">前前前世</option>
+	</select>
 	<pre id="log"></pre>
 
 	<script src="https://tonejs.github.io/build/Tone.js"></script>
@@ -89,8 +94,8 @@
 		synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination()),
 		sample = [
 			{
-				"bpm":90,"sc":-2,"ts":4,"name":"新宝島",
-				"scores":[
+				bpm:90,sc:-2,ts:4,name:"新宝島",
+				scores:[
 					'-4,0,3,7,10',['7,10','-4,0,3'],'7,10','-4,0,3,7,10',
 					'-5,2,5,7,10',['5,7,14','-5,2'],'5,7,14','-5,2,12,15',
 
@@ -104,8 +109,8 @@
 					'-9,-2',['-9','-9,-5'],['','-5,-2'],['-2,3','3,7']
 				]
 			},{
-				"bpm":130,"sc":0,"ts":4,"name":"LINE発信",
-				"scores":[
+				bpm:130,sc:0,ts:4,name:"LINE発信",
+				scores:[
 					'-4','-2','3','-4',
 					'-2','2','-2','0',
 
@@ -113,8 +118,8 @@
 					'','','',''
 				]
 			},{
-				"bpm":108,"sc":0,"ts":4,"name":"\\ｵﾌﾛｶﾞﾜｷﾏｼﾀ/",
-				"scores":[
+				bpm:108,sc:0,ts:4,name:"\\ｵﾌﾛｶﾞﾜｷﾏｼﾀ/",
+				scores:[
 					'3,7','','-2','-4',
 
 					'-9,-5','-5,-2','-5,-2','-5,-2,3',
@@ -129,8 +134,8 @@
 					'3,7','7,10','7,10','5,8'
 				]
 			},{
-				"bpm":90,"sc":-1,"ts":4,"name":"前前前世",
-				"scores":[
+				bpm:90,sc:-1,ts:4,name:"前前前世",
+				scores:[
 					'-7,-2,2,5',['','-7,-2'],['','-7,-2,0,3'],['0,3','-7,-2,0,3'],
 
 					'-5,0,3,7,10',['3,7,10','-5,0'],['3,7,10','-5,0'],['3,7','-4,0,3,5'],
@@ -191,10 +196,10 @@
 				if(x){
 					switch(typeof x){
 						case'string':
-							x.split(',').map(e=>{
+							x.split(',').map(y=>{
 								var note = document.createElement('p');
-								note.style.bottom=(Number(n2i[e])*16)+'px';
-								note.classList.add(e);
+								note.style.bottom=(Number(n2i[y])*16)+'px';
+								//note.classList.add('');
 								div.appendChild(note);
 							});
 							break;
@@ -210,7 +215,7 @@
 
 
 		const set=()=>{
-			setScores(main.scores);requestIdleCallback(render(main.scores,disp,1));
+			setScores(main.scores);requestIdleCallback(()=>{render(main.scores,disp,1)});
 			sc_.value=main.sc;bpm_.value=main.bpm;Tone.Transport.bpm.value=main.bpm;Tone.Transport.timeSignature=[main.ts,4];llog(main.name);
 		}
 		set();
