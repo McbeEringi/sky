@@ -231,21 +231,20 @@
 
 			/////main
 			set();
-			document.querySelectorAll('.kb>div>div').forEach((e)=>{
-				//sound
-				e.addEventListener("touchstart",function(){trigger(this.id);},false);
-				e.addEventListener("mousedown" ,function(){trigger(this.id);},false);
-				//animation
-				e.addEventListener("touchstart",function(){
+			document.querySelectorAll('.kb>div>div').forEach(key=>{
+				//sound & animation
+				key.addEventListener("touchstart",function(e){
+					e.preventDefault();trigger(this.id);
 					this.classList.remove('pushed');void this.offsetWidth;this.classList.add('pushed','anm');
 				},false);
-				e.addEventListener("mousedown",function(){
+				key.addEventListener("mousedown",function(e){
+					e.preventDefault();trigger(this.id);
 					this.classList.remove('pushed');void this.offsetWidth;this.classList.add('pushed','anm');
 					setTimeout(()=>this.classList.remove('pushed'),100);
 				},false);
-				e.addEventListener("touchend",function(e){this.classList.remove('pushed');e.preventDefault();},false);
-				e.addEventListener("touchcancel",function(){this.classList.remove('pushed');e.preventDefault();},false);
-				e.addEventListener("animationend",function(){this.classList.remove('anm');},false);
+				key.addEventListener("touchend",function(e){this.classList.remove('pushed');e.preventDefault();},false);
+				key.addEventListener("touchcancel",function(e){this.classList.remove('pushed');e.preventDefault();},false);
+				key.addEventListener("animationend",function(){this.classList.remove('anm');},false);
 			})
 			document.addEventListener('keydown',e=>{
 				if(keymap[kbmode][e.code]&&kb.style.opacity=="1")document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('mousedown'));
