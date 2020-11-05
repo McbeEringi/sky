@@ -26,91 +26,82 @@
 		<style>
 			:root{tab-size:4em;font-size:16px;}
 			pre{white-space:pre-wrap;font-family:'M PLUS Rounded 1c',sans-serif;}
-			img{width:100%;max-width:512px;background:#8888;}
+			br+img{width:100%;max-width:512px;background:#8888;}
 			input[type=checkbox]{display:none;}input[type=checkbox]+div{background:#8888;}input[type=checkbox]:not(:checked)+div{display:none;}label{display:block;margin:8px 0;}.clear_fix::after{content:"";clear:both;display:block;}
+			#office>p{display:inline-block;width:48px;height:48px;background:#8888;text-align:center;line-height:48px;}
+			#main{text-align:center;}#main label{display:inline-block;width:30%;min-width:256px;overflow:hidden;}
+			input[type=radio]{display:none;}
+			input:not(:checked)+div{display:none;}input+div:not(:last-child)::before{content:"select first candle position";display:block;}
+			input+img{width:100%;transform-origin:top left;vertical-align:top;transition:.2s;transform:scale(2);}
+			input:checked+img{transform:scale(1);}
 		</style>
 
-
-		<div class="clear_fix">
-			<div style="user-select:none;-webkit-user-select:none;float:left;">
-				<label><input type="checkbox">草原(3)▶︎<div>["入口左手前","丸石奥","鳥の塔右奥","洞窟入口"]<br><img src="img/candle/00.JPG"><br><br>["入口右奥","丸石右","4島中央","神殿内"]<br><img src="img/candle/01.JPG"><br><br>["入口左奥","鳥の塔中央","洞窟内","神殿前"]<br><img src="img/candle/02.JPG"></div></label>
-				<label><input type="checkbox">雨林(3)▶︎<div>["入口右手前","開拓地船","川&蟹木","晴れ間池"]<br><img src="img/candle/10.JPG"><br><br>["入口左奥","開拓地奥木","墓所中央","神殿後"]<br><img src="img/candle/11.JPG"><br><br>["入口右奥","川&amp;蟹出口","墓所橋","晴れ間奥"]<br><img src="img/candle/12.JPG"></div></label>
-				<label><input type="checkbox">峡谷(2)▶︎<div>["入口左","スケート橋","天球儀入口","ゴール左"]<br><img src="img/candle/20.JPG"><br><br>["入口右奥","スケート氷","天球儀出口","ゴール右"]<br><img src="img/candle/21.JPG"></div></label>
-				<label><input type="checkbox">捨て地(3)▶︎<div>["入口後ろ","祠出口","投石台手前","戦場砦右奥"]<br><img src="img/candle/30.JPG"><br><br>["入口左奥","祠闇花","投石台中央","難破船後端"]<br><img src="img/candle/31.JPG"><br><br>["入口右奥","投石台出口","難破船先端","戦場砦上"]<br><img src="img/candle/32.JPG"></div></label>
-				<label><input type="checkbox">書庫(2)▶︎<div>["1F手前","1F奥","2F奥","6F手前"]<br><img src="img/candle/40.JPG"><br><br>["1F右","2F扉左","4F祠","6F奥"]<br><img src="img/candle/41.JPG"></div></label>
+		<pre id="time">current time: loading…<br> server time : loading…</pre>
+		<hr>
+		<form id="main">
+			<input type="radio" name="m"><div>
+				<label><input type="radio" name="0"><img src="img/candle/00.JPG"></label>
+				<label><input type="radio" name="0"><img src="img/candle/01.JPG"></label>
+				<label><input type="radio" name="0"><img src="img/candle/02.JPG"></label>
 			</div>
-			<div style="float:right;">
-				<pre id="time">current time: loading…<br> server time : loading…</pre>
-				大キャンドル参考元: <a href="https://twitter.com/sky_tea11/status/1234038235149426689/photo/1">ティー様</a>
+			<input type="radio" name="m"><div>
+				<label><input type="radio" name="0"><img src="img/candle/10.JPG"></label>
+				<label><input type="radio" name="0"><img src="img/candle/11.JPG"></label>
+				<label><input type="radio" name="0"><img src="img/candle/12.JPG"></label>
 			</div>
+			<input type="radio" name="m"><div>
+				<label><input type="radio" name="0"><img src="img/candle/20.JPG"></label>
+				<label><input type="radio" name="0"><img src="img/candle/21.JPG"></label>
+			</div>
+			<input type="radio" name="m"><div>
+				<label><input type="radio" name="0"><img src="img/candle/30.JPG"></label>
+				<label><input type="radio" name="0"><img src="img/candle/31.JPG"></label>
+				<label><input type="radio" name="0"><img src="img/candle/32.JPG"></label>
+			</div>
+			<input type="radio" name="m"><div>
+				<label><input type="radio" name="0"><img src="img/candle/40.JPG"></label>
+				<label><input type="radio" name="0"><img src="img/candle/41.JPG"></label>
+			</div>
+			<input type="radio" name="m" checked><div>loading…</div>
+		</form>
+		<hr>
+		オフィス
+		<div id="office"><p>無念</p><p>社畜</p><p>ピザ</p><p>つぼ</p><p>ネコ</p><p>宇宙</p><p>散歩</p></div>
+		source: <a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area_(The_Office)#The_Spirits_of_the_Office">Sky Wiki</a>
+		<hr>
+		<div style="user-select:none;-webkit-user-select:none;">
+			<label><input type="checkbox">草原(3)▶︎<div>["入口左手前","丸石奥","鳥の塔右奥","洞窟入口"]<br><img src="img/candle/00.JPG"><br><br>["入口右奥","丸石右","4島中央","神殿内"]<br><img src="img/candle/01.JPG"><br><br>["入口左奥","鳥の塔中央","洞窟内","神殿前"]<br><img src="img/candle/02.JPG"></div></label>
+			<label><input type="checkbox">雨林(3)▶︎<div>["入口右手前","開拓地船","川&蟹木","晴れ間池"]<br><img src="img/candle/10.JPG"><br><br>["入口左奥","開拓地奥木","墓所中央","神殿後"]<br><img src="img/candle/11.JPG"><br><br>["入口右奥","川&amp;蟹出口","墓所橋","晴れ間奥"]<br><img src="img/candle/12.JPG"></div></label>
+			<label><input type="checkbox">峡谷(2)▶︎<div>["入口左","スケート橋","天球儀入口","ゴール左"]<br><img src="img/candle/20.JPG"><br><br>["入口右奥","スケート氷","天球儀出口","ゴール右"]<br><img src="img/candle/21.JPG"></div></label>
+			<label><input type="checkbox">捨て地(3)▶︎<div>["入口後ろ","祠出口","投石台手前","戦場砦右奥"]<br><img src="img/candle/30.JPG"><br><br>["入口左奥","祠闇花","投石台中央","難破船後端"]<br><img src="img/candle/31.JPG"><br><br>["入口右奥","投石台出口","難破船先端","戦場砦上"]<br><img src="img/candle/32.JPG"></div></label>
+			<label><input type="checkbox">書庫(2)▶︎<div>["1F手前","1F奥","2F奥","6F手前"]<br><img src="img/candle/40.JPG"><br><br>["1F右","2F扉左","4F祠","6F奥"]<br><img src="img/candle/41.JPG"></div></label>
 		</div>
-		<!--
-		ここから先の内容については保証し兼ねます
-		<hr>
-		<h2>本日分</h2>
-		<pre id="today">loading…</pre>
-		<img id="today_" alt="today's candle">
-		<hr>
-		<h2>次回更新分</h2>
-		<pre id="next">loading…</pre>
-		<img id="next_" alt="tomorrow's candle">
-		<hr>-->
+		大キャンドル参考元: <a href="https://twitter.com/sky_tea11/status/1234038235149426689/photo/1">ティー</a>様
 
 		<script>
-			const c_pat = x=>[x%5,Math.floor((x-1)/5)%[3,3,2,3,2][x%5]];
-			//	9/ 26:10 27:21 28:31 29:41 30:02	10/ 01:10 02:20 03:30 04:40 05:00 06:11 07:21 08:31 09:41 10:01 11:10 12:20 13:32 14:42 15:02 16:12 17:21 18:32 19:41 20:00 21:11 22:20 24:40 25:01 26:10 27:21 28:31 29:41
-			//		const c_pat2 = (x)=>[[(x-1)%5,(Math.floor((x-1)/5)+Math.floor((x-2)/5)+1)%[2,3,3,2,3][x%5]],[x%5,(Math.floor((x-1)/5)+Math.floor(x/5))%[3,3,2,3,2][x%5]]];
-			//		//7月///(1:0010,2:1120,3:2130,)4:31(40),5:4101,6:0210?,7:12?20,8:2132,9:3040,10:4101?,11:(01)11,12:1020,13:2131,14:3240,15:4100,16:0212,17:1120
 			const c_dic =[
 				//https://twitter.com/sky_tea11/status/1234038235149426689/photo/1
 				//https://twitter.com/i/events/1176090791342567424
-				["~草原~",
-					["入口左手前","丸石奥","鳥の塔右奥","洞窟入口"],
-					["入口右奥","丸石右","4島中央","神殿内"],
-					["入口左奥","鳥の塔中央","洞窟内","神殿前"]
-				],
-				["~雨林~",
-					["入口右手前","開拓地船","川&蟹木","晴れ間池"],
-					["入口左奥","開拓地奥木","墓所中央","神殿後"],
-					["入口右奥","川&蟹出口","墓所橋","晴れ間奥"]
-				],
-				["~峡谷~",
-					["入口左","スケート橋","天球儀入口","ゴール左"],
-					["入口右奥","スケート氷","天球儀出口","ゴール右"]
-				],
-				["~捨て地~",
-					["入口後ろ","祠出口","投石台手前","戦場砦右奥"],
-					["入口左奥","祠闇花","投石台中央","難破船後端"],
-					["入口右奥","投石台出口","難破船先端","戦場砦上"]
-				],
-				["~書庫~",
-					["1F手前","1F奥","2F奥","6F手前"],
-					["1F右","2F扉左","4F祠","6F奥"]
-				],
+				["~草原~",["入口左手前","丸石奥","鳥の塔右奥","洞窟入口"],["入口右奥","丸石右","4島中央","神殿内"],["入口左奥","鳥の塔中央","洞窟内","神殿前"]],
+				["~雨林~",["入口右手前","開拓地船","川&蟹木","晴れ間池"],["入口左奥","開拓地奥木","墓所中央","神殿後"],["入口右奥","川&蟹出口","墓所橋","晴れ間奥"]],
+				["~峡谷~",["入口左","スケート橋","天球儀入口","ゴール左"],["入口右奥","スケート氷","天球儀出口","ゴール右"]],
+				["~捨て地~",["入口後ろ","祠出口","投石台手前","戦場砦右奥"],["入口左奥","祠闇花","投石台中央","難破船後端"],["入口右奥","投石台出口","難破船先端","戦場砦上"]],
+				["~書庫~",["1F手前","1F奥","2F奥","6F手前"],["1F右","2F扉左","4F祠","6F奥"]],
 			];
-			var img=[];
-			function main(date) {
-				var dt = date.getDate(),c_pat_=c_pat(dt);
-				img = `img/candle/${c_pat_.join('')}.JPG`;
-				return `大キャンドル:\t${c_dic[c_pat_[0]][0]}\n\t\t${c_dic[c_pat_[0]][c_pat_[1]+1].join(", ")}
-
-オフィス:\t${(dt%7==5?"ねこ 🐈":(dt%7==6?"宇宙 🛰":"特になし"))}`;
-			}
 			var hbuf = null;
 			setTimeout(()=>setInterval(()=>{
 				var date = new Date();
 				time.textContent = "current time: "+date.toLocaleString();
-				date.setMinutes(date.getMinutes()-480+date.getTimezoneOffset());
+				date.setMinutes(date.getMinutes()-480+date.getTimezoneOffset());//420
 				time.textContent += "\n server time : "+date.toLocaleString();
-				/*if(hbuf!=date.getHours()){
+				if(hbuf!=date.getHours()){
 					hbuf = date.getHours();
 					console.log("exe");
-					today.innerText = main(date);
-					today_.src = img;
-					date.setDate(date.getDate()+1);
-					next.innerText = main(date);
-					next_.src = img;
-				}*/
+					var days = Math.floor((new Date().getTime()-new Date('2020/11/4 17:00').getTime())/86400000)%5;//1000*60*60*24
+					main.m[days].checked=true;
+					office.childNodes.forEach(e=>e.style.background='#2228');
+					office.childNodes[(new Date().getDate())%7-1].style.background='#6ca8';
+				}
 			},1000),1000-new Date().getMilliseconds());
 		</script>
 	</body>
