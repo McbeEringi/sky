@@ -44,8 +44,8 @@
 				大キャンドル参考元: <a href="https://twitter.com/sky_tea11/status/1234038235149426689/photo/1">ティー様</a>
 			</div>
 		</div>
-		<iframe href="https://www.icloud.com/numbers/0vl3524wq4iyG-V6Se7aEI6BA#treasure_candle">treasure_candle_his</iframe><br>
-		<a href="https://www.icloud.com/numbers/0vl3524wq4iyG-V6Se7aEI6BA#treasure_candle?embed=true" style="width:100vw;height:100vh;">Numbers</a>
+		<a href="https://www.icloud.com/numbers/0vl3524wq4iyG-V6Se7aEI6BA#treasure_candle">Numbers</a><br>
+		<iframe href="https://www.icloud.com/numbers/0vl3524wq4iyG-V6Se7aEI6BA#treasure_candle?embed=true" style="width:100vw;height:100vh;">treasure_candle_his</iframe>
 		<!--
 		ここから先の内容については保証し兼ねます
 		<hr>
@@ -56,7 +56,7 @@
 		<h2>次回更新分</h2>
 		<pre id="next">loading…</pre>
 		<img id="next_" alt="tomorrow's candle">
-		<hr>
+		<hr>-->
 
 		<script>
 			const c_pat = x=>[x%5,Math.floor((x-1)/5)%[3,3,2,3,2][x%5]];
@@ -102,9 +102,9 @@
 			setTimeout(()=>setInterval(()=>{
 				var date = new Date();
 				time.textContent = "current time: "+date.toLocaleString();
-				date.setMinutes(date.getMinutes()-420+date.getTimezoneOffset());
+				date.setMinutes(date.getMinutes()-480+date.getTimezoneOffset());
 				time.textContent += "\n server time : "+date.toLocaleString();
-				if(hbuf!=date.getHours()){
+				/*if(hbuf!=date.getHours()){
 					hbuf = date.getHours();
 					console.log("exe");
 					today.innerText = main(date);
@@ -112,8 +112,8 @@
 					date.setDate(date.getDate()+1);
 					next.innerText = main(date);
 					next_.src = img;
-				}
+				}*/
 			},1000),1000-new Date().getMilliseconds());
-		</script>-->
+		</script>
 	</body>
 </html>
