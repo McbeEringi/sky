@@ -5,7 +5,7 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145066191-2"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-145066191-2');</script>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<title>sky_info</title>
 		<meta name="Description" content="Sky treasure candle">
 		<link rel="shortcut icon" type="image/png" href="img/sky_192.png">
@@ -24,59 +24,41 @@
 	<body>
 		<script src="style.js"></script>
 		<style>
-			:root{tab-size:4em;font-size:16px;}
+			:root{tab-size:4em;font-size:16px;}img{width:100%}
 			pre{white-space:pre-wrap;font-family:'M PLUS Rounded 1c',sans-serif;}
 			br+img{width:100%;max-width:512px;background:#8888;}
-			input[type=checkbox]{display:none;}input[type=checkbox]+div{background:#8888;}input[type=checkbox]:not(:checked)+div{display:none;}label{display:block;margin:8px 0;}.clear_fix::after{content:"";clear:both;display:block;}
-			#office>p{display:inline-block;width:48px;height:48px;background:#8888;text-align:center;line-height:48px;}
-			#main{text-align:center;}#main label{display:inline-block;width:30%;min-width:256px;overflow:hidden;}
-			input[type=radio]{display:none;}
-			input:not(:checked)+div{display:none;}input+div:not(:last-child)::before{content:"select first candle position";display:block;}
-			input+img{width:100%;transform-origin:top left;vertical-align:top;transition:.2s;transform:scale(2);}
-			input:checked+img{transform:scale(1);}
+			input[type=checkbox]{display:none;}input[type=checkbox]+div{background:#8888;}input[type=checkbox]:not(:checked)+div{display:none;}label{display:block;margin:8px 0;}input[type=checkbox]+div>div{display:inline-block;}.clear_fix::after{content:"";clear:both;display:block;}
+			.ib>*{display:inline-block;max-width:512px;min-width:256px;width:100%;}
+			.of>p{display:inline-block;width:48px;height:48px;background:#8888;text-align:center;line-height:48px;}
 		</style>
 
-		<pre id="time">current time: loading…<br> server time : loading…</pre>
+		<pre id="time">javascript disabled</pre>
 		<hr>
-		<form id="main">
-			<input type="radio" name="m"><div>
-				<label><input type="radio" name="0"><img src="img/candle/00.JPG"></label>
-				<label><input type="radio" name="0"><img src="img/candle/01.JPG"></label>
-				<label><input type="radio" name="0"><img src="img/candle/02.JPG"></label>
+		<div class="ib">
+			<div>
+				<h2>today</h2>
+				<pre id="todayt"></pre>
+				<div id="todayo" class="of"><p>無念</p><p>社畜</p><p>ピザ</p><p>つぼ</p><p>ネコ</p><p>宇宙</p><p>散歩</p></div>
+				<img id="todayi">
 			</div>
-			<input type="radio" name="m"><div>
-				<label><input type="radio" name="0"><img src="img/candle/10.JPG"></label>
-				<label><input type="radio" name="0"><img src="img/candle/11.JPG"></label>
-				<label><input type="radio" name="0"><img src="img/candle/12.JPG"></label>
+			<div>
+				<h2>tomorrow</h2>
+				<pre id="tomorrowt"></pre>
+				<div id="tomorrowo" class="of"><p>無念</p><p>社畜</p><p>ピザ</p><p>つぼ</p><p>ネコ</p><p>宇宙</p><p>散歩</p></div>
+				<img id="tomorrowi">
 			</div>
-			<input type="radio" name="m"><div>
-				<label><input type="radio" name="0"><img src="img/candle/20.JPG"></label>
-				<label><input type="radio" name="0"><img src="img/candle/21.JPG"></label>
-			</div>
-			<input type="radio" name="m"><div>
-				<label><input type="radio" name="0"><img src="img/candle/30.JPG"></label>
-				<label><input type="radio" name="0"><img src="img/candle/31.JPG"></label>
-				<label><input type="radio" name="0"><img src="img/candle/32.JPG"></label>
-			</div>
-			<input type="radio" name="m"><div>
-				<label><input type="radio" name="0"><img src="img/candle/40.JPG"></label>
-				<label><input type="radio" name="0"><img src="img/candle/41.JPG"></label>
-			</div>
-			<input type="radio" name="m" checked><div>loading…</div>
-		</form>
-		<hr>
-		オフィス
-		<div id="office"><p>無念</p><p>社畜</p><p>ピザ</p><p>つぼ</p><p>ネコ</p><p>宇宙</p><p>散歩</p></div>
-		source: <a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area_(The_Office)#The_Spirits_of_the_Office">Sky Wiki</a>
+		</div>
 		<hr>
 		<div style="user-select:none;-webkit-user-select:none;">
-			<label><input type="checkbox">草原(3)▶︎<div>["入口左手前","丸石奥","鳥の塔右奥","洞窟入口"]<br><img src="img/candle/00.JPG"><br><br>["入口右奥","丸石右","4島中央","神殿内"]<br><img src="img/candle/01.JPG"><br><br>["入口左奥","鳥の塔中央","洞窟内","神殿前"]<br><img src="img/candle/02.JPG"></div></label>
-			<label><input type="checkbox">雨林(3)▶︎<div>["入口右手前","開拓地船","川&蟹木","晴れ間池"]<br><img src="img/candle/10.JPG"><br><br>["入口左奥","開拓地奥木","墓所中央","神殿後"]<br><img src="img/candle/11.JPG"><br><br>["入口右奥","川&amp;蟹出口","墓所橋","晴れ間奥"]<br><img src="img/candle/12.JPG"></div></label>
-			<label><input type="checkbox">峡谷(2)▶︎<div>["入口左","スケート橋","天球儀入口","ゴール左"]<br><img src="img/candle/20.JPG"><br><br>["入口右奥","スケート氷","天球儀出口","ゴール右"]<br><img src="img/candle/21.JPG"></div></label>
-			<label><input type="checkbox">捨て地(3)▶︎<div>["入口後ろ","祠出口","投石台手前","戦場砦右奥"]<br><img src="img/candle/30.JPG"><br><br>["入口左奥","祠闇花","投石台中央","難破船後端"]<br><img src="img/candle/31.JPG"><br><br>["入口右奥","投石台出口","難破船先端","戦場砦上"]<br><img src="img/candle/32.JPG"></div></label>
-			<label><input type="checkbox">書庫(2)▶︎<div>["1F手前","1F奥","2F奥","6F手前"]<br><img src="img/candle/40.JPG"><br><br>["1F右","2F扉左","4F祠","6F奥"]<br><img src="img/candle/41.JPG"></div></label>
+			<label><input type="checkbox">草原(3)▶︎<div><div>["入口左手前","丸石奥","鳥の塔右奥","洞窟入口"]<br><img src="img/candle/00.JPG"></div><div>["入口右奥","丸石右","4島中央","神殿内"]<br><img src="img/candle/01.JPG"></div><div>["入口左奥","鳥の塔中央","洞窟内","神殿前"]<br><img src="img/candle/02.JPG"></div></div></label>
+			<label><input type="checkbox">雨林(3)▶︎<div><div>["入口右手前","開拓地船","川&蟹木","晴れ間池"]<br><img src="img/candle/10.JPG"></div><div>["入口左奥","開拓地奥木","墓所中央","神殿後"]<br><img src="img/candle/11.JPG"></div><div>["入口右奥","川&amp;蟹出口","墓所橋","晴れ間奥"]<br><img src="img/candle/12.JPG"></div></div></label>
+			<label><input type="checkbox">峡谷(2)▶︎<div><div>["入口左","スケート橋","天球儀入口","ゴール左"]<br><img src="img/candle/20.JPG"></div><div>["入口右奥","スケート氷","天球儀出口","ゴール右"]<br><img src="img/candle/21.JPG"></div></div></label>
+			<label><input type="checkbox">捨て地(3)▶︎<div><div>["入口後ろ","祠出口","投石台手前","戦場砦右奥"]<br><img src="img/candle/30.JPG"></div><div>["入口左奥","祠闇花","投石台中央","難破船後端"]<br><img src="img/candle/31.JPG"></div><div>["入口右奥","投石台出口","難破船先端","戦場砦上"]<br><img src="img/candle/32.JPG"></div></div></label>
+			<label><input type="checkbox">書庫(2)▶︎<div><div>["1F手前","1F奥","2F奥","6F手前"]<br><img src="img/candle/40.JPG"></div><div>["1F右","2F扉左","4F祠","6F奥"]<br><img src="img/candle/41.JPG"></div></div></label>
 		</div>
-		大キャンドル参考元: <a href="https://twitter.com/sky_tea11/status/1234038235149426689/photo/1">ティー</a>様
+		大キャンドル参考元: <a href="https://twitter.com/sky_tea11/status/1234038235149426689/photo/1">ティー</a>様 <br>
+		オフィス参考元: <a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area_(The_Office)#The_Spirits_of_the_Office">Sky Wiki</a>
+		<pre id="log"></pre>
 
 		<script>
 			const c_dic =[
@@ -89,18 +71,25 @@
 				["~書庫~",["1F手前","1F奥","2F奥","6F手前"],["1F右","2F扉左","4F祠","6F奥"]],
 			];
 			var hbuf = null;
+			time.textContent=`current time: loading…\n  server time: loading…`;
+			const c_fx=t=>{var s=[Math.floor((t.getTime()-new Date('2020/11/4 17:00').getTime())/86400000)%5];s[1]=(t.getDate()-1)%[3,3,2,3,2][s[0]];return s;}
 			setTimeout(()=>setInterval(()=>{
-				var date = new Date();
-				time.textContent = "current time: "+date.toLocaleString();
-				date.setMinutes(date.getMinutes()-480+date.getTimezoneOffset());//420
-				time.textContent += "\n server time : "+date.toLocaleString();
-				if(hbuf!=date.getHours()){
-					hbuf = date.getHours();
+				var local=new Date(),server=new Date(local.getTime()-3600000*17);
+				time.textContent=`current time: ${local.toLocaleString()}\n  server time: ${server.toLocaleString()}`;
+				if(hbuf!=server.getHours()){
+					hbuf = server.getHours();
 					console.log("exe");
-					var days = Math.floor((new Date().getTime()-new Date('2020/11/4 17:00').getTime())/86400000)%5;//1000*60*60*24
-					main.m[days].checked=true;
-					office.childNodes.forEach(e=>e.style.background='#2228');
-					office.childNodes[(new Date().getDate())%7-1].style.background='#6ca8';
+					var today = c_fx(server);
+					todayt.textContent=`${c_dic[today[0]][0]}\n${c_dic[today[0]][today[1]+1]}`;
+					todayi.src=`img/candle/${today.join('')}.JPG`;
+					todayo.childNodes.forEach(e=>e.style.background='#2228');
+					todayo.childNodes[server.getDate()%7-1].style.background='#6ca8';
+					server.setDate(server.getDate()+1);
+					var tomorrow = c_fx(server);
+					tomorrowt.textContent=`${c_dic[tomorrow[0]][0]}\n${c_dic[tomorrow[0]][tomorrow[1]+1]}`;
+					tomorrowi.src=`img/candle/${tomorrow.join('')}.JPG`;
+					tomorrowo.childNodes.forEach(e=>e.style.background='#2228');
+					tomorrowo.childNodes[server.getDate()%7-1].style.background='#6ca8';
 				}
 			},1000),1000-new Date().getMilliseconds());
 		</script>
