@@ -71,7 +71,7 @@
 				["~書庫~",["1F手前","1F奥","2F奥","6F手前"],["1F右","2F扉左","4F祠","6F奥"]],
 			];
 			var hbuf = null;
-			const c_fx=t=>{var s=[Math.floor((t.getTime()-new Date('2020/11/4 00:00').getTime())/86400000)%5];s[1]=(t.getDate()-1)%[3,3,2,3,2][s[0]];return s;},
+			const c_fx=t=>{var s=[Math.floor((t.getTime()-new Date('2020/11/4 00:00').getTime())/86400000)%5];s[1]=Math.floor((t.getDate()-1)/5)%[3,3,2,3,2][s[0]];return s;},
 			main=()=>{
 				var local=new Date(),server=new Date(local.getTime()-3600000*17);
 				time.textContent=`current time: ${local.toLocaleString()}\n  server time: ${server.toLocaleString()}`;
