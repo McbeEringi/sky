@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache201206_0',STATIC_DATA=[
+const cacheName='cache201223_0',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg',
 	'img/sky.png',
@@ -18,7 +18,6 @@ const cacheName='cache201206_0',STATIC_DATA=[
 	//instr
 	'instr.html?pwa=1',
 	'https://tonejs.github.io/build/Tone.js',
-	'https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js',
 	'img/tex.png',
 	'audio/instr/musicbox/a3.mp3',
 	'audio/instr/musicbox/a4.mp3',
