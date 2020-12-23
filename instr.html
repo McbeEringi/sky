@@ -27,7 +27,6 @@
 		<pre id="jswarn">Please enable JavaScript to use this app.</pre><script>jswarn.style.display='none';</script>
 		<script src="style.js"></script>
 		<script src="https://tonejs.github.io/build/Tone.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
 		<style>
 			:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;overflow:hidden;}
 			body{position:relative;overflow:hidden;margin:0;}*::-webkit-scrollbar{display:none;}
@@ -128,7 +127,7 @@
 				}
 				return s;
 			};
-			const info = "Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander\n\nThis page uses cookie to store instruments settings.\n\nauthor:@SkyEringi\nMIT License";
+			const info = "Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander\n\nauthor:@SkyEringi\nMIT License";
 			const blli = [
 				{"c4":"c4.mp3","d4":"d4.mp3","g4":"g4.mp3","a4":"a4.mp3"},
 				{"c4":"c4_.mp3","d4":"d4_.mp3","g4":"g4_.mp3","a4":"a4_.mp3"}
@@ -164,9 +163,9 @@
 
 
 			/////save & load
-			const save = ()=>{Cookies.set('sc',sc,{expires:7,path:''});Cookies.set('instr',menu.instr.value,{expires:7,path:''});console.log("saved")}
+			const save = ()=>{localStorage.instr_sc=sc;localStorage.instr_instr=menu.instr.value;console.log("saved")}
 			function load(){
-				var c = [Cookies.get('sc'),Cookies.get('instr')];
+				var c = [localStorage.instr_sc,localStorage.instr_instr];
 				if(c){
 					if(c[0])sc=parseInt(c[0]);
 					if(c[1])try{menu.instr[parseInt(c[1])].checked=true;}catch(e){console.log(e);}
