@@ -235,15 +235,15 @@
 				key.addEventListener("touchstart",function(e){
 					e.preventDefault();trigger(this.id);
 					this.classList.remove('pushed');void this.offsetWidth;this.classList.add('pushed','anm');
-				},false);
+				},{passive:false});
 				key.addEventListener("mousedown",function(e){
 					e.preventDefault();trigger(this.id);
 					this.classList.remove('pushed');void this.offsetWidth;this.classList.add('pushed','anm');
 					setTimeout(()=>this.classList.remove('pushed'),100);
-				},false);
-				key.addEventListener("touchend",function(e){this.classList.remove('pushed');e.preventDefault();},false);
-				key.addEventListener("touchcancel",function(e){this.classList.remove('pushed');e.preventDefault();},false);
-				key.addEventListener("animationend",function(){this.classList.remove('anm');},false);
+				},{passive:false});
+				key.addEventListener("touchend",function(e){this.classList.remove('pushed');e.preventDefault();},{passive:false});
+				key.addEventListener("touchcancel",function(e){this.classList.remove('pushed');e.preventDefault();},{passive:false});
+				key.addEventListener("animationend",function(){this.classList.remove('anm');});
 			})
 			document.addEventListener('keydown',e=>{
 				if(keymap[kbmode][e.code]&&kb.style.opacity=="1")document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('mousedown'));
