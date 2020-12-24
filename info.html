@@ -37,15 +37,15 @@
 		<div class="ib">
 			<div>
 				<h2>today</h2>
-				<pre id="todayt"></pre>
-				<div id="todayo" class="of"><p>無念</p><p>社畜</p><p>ピザ</p><p>つぼ</p><p>ネコ</p><p>宇宙</p><p>散歩</p></div>
-				<img id="todayi">
+				<pre id="_0t"></pre>
+				<div id="_0o" class="of"><p>無念</p><p>社畜</p><p>ピザ</p><p>つぼ</p><p>ネコ</p><p>宇宙</p><p>散歩</p></div>
+				<img id="_0i"><img id="_0i_">
 			</div>
 			<div>
 				<h2>tomorrow</h2>
-				<pre id="tomorrowt"></pre>
-				<div id="tomorrowo" class="of"><p>無念</p><p>社畜</p><p>ピザ</p><p>つぼ</p><p>ネコ</p><p>宇宙</p><p>散歩</p></div>
-				<img id="tomorrowi">
+				<pre id="_1t"></pre>
+				<div id="_1o" class="of"><p>無念</p><p>社畜</p><p>ピザ</p><p>つぼ</p><p>ネコ</p><p>宇宙</p><p>散歩</p></div>
+				<img id="_1i"><img id="_1i_">
 			</div>
 		</div>
 		<hr>
@@ -69,26 +69,83 @@
 				["~峡谷~",["入口左","スケート橋","天球儀入口","ゴール左"],["入口右奥","スケート氷","天球儀出口","ゴール右"]],
 				["~捨て地~",["入口後ろ","祠出口","投石台手前","戦場砦右奥"],["入口左奥","祠闇花","投石台中央","難破船後端"],["入口右奥","投石台出口","難破船先端","戦場砦上"]],
 				["~書庫~",["1F手前","1F奥","2F奥","6F手前"],["1F右","2F扉左","4F祠","6F奥"]],
-			];
-			var hbuf = null;
+			],
+			calendar={
+				2020:{
+					12:{
+						21:[2,0,1],
+						22:[3,1,2],
+						23:[4,0,1],
+						24:[0,1,2],
+						25:[1,1,2],
+						26:[2,0,1],
+						27:[3,0,1],
+						28:[4,0,1],
+						29:[0,0,1],
+						30:[1,0,1],
+						31:[2,0,1]
+					}
+				},
+				2021:{
+					1:{
+						1 :[0,0,1],
+						2 :[1,0,1],
+						3 :[2,0,1],
+						//4 :[3],5 :[4],
+						6 :[0,2],
+						7 :[1,2],
+						8 :[2,0],
+						//9 :[3],10:[4],
+						11:[0,0],
+						12:[1,0],
+						13:[2,1],
+						//14:[3],15:[4],
+						16:[0,1],
+						17:[1,1],
+						18:[2,0],
+						//19:[3],20:[4],
+						21:[0,2],
+						22:[1,2],
+						23:[2,1],
+						//24:[3],25:[4],
+						26:[0,0],
+						27:[1,0],
+						28:[2,0],
+						//29:[3],30:[4],
+						31:[0,1]
+					}
+				}
+			};
+			const limited=(x,i)=>{
+				var cal=calendar[x.getFullYear()][x.getMonth()+1][x.getDate()];if(!cal)return 1;
+				document.getElementById(`_${i}t`).textContent=`${cal[2]+1?'DOUBLE TREASURE CANDLES ~Jan 3rd\n\n':''}${c_dic[cal[0]][0]}\n${c_dic[cal[0]][cal[1]+1]}\n${c_dic[cal[0]][cal[2]+1]||''}`;
+				document.getElementById(`_${i}i`).src=`img/candle/${cal[0]}${cal[1]}.JPG`;
+				if(cal[2]+1)document.getElementById(`_${i}i_`).src=`img/candle/${cal[0]}${cal[2]}.JPG`;
+				return 0;
+			}
+
 			const c_fx=t=>{var s=[Math.floor((t.getTime()-new Date('2020/11/4 00:00').getTime())/86400000)%5];s[1]=Math.floor((t.getDate()-1)/5)%[3,3,2,3,2][s[0]];return s;},
 			main=()=>{
-				var local=new Date(),server=new Date(local.getTime()-3600000*17);
+				var local=new Date(),server=new Date(local.getTime()-3600000*17),hbuf = null;
 				time.textContent=`current time: ${local.toLocaleString()}\n  server time: ${server.toLocaleString()}`;
 				if(hbuf!=server.getHours()){
 					hbuf = server.getHours();
 					console.log("exe");
-					var today = c_fx(server);
-					todayt.textContent=`${c_dic[today[0]][0]}\n${c_dic[today[0]][today[1]+1]}`;
-					todayi.src=`img/candle/${today.join('')}.JPG`;
-					todayo.childNodes.forEach(e=>e.style.background='#2228');
-					todayo.childNodes[(server.getDate()-1)%7].style.background='#6ca8';
+					if(limited(server,0)){
+						var today = c_fx(server);
+						_0t.textContent=`${c_dic[today[0]][0]}\n${c_dic[today[0]][today[1]+1]}`;
+						_0i.src=`img/candle/${today.join('')}.JPG`;
+					}
+					_0o.childNodes.forEach(e=>e.style.background='#2228');
+					_0o.childNodes[(server.getDate()-1)%7].style.background='#6ca8';
 					server.setDate(server.getDate()+1);
-					var tomorrow = c_fx(server);
-					tomorrowt.textContent=`${c_dic[tomorrow[0]][0]}\n${c_dic[tomorrow[0]][tomorrow[1]+1]}`;
-					tomorrowi.src=`img/candle/${tomorrow.join('')}.JPG`;
-					tomorrowo.childNodes.forEach(e=>e.style.background='#2228');
-					tomorrowo.childNodes[(server.getDate()-1)%7].style.background='#6ca8';
+					if(limited(server,1)){
+						var tomorrow = c_fx(server);
+						_1t.textContent=`${c_dic[tomorrow[0]][0]}\n${c_dic[tomorrow[0]][tomorrow[1]+1]}`;
+						_1i.src=`img/candle/${tomorrow.join('')}.JPG`;
+					}
+					_1o.childNodes.forEach(e=>e.style.background='#2228');
+					_1o.childNodes[(server.getDate()-1)%7].style.background='#6ca8';
 				}
 			};main();
 			setTimeout(()=>setInterval(main,1000),1000-new Date().getMilliseconds());
