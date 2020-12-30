@@ -85,7 +85,7 @@
 			<form id="menu" onchange="set();sfx('click');">
 				        <label><input type="radio" name="instr" value="0"  checked ><div style="--bp:-0px   -70px ;"></div>
 				</label><label><input type="radio" name="instr" value="1"          ><div style="--bp:-70px  -70px ;"></div>
-				</label><label><input type="radio" name="instr" value="2"  ><div style="--bp:-140px -70px ;"></div>
+				</label><label><input type="radio" name="instr" value="2"          ><div style="--bp:-140px -70px ;"></div>
 				</label><label><input type="radio" name="instr" value="3"          ><div style="--bp:-210px -70px ;"></div>
 				</label><label><input type="radio" name="instr" value="4"          ><div style="--bp:-280px -70px ;"></div>
 				</label><label><input type="radio" name="instr" value="5"          ><div style="--bp:-350px -70px ;"></div>
@@ -98,6 +98,8 @@
 				</label><label><input type="radio" name="instr" value="12"         ><div style="--bp:-280px -140px;"></div>
 				</label><label><input type="radio" name="instr" value="13"         ><div style="--bp:-350px -140px;"></div>
 				</label><label><input type="radio" name="instr" value="14"         ><div style="--bp:-420px -140px;"></div>
+				</label><label><input type="radio" name="instr" value="15" disabled><div style="--bp:-490px -140px;"></div>
+				</label><label><input type="radio" name="instr" value="16"         ><div style="--bp:-0px   -210px;"></div>
 				</label>
 			</form>
 			<hr>
@@ -117,9 +119,9 @@
 
 		<script>
 			var synth,synth_,kbmode=0,sc=0;
-			const stdli=(a,b)=>{
+			const stdli=(a,b=a+1)=>{
 				var s={};
-				for(var i=a;i<=(b?b:(a+1));i++){
+				for(var i=a;i<=b;i++){
 					s["d#"+i]=`ds${i}.mp3`;
 					s["a" +i]=`a${i}.mp3`;
 				}
@@ -144,19 +146,22 @@
 				["audio/instr/ukulele/",-1,{"d#4":"ds4.mp3","a4":"a4.mp3"}],
 				["https://tonejs.github.io/audio/salamander/",1,{"d#5":"Ds5.mp3","a5":"A5.mp3","d#6":"Ds6.mp3","a6":"A6.mp3"}],
 				["audio/instr/glock/",1,stdli(5)],
-				["audio/instr/harp/",-1,stdli(3)]
+				["audio/instr/harp/",-1,stdli(3)],
+				["audio/instr/percussion/",-1,{"a3":"0.mp3","a#3":"1.mp3","b3":"2.mp3","c4":"3.mp3","a4":"4.mp3","a#4":"5.mp3","b4":"6.mp3","c5":"7.mp3"}],
+				["audio/instr/pipa/",-1,stdli(3)]
 			],pmap={
-				"2":[[0,1,2,3],[12,13,14,15]],
-				"6":[[-9,-7,-2,0],[-9,-7,-2,0]],
-				"7":[[-9,-7,-2,0],[-9,-7,-2,0]],
-				"14":[[-7,0,3,5],[8,10,12,15]]
+				2:[[0,1,2,3],[12,13,14,15]],
+				6:[[-9,-7,-2,0],[-9,-7,-2,0]],
+				7:[[-9,-7,-2,0],[-9,-7,-2,0]],
+				14:[[-7,0,3,5],[8,10,12,15]],
+				15:[[0,1,2,3],[12,13,14,15]]
 			},keymap=[{
-				"KeyR":"_-9","KeyT":"_-7","KeyY":"_-5","KeyU":"_-4","KeyI":"_-2",
-				"KeyF":"_0" ,"KeyG":"_2" ,"KeyH":"_3" ,"KeyJ":"_5" ,"KeyK":"_7" ,
-				"KeyC":"_8" ,"KeyV":"_10","KeyB":"_12","KeyN":"_14","KeyM":"_15"
+				KeyR:"_-9",KeyT:"_-7",KeyY:"_-5",KeyU:"_-4",KeyI:"_-2",
+				KeyF:"_0" ,KeyG:"_2" ,KeyH:"_3" ,KeyJ:"_5" ,KeyK:"_7" ,
+				KeyC:"_8" ,KeyV:"_10",KeyB:"_12",KeyN:"_14",KeyM:"_15"
 			},{
-				"KeyR":"0_0","KeyT":"0_1","KeyY":"0_2","KeyU":"0_3",
-				"KeyF":"1_0","KeyG":"1_1","KeyH":"1_2","KeyJ":"1_3"
+				KeyR:"0_0",KeyT:"0_1",KeyY:"0_2",KeyU:"0_3",
+				KeyF:"1_0",KeyG:"1_1",KeyH:"1_2",KeyJ:"1_3"
 			}];
 
 
@@ -187,7 +192,7 @@
 				scd.style.opacity="1";scd.style.pointerEvents="auto";
 				scale();
 				switch(menu.instr.value){
-					case '2':
+					case '2':case '15':
 						scd.style.opacity=".2";scd.style.pointerEvents="none";scd_.style.transform="none";
 						setSynth();
 						synth_=synth;
@@ -254,10 +259,10 @@
 				if(x){
 					save();
 					var now=Tone.now();
-					if(menu.instr.value!='2')synth.triggerAttackRelease(220*Math.pow(2,(3+sc)/12+instr_li[menu.instr.value][1]),"1m",now);
+					synth.triggerAttackRelease(440*Math.pow(2,(3+sc)/12+instr_li[menu.instr.value][1]),"1m",now);
 					if(kbmode==0){
-						synth.triggerAttackRelease(220*Math.pow(2,(7 +sc)/12+instr_li[menu.instr.value][1]),"1m",now+.05)
-						synth.triggerAttackRelease(220*Math.pow(2,(10+sc)/12+instr_li[menu.instr.value][1]),"1m",now+.1)
+						synth.triggerAttackRelease(440*Math.pow(2,(7 +sc)/12+instr_li[menu.instr.value][1]),"1m",now+.05)
+						synth.triggerAttackRelease(440*Math.pow(2,(10+sc)/12+instr_li[menu.instr.value][1]),"1m",now+.1)
 					}
 				}
 			}
