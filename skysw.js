@@ -69,19 +69,14 @@ self.addEventListener('fetch',(e)=>{
 				console.log('skysw Range: '+e.request.url);
 				return r.arrayBuffer();
 			})
-			.then(arrb=>
-				new Response(
-					arrb.slice(pos,(pos2>0)?(pos2+1):undefined),
-					{
-						status:206,
-						statusText:'Partial Content',
-						headers:[
-							['Content-Type',contType],
-							['Content-Range',`bytes${pos}-${(pos2||(arrb.byteLength-1))}/${arrb.byteLength}`]
-						]
-					}
-				)
-			)
+			.then(arrb=>new Response(arrb.slice(pos,(pos2>0)?(pos2+1):undefined),{
+				status:206,
+				statusText:'Partial Content',
+				headers:[
+					['Content-Type',contType],
+					['Content-Range',`bytes${pos}-${(pos2||(arrb.byteLength-1))}/${arrb.byteLength}`]
+				]
+			}))
 		)
 	}
 	else
