@@ -35,7 +35,7 @@
 			hr{border:none;}hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		</style>
 		<div class="bg_">
-			<video muted autoplay loop playsinline src="img/hotspr.mp4" type="video/mp4" id="bgv"></video>
+			<video muted autoplay loop playsinline src="img/hotsprv.mp4" type="video/mp4" id="bgv"></video>
 			<div></div>
 		</div>
 
@@ -127,33 +127,33 @@
 			const stdli=(a,b=a+1)=>{
 				var s={};
 				for(var i=a;i<=b;i++){
-					s["d#"+i]=`ds${i}.mp3`;
-					s["a" +i]=`a${i}.mp3`;
+					s['d#'+i]=`ds${i}.mp3`;
+					s['a' +i]=`a${i}.mp3`;
 				}
 				return s;
 			};
-			const info="Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander\n\nauthor:@SkyEringi\nbuild:2101062\nMIT License";
+			const info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander\n\nauthor:@SkyEringi\nbuild:2101063\nMIT License';
 			const blli=[
-				{"c4":"c4.mp3","d4":"d4.mp3","g4":"g4.mp3","a4":"a4.mp3"},
-				{"c4":"c4_.mp3","d4":"d4_.mp3","g4":"g4_.mp3","a4":"a4_.mp3"}
+				{'c4':'c4.mp3','d4':'d4.mp3','g4':'g4.mp3','a4':'a4.mp3'},
+				{'c4':'c4_.mp3','d4':'d4_.mp3','g4':'g4_.mp3','a4':'a4_.mp3'}
 			],instr_li=[//[baseurl, octave, map, (map2)]
-				["audio/instr/musicbox/",1,Object.assign({"a3":"a3.mp3","d#7":"ds7.mp3"},stdli(4,6))],
-				["audio/instr/harp/",-1,stdli(3)],
-				["audio/instr/percussion/",-1,{"a3":"0.mp3","a#3":"1.mp3","b3":"2.mp3","c4":"3.mp3","a4":"4.mp3","a#4":"5.mp3","b4":"6.mp3","c5":"7.mp3"}],
-				["audio/instr/contrabass/",-2,stdli(2)],
-				["audio/instr/horn/",-2,stdli(2)],
-				["https://tonejs.github.io/audio/salamander/",0,{"d#4":"Ds4.mp3","a4":"A4.mp3","d#5":"Ds5.mp3","a5":"A5.mp3"}],
-				["audio/instr/",1].concat([{"d#5":"musicbox/ds5.mp3","a5":"musicbox/a5.mp3"},{"d#5":"glock/ds5.mp3","a5":"glock/a5.mp3"}]),
-				["audio/instr/bell2/",1].concat(blli),
-				["audio/instr/flute/",0,stdli(4)],
-				["audio/instr/quena/",0,stdli(4)],
-				["audio/instr/guitar/",-1,stdli(3)],
-				["audio/instr/ukulele/",-1,{"d#4":"ds4.mp3","a4":"a4.mp3"}],
-				["https://tonejs.github.io/audio/salamander/",1,{"d#5":"Ds5.mp3","a5":"A5.mp3","d#6":"Ds6.mp3","a6":"A6.mp3"}],
-				["audio/instr/glock/",1,stdli(5)],
-				["audio/instr/harp/",-1,stdli(3)],
-				["audio/instr/percussion/",-1,{"a3":"0.mp3","a#3":"1.mp3","b3":"2.mp3","c4":"3.mp3","a4":"4.mp3","a#4":"5.mp3","b4":"6.mp3","c5":"7.mp3"}],
-				["audio/instr/pipa/",-1,stdli(3)]
+				['audio/instr/musicbox/',1,Object.assign({'a3':'a3.mp3','d#7':'ds7.mp3'},stdli(4,6))],
+				['audio/instr/harp/',-1,stdli(3)],
+				['audio/instr/percussion/',-1,{'a3':'0.mp3','a#3':'1.mp3','b3':'2.mp3','c4':'3.mp3','a4':'4.mp3','a#4':'5.mp3','b4':'6.mp3','c5':'7.mp3'}],
+				['audio/instr/contrabass/',-2,stdli(2)],
+				['audio/instr/horn/',-2,stdli(2)],
+				['https://tonejs.github.io/audio/salamander/',0,{'d#4':'Ds4.mp3','a4':'A4.mp3','d#5':'Ds5.mp3','a5':'A5.mp3'}],
+				['audio/instr/',1].concat([{'d#5':'musicbox/ds5.mp3','a5':'musicbox/a5.mp3'},{'d#5':'glock/ds5.mp3','a5':'glock/a5.mp3'}]),
+				['audio/instr/bell2/',1].concat(blli),
+				['audio/instr/flute/',0,stdli(4)],
+				['audio/instr/quena/',0,stdli(4)],
+				['audio/instr/guitar/',-1,stdli(3)],
+				['audio/instr/ukulele/',-1,{'d#4':'ds4.mp3','a4':'a4.mp3'}],
+				['https://tonejs.github.io/audio/salamander/',1,{'d#5':'Ds5.mp3','a5':'A5.mp3','d#6':'Ds6.mp3','a6':'A6.mp3'}],
+				['audio/instr/glock/',1,stdli(5)],
+				['audio/instr/harp/',-1,stdli(3)],
+				['audio/instr/percussion/',-1,{'a3':'0.mp3','a#3':'1.mp3','b3':'2.mp3','c4':'3.mp3','a4':'4.mp3','a#4':'5.mp3','b4':'6.mp3','c5':'7.mp3'}],
+				['audio/instr/pipa/',-1,stdli(3)]
 			],pmap={
 				2:[[0,1,2,3],[12,13,14,15]],
 				6:[[-9,-7,-2,0],[-9,-7,-2,0]],
@@ -161,23 +161,23 @@
 				14:[[-7,0,3,5],[8,10,12,15]],
 				15:[[0,1,2,3],[12,13,14,15]]
 			},keymap=[{
-				KeyR:"_-9",KeyT:"_-7",KeyY:"_-5",KeyU:"_-4",KeyI:"_-2",
-				KeyF:"_0" ,KeyG:"_2" ,KeyH:"_3" ,KeyJ:"_5" ,KeyK:"_7" ,
-				KeyC:"_8" ,KeyV:"_10",KeyB:"_12",KeyN:"_14",KeyM:"_15"
+				KeyR:'_-9',KeyT:'_-7',KeyY:'_-5',KeyU:'_-4',KeyI:'_-2',
+				KeyF:'_0' ,KeyG:'_2' ,KeyH:'_3' ,KeyJ:'_5' ,KeyK:'_7' ,
+				KeyC:'_8' ,KeyV:'_10',KeyB:'_12',KeyN:'_14',KeyM:'_15'
 			},{
-				KeyR:"0_0",KeyT:"0_1",KeyY:"0_2",KeyU:"0_3",
-				KeyF:"1_0",KeyG:"1_1",KeyH:"1_2",KeyJ:"1_3"
+				KeyR:'0_0',KeyT:'0_1',KeyY:'0_2',KeyU:'0_3',
+				KeyF:'1_0',KeyG:'1_1',KeyH:'1_2',KeyJ:'1_3'
 			}];
 
 
 			/////save & load
-			const save=()=>{localStorage.instr_sc=sc;localStorage.instr_instr=menu.instr.value;console.log("saved")}
+			const save=()=>{localStorage.instr_sc=sc;localStorage.instr_instr=menu.instr.value;console.log('saved')}
 			function load(){
 				var c=[localStorage.instr_sc,localStorage.instr_instr];
 				if(c){
 					if(c[0])sc=parseInt(c[0]);
 					if(c[1])try{menu.instr[parseInt(c[1])].checked=true;}catch(e){console.log(e);}
-					console.log("loaded");
+					console.log('loaded');
 				}
 			}
 			load();
@@ -185,20 +185,20 @@
 			/////main fx
 			function setSynth(){
 				synth=new Tone.Sampler(instr_li[menu.instr.value][2],()=>{
-						 kb.style.opacity="1"; kb.style.pointerEvents="auto";
-						pkb.style.opacity="1";pkb.style.pointerEvents="auto";
+						 kb.style.opacity='1'; kb.style.pointerEvents='auto';
+						pkb.style.opacity='1';pkb.style.pointerEvents='auto';
 					},instr_li[menu.instr.value][0]).toDestination();
 			}
 			function set(){
-				kb.style.opacity=".2";kb.style.pointerEvents="none";pkb.style.opacity=".2";pkb.style.pointerEvents="none";
+				kb.style.opacity='.2';kb.style.pointerEvents='none';pkb.style.opacity='.2';pkb.style.pointerEvents='none';
 				//keyboard switch
 				kbmode=1;
-				kb.style.display="none";pkb.style.display="inline-block";
-				scd.style.opacity="1";scd.style.pointerEvents="auto";
+				kb.style.display='none';pkb.style.display='inline-block';
+				scd.style.opacity='1';scd.style.pointerEvents='auto';
 				scale();
 				switch(menu.instr.value){
 					case '2':case '15':
-						scd.style.opacity=".2";scd.style.pointerEvents="none";scd_.style.transform="none";
+						scd.style.opacity='.2';scd.style.pointerEvents='none';scd_.style.transform='none';
 						setSynth();
 						synth_=synth;
 						break;
@@ -212,26 +212,26 @@
 						break;
 					default:
 						kbmode=0;synth_=null;
-						pkb.style.display="none";kb.style.display="inline-block";
+						pkb.style.display='none';kb.style.display='inline-block';
 						setSynth();
 				}
 				save();
 				//icon
-				var pos=[menu.instr.value%8,Math.floor(menu.instr.value*.125+1)];console.log("ico",pos);
-				mico.style.backgroundPosition=pos.map(x=>(x*-48)+"px").join(" ");
+				var pos=[menu.instr.value%8,Math.floor(menu.instr.value*.125+1)];console.log('ico',pos);
+				mico.style.backgroundPosition=pos.map(x=>(x*-48)+'px').join(' ');
 			}
 			function trigger(id){
 				switch(kbmode){
 					case 0:
 						//C4~C6
-						synth.triggerAttackRelease(440*Math.pow(2,(parseInt(id.slice(1))+(scd.style.opacity=="1"?sc:0))/12+instr_li[menu.instr.value][1]));
+						synth.triggerAttackRelease(440*Math.pow(2,(parseInt(id.slice(1))+(scd.style.opacity=='1'?sc:0))/12+instr_li[menu.instr.value][1]));
 						break;
 					case 1:
-						if(id.substr(0,1)=='0')synth.triggerAttackRelease(440*Math.pow(2,(pmap[menu.instr.value][0][id.substr(-1)]+(scd.style.opacity=="1"?sc:0))/12+instr_li[menu.instr.value][1]));
-						else synth_.triggerAttackRelease(440*Math.pow(2,(pmap[menu.instr.value][1][id.substr(-1)]+(scd.style.opacity=="1"?sc:0))/12+instr_li[menu.instr.value][1]));
+						if(id.substr(0,1)=='0')synth.triggerAttackRelease(440*Math.pow(2,(pmap[menu.instr.value][0][id.substr(-1)]+(scd.style.opacity=='1'?sc:0))/12+instr_li[menu.instr.value][1]));
+						else synth_.triggerAttackRelease(440*Math.pow(2,(pmap[menu.instr.value][1][id.substr(-1)]+(scd.style.opacity=='1'?sc:0))/12+instr_li[menu.instr.value][1]));
 						break;
 					default:
-						console.log("unknown id");
+						console.log('unknown id');
 				}
 			}
 
@@ -242,44 +242,44 @@
 				key.appendChild(document.createElement('div'));
 				//sound & animation
 				function up(e){this.classList.remove('pushed');e.preventDefault();}
-				key.addEventListener("touchstart",function(e){
+				key.addEventListener('touchstart',function(e){
 					e.preventDefault();trigger(this.id);
 					this.classList.remove('pushed');void this.offsetWidth;this.classList.add('pushed','anm');
 				},{passive:false});
-				key.addEventListener("mousedown",function(e){
+				key.addEventListener('mousedown',function(e){
 					e.preventDefault();trigger(this.id);
 					this.classList.remove('pushed');void this.offsetWidth;this.classList.add('pushed','anm');
 					setTimeout(()=>this.classList.remove('pushed'),150);
 				},{passive:false});
-				key.addEventListener("touchend",up,{passive:false});
-				key.addEventListener("touchcancel",up,{passive:false});
-				key.addEventListener("animationend",function(){this.classList.remove('anm');});
+				key.addEventListener('touchend',up,{passive:false});
+				key.addEventListener('touchcancel',up,{passive:false});
+				key.addEventListener('animationend',function(){this.classList.remove('anm');});
 			})
-			document.addEventListener('keydown',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=="1")document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('touchstart'));});
-			document.addEventListener('keyup',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=="1")document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('touchend'));});
+			document.addEventListener('keydown',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('touchstart'));});
+			document.addEventListener('keyup',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('touchend'));});
 
 			/////scale
 			function scale(x){
-				scd_.style.transform="rotate("+(sc*30)+"deg)";
+				scd_.style.transform='rotate('+(sc*30)+'deg)';
 				if(x){
 					save();
 					var now=Tone.now();
-					synth.triggerAttackRelease(440*Math.pow(2,(3+sc)/12+instr_li[menu.instr.value][1]),"1m",now);
+					synth.triggerAttackRelease(440*Math.pow(2,(3+sc)/12+instr_li[menu.instr.value][1]),'1m',now);
 					if(kbmode==0){
-						synth.triggerAttackRelease(440*Math.pow(2,(7 +sc)/12+instr_li[menu.instr.value][1]),"1m",now+.05)
-						synth.triggerAttackRelease(440*Math.pow(2,(10+sc)/12+instr_li[menu.instr.value][1]),"1m",now+.1)
+						synth.triggerAttackRelease(440*Math.pow(2,(7 +sc)/12+instr_li[menu.instr.value][1]),'1m',now+.05)
+						synth.triggerAttackRelease(440*Math.pow(2,(10+sc)/12+instr_li[menu.instr.value][1]),'1m',now+.1)
 					}
 				}
 			}
 			scale(0);
 
-			const bgm=new Tone.Player("audio/hotspr.mp3").toDestination();
-			bgm.autostart=true;bgm.loop=true;bgm.fadeIn=5;bgm.fadeOut=5;bgm.volume.value=0;
+			const bga=new Tone.Player('audio/hotspra.mp3').toDestination();
+			bga.autostart=true;bga.loop=true;bga.fadeIn=5;bga.fadeOut=5;bga.volume.value=0;
 
 			/////reload
 			document.addEventListener('visibilitychange',()=>{
-				if(document.visibilityState=='visible'){console.log("become visible");bgv.play();/*location.reload(false);*/}
-				if(document.visibilityState=='hidden')console.log("become hidden");
+				if(document.visibilityState=='visible'){console.log('become visible');bgv.play();/*location.reload(false);*/}
+				if(document.visibilityState=='hidden')console.log('become hidden');
 			})
 
 			/////fullscreen
