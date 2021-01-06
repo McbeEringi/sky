@@ -65,49 +65,51 @@ self.addEventListener('fetch',(e)=>{
 	);
 });
 */
+//https://lt-collection.gitlab.io/pwa-nights-vol8/document/#12
+//https://qiita.com/biga816/items/dcc69a265235f1c3f7e0
 self.addEventListener('fetch',fetchEvent=>{
-    const destination=fetchEvent.request.destination;
-    const requestURL=new URL(fetchEvent.request.url);
-    if(requestURL.origin===location.origin){
-      switch(destination){
-        case'video':{
-          // ステータスコード206 Partial Contentでレスポンスを返却する処理
-					const rangeHeader=fetchEvent.request.headers.get('range');
-					const rangeMatch=rangeHeader.match(/^bytes\=(\d+)\-(\d+)?/);
-					const pos=Number(rangeMatch[1]);
-					let pos2=rangeMatch[2];
-					if(pos2)pos2=Number(pos2);
-					if(!rangeHeader){cacheFirst(fetchEvent);return;}
+	const destination=fetchEvent.request.destination;
+	const requestURL=new URL(fetchEvent.request.url);
+	if(requestURL.origin===location.origin){
+		switch(destination){
+			case'video':{
+				// ステータスコード206 Partial Contentでレスポンスを返却する処理
+				const rangeHeader=fetchEvent.request.headers.get('range');
+				const rangeMatch=rangeHeader.match(/^bytes\=(\d+)\-(\d+)?/);
+				const pos=Number(rangeMatch[1]);
+				let pos2=rangeMatch[2];
+				if(pos2)pos2=Number(pos2);
+				if(!rangeHeader){cacheFirst(fetchEvent);return;}
+				fetchEvent.respondWith(
+					caches.open(cacheName)
+					.then(cache=>cache.match(fetchEvent.request.url))
+					.then(response=>{
+						if(!response)fetch(fetchEvent.request.url).then(res=>res.arrayBuffer())
+						return response.arrayBuffer();
+					})
+					.then(arrayBuffer=>{
+						let responseHeaders={
+							status:206,
+							statusText:'Partial Content',
+							headers:[
+								['Content-Type','video/mp4'],
+								['Content-Range',`bytes${pos}-${(pos2||(arrayBuffer.byteLength-1))}/${arrayBuffer.byteLength}`]
+							]
+						};
+						let arrayBufferSliced={};
+						if(pos2>0)arrayBufferSliced=arrayBuffer.slice(pos,pos2+1);
+						else arrayBufferSliced=arrayBuffer.slice(pos);
+						return new Response(arrayBufferSliced,responseHeaders);
+					})
+				)
+				return;
+			}
+			default:{
 					fetchEvent.respondWith(
-				    caches.open(cacheName)
-				    .then(cache=>cache.match(fetchEvent.request.url))
-				    .then(response=>{
-					    if(!response)fetch(fetchEvent.request.url).then(res=>res.arrayBuffer())
-					    return response.arrayBuffer();
-				    })
-				    .then(arrayBuffer=>{
-					    let responseHeaders={
-				        status:206,
-				        statusText:'Partial Content',
-				        headers:[
-					        ['Content-Type','video/mp4'],
-									['Content-Range',`bytes${pos}-${(pos2||(arrayBuffer.byteLength-1))}/${arrayBuffer.byteLength}`]
-								]
-					    };
-					    let arrayBufferSliced={};
-					    if(pos2>0)arrayBufferSliced=arrayBuffer.slice(pos,pos2+1);
-					    else arrayBufferSliced=arrayBuffer.slice(pos);
-					    return new Response(arrayBufferSliced,responseHeaders);
-				    })
-					)
-          return;
-        }
-        default:{
-            fetchEvent.respondWith(
-                cacheFallingBackToNetwork(fetchEvent)
-            );
-            return;
-        }
-      }
-    }
-  });
+							cacheFallingBackToNetwork(fetchEvent)
+					);
+					return;
+			}
+		}
+	}
+});
