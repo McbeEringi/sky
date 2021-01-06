@@ -56,7 +56,7 @@ self.addEventListener('fetch',(e)=>{
 				 e.respondWith(
 					 fetch(e.request).then((response)=>{
 						return caches.open(cacheName).then((cache)=>{
-							console.log('[ServiceWorker] Caching: '+e.request.url);
+							console.log('[ServiceWorker] Cache: '+e.request.url);
 							cache.put(e.request,response.clone());
 							return response;
 						});
@@ -72,22 +72,24 @@ self.addEventListener('fetch',(e)=>{
 					e.respondWith(
 						caches.open(cacheName)
 						.then(cache=>cache.match(e.request.url).arrayBuffer())
-						.then(arrayBuffer=>{
-							const responseHeaders={
+						.then(arrb=>{
+							const r_h={
 								status:206,
 								statusText:'Partial Content',
 								headers:[
 									['Content-Type','video/mp4'],
-									['Content-Range',`bytes${pos}-${(pos2||(arrayBuffer.byteLength-1))}/${arrayBuffer.byteLength}`]
+									['Content-Range',`bytes${pos}-${(pos2||(arrb.byteLength-1))}/${arrb.byteLength}`]
 								]
 							};
-							if(pos2>0)return new Response(arrayBuffer.slice(pos,pos2+1),responseHeaders);
-							else return new Response(arrayBuffer.slice(pos),responseHeaders);
+							console.log('[ServiceWorker] Fetch video: '+e.request.url);
+							if(pos2>0)return new Response(arrb.slice(pos,pos2+1),r_h);
+							else return new Response(arrb.slice(pos),r_h);
 						})
 					)
 					return;
 				}
 				default:{
+					console.log('[ServiceWorker] Fetch: '+e.request.url);
 					e.respondWith(r);
 					return;
 				}
