@@ -61,6 +61,7 @@ self.addEventListener('fetch',(e)=>{
 		//https://lt-collection.gitlab.io/pwa-nights-vol8/document/#12
 		//https://qiita.com/biga816/items/dcc69a265235f1c3f7e0
 		const ranPrm=e.request.headers.get('range').match(/^bytes\=(\d+)\-(\d+)?/);
+		console.log(e.request.headers,ranprm);
 		const pos=Number(ranPrm[1]),pos2=ranPrm[2]?Number(ranPrm[2]):ranPrm[2];
 		e.respondWith(
 			caches.match(e.request.url)
