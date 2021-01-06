@@ -59,7 +59,7 @@ self.addEventListener('fetch',(e)=>{
 		});
 	});
 
-	if(event.request.headers.has('range')){
+	if(e.request.headers.has('range')){
 
 	}
 	else
