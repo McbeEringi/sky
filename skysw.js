@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache210106_4',STATIC_DATA=[
+const cacheName='cache210106_5',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg',
 	'img/sky.png',
@@ -49,11 +49,11 @@ self.addEventListener('activate',(e)=>{
 		})
 	);
 });
-/*
+
 self.addEventListener('fetch',(e)=>{
 	e.respondWith(
 		caches.match(e.request).then((r)=>{
-			console.log('[ServiceWorker] Fetching resource: '+e.request.url);
+			console.log('[ServiceWorker] Fetching resource: '+e.request.url,r);
 			return r || fetch(e.request).then((response)=>{
 				return caches.open(cacheName).then((cache)=>{
 					console.log('[ServiceWorker] Caching new resource: '+e.request.url);
@@ -64,9 +64,10 @@ self.addEventListener('fetch',(e)=>{
 		})
 	);
 });
-*/
+
 //https://lt-collection.gitlab.io/pwa-nights-vol8/document/#12
 //https://qiita.com/biga816/items/dcc69a265235f1c3f7e0
+/*
 self.addEventListener('fetch',e=>{
 	switch(e.request.destination){
 		case'video':{
@@ -102,10 +103,11 @@ self.addEventListener('fetch',e=>{
 			return;
 		}
 		default:{
-				e.respondWith(
-						cacheFallingBackToNetwork(e)
-				);
-				return;
+			e.respondWith(
+				cacheFallingBackToNetwork(e)
+			);
+			return;
 		}
 	}
 });
+*/
