@@ -53,8 +53,8 @@ self.addEventListener('activate',(e)=>{
 self.addEventListener('fetch',(e)=>{
 		caches.match(e.request).then((r)=>{
 			if(!r){//cache doesnt exist
-				 e.respondWith(
-					 fetch(e.request).then((response)=>{
+				e.respondWith(
+					fetch(e.request).then((response)=>{
 						return caches.open(cacheName).then((cache)=>{
 							console.log('[ServiceWorker] Cache: '+e.request.url);
 							cache.put(e.request,response.clone());
