@@ -51,23 +51,22 @@ self.addEventListener('activate',(e)=>{
 });
 
 self.addEventListener('fetch',(e)=>{
-	const cacheNew=()=>fetch(e.request).then((response)=>{
+	const cacheNew=()=>fetch(e.request.url).then((response)=>{
 		return caches.open(cacheName).then((cache)=>{
 			console.log('skysw Cache: '+e.request.url);
-			cache.put(e.request,response.clone());
+			cache.put(e.request.url,response.clone());
 			return response;
 		});
 	});
+
+	if(event.request.headers.has('range')){
+
+	}
+	else
 	e.respondWith(
-		caches.match(e.request).then((r)=>{
-			if(1)console.log('skysw Fetch: '+e.request.url);
-			return r || fetch(e.request).then((response)=>{
-				return caches.open(cacheName).then((cache)=>{
-					console.log('skysw Cache: '+e.request.url);
-					cache.put(e.request,response.clone());
-					return response;
-				});
-			});;
+		caches.match(e.request.url).then((r)=>{
+			if(r)console.log('skysw Fetch: '+e.request.url);
+			return r || cacheNew();
 		})
 	);
 });
