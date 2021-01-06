@@ -82,7 +82,7 @@ self.addEventListener('fetch',(e)=>{
 							['Content-Range',`bytes${pos}-${(pos2||(arrb.byteLength-1))}/${arrb.byteLength}`]
 						]
 					}
-				);
+				)
 			)
 		)
 	}
