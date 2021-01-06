@@ -51,59 +51,14 @@ self.addEventListener('activate',(e)=>{
 });
 
 self.addEventListener('fetch',(e)=>{
-	caches.match(e.request).then((r)=>{
-		if(!r){//cache doesnt exist
-			e.respondWith(
-				fetch(e.request).then((response)=>{
-					return caches.open(cacheName).then((cache)=>{
-						console.log('[ServiceWorker] Cache: '+e.request.url);
-						cache.put(e.request,response.clone());
-						return response;
-					});
-				})
-			);
-			return;
-		}
-		switch(e.request.destination){
-			case'video':{
-				const rangeMatch=e.request.headers.get('range').match(/^bytes\=(\d+)\-(\d+)?/);
-				const pos=Number(rangeMatch[1]);
-				let pos2=rangeMatch[2];if(pos2)pos2=Number(pos2);
-				e.respondWith(
-					caches.open(cacheName)
-					.then(cache=>cache.match(e.request.url).arrayBuffer())
-					.then(arrb=>{
-						const r_h={
-							status:206,
-							statusText:'Partial Content',
-							headers:[
-								['Content-Type','video/mp4'],
-								['Content-Range',`bytes${pos}-${(pos2||(arrb.byteLength-1))}/${arrb.byteLength}`]
-							]
-						};
-						console.log('[ServiceWorker] Fetch video: '+e.request.url);
-						if(pos2>0)return new Response(arrb.slice(pos,pos2+1),r_h);
-						else return new Response(arrb.slice(pos),r_h);
-					})
-				)
-				return;
-			}
-			default:{
-				console.log('[ServiceWorker] Fetch: '+e.request.url);
-				e.respondWith(r);
-				return;
-			}
-		}
-		/*
-		console.log('[ServiceWorker] Fetching resource: '+e.request.url,r);
-		return r || fetch(e.request).then((response)=>{
-			return caches.open(cacheName).then((cache)=>{
-				console.log('[ServiceWorker] Caching new resource: '+e.request.url);
-				cache.put(e.request,response.clone());
-				return response;
-			});
-		});*/
-	});
+	const cacheFromNet=()=>fetch(e.request).then(r=>{return caches.open(cacheName).then(cache=>{console.log('[Service Worker] Cache: '+e.request.url);cache.put(e.request,r.clone());return r;});
+  e.respondWith(
+    caches.match(e.request).then((r)=>{
+      console.log('[Service Worker] Fetch: '+e.request.url);
+      return r||cacheFromNet();
+      });
+    })
+  );
 });
 
 //https://lt-collection.gitlab.io/pwa-nights-vol8/document/#12
