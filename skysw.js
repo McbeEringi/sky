@@ -102,7 +102,7 @@ self.addEventListener('fetch',(e)=>{
 					return response;
 				});
 			});*/
-		})
+		});
 });
 
 //https://lt-collection.gitlab.io/pwa-nights-vol8/document/#12
