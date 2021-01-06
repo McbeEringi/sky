@@ -50,21 +50,20 @@ self.addEventListener('activate',(e)=>{
 	);
 });
 
-self.addEventListener('fetch',(e)=>{
-	e.respondWith(
-		caches.match(e.request).then((r)=>{
-			console.log('[Service Worker] Fetch: '+e.request.url);
-			return r||fetch(e.request).then((response)=>{
-				return caches.open(cacheName).then((cache)=>{
-					console.log('[Service Worker] Cache: '+e.request.url);
-					cache.put(e.request,response.clone());
-					return response;
-				});
-			});
-		})
-	);
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    caches.match(e.request).then((r) => {
+          console.log('[Service Worker] Fetching resource: '+e.request.url);
+      return r || fetch(e.request).then((response) => {
+                return caches.open(cacheName).then((cache) => {
+          console.log('[Service Worker] Caching new resource: '+e.request.url);
+          cache.put(e.request, response.clone());
+          return response;
+        });
+      });
+    })
+  );
 });
-
 //https://lt-collection.gitlab.io/pwa-nights-vol8/document/#12
 //https://qiita.com/biga816/items/dcc69a265235f1c3f7e0
 /*
