@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache210106_5',STATIC_DATA=[
+const cacheName='cache210106_6',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg',
 	'img/sky.png',
@@ -51,8 +51,47 @@ self.addEventListener('activate',(e)=>{
 });
 
 self.addEventListener('fetch',(e)=>{
-	e.respondWith(
 		caches.match(e.request).then((r)=>{
+			if(!r){//cache doesnt exist
+				 e.respondWith(
+					 fetch(e.request).then((response)=>{
+						return caches.open(cacheName).then((cache)=>{
+							console.log('[ServiceWorker] Caching: '+e.request.url);
+							cache.put(e.request,response.clone());
+							return response;
+						});
+					});
+				);
+				return;
+			}
+			switch(e.request.destination){
+				case'video':{
+					const rangeMatch=e.request.headers.get('range').match(/^bytes\=(\d+)\-(\d+)?/);
+					const pos=Number(rangeMatch[1]);
+					let pos2=rangeMatch[2];if(pos2)pos2=Number(pos2);
+					e.respondWith(
+						caches.open(cacheName)
+						.then(cache=>cache.match(e.request.url).arrayBuffer())
+						.then(arrayBuffer=>{
+							const responseHeaders={
+								status:206,
+								statusText:'Partial Content',
+								headers:[
+									['Content-Type','video/mp4'],
+									['Content-Range',`bytes${pos}-${(pos2||(arrayBuffer.byteLength-1))}/${arrayBuffer.byteLength}`]
+								]
+							};
+							if(pos2>0)return new Response(arrayBuffer.slice(pos,pos2+1),responseHeaders);
+							else return new Response(arrayBuffer.slice(pos),responseHeaders);
+						})
+					)
+					return;
+				}
+				default:{
+					e.respondWith(r);
+					return;
+				}
+			/*
 			console.log('[ServiceWorker] Fetching resource: '+e.request.url,r);
 			return r || fetch(e.request).then((response)=>{
 				return caches.open(cacheName).then((cache)=>{
@@ -60,9 +99,8 @@ self.addEventListener('fetch',(e)=>{
 					cache.put(e.request,response.clone());
 					return response;
 				});
-			});
+			});*/
 		})
-	);
 });
 
 //https://lt-collection.gitlab.io/pwa-nights-vol8/document/#12
