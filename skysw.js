@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache210107_1',STATIC_DATA=[
+const cacheName='cache210107_2',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg',
 	'img/sky.png',
@@ -61,7 +61,6 @@ self.addEventListener('fetch',(e)=>{
 		//https://lt-collection.gitlab.io/pwa-nights-vol8/document/#12
 		//https://qiita.com/biga816/items/dcc69a265235f1c3f7e0
 		const ranPrm=e.request.headers.get('range').match(/^bytes\=(\d+)\-(\d+)?/);
-		console.log(e.request.headers,ranprm);
 		const pos=Number(ranPrm[1]),pos2=ranPrm[2]?Number(ranPrm[2]):ranPrm[2];
 		e.respondWith(
 			caches.match(e.request.url)
