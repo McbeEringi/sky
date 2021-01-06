@@ -49,6 +49,7 @@ self.addEventListener('activate',(e)=>{
 		})
 	);
 });
+/*
 self.addEventListener('fetch',(e)=>{
 	e.respondWith(
 		caches.match(e.request).then((r)=>{
@@ -63,3 +64,50 @@ self.addEventListener('fetch',(e)=>{
 		})
 	);
 });
+*/
+self.addEventListener('fetch',fetchEvent=>{
+    const destination=fetchEvent.request.destination;
+    const requestURL=new URL(fetchEvent.request.url);
+    if(requestURL.origin===location.origin){
+      switch(destination){
+        case'video':{
+          // ステータスコード206 Partial Contentでレスポンスを返却する処理
+					const rangeHeader=fetchEvent.request.headers.get('range');
+					const rangeMatch=rangeHeader.match(/^bytes\=(\d+)\-(\d+)?/);
+					const pos=Number(rangeMatch[1]);
+					let pos2=rangeMatch[2];
+					if(pos2)pos2=Number(pos2);
+					if(!rangeHeader){cacheFirst(fetchEvent);return;}
+					fetchEvent.respondWith(
+				    caches.open(cacheName)
+				    .then(cache=>cache.match(fetchEvent.request.url))
+				    .then(response=>{
+					    if(!response)fetch(fetchEvent.request.url).then(res=>res.arrayBuffer())
+					    return response.arrayBuffer();
+				    })
+				    .then(arrayBuffer=>{
+					    let responseHeaders={
+				        status:206,
+				        statusText:'Partial Content',
+				        headers:[
+					        ['Content-Type','video/mp4'],
+									['Content-Range',`bytes${pos}-${(pos2||(arrayBuffer.byteLength-1))}/${arrayBuffer.byteLength}`]
+								]
+					    };
+					    let arrayBufferSliced={};
+					    if(pos2>0)arrayBufferSliced=arrayBuffer.slice(pos,pos2+1);
+					    else arrayBufferSliced=arrayBuffer.slice(pos);
+					    return new Response(arrayBufferSliced,responseHeaders);
+				    })
+					)
+          return;
+        }
+        default:{
+            fetchEvent.respondWith(
+                cacheFallingBackToNetwork(fetchEvent)
+            );
+            return;
+        }
+      }
+    }
+  });
