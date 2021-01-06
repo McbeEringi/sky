@@ -51,17 +51,16 @@ self.addEventListener('activate',(e)=>{
 });
 
 self.addEventListener('fetch',(e)=>{
-	const cacheNew=()=>fetch(e.request).then((response)=>{
-		return caches.open(cacheName).then((cache)=>{
-			console.log('[Service Worker] Cache: '+e.request.url);
-			cache.put(e.request,response.clone());
-			return response;
-		});
-	});
 	e.respondWith(
 		caches.match(e.request).then((r)=>{
 			console.log('[Service Worker] Fetch: '+e.request.url);
-			return r || cacheNew();
+			return r||fetch(e.request).then((response)=>{
+				return caches.open(cacheName).then((cache)=>{
+					console.log('[Service Worker] Cache: '+e.request.url);
+					cache.put(e.request,response.clone());
+					return response;
+				});
+			});
 		})
 	);
 });
