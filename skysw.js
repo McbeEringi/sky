@@ -37,10 +37,10 @@ self.addEventListener('install',(e)=>{
 			return cache.addAll(STATIC_DATA);
 		})
 	);
-	console.log('[ServiceWorker] Install');
+	console.log('skysw Install');
 });
 self.addEventListener('activate',(e)=>{
-	console.log('[ServiceWorker] Activate')
+	console.log('skysw Activate')
 	e.waitUntil(
 		caches.keys().then((keyList)=>{
 			return Promise.all(keyList.map((key)=>{
@@ -53,15 +53,21 @@ self.addEventListener('activate',(e)=>{
 self.addEventListener('fetch',(e)=>{
 	const cacheNew=()=>fetch(e.request).then((response)=>{
 		return caches.open(cacheName).then((cache)=>{
-			console.log('[Service Worker] Cache: '+e.request.url);
+			console.log('skysw Cache: '+e.request.url);
 			cache.put(e.request,response.clone());
 			return response;
 		});
 	});
 	e.respondWith(
 		caches.match(e.request).then((r)=>{
-			console.log('[Service Worker] Fetch: '+e.request.url);
-			return r || cacheNew();
+			if(1)console.log('skysw Fetch: '+e.request.url);
+			return r || fetch(e.request).then((response)=>{
+				return caches.open(cacheName).then((cache)=>{
+					console.log('skysw Cache: '+e.request.url);
+					cache.put(e.request,response.clone());
+					return response;
+				});
+			});;
 		})
 	);
 });
