@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache210107_0',STATIC_DATA=[
+const cacheName='cache210107_1',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg',
 	'img/sky.png',
@@ -19,7 +19,7 @@ const cacheName='cache210107_0',STATIC_DATA=[
 	'instr.html?pwa=1',
 	'https://tonejs.github.io/build/Tone.js',
 	'img/tex.png',
-	'img/hotsprv.mp4',
+	//'img/hotsprv.mp4',
 	'audio/hotspra.mp3',
 	'audio/instr/musicbox/a3.mp3',
 	'audio/instr/musicbox/a4.mp3',
@@ -60,7 +60,31 @@ self.addEventListener('fetch',(e)=>{
 	});
 
 	if(e.request.headers.has('range')){
-
+		const ranParam=e.request.headers.get('range').match(/^bytes\=(\d+)\-(\d+)?/);
+		const pos=Number(ranParam[1]);
+		let pos2=ranParam[2];
+		if(pos2)pos2=Number(pos2);
+		e.respondWith(
+			caches.open(cacheName)
+			.then(cache=>cache.match(e.request.url))
+			.then(r=>{
+				if(!r)return cacheNew().arrayBuffer();
+				return r.arrayBuffer();
+			})
+			.then(arrb=>{
+				let resh={
+					status:206,
+					statusText:'Partial Content',
+					headers:[
+						['Content-Type','video/mp4'],
+						['Content-Range',`bytes${pos}-${(pos2||(arrb.byteLength-1))}/${arrb.byteLength}`]
+					]
+				};
+				let arrayBufferSliced={};
+				if(pos2>0)return new Response(arrb.slice(pos,pos2+1),resh);
+				else return new Response(arrb.slice(pos),resh);
+			})
+		)
 	}
 	else
 	e.respondWith(
