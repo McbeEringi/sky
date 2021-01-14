@@ -11,24 +11,26 @@
 	<link rel="shortcut icon" type="image/png" href="img/sky_192.png">
 </head>
 <body>
-	<script src="style.js"></script>
+	<script src="style.js" async></script>
+	<script src="sample.js"></script>
 	<style>
 		body{margin:0;user-select:none;-webkit-user-select:none;}*::-webkit-scrollbar{display:none;}
 		.clear_fix::after{content:"";clear:both;display:block;}
 
-		.disppanel{position:relative;width:100vw;height:240px;background:#fff4 repeating-linear-gradient(#000d,#000d 16px,#0008 16px,#0008 48px,#000a 48px,#000a 64px,#0008 64px,#0008 80px,#000a 80px,#000a 96px,#0008 96px,#0008 112px);}
-		.disppanel>*,.disppanel>div:first-child>*{position:absolute;line-height:16px;font-size:8px;}
-		.disppanel>div:first-child{width:100%;height:100%;overflow:scroll;}
-		.disppanel>div:first-child>*{padding:0 64px 0 16px;display:flex;}
-		.nWrapper{display:flex;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background-color:#0002;}
-		.nWrapper.b{background:#0006;}.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea8;position:absolute;left:0;border-radius:33%;}
+		.dispPanel{position:relative;width:100vw;height:240px;border:4px solid #0000;border-left:none;border-right:none;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
+		.dispPanel>*,.dispPanel>div:first-child>*{position:absolute;line-height:16px;font-size:8px;}
+		.dispPanel>div:first-child{width:100%;height:100%;overflow:scroll;}
+		.dispPanel>div:first-child>*{padding:0 64px 0 16px;display:flex;}
+		.nWrapper{display:flex;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background-color:#0004;}
+		.nWrapper.b{border-left:2px solid #fea;}.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea8;box-shadow:0 0 4px #8888;position:absolute;left:0;border-radius:33%;}
+		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
 
-		.uipanel{float:left;clear:left;}
+		.uiPanel{float:left;clear:left;}
 		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#caf0f6;text-shadow:0 0 4px #688;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
 		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}
 
-		.kbpanel{position:relative;width:100%;max-width:360px;float:right;}.kbpanel:before{content:"";display:block;padding-top:60%;}
-		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;background:#0004;border-radius:8px;}#kb input{display:none;}#kb>div{height:33.3%;margin:0;}
+		.kbPanel{position:relative;width:100%;max-width:360px;float:right;}.kbPanel:before{content:"";display:block;padding-top:60%;}
+		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;background:#0004;border-radius:8px;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
 		#kb label{display:inline-block;width:20%;height:100%;position:relative;}
 		#kb label::before,#kb label::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
 		#kb label::before{background:#4448;filter:drop-shadow(0 0 4px #444);transition:.02s;}#kb input:not(:checked)+label::before{transition:.2s;}
@@ -40,28 +42,28 @@
 	</style>
 
 
-	<div class="disppanel">
-		<div>
+	<div class="dispPanel">
+		<div id="dispScr">
 			<div id="disp"></div>
 		</div>
-		<div style="opacity:.5;pointer-events:none;width:8px;">CBAGFEDCBAGFEDC</div>
+		<div style="opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;">CBAGFEDCBAGFEDC</div>
 	</div>
 	<div class="clear_fix">
-		<div class="uipanel">
+		<div class="uiPanel">
 			<div>
 				<button class="grid bg" style="--bp:-300% -100%;transform:rotateZ(180deg);">
 				</button><button onclick="Tone.start();ptoggle()" class="grid bg" style="--bp:0 -100%;"></button><button onclick="pstop()"class="grid bg" style="--bp:-100% -100%;">
 				</button><button class="grid bg" style="--bp:-300% -100%;"></button>
 			</div>
 		</div>
-		<div class="kbpanel">
+		<div class="kbPanel">
 			<div id="kb">
-				<div><input type="checkbox"id="kbb00"><label for="kbb00" class="c"></label><input type="checkbox"id="kbb01"><label for="kbb01"></label><input type="checkbox"id="kbb02"><label for="kbb02"></label><input type="checkbox"id="kbb03"><label for="kbb03"></label><input type="checkbox"id="kbb04"><label for="kbb04"></label></div>
-				<div><input type="checkbox"id="kbb10"><label for="kbb10"></label><input type="checkbox"id="kbb11"><label for="kbb11"></label><input type="checkbox"id="kbb12"><label for="kbb12" class="c"></label><input type="checkbox"id="kbb13"><label for="kbb13"></label><input type="checkbox"id="kbb14"><label for="kbb14"></label></div>
-				<div><input type="checkbox"id="kbb20"><label for="kbb20"></label><input type="checkbox"id="kbb21"><label for="kbb21"></label><input type="checkbox"id="kbb22"><label for="kbb22"></label><input type="checkbox"id="kbb23"><label for="kbb23"></label><input type="checkbox"id="kbb24"><label for="kbb24" class="c"></label></div>
+				<div><input type="checkbox"id="kbb00"><label class="c"></label><input type="checkbox"id="kbb01"><label></label><input type="checkbox"id="kbb02"><label></label><input type="checkbox"id="kbb03"><label></label><input type="checkbox"id="kbb04"><label></label></div>
+				<div><input type="checkbox"id="kbb10"><label></label><input type="checkbox"id="kbb11"><label></label><input type="checkbox"id="kbb12"><label class="c"></label><input type="checkbox"id="kbb13"><label></label><input type="checkbox"id="kbb14"><label></label></div>
+				<div><input type="checkbox"id="kbb20"><label></label><input type="checkbox"id="kbb21"><label></label><input type="checkbox"id="kbb22"><label></label><input type="checkbox"id="kbb23"><label></label><input type="checkbox"id="kbb24"><label class="c"></label></div>
 			</div>
 		</div>
-		<div class="uipanel">
+		<div class="uiPanel">
 			<div>
 				<button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-600% 0;">
 				</button><input id="bpm_" class="grid bg" onchange="bpmset();" style="--bp:-700% 0;"></input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;"></button>
@@ -77,109 +79,23 @@
 		<option value="0">新宝島</option>
 		<option value="1">LINE</option>
 		<option value="2">\ｵﾌﾛｶﾞﾜｷﾏｼﾀ/</option>
-		<option value="3">前前前世</option>
-		<option value="4" selected>nyan-cat</option>
+		<option value="3" selected>前前前世</option>
+		<option value="4">nyan-cat</option>
 	</select>
 	<pre id="log"></pre>
+
 
 	<script src="https://tonejs.github.io/build/Tone.js"></script>
 	<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js"></script>
 	<script>
-		var seq,sc=Number(sc_.value),main,kbl=[];
-		document.querySelectorAll('#kb label').forEach((e,i)=>kbl[i]=e);
+		var seq,sc=Number(sc_.value),main;
 		const llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		scset=()=>{if(Number(sc_.value)||sc_.value=='0')main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
 		bpmset=()=>{var tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
 		url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli = ()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
-		synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination()),
-		sample = [
-			{
-				bpm:90,sc:-2,ts:4,name:"新宝島",
-				scores:[
-					'-4,0,3,7,10',['7,10','-4,0,3'],'7,10','-4,0,3,7,10',
-					'-5,2,5,7,10',['5,7,14','-5,2'],'5,7,14','-5,2,12,15',
+		synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination());
 
-					'0,3',['7,10','0,3'],'7,10',['0,3,7,10','5,8'],
-					['-9,-2','3,7'],['','-2'],['','-2'],['3,7','-2'],
-
-					'-4,0',['3','-4,0'],['3,7','-4,0'],['3','2,5,7'],
-					['-5','2,5'],['','-5'],['','-5'],['2,5,7','-5'],
-
-					'-5,0',['3','3,0'],['','-5,0'],['3','-5,0'],
-					'-9,-2',['-9','-9,-5'],['','-5,-2'],['-2,3','3,7']
-				]
-			},
-			{bpm:130,sc:0,ts:4,name:"LINE発信",scores:['-4','-2','3','-4','-2','2','-2','0','5','-4','-2',['-4','-2','3'],'','','','']},
-			{
-				bpm:108,sc:0,ts:4,name:"\\ｵﾌﾛｶﾞﾜｷﾏｼﾀ/",
-				scores:[
-					'3,7','','-2','-4',
-
-					'-9,-5','-5,-2','-5,-2','-5,-2,3',
-					'-7,2','-4,2','-4,-2,2','5',
-
-					'-5,3','-2,3','-2,3,7','-2,3',
-					'-5','-2,3','-2,3','-2,2,3',
-
-					'-4,0','0,5','0,5,8','5',
-					'-2,3','3,7','-2,2','5,8',
-
-					'3,7','7,10','7,10','5,8'
-				]
-			},{
-				bpm:90,sc:-1,ts:4,name:"前前前世",
-				scores:[
-					'-7,-2',['','-7,-2,2,5'],['','-7,-2,0,3'],['0,3','-7,-2,0,3'],
-					'-5,0,3,7,10',['3,7,10','-5,0'],['3,7,10','-5,0'],['3,7','-4,0,3,5'],
-					['','3,5'],['-4,0','3'],['','-4,0,3'],['3','-4,0,3'],
-					['-9,-2,3,7,10','3,7,10'],['3,7,10','-9,-2,3,7,10'],['3,7,10','3,7'],['-9,-2,3,7','2,5'],
-					['','-7,-2'],['2,5','-7,-2'],['3','5'],['-7,-2,3,7','5'],
-					['-5,0','3'],['','-5,0'],['3','5'],['-5,0,3,7','5'],
-					['-4,0','3'],['','-4,0'],['3','-4,0'],['-4,0,3'],
-					'-9,-2,3,7,10',['3,7','-9,-2,3,7,10'],['','3,7'],['-9,-2','2,5']
-				]
-			},{
-				bpm:142,sc:0,ts:4,name:"nyan-cat",
-				scores:[
-					'9,-5','11,-5',['5,-3','6'],['-3','2'],
-					['5,-6','4'],'2,-6','2,-1','4,-1',
-					'5,-8',['5,-8','4'],['2,-3','4'],['6,-3','9'],
-					['11,-10','5'],['6,-10','2'],['5,-10','2,-7'],['4,-8','2,-10'],
-					'6,-5','9,-5',['11,-3','5'],['6,-3','2'],
-					['6,-6','2'],['5,-6','6'],['5,-1','4'],['2,-1','4'],
-					'5,-8',['2,-8','4'],['5,-3','9'],['5,-3','6'],
-					['5,-10','2'],'4,-10',['2,-10','-8'],['4,-7','-6'],
-
-					'9,-5','11,-5',['5,-3','6'],['-3','2'],
-					['5,-6','4'],'2,-6','2,-1','4,-1',
-					'5,-8',['5,-8','4'],['2,-3','4'],['6,-3','9'],
-					['11,-10','5'],['6,-10','2'],['5,-10','2,-7'],['4,-8','2,-10'],
-					'6,-5','9,-5',['11,-3','5'],['6,-3','2'],
-					['6,-6','2'],['5,-6','6'],['5,-1','4'],['2,-1','4'],
-					'5,-8',['2,-8','4'],['5,-3','9'],['5,-3','6'],
-					['5,-10','2'],'4,-10',['2,-10','-8'],['2,-7','-6'],
-
-					'2,-5',['-3,-5','-1'],'2,-3',['-3','-1'],
-					['2,-6','4'],['6,-6','2'],['7,-1','6'],['7,-1','9'],
-					'2,-8','2,-8',['-3','-1'],['2,-3','-3'],
-					['7,-10','6'],['4,-10','2'],['-3,-10','-6,-7'],['-5,-8','-3,-10'],
-					'2,-5',['-3,-5','-1'],'2,-3',['-3','-1'],
-					['2,-6','2'],['4,-6','6'],['2,-1','-3'],['-1','-3'],
-					'2,-8',['2,-8','1'],['2,-3','-3'],['-1,-3','2'],
-					['7,-10','6'],['7,-10','9'],['2,-10','-8'],['1,-7','-6'],
-
-					'2,-5',['-3,-5','-1'],'2,-3',['-3','-1'],
-					['2,-6','4'],['6,-6','2'],['7,-1','6'],['7,-1','9'],
-					'2,-8','2,-8',['-3','-1'],['2,-3','-3'],
-					['7,-10','6'],['4,-10','2'],['-3,-10','-6,-7'],['-5,-8','-3,-10'],
-					'2,-5',['-3,-5','-1'],'2,-3',['-3','-1'],
-					['2,-6','2'],['4,-6','6'],['2,-1','-3'],['-1','-3'],
-					'2,-8',['2,-8','1'],['2,-3','-3'],['-1,-3','2'],
-					['7,-10','6'],['7,-10','9'],['2,-10','-8'],['4,-7','-6']
-				]
-			}
-		];
 		main=sample[slc.value];
 		log.textContent='seq';
 
@@ -208,13 +124,15 @@
 		}
 
 		/////Keys
-		const i2n=["-9","-7","-5","-4","-2","0","2","3","5","7","8","10","12","14","15"],
-		n2i={"-9":"0","-7":"1","-5":"2","-4":"3","-2":"4","0":"5","2":"6","3":"7","5":"8","7":"9","8":"10","10":"11","12":"12","14":"13","15":"14"},
+		const i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
+		n2i={'-9':'0','-7':'1','-5':'2','-4':'3','-2':'4','0':'5','2':'6','3':'7','5':'8','7':'9','8':'10','10':'11','12':'12','14':'13','15':'14'},
 		n2c=['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'];
-		kbl.map((e,i)=>{
-			e.onclick=()=>{
+		document.querySelectorAll('#kb label').forEach((e,i)=>{
+			e.addEventListener('pointerdown',ev=>{
+				ev.preventDefault();
 				if(e.previousElementSibling.checked==false)synth.triggerAttackRelease(toHz(i2n[i]));
-			}
+				e.previousElementSibling.checked=!e.previousElementSibling.checked;
+			});
 		})
 		function kbset(x){
 			x=x.split(',').map(x=>n2i[x]);
@@ -229,13 +147,13 @@
 			if(b)e.textContent=" ";
 			scores.map((x,i)=>{
 				var div = document.createElement('div');
-				div.textContent+=i+1;
+				//div.textContent+=i+1;
 				if(x){
 					switch(typeof x){
 						case'string':
 							x.split(',').map(y=>{
 								var note = document.createElement('p');
-								note.style.bottom=(Number(n2i[y])*16)+'px';
+								note.style.bottom=((Number(n2i[y])||15)*16)+'px';
 								//note.classList.add('');
 								div.appendChild(note);
 							});
@@ -271,9 +189,7 @@
 						'KeyC':'kbb20','KeyV':'kbb21','KeyB':'kbb22','KeyN':'kbb23','KeyM':'kbb24'
 					}
 					if(keymap[e.code]){
-						var curkey = document.getElementById(keymap[e.code]);
-						if(curkey.checked)curkey.checked=false;
-						else curkey.checked=true;
+						document.getElementById(keymap[e.code]).nextElementSibling.dispatchEvent(new Event('pointerdown'));
 					}
 			}
 		},false);
