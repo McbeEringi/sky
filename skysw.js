@@ -51,7 +51,7 @@ self.addEventListener('activate',(e)=>{
 });
 
 self.addEventListener('fetch',(e)=>{
-	const cacheNew=()=>fetch(e.request.url,{mode:'no-cors'}).then(r=>caches.open(cacheName).then(cache=>{
+	const cacheNew=()=>fetch(e.request.url,{mode:'cors'}).then(r=>caches.open(cacheName).then(cache=>{
 		console.log('skysw Cache: '+e.request.url);
 		cache.put(e.request.url,r.clone());
 		if(r)return r;
