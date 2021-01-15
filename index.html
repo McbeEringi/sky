@@ -29,14 +29,14 @@
 			:root{--bp:0;}
 			.links>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;}
 			@media(max-width:504px){.links{text-align:center;}}
-			.links>a::before{content:"";display:block;height:150px;background-size:300%;border-radius:20%;background-image:url(img/ico.png);background-position:var(--bp);}
+			.links>a::before{content:"";display:block;height:150px;background-size:400%;border-radius:20%;background-image:url(img/ico.png);background-position:var(--bp);}
 			.links>a:hover{transform:scale(1.05);filter:brightness(1.2)saturate(1.2)drop-shadow(0 0 8px #fea);}
 		</style>
 		<div class="links">
 			<a href="instr.html" style="--bp:-100%;">sky_instruments</a>
 			<a href="info.html" style="--bp:-200%;">sky_info</a>
 			<a href="stuff.html" class="nopwa">sky_stuff</a>
-			<a href="seq.html" class="nopwa">sky_sequencer(indev)</a>
+			<a href="seq.html" style="--bp:-300%;" class="nopwa">sky_sequencer(indev)</a>
 		</div>
 		<script>
 			document.querySelectorAll('a').forEach(e=>e.ontouchstart=()=>{});
