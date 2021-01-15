@@ -18,11 +18,11 @@
 		.clear_fix::after{content:"";clear:both;display:block;}
 
 		.dispPanel{position:relative;width:100vw;height:240px;border:4px solid #0000;border-left:none;border-right:none;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
-		.dispPanel>*,.dispPanel>div:first-child>*{position:absolute;line-height:16px;font-size:8px;}
-		.dispPanel>div:first-child{width:100%;height:100%;overflow:scroll;}
-		.dispPanel>div:first-child>*{padding:0 64px 0 16px;display:flex;}
+		.dispPanel>*,#dispScr>*{position:absolute;line-height:16px;font-size:8px;}
+		#dispScr{width:100%;height:100%;overflow:scroll;position:relative;}#disp{padding:0 64px 0 16px;display:flex;}
+		#dispCur{width:16px;height:100%;background:#f88;left:16px;}
 		.nWrapper{display:flex;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background-color:#0004;}
-		.nWrapper.b{border-left:2px solid #fea;}.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea8;box-shadow:0 0 4px #8888;position:absolute;left:0;border-radius:33%;}
+		.nWrapper.b{border-left:2px solid #feac;}.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;}
 		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
 
 		.uiPanel{float:left;clear:left;}
@@ -44,9 +44,10 @@
 
 	<div class="dispPanel">
 		<div id="dispScr">
+			<div id="dispCur"></div>
 			<div id="disp"></div>
 		</div>
-		<div style="opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;">CBAGFEDCBAGFEDC</div>
+		<div style="opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;top:0;">CBAGFEDCBAGFEDC</div>
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel">
