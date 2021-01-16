@@ -198,8 +198,9 @@
 		}
 
 		const set=()=>{
-			setScores(main.scores);render(main.scores,disp);
+			setScores(main.scores);
 			sc_.value=main.sc;bpm_.value=main.bpm;Tone.Transport.bpm.value=main.bpm;Tone.Transport.timeSignature=main.ts;llog(main.name);//Tone.Transport.swing=1;
+			render(main.scores,disp);
 		}
 		set();
 
