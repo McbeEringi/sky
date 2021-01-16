@@ -20,9 +20,10 @@
 		.dispPanel{position:relative;width:100vw;height:240px;border:4px solid #0000;border-left:none;border-right:none;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 		.dispPanel>*,#dispScr>*{position:absolute;line-height:16px;font-size:8px;}
 		#dispScr{width:100%;height:100%;overflow:scroll;position:relative;}#disp{padding:0 64px 0 16px;display:flex;}
-		#dispCur{width:16px;height:100%;background:#f88;left:16px;}
+		#dispCur{width:16px;height:100%;background:#f88;left:17px;transition:.1s;border-radius:4px;}
 		.nWrapper{display:flex;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background-color:#0004;}
-		.nWrapper.b{border-left:2px solid #feac;}.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;}
+		.nWrapper.b{overflow:hidden;}.nWrapper.b::before{content:"";display:block;width:2px;height:100%;background:#feac;}
+		.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;}
 		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
 
 		.uiPanel{float:left;clear:left;}
@@ -89,7 +90,7 @@
 	<script src="https://tonejs.github.io/build/Tone.js"></script>
 	<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js"></script>
 	<script>
-		var seq,sc=Number(sc_.value),main;
+		var seq,sc=Number(sc_.value),main,rendered;
 		const llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		scset=()=>{if(Number(sc_.value)||sc_.value=='0')main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
 		bpmset=()=>{var tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
@@ -108,6 +109,8 @@
 		function pstop(){
 			Tone.Transport.stop();
 			requestIdleCallback(()=>{
+				dispCur.style.left='17px';
+				dispScr.scrollLeft=0;
 				kbset('');
 			});
 		}
@@ -121,8 +124,17 @@
 					kbset('');kbset(note);
 					note=note.split(',');
 					synth.triggerAttackRelease(note.map(toHz),'1m',time);
-					llog(`${note.map(x=>n2c[((Number(x)+main.sc)%12+12)%12]+(Math.floor((Number(x)+main.sc)/12)+4)/*49+Number(x)+main.sc*/)}\n${Tone.Transport.position}`,1);
+					llog(`${note.map(x=>n2c[((Number(x)+main.sc)%12+12)%12]+(Math.floor((Number(x)+main.sc)/12)+4)/*49+Number(x)+main.sc*/)}`,1);
 				}
+				llog(Tone.Transport.position);
+				var p=Tone.Transport.position.split(':').map(x=>Number(x));
+				p=((p[0]*Tone.Transport.timeSignature+p[1])*2+p[2]*.5)%main.scores.length;
+				llog(p);
+				if(p<1)dispScr.scrollLeft=0;
+				dispCur.style.left=rendered[Math.floor(p)].getBoundingClientRect().left+dispScr.scrollLeft+'px';
+				var dcbl=dispCur.getBoundingClientRect().left;
+				if(dcbl>=window.innerWidth-64||dcbl<16)dispScr.scrollLeft+=dcbl-16;
+				//dispScr.scrollLeft-=window.innerWidth*.5-dispCur.getBoundingClientRect().left;
 			},x).start(0);
 		}
 
@@ -146,35 +158,39 @@
 		}
 
 		/////render
-		const render=(scores,e,b)=>{
-			if(b)e.textContent=" ";
-			scores.map((x,i)=>{
-				var div = document.createElement('div');
-				//div.textContent+=i+1;
-				if(x){
-					switch(typeof x){
-						case'string':
-							x.split(',').map(y=>{
-								var note = document.createElement('p');
-								note.style.bottom=((Number(n2i[y])||15)*16)+'px';
-								//note.classList.add('');
-								div.appendChild(note);
-							});
-							break;
-						case'object':render(x,div,0);break;
+		const render=(sc,el)=>{
+			const rcore=(scores,e,b)=>{
+				if(b)e.textContent=" ";
+				scores.map((x,i)=>{
+					var div = document.createElement('div');
+					//div.textContent+=i+1;
+					if(x){
+						switch(typeof x){
+							case'string':
+								x.split(',').map(y=>{
+									var note = document.createElement('p');
+									note.style.bottom=((Number(n2i[y])||15)*16)+'px';
+									//note.classList.add('');
+									div.appendChild(note);
+								});
+								break;
+							case'object':rcore(x,div,0);break;
+						}
 					}
-				}
-				div.classList.add('nWrapper');
-				if(i%main.ts==0&&b)div.classList.add('b');
-				e.appendChild(div);//e.insertBefore(div,e.lastChild);
-			})
-
+					div.classList.add('nWrapper');
+					if(i%Tone.Transport.timeSignature==0&&b)div.classList.add('b');
+					e.appendChild(div);//e.insertBefore(div,e.lastChild);
+				})
+			}
+			rcore(sc,el,1);
+			rendered=document.querySelectorAll('#disp>.nWrapper');
+			console.log('render',rendered);
 		}
 
 
 		const set=()=>{
-			setScores(main.scores);requestIdleCallback(()=>{render(main.scores,disp,1)});
-			sc_.value=main.sc;bpm_.value=main.bpm;Tone.Transport.bpm.value=main.bpm;Tone.Transport.timeSignature=[main.ts,4];llog(main.name);
+			setScores(main.scores);requestIdleCallback(()=>{render(main.scores,disp);});
+			sc_.value=main.sc;bpm_.value=main.bpm;Tone.Transport.bpm.value=main.bpm;Tone.Transport.timeSignature=main.ts;llog(main.name);
 		}
 		set();
 
@@ -187,9 +203,9 @@
 					break;
 				default:
 					const keymap={
-						'KeyR':'kbb00','KeyT':'kbb01','KeyY':'kbb02','KeyU':'kbb03','KeyI':'kbb04',
-						'KeyF':'kbb10','KeyG':'kbb11','KeyH':'kbb12','KeyJ':'kbb13','KeyK':'kbb14',
-						'KeyC':'kbb20','KeyV':'kbb21','KeyB':'kbb22','KeyN':'kbb23','KeyM':'kbb24'
+						KeyR:'kbb00',KeyT:'kbb01',KeyY:'kbb02',KeyU:'kbb03',KeyI:'kbb04',
+						KeyF:'kbb10',KeyG:'kbb11',KeyH:'kbb12',KeyJ:'kbb13',KeyK:'kbb14',
+						KeyC:'kbb20',KeyV:'kbb21',KeyB:'kbb22',KeyN:'kbb23',KeyM:'kbb24'
 					}
 					if(keymap[e.code]){
 						document.getElementById(keymap[e.code]).nextElementSibling.dispatchEvent(new Event('pointerdown'));
