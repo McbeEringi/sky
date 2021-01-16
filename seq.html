@@ -23,7 +23,7 @@
 		#dispCur{width:16px;height:100%;background:#f88;left:17px;transition:.1s;border-radius:4px;}
 		.nWrapper{display:flex;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background-color:#0004;}
 		.nWrapper.b{overflow:hidden;}.nWrapper.b::before{content:"";display:block;width:2px;height:100%;background:#feac;}
-		.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;}
+		.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;}
 		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
 
 		.uiPanel{float:left;clear:left;}
@@ -54,8 +54,11 @@
 		<div class="uiPanel">
 			<div>
 				<button class="grid bg" style="--bp:-300% -100%;transform:rotateZ(180deg);">
-				</button><button onclick="Tone.start();ptoggle()" class="grid bg" style="--bp:0 -100%;"></button><button onclick="pstop()"class="grid bg" style="--bp:-100% -100%;">
-				</button><button class="grid bg" style="--bp:-300% -100%;"></button>
+				</button><button onclick="Tone.start();ptoggle()" class="grid bg" style="--bp:0 -100%;"></button><button onclick="pstop()" class="grid bg" style="--bp:-100% -100%;">
+				</button><button class="grid bg" style="--bp:-300% -100%;"></button><br>
+				<button class="grid bg" style="--bp:-400% -100%;">
+				</button><button class="grid bg" style="--bp:-500% -100%;">
+				</button><button class="grid bg" style="--bp:-600% -100%;"></button>
 			</div>
 		</div>
 		<div class="kbPanel">
@@ -159,27 +162,29 @@
 
 		/////render
 		const render=(sc,el)=>{
-			const rcore=(scores,e,b)=>{
+			const rcore=(scores,e,b,l=1)=>{
 				if(b)e.textContent=" ";
 				scores.map((x,i)=>{
 					var div = document.createElement('div');
-					//div.textContent+=i+1;
+					e.appendChild(div);//e.insertBefore(div,e.lastChild);
+					div.dataset.ind=(div.parentNode.dataset.ind?div.parentNode.dataset.ind+'-':'')+String(i);
+					div.dataset.p=(b?i:Number(div.parentNode.dataset.p)+l*i);
+					div.dataset.ts=`${Math.floor(div.dataset.p*.5/Tone.Transport.timeSignature)}:${Math.floor(div.dataset.p*.5)%Tone.Transport.timeSignature}:${Number(div.dataset.p*2)%4}`
 					if(x){
 						switch(typeof x){
 							case'string':
 								x.split(',').map(y=>{
 									var note = document.createElement('p');
 									note.style.bottom=((Number(n2i[y])||15)*16)+'px';
-									//note.classList.add('');
 									div.appendChild(note);
+									div.classList.add('t');
 								});
 								break;
-							case'object':rcore(x,div,0);break;
+							case'object':rcore(x,div,0,l/x.length);break;
 						}
 					}
 					div.classList.add('nWrapper');
 					if(i%Tone.Transport.timeSignature==0&&b)div.classList.add('b');
-					e.appendChild(div);//e.insertBefore(div,e.lastChild);
 				})
 			}
 			rcore(sc,el,1);
@@ -187,12 +192,16 @@
 			console.log('render',rendered);
 		}
 
-
 		const set=()=>{
 			setScores(main.scores);requestIdleCallback(()=>{render(main.scores,disp);});
-			sc_.value=main.sc;bpm_.value=main.bpm;Tone.Transport.bpm.value=main.bpm;Tone.Transport.timeSignature=main.ts;llog(main.name);
+			sc_.value=main.sc;bpm_.value=main.bpm;Tone.Transport.bpm.value=main.bpm;Tone.Transport.timeSignature=main.ts;llog(main.name);//Tone.Transport.swing=1;
 		}
 		set();
+
+		disp.onclick=e=>{
+			e.target.style.background='#fea8';
+			setTimeout(()=>e.target.style.background='',100)
+		}
 
 		/////keyboard
 		document.addEventListener('keydown',e=>{
