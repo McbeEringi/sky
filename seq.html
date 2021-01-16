@@ -22,7 +22,6 @@
 		#dispScr{width:100%;height:100%;overflow:scroll;position:relative;}#disp{padding:0 64px 0 16px;display:flex;}
 		#dispCur{width:16px;height:100%;background:#f88;left:17px;transition:.1s;border-radius:4px;}
 		.nWrapper{display:flex;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background-color:#0004;}
-		.nWrapper.b{overflow:hidden;}.nWrapper.b::before{content:"";display:block;width:2px;height:100%;background:#feac;}
 		.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;}
 		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
 
@@ -41,7 +40,9 @@
 		#kb label:nth-child(4n):not(.c)::after{background-position:-100% 0;}
 		#kb input:checked+label::after{transform:rotateY(360deg)scale(.8);}
 	</style>
+	<style id="sty">
 
+	</style>
 
 	<div class="dispPanel">
 		<div id="dispScr">
@@ -162,14 +163,16 @@
 
 		/////render
 		const render=(sc,el)=>{
+			console.time();
 			const rcore=(scores,e,b,l=1)=>{
 				if(b)e.textContent=" ";
 				scores.map((x,i)=>{
 					var div = document.createElement('div');
+					div.classList.add('nWrapper');
 					e.appendChild(div);//e.insertBefore(div,e.lastChild);
-					div.dataset.ind=(div.parentNode.dataset.ind?div.parentNode.dataset.ind+'-':'')+String(i);
+					div.dataset.ind=(div.parentNode.dataset.ind?div.parentNode.dataset.ind+'-':'')+i;
 					div.dataset.p=(b?i:Number(div.parentNode.dataset.p)+l*i);
-					div.dataset.ts=`${Math.floor(div.dataset.p*.5/Tone.Transport.timeSignature)}:${Math.floor(div.dataset.p*.5)%Tone.Transport.timeSignature}:${Number(div.dataset.p*2)%4}`
+					div.dataset.ts=`${Math.floor(div.dataset.p*.5/Tone.Transport.timeSignature)}:${Math.floor(div.dataset.p*.5)%Tone.Transport.timeSignature}:${(div.dataset.p*2)%4}`
 					if(x){
 						switch(typeof x){
 							case'string':
@@ -177,23 +180,25 @@
 									var note = document.createElement('p');
 									note.style.bottom=((Number(n2i[y])||15)*16)+'px';
 									div.appendChild(note);
-									div.classList.add('t');
 								});
+								div.classList.add('t');
 								break;
 							case'object':rcore(x,div,0,l/x.length);break;
 						}
-					}
-					div.classList.add('nWrapper');
-					if(i%Tone.Transport.timeSignature==0&&b)div.classList.add('b');
+					}else div.classList.add('t');
 				})
 			}
 			rcore(sc,el,1);
+			console.timeEnd();
+			sty.textContent=`
+				#disp>.nWrapper:nth-child(${Tone.Transport.timeSignature}n+1){overflow:hidden;}
+				#disp>.nWrapper:nth-child(${Tone.Transport.timeSignature}n+1)::before{content:"";display:block;width:2px;height:100%;background:#feac;}`;
 			rendered=document.querySelectorAll('#disp>.nWrapper');
 			console.log('render',rendered);
 		}
 
 		const set=()=>{
-			setScores(main.scores);requestIdleCallback(()=>{render(main.scores,disp);});
+			setScores(main.scores);render(main.scores,disp);
 			sc_.value=main.sc;bpm_.value=main.bpm;Tone.Transport.bpm.value=main.bpm;Tone.Transport.timeSignature=main.ts;llog(main.name);//Tone.Transport.swing=1;
 		}
 		set();
