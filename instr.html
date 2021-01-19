@@ -30,7 +30,7 @@
 			:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;overflow:hidden;color:#fff;}
 			html,body{width:100%;height:100%;position:relative;margin:0;overflow:hidden;}*::-webkit-scrollbar{display:none;}
 			.bg_,.fg_{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}.fg_{z-index:10;}.fg_>*{pointer-events:auto;}
-			.bg_>video{width:100%;height:100%;object-fit:cover;}.bg_>div{width:100%;height:64px;position:absolute;top:0;left:0;background:linear-gradient(#0008,#0000);}
+			.bg_>video{width:100%;height:100%;object-fit:cover;transition:2s;}.bg_>div{width:100%;height:64px;position:absolute;top:0;left:0;background:linear-gradient(#0008,#0000);}
 			hr{border:none;}hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 			#alcb{display:none;}
 			#alcb+label{display:block;width:100%;height:100%;background:#0008;opacity:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);pointer-events:none;transition:.2s;}
@@ -91,9 +91,9 @@
 			#scd,#scd_{transition:.2s}
 			#scd_{position:absolute;top:0;left:0;width:100%;height:100%;background:url(img/tex.png);background-size:560px auto;background-position:-490px 0;}
 		</style>
-		<input type="checkbox" id="menucb"><label for="menucb" style="pointer-events:none;"></label>
+		<input type="checkbox" id="menucb" onchange="sfx.player(this.checked?'op':'cl').start();"><label for="menucb" style="pointer-events:none;"></label>
 		<div class="menu">
-			<form id="menu" onchange="set();">
+			<form id="menu" onchange="set();sfx.player('cs').start();">
 				        <label><input type="radio" name="instr" value="0"  checked ><div style="--bp:-0%   -100% ;"></div>
 				</label><label><input type="radio" name="instr" value="1"          ><div style="--bp:-100% -100% ;"></div>
 				</label><label><input type="radio" name="instr" value="2"          ><div style="--bp:-200% -100% ;"></div>
@@ -103,7 +103,7 @@
 				</label><label><input type="radio" name="instr" value="6"          ><div style="--bp:-600% -100% ;"></div>
 				</label><label><input type="radio" name="instr" value="7"  disabled><div style="--bp:-700% -100% ;"></div>
 				</label><label><input type="radio" name="instr" value="8"          ><div style="--bp:-0%   -200%;"></div>
-				</label><label><input type="radio" name="instr" value="9"  disabled><div style="--bp:-100% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="9"          ><div style="--bp:-100% -200%;"></div>
 				</label><label><input type="radio" name="instr" value="10"         ><div style="--bp:-200% -200%;"></div>
 				</label><label><input type="radio" name="instr" value="11"         ><div style="--bp:-300% -200%;"></div>
 				</label><label><input type="radio" name="instr" value="12"         ><div style="--bp:-400% -200%;"></div>
@@ -120,7 +120,8 @@
 				</div><div ontouchstart="" class="grid button" style="--bp:-500% -0%;" onclick="sc++;scale(1);"></div>
 			</div>
 			<hr>
-			<div class="grid button" style="--bp:-300% -0%;" onclick="alert(info);"></div>
+			<div class="grid button" style="--bp:-0% -0%;" onclick="bga[bga.state=='stopped'?'start':'stop']();bgv.style.opacity=Number(bga.state=='started');">
+			</div><div class="grid button" style="--bp:-300% -0%;" onclick="alert(info);"></div>
 		</div>
 		<label for="menucb"><div id="mico"></div></label>
 
@@ -139,28 +140,28 @@
 				}
 				return s;
 			};
-			const info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @SkyEringi\n\nauthor:@SkyEringi\nbuild:2101190\nMIT License';
+			const info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @SkyEringi\n\nauthor:@SkyEringi\nbuild:2101200\nMIT License';
 			const blli=[
 				{'c4':'c4.mp3','d4':'d4.mp3','g4':'g4.mp3','a4':'a4.mp3'},
 				{'c4':'c4_.mp3','d4':'d4_.mp3','g4':'g4_.mp3','a4':'a4_.mp3'}
 			],instr_li=[//[baseurl, octave, map, (map2)]
 				['audio/instr/musicbox/',1,Object.assign({'a3':'a3.mp3','d#7':'ds7.mp3'},stdli(4,6))],
 				['audio/instr/harp/',-1,stdli(3)],
-				['audio/instr/percussion/',-1,{'a3':'0.mp3','a#3':'1.mp3','b3':'2.mp3','c4':'3.mp3','a4':'4.mp3','a#4':'5.mp3','b4':'6.mp3','c5':'7.mp3'}],
+					['audio/instr/percussion/',-1,{'a3':'0.mp3','a#3':'1.mp3','b3':'2.mp3','c4':'3.mp3','a4':'4.mp3','a#4':'5.mp3','b4':'6.mp3','c5':'7.mp3'}],
 				['audio/instr/contrabass/',-2,stdli(2)],
-				['audio/instr/horn/',-2,stdli(2)],
-				['audio/instr/piano/',0,stdli(4)],
-				['audio/instr/',1].concat([{'d#5':'musicbox/ds5.mp3','a5':'musicbox/a5.mp3'},{'d#5':'glock/ds5.mp3','a5':'glock/a5.mp3'}]),
-				['audio/instr/bell2/',1].concat(blli),
-				['audio/instr/flute/',0,stdli(4)],
+				['audio/instr/horn/',-1,stdli(3)],
+					['audio/instr/piano/',0,stdli(4)],
+					['audio/instr/',1].concat([{'d#5':'musicbox/ds5.mp3','a5':'musicbox/a5.mp3'},{'d#5':'glock/ds5.mp3','a5':'glock/a5.mp3'}]),
+					['audio/instr/bell2/',1].concat(blli),
+					['audio/instr/flute/',0,stdli(4)],
 				['audio/instr/quena/',0,stdli(4)],
 				['audio/instr/guitar/',-1,stdli(3)],
-				['audio/instr/ukulele/',-1,{'d#4':'ds4.mp3','a4':'a4.mp3'}],
-				['audio/instr/piano/',1,stdli(5)],
-				['audio/instr/glock/',1,stdli(5)],
-				['audio/instr/harp/',-1,stdli(3)],
+				['audio/instr/ukulele/',-1,stdli(3)],
+					['audio/instr/piano/',1,stdli(5)],
+					['audio/instr/glock/',1,stdli(5)],
+				['audio/instr/handpan/',-1,stdli(3)],
 				['audio/instr/dundun/',-1,{'a3':'0.mp3','a#3':'1.mp3','b3':'2.mp3','c4':'3.mp3','a4':'4.mp3','a#4':'5.mp3','b4':'6.mp3','c5':'7.mp3'}],
-				['audio/instr/pipa/',-1,stdli(3)]
+					['audio/instr/pipa/',-1,stdli(3)]
 			],pmap={
 				2:[[0,1,2,3],[12,13,14,15]],
 				6:[[-9,-7,-2,0],[-9,-7,-2,0]],
@@ -280,8 +281,9 @@
 			}
 			scale(0);
 
-			const bga=new Tone.Player('audio/hotspra.mp3').toDestination();
-			bga.autostart=true;bga.loop=true;bga.fadeIn=5;bga.fadeOut=5;bga.volume.value=0;
+			const bga=new Tone.Player('audio/hotspra.mp3').toDestination(),
+			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination();
+			bga.autostart=true;bga.loop=true;bga.fadeIn=5;bga.fadeOut=2;bga.volume.value=-10;
 
 			/////reload
 			document.addEventListener('visibilitychange',()=>{
