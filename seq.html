@@ -31,14 +31,14 @@
 
 		.kbPanel{position:relative;width:100%;max-width:360px;float:right;}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;background:#0004;border-radius:8px;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
-		#kb label{display:inline-block;width:20%;height:100%;position:relative;}
-		#kb label::before,#kb label::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
-		#kb label::before{background:#4448;filter:drop-shadow(0 0 4px #444);transition:.02s;}#kb input:not(:checked)+label::before{transition:.2s;}
-		#kb input:checked+label::before{background:#fea8;filter:drop-shadow(0 0 4px #fea);transform:scale(.8);}
-		#kb label::after{background:url(img/seq.png);background-size:800%;transition:.4s;}#kb input:not(:checked)+label::after{transition:.01s;}
-		#kb label:nth-child(2n):not(.c)::after{background-position:-200% 0;}
-		#kb label:nth-child(4n):not(.c)::after{background-position:-100% 0;}
-		#kb input:checked+label::after{transform:rotateY(360deg)scale(.8);}
+		#kb p{display:inline-block;width:20%;height:100%;margin:0;position:relative;}
+		#kb p::before,#kb p::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
+		#kb p::before{background:#4448;filter:drop-shadow(0 0 4px #444);transition:.02s;}#kb input:not(:checked)+p::before{transition:.2s;}
+		#kb input:checked+p::before{background:#fea8;filter:drop-shadow(0 0 4px #fea);transform:scale(.8);}
+		#kb p::after{background:url(img/seq.png);background-size:800%;transition:.4s;}#kb input:not(:checked)+p::after{transition:.01s;}
+		#kb p:nth-child(2n):not(.c)::after{background-position:-200% 0;}
+		#kb p:nth-child(4n):not(.c)::after{background-position:-100% 0;}
+		#kb input:checked+p::after{transform:rotateY(360deg)scale(.8);}
 	</style>
 	<style id="sty">
 
@@ -64,9 +64,9 @@
 		</div>
 		<div class="kbPanel">
 			<div id="kb">
-				<div><input type="checkbox"id="kbb00"><label class="c"></label><input type="checkbox"id="kbb01"><label></label><input type="checkbox"id="kbb02"><label></label><input type="checkbox"id="kbb03"><label></label><input type="checkbox"id="kbb04"><label></label></div>
-				<div><input type="checkbox"id="kbb10"><label></label><input type="checkbox"id="kbb11"><label></label><input type="checkbox"id="kbb12"><label class="c"></label><input type="checkbox"id="kbb13"><label></label><input type="checkbox"id="kbb14"><label></label></div>
-				<div><input type="checkbox"id="kbb20"><label></label><input type="checkbox"id="kbb21"><label></label><input type="checkbox"id="kbb22"><label></label><input type="checkbox"id="kbb23"><label></label><input type="checkbox"id="kbb24"><label class="c"></label></div>
+				<div><input type="checkbox"id="kbb00"><p class="c"></p><input type="checkbox"id="kbb01"><p></p><input type="checkbox"id="kbb02"><p></p><input type="checkbox"id="kbb03"><p></p><input type="checkbox"id="kbb04"><p></p></div>
+				<div><input type="checkbox"id="kbb10"><p></p><input type="checkbox"id="kbb11"><p></p><input type="checkbox"id="kbb12"><p class="c"></p><input type="checkbox"id="kbb13"><p></p><input type="checkbox"id="kbb14"><p></p></div>
+				<div><input type="checkbox"id="kbb20"><p></p><input type="checkbox"id="kbb21"><p></p><input type="checkbox"id="kbb22"><p></p><input type="checkbox"id="kbb23"><p></p><input type="checkbox"id="kbb24"><p class="c"></p></div>
 			</div>
 		</div>
 		<div class="uiPanel">
@@ -94,7 +94,7 @@
 	<script src="https://tonejs.github.io/build/Tone.js"></script>
 	<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js"></script>
 	<script>
-		var seq,sc=Number(sc_.value),main,rendered;
+		var seq,sc=Number(sc_.value),main,rendered,curpos=0;
 		const llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		scset=()=>{if(Number(sc_.value)||sc_.value=='0')main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
 		bpmset=()=>{var tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
@@ -115,6 +115,7 @@
 			requestIdleCallback(()=>{
 				dispCur.style.left='17px';
 				dispScr.scrollLeft=0;
+				curpos=0;
 				kbset('');
 			});
 		}
@@ -134,8 +135,11 @@
 				var p=Tone.Transport.position.split(':').map(x=>Number(x));
 				p=((p[0]*Tone.Transport.timeSignature+p[1])*2+p[2]*.5)%main.scores.length;
 				llog(p);
+
 				if(p<1)dispScr.scrollLeft=0;
-				dispCur.style.left=rendered[Math.floor(p)].getBoundingClientRect().left+dispScr.scrollLeft+'px';
+				dispCur.style.left=rendered[curpos++].getBoundingClientRect().left+dispScr.scrollLeft+'px';
+				if(curpos>=rendered.length)curpos-=rendered.length;
+
 				var dcbl=dispCur.getBoundingClientRect().left;
 				if(dcbl>=window.innerWidth-64||dcbl<16)dispScr.scrollLeft+=dcbl-16;
 				//dispScr.scrollLeft-=window.innerWidth*.5-dispCur.getBoundingClientRect().left;
@@ -144,9 +148,10 @@
 
 		/////Keys
 		const i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
-		n2i={'-9':'0','-7':'1','-5':'2','-4':'3','-2':'4','0':'5','2':'6','3':'7','5':'8','7':'9','8':'10','10':'11','12':'12','14':'13','15':'14'},
+		n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'6.5','2':'6',
+			'3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
 		n2c=['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'];
-		document.querySelectorAll('#kb label').forEach((e,i)=>{
+		document.querySelectorAll('#kb p').forEach((e,i)=>{
 			e.addEventListener('pointerdown',ev=>{
 				ev.preventDefault();
 				if(e.previousElementSibling.checked==false)synth.triggerAttackRelease(toHz(i2n[i]));
@@ -178,7 +183,7 @@
 							case'string':
 								x.split(',').map(y=>{
 									var note = document.createElement('p');
-									note.style.bottom=((Number(n2i[y])||15)*16)+'px';
+									note.style.bottom=((n2i[y]+1?Number(n2i[y]):15)*16)+'px';
 									div.appendChild(note);
 								});
 								div.classList.add('t');
@@ -193,7 +198,7 @@
 			sty.textContent=`
 				#disp>.nWrapper:nth-child(${Tone.Transport.timeSignature}n+1){overflow:hidden;}
 				#disp>.nWrapper:nth-child(${Tone.Transport.timeSignature}n+1)::before{content:"";display:block;width:2px;height:100%;background:#feac;}`;
-			rendered=document.querySelectorAll('#disp>.nWrapper');
+			rendered=document.querySelectorAll('#disp .t');
 			console.log('render',rendered);
 		}
 
