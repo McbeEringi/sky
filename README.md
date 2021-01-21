@@ -12,7 +12,7 @@ PWA, offline support
 	coming soon…
 	- can use "N"tuplet "N"metre
 	- custom key
-- treasure candle
+- sky_info
 	- tells treasure candle location with photo
 	- forecast
 	- office spirits
