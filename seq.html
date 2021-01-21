@@ -30,7 +30,7 @@
 		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}
 
 		.kbPanel{position:relative;width:100%;max-width:360px;float:right;}.kbPanel:before{content:"";display:block;padding-top:60%;}
-		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;background:#0004;border-radius:8px;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
+		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;background:#0004;border-radius:8px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
 		#kb p{display:inline-block;width:20%;height:100%;margin:0;position:relative;}
 		#kb p::before,#kb p::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
 		#kb p::before{background:#4448;filter:drop-shadow(0 0 4px #444);transition:.02s;}#kb input:not(:checked)+p::before{transition:.2s;}
@@ -40,22 +40,17 @@
 		#kb p:nth-child(4n):not(.c)::after{background-position:-100% 0;}
 		#kb input:checked+p::after{transform:rotateY(360deg)scale(.8);}
 	</style>
-	<style id="sty">
-
-	</style>
+	<style id="sty"></style>
 
 	<div class="dispPanel">
-		<div id="dispScr">
-			<div id="dispCur"></div>
-			<div id="disp"></div>
-		</div>
+		<div id="dispScr"><div id="dispCur"></div><div id="disp"></div></div>
 		<div style="opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;top:0;">CBAGFEDCBAGFEDC</div>
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel">
 			<div>
 				<button class="grid bg" style="--bp:-300% -100%;transform:rotateZ(180deg);">
-				</button><button onclick="Tone.start();ptoggle()" class="grid bg" style="--bp:0 -100%;"></button><button onclick="pstop()" class="grid bg" style="--bp:-100% -100%;">
+				</button><button onclick="Tone.start();ttoggle()" class="grid bg" style="--bp:0 -100%;"></button><button onclick="tstop()" class="grid bg" style="--bp:-100% -100%;">
 				</button><button class="grid bg" style="--bp:-300% -100%;"></button><br>
 				<button class="grid bg" style="--bp:-400% -100%;">
 				</button><button class="grid bg" style="--bp:-500% -100%;">
@@ -94,35 +89,83 @@
 	<script src="https://tonejs.github.io/build/Tone.js"></script>
 	<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js"></script>
 	<script>
-		var seq,sc=Number(sc_.value),main,rendered,curpos=0;
+		//window.onbeforeunload=e=>{e.preventDefault();return'';};
+
+		var seq,sc=Number(sc_.value),main,rendered,p=0;
 		const llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
+		url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
+		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
+		synth=new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination()),
+		toHz=x=>880*Math.pow(2,(Number(x)+main.sc)/12),//C5~C7
+		i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
+		n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'6.5','2':'6',
+			'3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
+		n2c=['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'],
 		scset=()=>{if(Number(sc_.value)||sc_.value=='0')main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
 		bpmset=()=>{var tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
-		url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
-		mbxli = ()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
-		synth = new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination());
+		pset=()=>{var tmp=Tone.Transport.position.split(':').map(x=>Number(x));p=((tmp[0]*Tone.Transport.timeSignature+tmp[1])*2+tmp[2]*.5)%main.scores.length;},
+		curset=()=>{
+			pset();
+			dispCur.style.left=rendered.e[
+				rendered.p.indexOf(Math.floor(p))
+			].getBoundingClientRect().left+dispScr.scrollLeft+'px';
+		},
+		kbset=x=>{x=x.split(',').map(x=>n2i[x]);document.querySelectorAll('#kb input').forEach((e,i)=>e.checked=x.includes(String(i)));};
 
-		main=sample[slc.value];
-		log.textContent='seq';
+		document.querySelectorAll('#kb p').forEach((e,i)=>{
+			e.addEventListener('pointerdown',ev=>{
+				ev.preventDefault();
+				if(e.previousElementSibling.checked==false)synth.triggerAttackRelease(toHz(i2n[i]));
+				e.previousElementSibling.checked=!e.previousElementSibling.checked;
+			});
+		});
+		document.addEventListener('keydown',e=>{
+			llog(e.code);
+			switch (e.code) {
+				case 'Space':
+					ttoggle();
+					break;
+				default:
+					const keymap={
+						KeyR:'kbb00',KeyT:'kbb01',KeyY:'kbb02',KeyU:'kbb03',KeyI:'kbb04',
+						KeyF:'kbb10',KeyG:'kbb11',KeyH:'kbb12',KeyJ:'kbb13',KeyK:'kbb14',
+						KeyC:'kbb20',KeyV:'kbb21',KeyB:'kbb22',KeyN:'kbb23',KeyM:'kbb24'
+					}
+					if(keymap[e.code]){
+						document.getElementById(keymap[e.code]).nextElementSibling.dispatchEvent(new Event('pointerdown'));
+					}
+			}
+		});
 
-		/////from button
-		function ptoggle(){
+
+				main=sample[slc.value];
+				log.textContent='seq';
+
+
+		/////from gui
+		const ttoggle=()=>{
 			if(Tone.Transport.state=='started')Tone.Transport.pause();
 			else Tone.Transport.start();
-		}
-		function pstop(){
+		};
+		const tstop=()=>{
 			Tone.Transport.stop();
 			requestIdleCallback(()=>{
-				dispCur.style.left='17px';
-				dispScr.scrollLeft=0;
-				curpos=0;
+				dispCur.style.left='17px';dispScr.scrollLeft=0;//curset();
 				kbset('');
 			});
-		}
+		};
+		disp.onclick=e=>{
+			if(e.target.classList.contains('t')){
+				e.target.style.background='#fea8';
+				llog(e.target.dataset.pos);
+				setTimeout(()=>e.target.style.background='',100);
+				Tone.Transport.position=e.target.dataset.pos;
+				curset();
+			}
+		};
 
 		/////Sequence
-		const toHz = x=>880*Math.pow(2,(Number(x)+main.sc)/12);//C5~C7
-		function setScores(x){
+		const setScores=x=>{
 			if(seq)seq.dispose();
 			seq = new Tone.Sequence((time,note)=>{
 				if(note){
@@ -132,39 +175,18 @@
 					llog(`${note.map(x=>n2c[((Number(x)+main.sc)%12+12)%12]+(Math.floor((Number(x)+main.sc)/12)+4)/*49+Number(x)+main.sc*/)}`,1);
 				}
 				llog(Tone.Transport.position);
-				var p=Tone.Transport.position.split(':').map(x=>Number(x));
-				p=((p[0]*Tone.Transport.timeSignature+p[1])*2+p[2]*.5)%main.scores.length;
-				llog(p);
 
-				if(p<1)dispScr.scrollLeft=0;
-				dispCur.style.left=rendered[curpos++].getBoundingClientRect().left+dispScr.scrollLeft+'px';
-				if(curpos>=rendered.length)curpos-=rendered.length;
+				curset();
+				llog(p);
 
 				var dcbl=dispCur.getBoundingClientRect().left;
 				if(dcbl>=window.innerWidth-64||dcbl<16)dispScr.scrollLeft+=dcbl-16;
 				//dispScr.scrollLeft-=window.innerWidth*.5-dispCur.getBoundingClientRect().left;
-			},x).start(0);
-		}
 
-		/////Keys
-		const i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
-		n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'6.5','2':'6',
-			'3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
-		n2c=['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'];
-		document.querySelectorAll('#kb p').forEach((e,i)=>{
-			e.addEventListener('pointerdown',ev=>{
-				ev.preventDefault();
-				if(e.previousElementSibling.checked==false)synth.triggerAttackRelease(toHz(i2n[i]));
-				e.previousElementSibling.checked=!e.previousElementSibling.checked;
-			});
-		})
-		function kbset(x){
-			x=x.split(',').map(x=>n2i[x]);
-			document.querySelectorAll('#kb input').forEach((e,i)=>{
-				//e.checked=false;void e.offsetWidth;
-				e.checked=x.includes(String(i));
-			});
-		}
+				if(p<1)dispScr.scrollLeft=0;
+			},x).start(0);
+		};
+
 
 		/////render
 		const render=(sc,el)=>{
@@ -177,7 +199,7 @@
 					e.appendChild(div);//e.insertBefore(div,e.lastChild);
 					div.dataset.ind=(div.parentNode.dataset.ind?div.parentNode.dataset.ind+'-':'')+i;
 					div.dataset.p=(b?i:Number(div.parentNode.dataset.p)+l*i);
-					div.dataset.ts=`${Math.floor(div.dataset.p*.5/Tone.Transport.timeSignature)}:${Math.floor(div.dataset.p*.5)%Tone.Transport.timeSignature}:${(div.dataset.p*2)%4}`
+					div.dataset.pos=`${Math.floor(div.dataset.p*.5/Tone.Transport.timeSignature)}:${Math.floor(div.dataset.p*.5)%Tone.Transport.timeSignature}:${(div.dataset.p*2)%4}`
 					if(x){
 						switch(typeof x){
 							case'string':
@@ -195,44 +217,28 @@
 			}
 			rcore(sc,el,1);
 			console.timeEnd();
-			sty.textContent=`
+			sty.textContent=main.ts?`
 				#disp>.nWrapper:nth-child(${Tone.Transport.timeSignature}n+1){overflow:hidden;}
-				#disp>.nWrapper:nth-child(${Tone.Transport.timeSignature}n+1)::before{content:"";display:block;width:2px;height:100%;background:#feac;}`;
-			rendered=document.querySelectorAll('#disp .t');
+				#disp>.nWrapper:nth-child(${Tone.Transport.timeSignature}n+1)::before{content:"";display:block;width:2px;height:100%;background:#feac;}
+			`:'';
+			rendered={ind:[],p:[],pos:[]};
+			rendered.e=document.querySelectorAll('#disp .t');
+			rendered.e.forEach(e=>{
+				rendered.ind.push(e.dataset.ind);
+				rendered.p.push(Number(e.dataset.p));
+				rendered.pos.push(e.dataset.pos);
+			});
+			rendered.length=rendered.e.length;
 			console.log('render',rendered);
-		}
+		};
 
 		const set=()=>{
 			setScores(main.scores);
-			sc_.value=main.sc;bpm_.value=main.bpm;Tone.Transport.bpm.value=main.bpm;Tone.Transport.timeSignature=main.ts;llog(main.name);//Tone.Transport.swing=1;
+			sc_.value=main.sc;bpm_.value=main.bpm;Tone.Transport.bpm.value=main.bpm;Tone.Transport.timeSignature=main.ts||4;llog(main.name);//Tone.Transport.swing=1;
 			render(main.scores,disp);
-		}
+			tstop();
+		};
 		set();
-
-		disp.onclick=e=>{
-			e.target.style.background='#fea8';
-			setTimeout(()=>e.target.style.background='',100)
-		}
-
-		/////keyboard
-		document.addEventListener('keydown',e=>{
-			llog(e.code);
-			switch (e.code) {
-				case 'Space':
-					ptoggle();
-					break;
-				default:
-					const keymap={
-						KeyR:'kbb00',KeyT:'kbb01',KeyY:'kbb02',KeyU:'kbb03',KeyI:'kbb04',
-						KeyF:'kbb10',KeyG:'kbb11',KeyH:'kbb12',KeyJ:'kbb13',KeyK:'kbb14',
-						KeyC:'kbb20',KeyV:'kbb21',KeyB:'kbb22',KeyN:'kbb23',KeyM:'kbb24'
-					}
-					if(keymap[e.code]){
-						document.getElementById(keymap[e.code]).nextElementSibling.dispatchEvent(new Event('pointerdown'));
-					}
-			}
-		},false);
-
 	</script>
 </body>
 </html>
