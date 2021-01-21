@@ -83,6 +83,7 @@
 		<option value="3" selected>前前前世</option>
 		<option value="4">nyan-cat</option>
 	</select>
+	<button onclick="caches.delete('/sky/seq.html').then(x=>log.textContent+=`\ncache del: ${x}`)">cache del</button>
 	<pre id="log"></pre>
 
 
@@ -139,7 +140,7 @@
 
 
 				main=sample[slc.value];
-				log.textContent='seq';
+				log.textContent='build: 2101210';
 
 
 		/////from gui
