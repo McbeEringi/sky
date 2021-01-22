@@ -109,7 +109,7 @@
 		pset=()=>p=pos2p(Tone.Transport.position)%main.scores.length,
 		curset=()=>{
 			pset();
-			curpos=rendered.p.indexOf(Math.floor(p));while(p>rendered.p[curpos])curpos++;curpos--;
+			curpos=rendered.p.indexOf(Math.floor(p));while(p>=rendered.p[curpos])curpos++;curpos--;
 			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
 		},
 		kbset=x=>{x=x.split(',').map(x=>n2i[x]);document.querySelectorAll('#kb input').forEach((e,i)=>e.checked=x.includes(String(i)));};
@@ -141,7 +141,7 @@
 
 
 				main=sample[slc.value];
-				log.textContent='build: 2101222';
+				log.textContent='build: 2101223';
 
 
 		/////from gui
@@ -171,11 +171,11 @@
 			if(seq)seq.dispose();
 			seq = new Tone.Sequence((time,note)=>{
 				if(note){
-					kbset('');kbset(note);
+					kbset(note);
 					note=note.split(',');
 					synth.triggerAttackRelease(note.map(toHz),'1m',time);
 					llog(`${note.map(x=>n2c[((Number(x)+main.sc)%12+12)%12]+(Math.floor((Number(x)+main.sc)/12)+4)/*49+Number(x)+main.sc*/)}`,1);
-				}
+				}else kbset('');
 				llog(Tone.Transport.position);
 
 				curset();
