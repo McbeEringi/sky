@@ -110,7 +110,7 @@
 		curset=()=>{
 			pset();
 			curpos=rendered.p.indexOf(Math.floor(p));while(p>rendered.p[curpos])curpos++;curpos--;
-			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+'px';
+			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
 		},
 		kbset=x=>{x=x.split(',').map(x=>n2i[x]);document.querySelectorAll('#kb input').forEach((e,i)=>e.checked=x.includes(String(i)));};
 
@@ -141,7 +141,7 @@
 
 
 				main=sample[slc.value];
-				log.textContent='build: 2101221';
+				log.textContent='build: 2101222';
 
 
 		/////from gui
@@ -181,7 +181,7 @@
 				curset();
 				llog(p);
 
-				var dcbl=dispCur.getBoundingClientRect().left;
+				var dcbl=dispCur.getBoundingClientRect().left+window.scrollX;
 				if(dcbl>=window.innerWidth-64||dcbl<16)dispScr.scrollLeft+=dcbl-16;
 				//dispScr.scrollLeft-=window.innerWidth*.5-dispCur.getBoundingClientRect().left;
 
