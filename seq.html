@@ -92,7 +92,7 @@
 	<script>
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
-		var seq,sc=Number(sc_.value),main,rendered,p=0;
+		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos;
 		const llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -109,9 +109,8 @@
 		pset=()=>p=pos2p(Tone.Transport.position)%main.scores.length,
 		curset=()=>{
 			pset();
-			dispCur.style.left=rendered.e[
-				rendered.p.indexOf(Math.floor(p))
-			].getBoundingClientRect().left+dispScr.scrollLeft+'px';
+			curpos=rendered.p.indexOf(Math.floor(p));while(p<rendered.p[curpos])curpos++;curpos--;
+			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+'px';
 		},
 		kbset=x=>{x=x.split(',').map(x=>n2i[x]);document.querySelectorAll('#kb input').forEach((e,i)=>e.checked=x.includes(String(i)));};
 
