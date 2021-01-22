@@ -49,10 +49,10 @@
 	<div class="clear_fix">
 		<div class="uiPanel">
 			<div>
-				<button class="grid bg" style="--bp:-300% -100%;transform:rotateZ(180deg);">
-				</button><button onclick="Tone.start();ttoggle()" class="grid bg" style="--bp:0 -100%;"></button><button onclick="tstop()" class="grid bg" style="--bp:-100% -100%;">
-				</button><button class="grid bg" style="--bp:-300% -100%;"></button><br>
-				<button class="grid bg" style="--bp:-400% -100%;">
+				         <button class="grid bg" style="--bp:-300% -100%;transform:rotateZ(180deg);" onclick="tstep(-1);">
+				</button><button onclick="Tone.start();ttoggle();" class="grid bg" style="--bp:0 -100%;"></button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">
+				</button><button class="grid bg" style="--bp:-300% -100%;" onclick="tstep(1);"></button><br>
+				         <button class="grid bg" style="--bp:-400% -100%;">
 				</button><button class="grid bg" style="--bp:-500% -100%;">
 				</button><button class="grid bg" style="--bp:-600% -100%;"></button>
 			</div>
@@ -92,7 +92,7 @@
 	<script>
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
-		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos;
+		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0;
 		const llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -112,7 +112,16 @@
 			curpos=rendered.p.indexOf(Math.floor(p));while(p>=rendered.p[curpos])curpos++;curpos--;
 			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
 		},
-		kbset=x=>{x=x.split(',').map(x=>n2i[x]);document.querySelectorAll('#kb input').forEach((e,i)=>e.checked=x.includes(String(i)));};
+		kbset=(x=rendered.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores))=>{
+			x=x.split(',');var tmp=x.map(y=>n2i[y]);
+			document.querySelectorAll('#kb input').forEach((e,i)=>e.checked=tmp.includes(String(i)));
+			return x;
+		},
+		scrset=()=>{
+			var dcbl=dispCur.getBoundingClientRect().left+window.scrollX;
+			if(dcbl>=window.innerWidth-64||dcbl<16)dispScr.scrollLeft+=dcbl-16;
+			if(curpos==0)dispScr.scrollLeft=0;else if(curpos==rendered.length)dispScr.scrollLeft=dispScr.scrollWidth-dispScr.clientWidth;
+		};
 
 		document.querySelectorAll('#kb p').forEach((e,i)=>{
 			e.addEventListener('pointerdown',ev=>{
@@ -141,7 +150,7 @@
 
 
 				main=sample[slc.value];
-				log.textContent='build: 2101223';
+				log.textContent='build: 2101224';
 
 
 		/////from gui
@@ -153,8 +162,18 @@
 			Tone.Transport.stop();
 			requestIdleCallback(()=>{
 				dispCur.style.left='17px';dispScr.scrollLeft=0;//curset();
-				kbset('');
+				curpos=0;
+				kbset();
 			});
+		};
+		const tstep=x=>{
+			Tone.Transport.pause();
+			curpos+=x;
+			if(curpos<0)curpos+=rendered.length;else if(curpos>=rendered.length)curpos-=rendered.length;
+			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
+			Tone.Transport.position=p2pos(rendered.p[curpos]);
+			scrset();
+			var note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
 		};
 		disp.onclick=e=>{
 			if(e.target.classList.contains('t')){
@@ -163,6 +182,7 @@
 				setTimeout(()=>e.target.style.background='',100);
 				Tone.Transport.position=e.target.dataset.pos;
 				curset();
+				kbset();
 			}
 		};
 
@@ -176,16 +196,12 @@
 					synth.triggerAttackRelease(note.map(toHz),'1m',time);
 					llog(`${note.map(x=>n2c[((Number(x)+main.sc)%12+12)%12]+(Math.floor((Number(x)+main.sc)/12)+4)/*49+Number(x)+main.sc*/)}`,1);
 				}else kbset('');
-				llog(Tone.Transport.position);
 
 				curset();
+				scrset();
+
+				llog(Tone.Transport.position);
 				llog(p);
-
-				var dcbl=dispCur.getBoundingClientRect().left+window.scrollX;
-				if(dcbl>=window.innerWidth-64||dcbl<16)dispScr.scrollLeft+=dcbl-16;
-				//dispScr.scrollLeft-=window.innerWidth*.5-dispCur.getBoundingClientRect().left;
-
-				if(p<1)dispScr.scrollLeft=0;
 			},x).start(0);
 		};
 
@@ -223,12 +239,11 @@
 				#disp>.nWrapper:nth-child(${Tone.Transport.timeSignature}n+1){overflow:hidden;}
 				#disp>.nWrapper:nth-child(${Tone.Transport.timeSignature}n+1)::before{content:"";display:block;width:2px;height:100%;background:#feac;}
 			`:'';
-			rendered={ind:[],p:[],pos:[]};
+			rendered={ind:[],p:[]};
 			rendered.e=document.querySelectorAll('#disp .t');
 			rendered.e.forEach(e=>{
 				rendered.ind.push(e.dataset.ind);
 				rendered.p.push(Number(e.dataset.p));
-				rendered.pos.push(e.dataset.pos);
 			});
 			rendered.length=rendered.e.length;
 			console.log('render',rendered);
