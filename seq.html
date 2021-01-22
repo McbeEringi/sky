@@ -109,7 +109,7 @@
 		pset=()=>p=pos2p(Tone.Transport.position)%main.scores.length,
 		curset=()=>{
 			pset();
-			curpos=rendered.p.indexOf(Math.floor(p));while(p<rendered.p[curpos])curpos++;curpos--;
+			curpos=rendered.p.indexOf(Math.floor(p));while(p>rendered.p[curpos])curpos++;curpos--;
 			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+'px';
 		},
 		kbset=x=>{x=x.split(',').map(x=>n2i[x]);document.querySelectorAll('#kb input').forEach((e,i)=>e.checked=x.includes(String(i)));};
