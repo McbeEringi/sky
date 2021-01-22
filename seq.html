@@ -70,8 +70,8 @@
 				</button><input id="bpm_" class="grid bg" onchange="bpmset();" style="--bp:-700% 0;"></input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;"></button>
 			</div>
 			<div>
-				<button onclick="main.sc--;sc_.value=main.sc;" class="grid bg" style="--bp:-600% 0;">
-				</button><input id="sc_" class="grid bg" onchange="scset();" style="--bp:-200% -100%;"></input><button onclick="main.sc++;sc_.value=main.sc;" class="grid bg" style="--bp:-500% 0;"></button>
+				<button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-600% 0;">
+				</button><input id="sc_" class="grid bg" onchange="scset();" style="--bp:-200% -100%;"></input><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-500% 0;"></button>
 			</div>
 		</div>
 	</div>
@@ -80,8 +80,8 @@
 		<option value="0">新宝島</option>
 		<option value="1">LINE</option>
 		<option value="2">\ｵﾌﾛｶﾞﾜｷﾏｼﾀ/</option>
-		<option value="3" selected>前前前世</option>
-		<option value="4">nyan-cat</option>
+		<option value="3">前前前世</option>
+		<option value="4" selected>nyan-cat</option>
 	</select>
 	<button onclick="caches.keys().then(x=>caches.open(x[0])).then(x=>x.delete('/sky/seq.html')).then(x=>log.textContent+=`\ncache del: ${x}`)">cache del</button>
 	<pre id="log"></pre>
@@ -119,8 +119,25 @@
 		},
 		scrset=()=>{
 			var dcbl=dispCur.getBoundingClientRect().left+window.scrollX;
-			if(dcbl>=window.innerWidth-64||dcbl<16)dispScr.scrollLeft+=dcbl-16;
-			if(curpos==0)dispScr.scrollLeft=0;else if(curpos==rendered.length)dispScr.scrollLeft=dispScr.scrollWidth-dispScr.clientWidth;
+			if(dcbl>=dispScr.clientWidth-64)dispScr.scrollLeft+=dcbl-16;else if(dcbl<16)dispScr.scrollLeft+=dcbl+64-dispScr.clientWidth;
+			if(curpos==0)dispScr.scrollLeft=0;else if(curpos==rendered.length-1)dispScr.scrollLeft=dispScr.scrollWidth-dispScr.clientWidth;
+		},
+		seqset=()=>{
+			if(seq)seq.dispose();
+			seq = new Tone.Sequence((time,note)=>{
+				if(note){
+					kbset(note);
+					note=note.split(',');
+					synth.triggerAttackRelease(note.map(toHz),'1m',time);
+					llog(`${note.map(x=>n2c[(Number(x)+main.sc+12)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`,1);
+				}else kbset('');
+
+				curset();
+				scrset();
+
+				llog(Tone.Transport.position);
+				llog(p);
+			},main.scores).start(0);
 		};
 
 		document.querySelectorAll('#kb p').forEach((e,i)=>{
@@ -132,41 +149,34 @@
 		});
 		document.addEventListener('keydown',e=>{
 			llog(e.code);
-			switch (e.code) {
-				case 'Space':
-					ttoggle();
-					break;
+			switch (e.code){
+				case'Space':ttoggle();break;
+				case'ArrowUp':e.preventDefault();if(e.shiftKey)bpm_.nextElementSibling.click();else sc_.value=++main.sc;break;
+				case'ArrowDown':e.preventDefault();if(e.shiftKey)bpm_.previousElementSibling.click();else sc_.value=--main.sc;break;
+				case'ArrowLeft':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value--;bpm_.value=--main.bpm;}else tstep(-1);break;
+				case'ArrowRight':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value++;bpm_.value=++main.bpm;}else tstep(1);break;
 				default:
 					const keymap={
 						KeyR:'kbb00',KeyT:'kbb01',KeyY:'kbb02',KeyU:'kbb03',KeyI:'kbb04',
 						KeyF:'kbb10',KeyG:'kbb11',KeyH:'kbb12',KeyJ:'kbb13',KeyK:'kbb14',
 						KeyC:'kbb20',KeyV:'kbb21',KeyB:'kbb22',KeyN:'kbb23',KeyM:'kbb24'
 					}
-					if(keymap[e.code]){
-						document.getElementById(keymap[e.code]).nextElementSibling.dispatchEvent(new Event('pointerdown'));
-					}
+					if(keymap[e.code])window[keymap[e.code]].nextElementSibling.dispatchEvent(new Event('pointerdown'));
 			}
 		});
 
 
 				main=sample[slc.value];
-				log.textContent='build: 2101224';
+				log.textContent='build: 2101225';
 
 
 		/////from gui
-		const ttoggle=()=>{
-			if(Tone.Transport.state=='started')Tone.Transport.pause();
-			else Tone.Transport.start();
-		};
-		const tstop=()=>{
+		const ttoggle=()=>Tone.Transport[Tone.Transport.state=='started'?'pause':'start'](),
+		tstop=()=>{
 			Tone.Transport.stop();
-			requestIdleCallback(()=>{
-				dispCur.style.left='17px';dispScr.scrollLeft=0;//curset();
-				curpos=0;
-				kbset();
-			});
-		};
-		const tstep=x=>{
+			requestIdleCallback(()=>{dispCur.style.left='17px';dispScr.scrollLeft=0;curpos=0;kbset();});
+		},
+		tstep=x=>{
 			Tone.Transport.pause();
 			curpos+=x;
 			if(curpos<0)curpos+=rendered.length;else if(curpos>=rendered.length)curpos-=rendered.length;
@@ -178,46 +188,26 @@
 		disp.onclick=e=>{
 			if(e.target.classList.contains('t')){
 				e.target.style.background='#fea8';
-				llog(e.target.dataset.pos);
+				llog(e.target.dataset.p);
 				setTimeout(()=>e.target.style.background='',100);
-				Tone.Transport.position=e.target.dataset.pos;
+				Tone.Transport.position=p2pos(e.target.dataset.p);
 				curset();
-				kbset();
+				var note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
 			}
-		};
-
-		/////Sequence
-		const setScores=x=>{
-			if(seq)seq.dispose();
-			seq = new Tone.Sequence((time,note)=>{
-				if(note){
-					kbset(note);
-					note=note.split(',');
-					synth.triggerAttackRelease(note.map(toHz),'1m',time);
-					llog(`${note.map(x=>n2c[((Number(x)+main.sc)%12+12)%12]+(Math.floor((Number(x)+main.sc)/12)+4)/*49+Number(x)+main.sc*/)}`,1);
-				}else kbset('');
-
-				curset();
-				scrset();
-
-				llog(Tone.Transport.position);
-				llog(p);
-			},x).start(0);
 		};
 
 
 		/////render
-		const render=(sc,el)=>{
+		const render=()=>{
 			console.time();
 			const rcore=(scores,e,b,l=1)=>{
-				if(b)e.textContent=" ";
+				if(b)e.textContent=' ';
 				scores.map((x,i)=>{
 					var div = document.createElement('div');
 					div.classList.add('nWrapper');
 					e.appendChild(div);//e.insertBefore(div,e.lastChild);
 					div.dataset.ind=(div.parentNode.dataset.ind?div.parentNode.dataset.ind+'-':'')+i;
 					div.dataset.p=(b?i:Number(div.parentNode.dataset.p)+l*i);
-					div.dataset.pos=p2pos(div.dataset.p);
 					if(x){
 						switch(typeof x){
 							case'string':
@@ -233,7 +223,7 @@
 					}else div.classList.add('t');
 				})
 			}
-			rcore(sc,el,1);
+			rcore(main.scores,disp,1);
 			console.timeEnd();
 			sty.textContent=main.ts?`
 				#disp>.nWrapper:nth-child(${Tone.Transport.timeSignature}n+1){overflow:hidden;}
@@ -250,9 +240,9 @@
 		};
 
 		const set=()=>{
-			setScores(main.scores);
+			seqset();
 			sc_.value=main.sc;bpm_.value=main.bpm;Tone.Transport.bpm.value=main.bpm;Tone.Transport.timeSignature=main.ts||4;llog(main.name);//Tone.Transport.swing=1;
-			render(main.scores,disp);
+			render();
 			tstop();
 		};
 		set();
