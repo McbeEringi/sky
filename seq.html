@@ -80,7 +80,8 @@
 				</button><br><button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-600% 0;">
 				</button><input id="sc_" class="grid bg" onchange="scset();" style="--bp:-200% -100%;"></input><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-500% 0;"></button>
 			</div>
-			<label for="uiflip" class="grid"></label>
+			<label for="uiflip" class="grid bg" style="--bp:0 -200%;">
+			</label><button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-100% -200%;"></button>
 		</div>
 	</div>
 
@@ -101,9 +102,10 @@
 	<script src="https://tonejs.github.io/build/Tone.js"></script>
 	<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js"></script>
 	<script>
+		'use strict';
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
-		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0;
+		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0,userscr=[false,false];
 		const llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -130,8 +132,13 @@
 		},
 		scrset=()=>{
 			var dcbl=dispCur.getBoundingClientRect().left+window.scrollX;
-			if(dcbl>=dispScr.clientWidth-64)dispScr.scrollLeft+=dcbl-16;else if(dcbl<16)dispScr.scrollLeft+=dcbl+64-dispScr.clientWidth;
-			if(curpos==0)dispScr.scrollLeft=0;else if(curpos==rendered.length-1)dispScr.scrollLeft=dispScr.scrollWidth-dispScr.clientWidth;
+			if(16<dcbl&&dcbl<dispScr.clientWidth-64)userscr[1]=false;
+			if(!userscr[1]){
+				if(dcbl>=dispScr.clientWidth-64){userscr[0]=true;dispScr.scrollLeft+=dcbl-16;}
+				else if(dcbl<=16){userscr[0]=true;dispScr.scrollLeft+=dcbl+64-dispScr.clientWidth;}
+				if(curpos==0){userscr[0]=true;dispScr.scrollLeft=0;}
+				else if(curpos==rendered.length-1){userscr[0]=true;dispScr.scrollLeft=dispScr.scrollWidth-dispScr.clientWidth;}
+			}
 		},
 		seqset=()=>{
 			if(seq)seq.dispose();
@@ -178,14 +185,14 @@
 
 
 				main=sample[slc.value];
-				log.textContent='build: 21012351';
+				log.textContent='build: 2101236';
 
 
 		/////from gui
 		const ttoggle=()=>Tone.Transport[Tone.Transport.state=='started'?'pause':'start'](),
 		tstop=()=>{
 			Tone.Transport.stop();
-			requestIdleCallback(()=>{dispCur.style.left='17px';dispScr.scrollLeft=0;curpos=0;kbset();});
+			requestIdleCallback(()=>{dispCur.style.left='17px';userscr[0]=true;dispScr.scrollLeft=0;curpos=0;kbset();});
 		},
 		tstep=x=>{
 			Tone.Transport.pause();
@@ -206,6 +213,7 @@
 				var note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
 			}
 		};
+		dispScr.addEventListener('scroll',e=>{if(userscr[0])userscr[0]=false;else userscr[1]=true;});
 
 
 		/////render
