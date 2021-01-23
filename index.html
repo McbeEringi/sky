@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-	<head>
+	<head prefix="og: http://ogp.me/ns#">
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145066191-2"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-145066191-2');</script>
@@ -8,7 +8,12 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<title>SkyEringi sky</title>
 		<meta name="Description" content="McbeEringi Sky Top">
-		<link rel="shortcut icon" type="image/png" href="img/sky_192.png">
+		<link rel="shortcut icon" type="image/png" href="img/ico/sky.jpg">
+		<meta property="og:type" content="website">
+		<meta property="og:title" content="sky">
+		<meta property="og:description" content="Skyのツールのトップページです">
+		<meta property="og:url" content="https://mcbeeringi.github.io/sky/index.html">
+		<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/sky.jpg">
 		<!--iOS-->
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -29,14 +34,14 @@
 			:root{--bp:0;}
 			.links>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;}
 			@media(max-width:504px){.links{text-align:center;}}
-			.links>a::before{content:"";display:block;height:150px;background-size:400%;border-radius:20%;background-image:url(img/ico.png);background-position:var(--bp);}
+			.links>a::before{content:"";display:block;height:150px;background-size:100%;border-radius:20%;background-image:var(--url);}
 			.links>a:hover{transform:scale(1.05);filter:brightness(1.2)saturate(1.2)drop-shadow(0 0 8px #fea);}
 		</style>
 		<div class="links">
-			<a href="instr.html" style="--bp:-100%;">sky_instruments</a>
-			<a href="info.html" style="--bp:-200%;">sky_info</a>
-			<a href="stuff.html" class="nopwa">sky_stuff</a>
-			<a href="seq.html" style="--bp:-300%;" class="nopwa">sky_sequencer(indev)</a>
+			<a href="instr.html" style="--url:url(img/ico/instr.jpg);">sky_instruments</a>
+			<a href="info.html" style="--url:url(img/ico/info.jpg);">sky_info</a>
+			<a href="stuff.html" style="--url:url(img/ico/sky.jpg);" class="nopwa">sky_stuff</a>
+			<a href="seq.html" style="--url:url(img/ico/seq.jpg);" class="nopwa">sky_sequencer(indev)</a>
 		</div>
 		<script>
 			document.querySelectorAll('a').forEach(e=>e.ontouchstart=()=>{});

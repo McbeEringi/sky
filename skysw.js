@@ -1,13 +1,14 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache210121_0',STATIC_DATA=[
+const cacheName='cache210123_0',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg',
 	'img/sky.png',
 	'img/sky_192.png',
 
 	//index
-	'index.html?pwa=0','img/ico.png',
+	'index.html?pwa=0',
+	'img/ico/sky.jpg','img/ico/instr.jpg','img/ico/info.jpg','img/ico/seq.jpg',
 	//info
 	'info.html?pwa=1',
 	'img/candle/00.JPG','img/candle/01.JPG','img/candle/02.JPG',
