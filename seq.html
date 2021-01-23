@@ -30,11 +30,11 @@
 		.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;}
 		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
 
-		.uiPanel{float:right;clear:none;}
+		.uiPanel{float:right;clear:right;}
 		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#caf0f6;text-shadow:0 0 4px #688;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
 		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}
 
-		.kbPanel{position:relative;width:100%;max-width:360px;float:left;clear:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
+		.kbPanel{position:relative;width:100%;max-width:360px;float:left;clear:left;}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;background:#0004;border-radius:8px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
 		#kb p{display:inline-block;width:20%;height:100%;margin:0;position:relative;}
 		#kb p::before,#kb p::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
@@ -45,7 +45,7 @@
 		#kb p:nth-child(4n):not(.c)::after{background-position:-100% 0;}
 		#kb input:checked+p::after{transform:rotateY(360deg)scale(.8);}
 
-		#uiflip:checked~* .uiPanel{float:left;}#uiflip:checked~* .kbPanel{float:right;}
+		#uiflip:checked~* .uiPanel{float:left;clear:left;}#uiflip:checked~* .kbPanel{float:right;clear:right;}
 	</style>
 	<style id="sty"></style>
 	<input type="checkbox" id="uiflip" style="display:none;">
@@ -92,7 +92,9 @@
 		<option value="4" selected>nyan-cat</option>
 	</select>
 	<button onclick="caches.keys().then(x=>caches.open(x[0])).then(x=>x.delete('/sky/seq.html')).then(x=>log.textContent+=`\ncache del: ${x}`)">cache del</button><br>
+	<!--
 	<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="sky_sequencer" data-size="large" data-url="https://mcbeeringi.github.io/sky/seq.html" data-hashtags="">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+	-->
 	<pre id="log"></pre>
 
 
@@ -176,7 +178,7 @@
 
 
 				main=sample[slc.value];
-				log.textContent='build: 21012350';
+				log.textContent='build: 21012351';
 
 
 		/////from gui
