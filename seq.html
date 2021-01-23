@@ -25,11 +25,11 @@
 		.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;}
 		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
 
-		.uiPanel{float:left;clear:left;}
+		.uiPanel{float:right;clear:none;}
 		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#caf0f6;text-shadow:0 0 4px #688;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
 		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}
 
-		.kbPanel{position:relative;width:100%;max-width:360px;float:right;}.kbPanel:before{content:"";display:block;padding-top:60%;}
+		.kbPanel{position:relative;width:100%;max-width:360px;float:left;clear:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;background:#0004;border-radius:8px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
 		#kb p{display:inline-block;width:20%;height:100%;margin:0;position:relative;}
 		#kb p::before,#kb p::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
@@ -39,8 +39,11 @@
 		#kb p:nth-child(2n):not(.c)::after{background-position:-200% 0;}
 		#kb p:nth-child(4n):not(.c)::after{background-position:-100% 0;}
 		#kb input:checked+p::after{transform:rotateY(360deg)scale(.8);}
+
+		#uiflip:checked~* .uiPanel{float:left;}#uiflip:checked~* .kbPanel{float:right;}
 	</style>
 	<style id="sty"></style>
+	<input type="checkbox" id="uiflip" style="display:none;">
 
 	<div class="dispPanel">
 		<div id="dispScr"><div id="dispCur"></div><div id="disp"></div></div>
@@ -54,7 +57,8 @@
 				</button><button class="grid bg" style="--bp:-300% -100%;" onclick="tstep(1);"></button><br>
 				         <button class="grid bg" style="--bp:-400% -100%;">
 				</button><button class="grid bg" style="--bp:-500% -100%;">
-				</button><button class="grid bg" style="--bp:-600% -100%;"></button>
+				</button><button class="grid bg" style="--bp:-600% -100%;">
+				</button><button class="grid bg" style="--bp:-700% -100%;"></button>
 			</div>
 		</div>
 		<div class="kbPanel">
@@ -66,13 +70,12 @@
 		</div>
 		<div class="uiPanel">
 			<div>
-				<button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-600% 0;">
-				</button><input id="bpm_" class="grid bg" onchange="bpmset();" style="--bp:-700% 0;"></input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;"></button>
-			</div>
-			<div>
-				<button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-600% 0;">
+				         <button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-600% 0;">
+				</button><input id="bpm_" class="grid bg" onchange="bpmset();" style="--bp:-700% 0;"></input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">
+				</button><br><button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-600% 0;">
 				</button><input id="sc_" class="grid bg" onchange="scset();" style="--bp:-200% -100%;"></input><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-500% 0;"></button>
 			</div>
+			<label for="uiflip" class="grid"></label>
 		</div>
 	</div>
 
@@ -167,7 +170,7 @@
 
 
 				main=sample[slc.value];
-				log.textContent='build: 2101225';
+				log.textContent='build: 21012350';
 
 
 		/////from gui
