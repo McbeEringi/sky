@@ -45,7 +45,7 @@
 		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
 		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;}
 
-		.kbPanel{position:relative;width:100%;max-width:360px;float:left;clear:left;touch-action:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
+		.kbPanel{position:relative;width:100%;max-width:360px;float:left;clear:left;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;background:#0004;border-radius:8px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
 		#kb p{display:inline-block;width:20%;height:100%;margin:0;position:relative;}
 		#kb p::before,#kb p::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
@@ -58,8 +58,9 @@
 
 		body>input[type="checkbox"]{display:none;}
 		#uiflip:checked~* .uiPanel{float:left;clear:left;}#uiflip:checked~* .kbPanel{float:right;clear:right;}
-		label[for="kblock"],label[for="tmute"],label[for="cmute"]{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
-		#kblock:checked~* label[for="kblock"],#tmute:checked~* label[for="tmute"],#cmute:checked~* label[for="cmute"]{box-shadow:0 0 1px 3px #fea inset;}
+		label[for="kblock"],label[for="tmute"],label[for="pract"]{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
+		#kblock:checked~* label[for="kblock"],#tmute:checked~* label[for="tmute"],#pract:checked~* label[for="pract"]{box-shadow:0 0 2px 4px #fea inset;}
+		#pract:checked~* .kbPanel{position:fixed;top:0;left:50%;transform:translateX(-50%);max-width:420px;}
 
 		.fg_{position:fixed;width:100vw;height:100vh;z-index:10;pointer-events:none;}
 		#alcb{display:none;}
@@ -71,7 +72,7 @@
 	<input type="checkbox" id="uiflip">
 	<input type="checkbox" id="kblock">
 	<input type="checkbox" id="tmute">
-	<input type="checkbox" id="cmute">
+	<input type="checkbox" id="pract" onchange="kblock.checked=this.checked;">
 	<div class="fg_">
 		<pre id="jswarn">Please enable JavaScript to use this app.</pre><script>jswarn.style.display='none';</script>
 		<input type="checkbox" id="alcb"><label for="alcb"><pre id="albox" class="style"></pre></label>
@@ -94,7 +95,7 @@
 			         <button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-100% -200%;">scroll to cursor
 			</button><label for="kblock" class="grid bg" style="--bp:-200% -200%;">lock keyboard
 			</label><label for="tmute" class="grid bg" style="--bp:-300% -200%;">mute
-			</label><label for="cmute" class="grid bg" style="--bp:-300% -200%;">mute</label>
+			</label><label for="pract" class="grid bg" style="--bp:-300% -200%;">practice</label>
 		</div>
 		<div class="kbPanel">
 			<div id="kb">
@@ -137,7 +138,7 @@
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0,userscr=[false,false];
-		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101242\nMIT License',
+		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101243\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -196,10 +197,9 @@
 		document.querySelectorAll('#kb p').forEach((e,i)=>{
 			e.addEventListener('pointerdown',ev=>{
 				ev.preventDefault();
-				if(kblock.checked){
-					if(!cmute.checked)synth.triggerAttackRelease(toHz(i2n[i]));
-				}else{
-					if(e.previousElementSibling.checked==false&&!cmute.checked)synth.triggerAttackRelease(toHz(i2n[i]));
+				if(kblock.checked)synth.triggerAttackRelease(toHz(i2n[i]));
+				else{
+					if(e.previousElementSibling.checked==false)synth.triggerAttackRelease(toHz(i2n[i]));
 					e.previousElementSibling.checked=!e.previousElementSibling.checked;
 				}
 			});
@@ -238,7 +238,7 @@
 			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
 			Tone.Transport.position=p2pos(rendered.p[curpos]);
 			scrset();
-			var note=kbset();if(note[0]&&!cmute.checked)synth.triggerAttackRelease(note.map(toHz));
+			var note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
 		};
 		disp.onclick=e=>{
 			if(e.target.classList.contains('t')){
@@ -247,7 +247,7 @@
 				setTimeout(()=>e.target.style.background='',100);
 				Tone.Transport.position=p2pos(e.target.dataset.p);
 				curset();
-				var note=kbset();if(note[0]&&!cmute.checked)synth.triggerAttackRelease(note.map(toHz));
+				var note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
 			}
 		};
 		dispScr.addEventListener('scroll',e=>{if(userscr[0])userscr[0]=false;else userscr[1]=true;});
