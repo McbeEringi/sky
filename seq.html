@@ -60,7 +60,7 @@
 		#uiflip:checked~* .uiPanel{float:left;clear:left;}#uiflip:checked~* .kbPanel{float:right;clear:right;}
 		label[for="kblock"],label[for="tmute"],label[for="pract"]{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
 		#kblock:checked~* label[for="kblock"],#tmute:checked~* label[for="tmute"],#pract:checked~* label[for="pract"]{box-shadow:0 0 2px 4px #fea inset;}
-		#pract:checked~* .kbPanel{position:fixed;top:0;left:50%;transform:translateX(-50%);max-width:420px;}
+		#pract:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;}
 
 		.fg_{position:fixed;width:100vw;height:100vh;z-index:10;pointer-events:none;}
 		#alcb{display:none;}
@@ -95,7 +95,7 @@
 			         <button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-100% -200%;">scroll to cursor
 			</button><label for="kblock" class="grid bg" style="--bp:-200% -200%;">lock keyboard
 			</label><label for="tmute" class="grid bg" style="--bp:-300% -200%;">mute
-			</label><label for="pract" class="grid bg" style="--bp:-300% -200%;">practice</label>
+			</label><label for="pract" class="grid bg" style="--bp:-400% -200%;">practice</label>
 		</div>
 		<div class="kbPanel">
 			<div id="kb">
