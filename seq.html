@@ -19,10 +19,10 @@
 	<script src="style.js" async></script>
 	<script src="sample.js"></script>
 	<style>
-		body{margin:0;user-select:none;-webkit-user-select:none;}*::-webkit-scrollbar{display:none;}
+		body{margin:0;user-select:none;-webkit-user-select:none;}/*::-webkit-scrollbar{display:none;}*/
 		.clear_fix::after{content:"";clear:both;display:block;}
 
-		.dispPanel{position:relative;width:100vw;height:240px;border:4px solid #0000;border-left:none;border-right:none;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
+		.dispPanel{position:relative;width:100vw;height:240px;border:4px solid #0000;border-left:none;border-right:none;touch-action:manipulation;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 		.dispPanel>*,#dispScr>*{position:absolute;line-height:16px;font-size:8px;}
 		#dispScr{width:100%;height:100%;overflow:scroll;position:relative;}#disp{padding:0 64px 0 16px;display:flex;}
 		#dispCur{width:16px;height:100%;background:#f88;left:17px;transition:.1s;border-radius:4px;}
@@ -34,7 +34,7 @@
 		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#caf0f6;text-shadow:0 0 4px #688;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
 		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}
 
-		.kbPanel{position:relative;width:100%;max-width:360px;float:left;clear:left;}.kbPanel:before{content:"";display:block;padding-top:60%;}
+		.kbPanel{position:relative;width:100%;max-width:360px;float:left;clear:left;touch-action:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;background:#0004;border-radius:8px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
 		#kb p{display:inline-block;width:20%;height:100%;margin:0;position:relative;}
 		#kb p::before,#kb p::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
@@ -45,10 +45,27 @@
 		#kb p:nth-child(4n):not(.c)::after{background-position:-100% 0;}
 		#kb input:checked+p::after{transform:rotateY(360deg)scale(.8);}
 
+		body>input[type="checkbox"]{display:none;}
 		#uiflip:checked~* .uiPanel{float:left;clear:left;}#uiflip:checked~* .kbPanel{float:right;clear:right;}
+		label[for="kblock"],label[for="tmute"],label[for="cmute"]{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
+		#kblock:checked~* label[for="kblock"],#tmute:checked~* label[for="tmute"],#cmute:checked~* label[for="cmute"]{box-shadow:0 0 1px 3px #fea inset;}
+
+		.fg_{position:fixed;width:100vw;height:100vh;z-index:10;pointer-events:none;}
+		#alcb{display:none;}
+		#alcb+label{display:block;width:100%;height:100%;background:#0008;opacity:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);pointer-events:none;transition:.2s;}
+		#alcb:checked+label{opacity:1;pointer-events:auto;}
+		#albox{width:calc(90% - 40px);max-width:256px;min-height:128px;border-radius:16px;padding:20px;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
 	</style>
 	<style id="sty"></style>
-	<input type="checkbox" id="uiflip" style="display:none;">
+	<input type="checkbox" id="uiflip">
+	<input type="checkbox" id="kblock">
+	<input type="checkbox" id="tmute">
+	<input type="checkbox" id="cmute">
+	<div class="fg_">
+		<pre id="jswarn">Please enable JavaScript to use this app.</pre><script>jswarn.style.display='none';</script>
+		<input type="checkbox" id="alcb"><label for="alcb"><pre id="albox" class="style"></pre></label>
+	</div>
+
 
 	<div class="dispPanel">
 		<div id="dispScr"><div id="dispCur"></div><div id="disp"></div></div>
@@ -56,15 +73,17 @@
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel">
-			<div>
-				         <button class="grid bg" style="--bp:-300% -100%;transform:rotateZ(180deg);" onclick="tstep(-1);">
-				</button><button onclick="Tone.start();ttoggle();" class="grid bg" style="--bp:0 -100%;"></button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">
-				</button><button class="grid bg" style="--bp:-300% -100%;" onclick="tstep(1);"></button><br>
-				         <button class="grid bg" style="--bp:-400% -100%;">
-				</button><button class="grid bg" style="--bp:-500% -100%;">
-				</button><button class="grid bg" style="--bp:-600% -100%;">
-				</button><button class="grid bg" style="--bp:-700% -100%;"></button>
-			</div>
+			         <button class="grid bg" style="--bp:-300% -100%;transform:rotateZ(180deg);" onclick="tstep(-1);">
+			</button><button onclick="Tone.start();ttoggle();" class="grid bg" style="--bp:0 -100%;"></button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">
+			</button><button class="grid bg" style="--bp:-300% -100%;" onclick="tstep(1);"></button><br>
+			         <button class="grid bg" style="--bp:-400% -100%;">
+			</button><button class="grid bg" style="--bp:-500% -100%;">
+			</button><button class="grid bg" style="--bp:-600% -100%;">
+			</button><button class="grid bg" style="--bp:-700% -100%;"></button><br>
+			         <button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-100% -200%;">
+			</button><label for="kblock" class="grid bg" style="--bp:-200% -200%;">
+			</label><label for="tmute" class="grid bg" style="--bp:-300% -200%;">
+			</label><label for="cmute" class="grid bg" style="--bp:-300% -200%;"></label>
 		</div>
 		<div class="kbPanel">
 			<div id="kb">
@@ -74,14 +93,14 @@
 			</div>
 		</div>
 		<div class="uiPanel">
-			<div>
-				         <button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-600% 0;">
-				</button><input id="bpm_" class="grid bg" onchange="bpmset();" style="--bp:-700% 0;"></input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">
-				</button><br><button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-600% 0;">
-				</button><input id="sc_" class="grid bg" onchange="scset();" style="--bp:-200% -100%;"></input><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-500% 0;"></button>
-			</div>
+			         <button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-600% 0;">
+			</button><input id="bpm_" class="grid bg" onchange="bpmset();" style="--bp:-700% 0;"></input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">
+			</button><br><button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-600% 0;">
+			</button><input id="sc_" class="grid bg" onchange="scset();" style="--bp:-200% -100%;"></input><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-500% 0;"></button>
+		</div>
+		<div class="uiPanel">
 			<label for="uiflip" class="grid bg" style="--bp:0 -200%;">
-			</label><button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-100% -200%;"></button>
+			</label><button onclick="alert(info);" class="grid bg" style="--bp:-300% 0;"></button>
 		</div>
 	</div>
 
@@ -103,11 +122,13 @@
 	<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js"></script>
 	<script>
 		'use strict';
+		alert=x=>{albox.textContent=x;alcb.checked=true;}
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0,userscr=[false,false];
-		const llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
-		url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
+		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:xxxxxxx\nMIT License',
+		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
+		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
 		synth=new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination()),
 		toHz=x=>880*Math.pow(2,(Number(x)+main.sc)/12),//C5~C7
@@ -146,7 +167,7 @@
 				if(note){
 					kbset(note);
 					note=note.split(',');
-					synth.triggerAttackRelease(note.map(toHz),'1m',time);
+					if(!tmute.checked)synth.triggerAttackRelease(note.map(toHz),'1m',time);
 					llog(`${note.map(x=>n2c[(Number(x)+main.sc+12)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`,1);
 				}else kbset('');
 
@@ -161,8 +182,12 @@
 		document.querySelectorAll('#kb p').forEach((e,i)=>{
 			e.addEventListener('pointerdown',ev=>{
 				ev.preventDefault();
-				if(e.previousElementSibling.checked==false)synth.triggerAttackRelease(toHz(i2n[i]));
-				e.previousElementSibling.checked=!e.previousElementSibling.checked;
+				if(kblock.checked){
+					if(!cmute.checked)synth.triggerAttackRelease(toHz(i2n[i]));
+				}else{
+					if(e.previousElementSibling.checked==false&&!cmute.checked)synth.triggerAttackRelease(toHz(i2n[i]));
+					e.previousElementSibling.checked=!e.previousElementSibling.checked;
+				}
 			});
 		});
 		document.addEventListener('keydown',e=>{
@@ -185,7 +210,7 @@
 
 
 				main=sample[slc.value];
-				log.textContent='build: 2101236';
+				log.textContent='build: 2101240';
 
 
 		/////from gui
@@ -201,7 +226,7 @@
 			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
 			Tone.Transport.position=p2pos(rendered.p[curpos]);
 			scrset();
-			var note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
+			var note=kbset();if(note[0]&&!cmute.checked)synth.triggerAttackRelease(note.map(toHz));
 		};
 		disp.onclick=e=>{
 			if(e.target.classList.contains('t')){
@@ -210,7 +235,7 @@
 				setTimeout(()=>e.target.style.background='',100);
 				Tone.Transport.position=p2pos(e.target.dataset.p);
 				curset();
-				var note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
+				var note=kbset();if(note[0]&&!cmute.checked)synth.triggerAttackRelease(note.map(toHz));
 			}
 		};
 		dispScr.addEventListener('scroll',e=>{if(userscr[0])userscr[0]=false;else userscr[1]=true;});
