@@ -30,8 +30,8 @@
 	<script src="style.js" async></script>
 	<script src="sample.js"></script>
 	<style>
-		body{margin:0;user-select:none;-webkit-user-select:none;}/*::-webkit-scrollbar{display:none;}*/
-		.clear_fix::after{content:"";clear:both;display:block;}
+		:root{user-select:none;-webkit-user-select:none;}/*::-webkit-scrollbar{display:none;}*/
+		html,body{height:100%;margin:0;position:relative;}.clear_fix::after{content:"";clear:both;display:block;}
 
 		.dispPanel{position:relative;width:100vw;height:240px;border:6px solid #0000;border-left:none;border-right:none;touch-action:manipulation;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 		.dispPanel>*,#dispScr>*{position:absolute;line-height:16px;font-size:12px;}
@@ -62,7 +62,7 @@
 		#kblock:checked~* label[for="kblock"],#tmute:checked~* label[for="tmute"],#pract:checked~* label[for="pract"]{box-shadow:0 0 2px 4px #fea inset;}
 		#pract:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;}
 
-		.fg_{position:fixed;width:100vw;height:100vh;z-index:10;pointer-events:none;}
+		.fg_{position:absolute;width:100%;height:100%;z-index:10;pointer-events:none;}
 		#alcb{display:none;}
 		#alcb+label{display:block;width:100%;height:100%;background:#0008;opacity:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);pointer-events:none;transition:.2s;}
 		#alcb:checked+label{opacity:1;pointer-events:auto;}
@@ -138,7 +138,7 @@
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0,userscr=[false,false];
-		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101243\nMIT License',
+		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101244\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
