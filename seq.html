@@ -14,6 +14,17 @@
 	<meta property="og:description" content="Skyの楽譜が作れるページです">
 	<meta property="og:url" content="https://mcbeeringi.github.io/sky/seq.html">
 	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/seq.jpg">
+	<!--iOS-->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="sky instr">
+	<link rel="apple-touch-icon" href="img/sky.png">
+	<!--sw-->
+	<link rel="manifest" href="skymf.json">
+	<meta name="theme-color" content="#fea"/>
+	<script>
+		if('serviceWorker'in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('[ServiceWorker] Registered',reg);});});
+	</script>
 </head>
 <body>
 	<script src="style.js" async></script>
