@@ -104,13 +104,13 @@
 		</div>
 	</div>
 
-	<select id="slc" onchange="main=sample[this.value];set();">
+	<label>sample: <select id="slc" onchange="main=sample[this.value];set();">
 		<option value="0">新宝島</option>
 		<option value="1">LINE</option>
 		<option value="2">\ｵﾌﾛｶﾞﾜｷﾏｼﾀ/</option>
 		<option value="3">前前前世</option>
 		<option value="4" selected>nyan-cat</option>
-	</select>
+	</select></label>
 	<button onclick="caches.keys().then(x=>caches.open(x[0])).then(x=>x.delete('/sky/seq.html')).then(x=>log.textContent+=`\ncache del: ${x}`)">cache del</button><br>
 	<!--
 	<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="sky_sequencer" data-size="large" data-url="https://mcbeeringi.github.io/sky/seq.html" data-hashtags="">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
@@ -126,7 +126,7 @@
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0,userscr=[false,false];
-		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:xxxxxxx\nMIT License',
+		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101241\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -179,6 +179,9 @@
 			},main.scores).start(0);
 		};
 
+		main=sample[slc.value];
+		log.textContent=info;
+
 		document.querySelectorAll('#kb p').forEach((e,i)=>{
 			e.addEventListener('pointerdown',ev=>{
 				ev.preventDefault();
@@ -207,11 +210,6 @@
 					if(keymap[e.code])window[keymap[e.code]].nextElementSibling.dispatchEvent(new Event('pointerdown'));
 			}
 		});
-
-
-				main=sample[slc.value];
-				log.textContent='build: 2101240';
-
 
 		/////from gui
 		const ttoggle=()=>Tone.Transport[Tone.Transport.state=='started'?'pause':'start'](),
