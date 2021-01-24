@@ -138,7 +138,7 @@
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0,userscr=[false,false];
-		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101244\nMIT License',
+		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101245\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -195,14 +195,16 @@
 		log.textContent=info;
 
 		document.querySelectorAll('#kb p').forEach((e,i)=>{
-			e.addEventListener('pointerdown',ev=>{
+			const keyfx=ev=>{
 				ev.preventDefault();
 				if(kblock.checked)synth.triggerAttackRelease(toHz(i2n[i]));
 				else{
 					if(e.previousElementSibling.checked==false)synth.triggerAttackRelease(toHz(i2n[i]));
 					e.previousElementSibling.checked=!e.previousElementSibling.checked;
 				}
-			});
+			};
+			e.addEventListener('touchstart',keyfx,{passive:false});
+			e.addEventListener('mousedown',keyfx,{passive:false});
 		});
 		document.addEventListener('keydown',e=>{
 			llog(e.code);
