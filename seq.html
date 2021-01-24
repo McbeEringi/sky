@@ -23,7 +23,7 @@
 		.clear_fix::after{content:"";clear:both;display:block;}
 
 		.dispPanel{position:relative;width:100vw;height:240px;border:4px solid #0000;border-left:none;border-right:none;touch-action:manipulation;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
-		.dispPanel>*,#dispScr>*{position:absolute;line-height:16px;font-size:8px;}
+		.dispPanel>*,#dispScr>*{position:absolute;line-height:16px;font-size:12px;}
 		#dispScr{width:100%;height:100%;overflow:scroll;position:relative;}#disp{padding:0 64px 0 16px;display:flex;}
 		#dispCur{width:16px;height:100%;background:#bff;left:17px;transition:.1s;border-radius:4px;}
 		.nWrapper{display:flex;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background-color:#0004;}
@@ -94,9 +94,9 @@
 		</div>
 		<div class="uiPanel">
 			         <button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-600% 0;">slow
-			</button><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">fast</button><br>
+			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">fast</button><br>
 			         <button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-600% 0;">down
-			</button><input id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-200% -100%;"></input><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-500% 0;">up</button>
+			</button><label><input id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-200% -100%;"></input></label><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-500% 0;">up</button>
 		</div>
 		<div class="uiPanel">
 			<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui
