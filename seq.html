@@ -58,8 +58,8 @@
 
 		body>input[type="checkbox"]{display:none;}
 		#uiflip:checked~* .uiPanel{float:left;clear:left;}#uiflip:checked~* .kbPanel{float:right;clear:right;}
-		label[for="kblock"],label[for="tmute"],label[for="pract"]{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
-		#kblock:checked~* label[for="kblock"],#tmute:checked~* label[for="tmute"],#pract:checked~* label[for="pract"]{box-shadow:0 0 2px 4px #fea inset;}
+		label[for="kblock"],label[for="pract"]{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
+		#kblock:checked~* label[for="kblock"],#pract:checked~* label[for="pract"]{box-shadow:0 0 2px 4px #fea inset;}
 		#pract:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;}
 
 		.fg_{position:absolute;width:100%;height:100%;z-index:10;pointer-events:none;}
@@ -92,9 +92,7 @@
 			</button><button class="grid bg" style="--bp:-600% -100%;">add in
 			</button><button class="grid bg" style="--bp:-700% -100%;">add out</button><br>
 			         <button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-100% -200%;">scroll to cursor
-			</button><label for="kblock" class="grid bg" style="--bp:-200% -200%;">lock keyboard
-			</label><label for="pract" class="grid bg" style="--bp:-400% -200%;">practice
-			</label><button class="grid bg" style="--bp:-0% -0%;">button</button>
+			</button>
 		</div>
 		<div class="kbPanel">
 			<div id="kb">
@@ -104,6 +102,8 @@
 			</div>
 		</div>
 		<div class="uiPanel">
+			        <label for="kblock" class="grid bg" style="--bp:-200% -200%;">lock keyboard
+			</label><label for="pract" class="grid bg" style="--bp:-400% -200%;">practice</label><br>
 			         <button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-600% 0;">slow
 			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">fast</button><br>
 			         <button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-600% 0;">down
