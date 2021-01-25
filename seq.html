@@ -92,7 +92,8 @@
 			</button><button class="grid bg" style="--bp:-600% -100%;">add in
 			</button><button class="grid bg" style="--bp:-700% -100%;">add out</button><br>
 			         <button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-100% -200%;">scroll to cursor
-			</button>
+			</button><p class="grid" style="opacity:0;"></p><button onclick="" class="grid bg" style="--bp:-00% -00%;">
+			</button><button onclick="" class="grid bg" style="--bp:-00% -00%;"></button>
 		</div>
 		<div class="kbPanel">
 			<div id="kb">
@@ -103,7 +104,9 @@
 		</div>
 		<div class="uiPanel">
 			        <label for="kblock" class="grid bg" style="--bp:-200% -200%;">lock keyboard
-			</label><label for="pract" class="grid bg" style="--bp:-400% -200%;">practice</label><br>
+			</label><label for="pract" class="grid bg" style="--bp:-400% -200%;">practice
+			</label><button onclick="" class="grid bg" style="--bp:-00% -00%;">
+			</button><button onclick="" class="grid bg" style="--bp:-00% -00%;"></button><br>
 			         <button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-600% 0;">slow
 			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">fast</button><br>
 			         <button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-600% 0;">down
