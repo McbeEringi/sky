@@ -71,8 +71,7 @@
 	<style id="sty"></style>
 	<input type="checkbox" id="uiflip">
 	<input type="checkbox" id="kblock">
-	<input type="checkbox" id="tmute">
-	<input type="checkbox" id="pract" onchange="kblock.checked=this.checked;tmute.checked=this.checked;">
+	<input type="checkbox" id="pract" onchange="kblock.checked=this.checked;">
 	<div class="fg_">
 		<pre id="jswarn">Please enable JavaScript to use this app.</pre><script>jswarn.style.display='none';</script>
 		<input type="checkbox" id="alcb"><label for="alcb"><pre id="albox" class="style"></pre></label>
@@ -94,8 +93,8 @@
 			</button><button class="grid bg" style="--bp:-700% -100%;">add out</button><br>
 			         <button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-100% -200%;">scroll to cursor
 			</button><label for="kblock" class="grid bg" style="--bp:-200% -200%;">lock keyboard
-			</label><label for="tmute" class="grid bg" style="--bp:-300% -200%;">mute
-			</label><label for="pract" class="grid bg" style="--bp:-400% -200%;">practice</label>
+			</label><label for="pract" class="grid bg" style="--bp:-400% -200%;">practice
+			</label><button class="grid bg" style="--bp:-0% -0%;">button</button>
 		</div>
 		<div class="kbPanel">
 			<div id="kb">
@@ -179,7 +178,7 @@
 				if(note){
 					kbset(note);
 					note=note.split(',');
-					synth.triggerAttackRelease(note.map(toHz),'1m',time,tmute.checked?.3:1);
+					synth.triggerAttackRelease(note.map(toHz),'1m',time,pract.checked?.3:1);
 					llog(`${note.map(x=>n2c[(Number(x)+main.sc+12)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`,1);
 				}else kbset('');
 
