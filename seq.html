@@ -84,16 +84,17 @@
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel">
-			         <button class="grid bg" style="--bp:-300% -100%;transform:rotateZ(180deg);" onclick="tstep(-1);">back
+			         <button class="grid bg" style="--bp:-200% -100%;transform:scaleX(-1);" onclick="tstep(-1);">back
 			</button><button onclick="ttoggle();" class="grid bg" style="--bp:0 -100%;">start/pause</button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">stop
-			</button><button class="grid bg" style="--bp:-300% -100%;" onclick="tstep(1);">forward</button><br>
+			</button><button class="grid bg" style="--bp:-200% -100%;" onclick="tstep(1);">forward</button><br>
 			         <button class="grid bg" style="--bp:-400% -100%;">delete
 			</button><button class="grid bg" style="--bp:-500% -100%;">add
 			</button><button class="grid bg" style="--bp:-600% -100%;">add in
 			</button><button class="grid bg" style="--bp:-700% -100%;">add out</button><br>
-			         <button onclick="" class="grid bg" style="--bp:-00% -00%;">undo
-			</button><button onclick="" class="grid bg" style="--bp:-00% -00%;">redo
-			</button><button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-100% -200%;">scroll to cursor</button>
+			         <button onclick="" class="grid bg" style="--bp:-300% -200%;transform:scaleX(-1);">undo
+			</button><button onclick="" class="grid bg" style="--bp:-300% -200%;">redo
+			</button><button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-300% -100%;">scroll to cursor
+			</button><button onclick="" class="grid bg" style="--bp:-400% -200%;">raw</button>
 		</div>
 		<div class="kbPanel">
 			<div id="kb">
@@ -103,16 +104,16 @@
 			</div>
 		</div>
 		<div class="uiPanel">
-			        <label for="kblock" class="grid bg" style="--bp:-200% -200%;">lock keyboard
-			</label><label for="pract" class="grid bg" style="--bp:-400% -200%;">practice
-			</label><button onclick="" class="grid bg" style="--bp:-00% -00%;">save
-			</button><button onclick="" class="grid bg" style="--bp:-00% -00%;">load</button>
+			        <label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
+			</label><label for="pract" class="grid bg" style="--bp:-200% -200%;">practice
+			</label><button onclick="" class="grid bg" style="--bp:-600% -200%;">save
+			</button><button onclick="" class="grid bg" style="--bp:-500% -200%;">load</button>
 		</div>
 		<div class="uiPanel">
-			         <button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-600% 0;">slow
-			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">fast</button><br>
-			         <button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-600% 0;">down
-			</button><label><input id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-200% -100%;"></input></label><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-500% 0;">up</button>
+			         <button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow
+			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast</button><br>
+			         <button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-500% 0;">down
+			</button><label><input id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-600% 0;"></input></label><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-400% 0;">up</button>
 		</div>
 		<div class="uiPanel">
 			<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui
@@ -142,7 +143,7 @@
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0,userscr=[false,false];
-		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101252\nMIT License',
+		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101253\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
