@@ -86,7 +86,7 @@
 	<div class="clear_fix">
 		<div class="uiPanel">
 			         <button class="grid bg" style="--bp:-300% -100%;transform:rotateZ(180deg);" onclick="tstep(-1);">back
-			</button><button onclick="Tone.start();ttoggle();" class="grid bg" style="--bp:0 -100%;">start/pause</button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">stop
+			</button><button onclick="ttoggle();" class="grid bg" style="--bp:0 -100%;">start/pause</button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">stop
 			</button><button class="grid bg" style="--bp:-300% -100%;" onclick="tstep(1);">forward</button><br>
 			         <button class="grid bg" style="--bp:-400% -100%;">delete
 			</button><button class="grid bg" style="--bp:-500% -100%;">add
@@ -196,6 +196,7 @@
 
 		document.querySelectorAll('#kb p').forEach((e,i)=>{
 			const keyfx=ev=>{
+				Tone.start();
 				ev.preventDefault();
 				if(kblock.checked)synth.triggerAttackRelease(toHz(i2n[i]));
 				else{
@@ -228,7 +229,7 @@
 		});
 
 		/////from gui
-		const ttoggle=()=>Tone.Transport[Tone.Transport.state=='started'?'pause':'start'](),
+		const ttoggle=()=>{Tone.start();Tone.Transport[Tone.Transport.state=='started'?'pause':'start']();},
 		tstop=()=>{
 			Tone.Transport.stop();
 			requestIdleCallback(()=>{dispCur.style.left='17px';userscr[0]=true;dispScr.scrollLeft=0;curpos=0;kbset();});
@@ -244,6 +245,7 @@
 		};
 		disp.onclick=e=>{
 			if(e.target.classList.contains('t')){
+				Tone.start();
 				e.target.style.background='#fea8';
 				llog(e.target.dataset.p);
 				setTimeout(()=>e.target.style.background='',100);
