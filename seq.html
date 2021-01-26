@@ -148,7 +148,7 @@
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0,userscr=[false,false];
-		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101271\nMIT License',
+		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101272\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -160,7 +160,7 @@
 		n2c=['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'],
 		pos2p=pos_=>{var tmp=pos_.split(':').map(x=>Number(x));return tmp[0]*Tone.Transport.timeSignature+tmp[1]+tmp[2]*.25;},
 		p2pos=p_=>`${Math.floor(p_/Tone.Transport.timeSignature)}:${Math.floor(p_)%Tone.Transport.timeSignature}:${(p_*4)%4}`,
-		scset=()=>{if(Number(sc_.value)||sc_.value=='0')main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
+		scset=()=>{if(Number.isInteger(Number(sc_.value)))main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
 		bpmset=()=>{var tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
 		tsset=()=>{var tmp=Number(ts_.value);if(tmp){main.ts=tmp;Tone.Transport.timeSignature=tmp||4;}else ts_.value=main.ts;
 			sty.textContent=main.ts>1?`#disp>.nWrapper:nth-child(${main.ts}n+1){overflow:hidden;}#disp>.nWrapper:nth-child(${main.ts}n+1)::before{content:"";display:block;width:2px;height:100%;background:#feac;}`:'';
@@ -168,8 +168,9 @@
 		},
 		nameset=()=>{if(name_.value)main.name=name_.value;else name_.value=main.name;llog(main.name);},
 		pset=()=>p=pos2p(Tone.Transport.position)%main.scores.length,
-		curset=(ps=pset())=>{
-			curpos=rendered.p.indexOf(Math.floor(p));while(p>=rendered.p[curpos])curpos++;curpos--;
+		curset=p_=>{
+			if(typeof p_=='number'&&isFinite(p_)){p=p_;curpos=rendered.p.indexOf(p);}
+			else{pset();curpos=rendered.p.indexOf(Math.floor(p));while(p>=rendered.p[curpos])curpos++;curpos--;}
 			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
 		},
 		kbset=(x=rendered.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores))=>{
@@ -256,9 +257,9 @@
 			Tone.Transport.pause();styperf.textContent='';
 			curpos+=x;
 			if(curpos<0)curpos+=rendered.length;else if(curpos>=rendered.length)curpos-=rendered.length;
+			p=rendered.p[curpos];
 			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
 			Tone.Transport.position=p2pos(rendered.p[curpos]);
-			p=rendered.p[curpos];
 			scrset();
 			var note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
 		};
@@ -269,8 +270,7 @@
 				llog(e.target.dataset.p);
 				setTimeout(()=>e.target.style.background='',100);
 				Tone.Transport.position=p2pos(e.target.dataset.p);
-				p=e.target.dataset.p
-				curset(0);
+				curset(Number(e.target.dataset.p));
 				var note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
 			}
 		};
@@ -320,7 +320,7 @@
 			sc_.value=main.sc;bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;nameset();
 			//Tone.Transport.swing=1;
 			requestIdleCallback(render);
-			tstop();
+			requestIdleCallback(tstop);
 		};
 		set();
 		const save=()=>{
