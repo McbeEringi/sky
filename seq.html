@@ -41,7 +41,7 @@
 		.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;}
 		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
 
-		.uiPanel{float:right;clear:right;max-width:320px;}
+		.uiPanel{float:right;clear:right;max-width:320px;margin:2px 0;}
 		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
 		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;}
 
@@ -63,10 +63,14 @@
 		#pract:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;}
 
 		.fg_{position:fixed;width:100%;height:100%;z-index:10;pointer-events:none;}
-		#alcb{display:none;}
-		#alcb+label{display:block;width:100%;height:100%;background:#0008;opacity:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);pointer-events:none;transition:.2s;}
-		#alcb:checked+label{opacity:1;pointer-events:auto;}
-		#albox{width:calc(90% - 40px);max-width:256px;min-height:128px;border-radius:16px;padding:20px;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
+		#alcb{display:none;}#alcb+label,#albox{opacity:0;pointer-events:none;transition:.2s;}
+		#alcb+label{display:block;width:100%;height:100%;background:#0008;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+		#albox{width:calc(90% - 40px);max-width:256px;min-height:128px;max-height:calc(90% - 40px);border-radius:16px;padding:20px;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);overflow-y:scroll;}
+		#alcb:checked~*{opacity:1;pointer-events:auto;}
+
+		ul{padding:0;list-style:none;}
+		li{background:#8884;margin:4px 0;}
+		li input{font-size:large;background:#8888;width:100%;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#fff;text-shadow:0 0 4px #222;outline:none;padding:0;}
 	</style>
 	<style id="sty"></style>
 	<input type="checkbox" id="uiflip">
@@ -74,12 +78,12 @@
 	<input type="checkbox" id="pract" onchange="kblock.checked=this.checked;">
 	<div class="fg_">
 		<pre id="jswarn">Please enable JavaScript to use this app.</pre><script>jswarn.style.display='none';</script>
-		<input type="checkbox" id="alcb"><label for="alcb"><pre id="albox" class="style"></pre></label>
+		<input type="checkbox" id="alcb"><label for="alcb"></label><pre id="albox" class="style"></pre>
 	</div>
 
 
 	<div class="dispPanel">
-		<div id="dispScr"><div id="dispCur"></div><div id="disp"></div></div>
+		<div id="dispScr"><div id="dispCur"></div><div id="disp">loading…</div></div>
 		<div style="opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;top:0;">CBAGFEDCBAGFEDC</div>
 	</div>
 	<div class="clear_fix">
@@ -108,7 +112,7 @@
 			</label><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
 			</label><label for="pract" class="grid bg" style="--bp:-200% -200%;">practice
 			</label><button onclick="" class="grid bg" style="--bp:-600% -200%;">save
-			</button><button onclick="" class="grid bg" style="--bp:-500% -200%;">load
+			</button><button onclick="Tone.Transport.pause();load();" class="grid bg" style="--bp:-500% -200%;">load
 			</button><button onclick="alert(info);" class="grid bg" style="--bp:-300% 0;">info
 			</button><button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow
 			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast
@@ -137,11 +141,11 @@
 	<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js"></script>
 	<script>
 		'use strict';
-		alert=x=>{albox.textContent=x;alcb.checked=true;}
+		alert=(x,b)=>{albox.textContent=x;albox.style.pointerEvents=b?'':'none';alcb.checked=true;}
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0,userscr=[false,false];
-		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101254\nMIT License',
+		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101260\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -212,22 +216,24 @@
 		});
 		document.addEventListener('keydown',e=>{
 			llog(e.code);
-			switch (e.code){
-				case'Space':e.preventDefault();ttoggle();break;
-				case'ArrowUp':e.preventDefault();if(e.shiftKey)bpm_.nextElementSibling.click();else sc_.value=++main.sc;break;
-				case'ArrowDown':e.preventDefault();if(e.shiftKey)bpm_.previousElementSibling.click();else sc_.value=--main.sc;break;
-				case'ArrowLeft':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value--;bpm_.value=--main.bpm;}else tstep(-1);break;
-				case'ArrowRight':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value++;bpm_.value=++main.bpm;}else tstep(1);break;
-				default:
-					const keymap={
-						KeyR:'kbb00',KeyT:'kbb01',KeyY:'kbb02',KeyU:'kbb03',KeyI:'kbb04',
-						KeyF:'kbb10',KeyG:'kbb11',KeyH:'kbb12',KeyJ:'kbb13',KeyK:'kbb14',
-						KeyC:'kbb20',KeyV:'kbb21',KeyB:'kbb22',KeyN:'kbb23',KeyM:'kbb24'
-					}
-					if(keymap[e.code]){
-						//e.preventDefault();
-						window[keymap[e.code]].nextElementSibling.dispatchEvent(new Event('mousedown'));
-					}
+			if(!alcb.checked){
+				switch (e.code){
+					case'Space':e.preventDefault();ttoggle();break;
+					case'ArrowUp':e.preventDefault();if(e.shiftKey)bpm_.nextElementSibling.click();else sc_.value=++main.sc;break;
+					case'ArrowDown':e.preventDefault();if(e.shiftKey)bpm_.previousElementSibling.click();else sc_.value=--main.sc;break;
+					case'ArrowLeft':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value--;bpm_.value=--main.bpm;}else tstep(-1);break;
+					case'ArrowRight':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value++;bpm_.value=++main.bpm;}else tstep(1);break;
+					default:
+						const keymap={
+							KeyR:'kbb00',KeyT:'kbb01',KeyY:'kbb02',KeyU:'kbb03',KeyI:'kbb04',
+							KeyF:'kbb10',KeyG:'kbb11',KeyH:'kbb12',KeyJ:'kbb13',KeyK:'kbb14',
+							KeyC:'kbb20',KeyV:'kbb21',KeyB:'kbb22',KeyN:'kbb23',KeyM:'kbb24'
+						}
+						if(keymap[e.code]){
+							//e.preventDefault();
+							window[keymap[e.code]].nextElementSibling.dispatchEvent(new Event('mousedown'));
+						}
+				}
 			}
 		});
 
@@ -276,7 +282,7 @@
 						switch(typeof x){
 							case'string':
 								x.split(',').map(y=>{
-									var note = document.createElement('p');
+									var note=document.createElement('p');
 									note.style.bottom=((n2i[y]+1?Number(n2i[y]):15)*16)+'px';
 									div.appendChild(note);
 								});
@@ -310,6 +316,19 @@
 			tstop();
 		};
 		set();
+		const save=()=>{
+
+		},
+		load=()=>{
+			alert('loading…',true);
+			albox.innerHTML='<ul><ul>';
+			new Array(20).fill({name:'example ',lastm:'xx/xx/xx'}).forEach((x,i)=>{
+				albox.childNodes[0].insertAdjacentHTML('beforeend',`<li><input value="${x.name+i}" onchange="alert('test');"><br>${x.lastm}<br><button onclick="alcb.checked=false;"
+					class="grid bg" style="--bp:0 -100%;">open</button><button onclick="if(this.style.left=='0px'){this.style.left='52px';this.textContent='really?';this.classList.add('showtxt');setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}
+					else{alert('test');}"
+					class="grid bg" style="--bp:-700% -200%;position:relative;left:0px;transition:left .2s;">delete</button></li>`);
+			});
+		}
 	</script>
 </body>
 </html>
