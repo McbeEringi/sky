@@ -113,7 +113,7 @@
 			</label><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
 			</label><label for="pract" class="grid bg" style="--bp:-200% -200%;">practice
 			</label><button onclick="" class="grid bg" style="--bp:-600% -200%;">save
-			</button><button onclick="Tone.Transport.pause();load();" class="grid bg" style="--bp:-500% -200%;">load
+			</button><button onclick="Tone.Transport.pause();styperf.textContent='';load();" class="grid bg" style="--bp:-500% -200%;">load
 			</button><button onclick="alert(info);" class="grid bg" style="--bp:-300% 0;">info
 			</button><button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow
 			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast
@@ -148,14 +148,14 @@
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0,userscr=[false,false];
-		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101270\nMIT License',
+		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101271\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
 		synth=new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination()),
 		toHz=x=>880*Math.pow(2,(Number(x)+main.sc)/12),//C5~C7
 		i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
-		n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'6.5','2':'6',
+		n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6',
 			'3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
 		n2c=['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'],
 		pos2p=pos_=>{var tmp=pos_.split(':').map(x=>Number(x));return tmp[0]*Tone.Transport.timeSignature+tmp[1]+tmp[2]*.25;},
@@ -168,8 +168,7 @@
 		},
 		nameset=()=>{if(name_.value)main.name=name_.value;else name_.value=main.name;llog(main.name);},
 		pset=()=>p=pos2p(Tone.Transport.position)%main.scores.length,
-		curset=()=>{
-			pset();
+		curset=(ps=pset())=>{
 			curpos=rendered.p.indexOf(Math.floor(p));while(p>=rendered.p[curpos])curpos++;curpos--;
 			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
 		},
@@ -254,11 +253,12 @@
 		tstop=()=>{Tone.Transport.stop();styperf.textContent='';curset();scrset();},
 		tstep=x=>{
 			Tone.start();
-			Tone.Transport.pause();
+			Tone.Transport.pause();styperf.textContent='';
 			curpos+=x;
 			if(curpos<0)curpos+=rendered.length;else if(curpos>=rendered.length)curpos-=rendered.length;
 			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
 			Tone.Transport.position=p2pos(rendered.p[curpos]);
+			p=rendered.p[curpos];
 			scrset();
 			var note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
 		};
@@ -269,7 +269,8 @@
 				llog(e.target.dataset.p);
 				setTimeout(()=>e.target.style.background='',100);
 				Tone.Transport.position=p2pos(e.target.dataset.p);
-				curset();
+				p=e.target.dataset.p
+				curset(0);
 				var note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
 			}
 		};
@@ -317,8 +318,8 @@
 		const set=()=>{
 			seqset();
 			sc_.value=main.sc;bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;nameset();
-			llog(main.name);//Tone.Transport.swing=1;
-			render();
+			//Tone.Transport.swing=1;
+			requestIdleCallback(render);
 			tstop();
 		};
 		set();
