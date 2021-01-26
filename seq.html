@@ -65,12 +65,11 @@
 		.fg_{position:fixed;width:100%;height:100%;z-index:10;pointer-events:none;}
 		#alcb{display:none;}#alcb+label,#albox{opacity:0;pointer-events:none;transition:.2s;}
 		#alcb+label{display:block;width:100%;height:100%;background:#0008;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
-		#albox{width:calc(90% - 40px);max-width:256px;min-height:128px;max-height:calc(90% - 40px);border-radius:16px;padding:20px;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);overflow-y:scroll;}
+		#albox{width:calc(90% - 64px);max-width:256px;min-height:128px;max-height:calc(90% - 40px);border-radius:16px;padding:20px;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);overflow-y:scroll;text-align:center;}
 		#alcb:checked~*{opacity:1;pointer-events:auto;}
 
-		ul{padding:0;list-style:none;}
-		li{background:#8884;margin:4px 0;}
-		li input{font-size:large;background:#8888;width:100%;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#fff;text-shadow:0 0 4px #222;outline:none;padding:0;}
+		#albox>div{display:inline-block;background:#8884;margin:4px;max-width:256px;text-align:left;}
+		#albox input{font-size:large;background:#8888;width:100%;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#fff;text-shadow:0 0 4px #222;outline:none;padding:0;}
 	</style>
 	<style id="sty"></style>
 	<input type="checkbox" id="uiflip">
@@ -141,11 +140,11 @@
 	<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js"></script>
 	<script>
 		'use strict';
-		alert=(x,b)=>{albox.textContent=x;albox.style.pointerEvents=b?'':'none';alcb.checked=true;}
+		alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';alcb.checked=true;}
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0,userscr=[false,false];
-		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101260\nMIT License',
+		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101261\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -320,13 +319,13 @@
 
 		},
 		load=()=>{
-			alert('loading…',true);
-			albox.innerHTML='<ul><ul>';
+			alert('loading…','none');
+			albox.textContent='';
 			new Array(20).fill({name:'example ',lastm:'xx/xx/xx'}).forEach((x,i)=>{
-				albox.childNodes[0].insertAdjacentHTML('beforeend',`<li><input value="${x.name+i}" onchange="alert('test');"><br>${x.lastm}<br><button onclick="alcb.checked=false;"
+				albox.insertAdjacentHTML('beforeend',`<div><input value="${x.name+i}" onchange="alert('test');"><br>${x.lastm}<br><button onclick="alcb.checked=false;"
 					class="grid bg" style="--bp:0 -100%;">open</button><button onclick="if(this.style.left=='0px'){this.style.left='52px';this.textContent='really?';this.classList.add('showtxt');setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}
 					else{alert('test');}"
-					class="grid bg" style="--bp:-700% -200%;position:relative;left:0px;transition:left .2s;">delete</button></li>`);
+					class="grid bg" style="--bp:-700% -200%;position:relative;left:0px;transition:left .2s;">delete</button></div>`);
 			});
 		}
 	</script>
