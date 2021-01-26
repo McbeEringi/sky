@@ -29,6 +29,7 @@
 <body>
 	<script src="style.js" async></script>
 	<script src="sample.js"></script>
+	<script>var ifwebp=new Image();ifwebp.onerror=()=>document.body.classList.add('nowebp');ifwebp.src='img/seq.webp';</script>
 	<style>
 		:root{user-select:none;-webkit-user-select:none;}/*::-webkit-scrollbar{display:none;}*/
 		html,body{height:100%;margin:0;position:relative;}.clear_fix::after{content:"";clear:both;display:block;}
@@ -41,9 +42,9 @@
 		.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;}
 		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
 
-		.uiPanel{float:right;clear:right;max-width:320px;margin:2px 0;}
+		.uiPanel{float:right;clear:right;max-width:312px;margin:2px 0;}
 		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
-		.bg{background-image:url(img/seq.png);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;}
+		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;}
 
 		.kbPanel{position:relative;width:100%;max-width:360px;float:left;clear:left;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;background:#0004;border-radius:8px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
@@ -51,7 +52,7 @@
 		#kb p::before,#kb p::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
 		#kb p::before{background:#4448;filter:drop-shadow(0 0 4px #444);transition:.02s;}#kb input:not(:checked)+p::before{transition:.2s;}
 		#kb input:checked+p::before{background:#fea8;filter:drop-shadow(0 0 4px #fea);transform:scale(.8);}
-		#kb p::after{background:url(img/seq.png);background-size:800%;transition:.4s;}#kb input:not(:checked)+p::after{transition:.01s;}
+		#kb p::after{background:url(img/seq.webp);background-size:800%;transition:.4s;}#kb input:not(:checked)+p::after{transition:.01s;}
 		#kb p:nth-child(2n):not(.c)::after{background-position:-200% 0;}
 		#kb p:nth-child(4n):not(.c)::after{background-position:-100% 0;}
 		#kb input:checked+p::after{transform:rotateY(360deg)scale(.8);}
@@ -68,8 +69,10 @@
 		#albox{width:calc(90% - 64px);max-width:256px;min-height:128px;max-height:calc(90% - 40px);border-radius:16px;padding:20px;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);overflow-y:scroll;text-align:center;}
 		#alcb:checked~*{opacity:1;pointer-events:auto;}
 
-		#albox>div{display:inline-block;background:#8884;margin:4px;max-width:256px;text-align:left;}
+		#albox>div{display:inline-block;background:#8884;margin:4px;width:260px;text-align:left;}
 		#albox input{font-size:large;background:#8888;width:100%;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#fff;text-shadow:0 0 4px #222;outline:none;padding:0;}
+
+		.nowebp .bg,.nowebp #kb p::after{background-image:url(img/seq.png);}
 	</style>
 	<style id="sty"></style>
 	<input type="checkbox" id="uiflip">
@@ -116,7 +119,8 @@
 			</button><button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow
 			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast
 			</button><button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-500% 0;">down
-			</button><label><input id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-600% 0;"></input></label><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-400% 0;">up</button>
+			</button><label><input id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-600% 0;"></input></label><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-400% 0;">up
+			</button><label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label>
 		</div>
 		<div class="uiPanel">
 		</div>
@@ -144,7 +148,7 @@
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0,userscr=[false,false];
-		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101261\nMIT License',
+		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101262\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -158,6 +162,10 @@
 		p2pos=p_=>`${Math.floor(p_*.5/Tone.Transport.timeSignature)}:${Math.floor(p_*.5)%Tone.Transport.timeSignature}:${(p_*2)%4}`,
 		scset=()=>{if(Number(sc_.value)||sc_.value=='0')main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
 		bpmset=()=>{var tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
+		tsset=()=>{var tmp=Number(ts_.value);if(tmp){main.ts=tmp;Tone.Transport.timeSignature=tmp||4;}else ts_.value=main.ts;
+			sty.textContent=main.ts>1?`#disp>.nWrapper:nth-child(${main.ts}n+1){overflow:hidden;}#disp>.nWrapper:nth-child(${main.ts}n+1)::before{content:"";display:block;width:2px;height:100%;background:#feac;}`:'';
+			llog(main.ts);
+		},
 		pset=()=>p=pos2p(Tone.Transport.position)%main.scores.length,
 		curset=()=>{
 			pset();
@@ -294,10 +302,6 @@
 			}
 			rcore(main.scores,disp,1);
 			console.timeEnd();
-			sty.textContent=main.ts?`
-				#disp>.nWrapper:nth-child(${Tone.Transport.timeSignature}n+1){overflow:hidden;}
-				#disp>.nWrapper:nth-child(${Tone.Transport.timeSignature}n+1)::before{content:"";display:block;width:2px;height:100%;background:#feac;}
-			`:'';
 			rendered={ind:[],p:[]};
 			rendered.e=document.querySelectorAll('#disp .t');
 			rendered.e.forEach(e=>{
@@ -310,7 +314,8 @@
 
 		const set=()=>{
 			seqset();
-			sc_.value=main.sc;bpm_.value=main.bpm;Tone.Transport.bpm.value=main.bpm;Tone.Transport.timeSignature=main.ts||4;llog(main.name);//Tone.Transport.swing=1;
+			sc_.value=main.sc;bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();
+			llog(main.name);//Tone.Transport.swing=1;
 			render();
 			tstop();
 		};
@@ -322,9 +327,11 @@
 			alert('loading…','none');
 			albox.textContent='';
 			new Array(20).fill({name:'example ',lastm:'xx/xx/xx'}).forEach((x,i)=>{
-				albox.insertAdjacentHTML('beforeend',`<div><input value="${x.name+i}" onchange="alert('test');"><br>${x.lastm}<br><button onclick="alcb.checked=false;"
-					class="grid bg" style="--bp:0 -100%;">open</button><button onclick="if(this.style.left=='0px'){this.style.left='52px';this.textContent='really?';this.classList.add('showtxt');setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}
-					else{alert('test');}"
+				albox.insertAdjacentHTML('beforeend',`<div><input value="${x.name+i}" onchange="alert('test');"><br>${x.lastm}<br><button
+					onclick="alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button><button
+					onclick="alert('dupe');"class="grid bg" style="--bp:0 -300%;">dupe</button><button
+					onclick="if(this.style.left=='0px'){this.style.left='52px';this.textContent='really?';this.classList.add('showtxt');setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}
+					else{alert('del');}"
 					class="grid bg" style="--bp:-700% -200%;position:relative;left:0px;transition:left .2s;">delete</button></div>`);
 			});
 		}
