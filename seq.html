@@ -45,6 +45,7 @@
 		.uiPanel{float:right;clear:right;max-width:312px;margin:2px 0;}
 		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
 		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;}
+		#name_{font-size:large;background:#4448;width:calc(100% - 56px);height:48px;border-radius:12px;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#caf0f6;text-shadow:0 0 4px #688;outline:none;padding:0;margin:2px;}
 
 		.kbPanel{position:relative;width:100%;max-width:360px;float:left;clear:left;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;background:#0004;border-radius:8px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
@@ -68,9 +69,7 @@
 		#alcb+label{display:block;width:100%;height:100%;background:#0008;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 		#albox{width:calc(90% - 64px);max-width:256px;min-height:128px;max-height:calc(90% - 40px);border-radius:16px;padding:20px;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);overflow-y:scroll;text-align:center;}
 		#alcb:checked~*{opacity:1;pointer-events:auto;}
-
-		#albox>div{display:inline-block;background:#8884;margin:4px;width:260px;text-align:left;}
-		#albox input{font-size:large;background:#8888;width:100%;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#fff;text-shadow:0 0 4px #222;outline:none;padding:0;}
+		#albox>div{display:inline-block;background:#8884;margin:4px;width:260px;text-align:left;}#albox>div:first-line{font-size:large;}
 
 		.nowebp .bg,.nowebp #kb p::after{background-image:url(img/seq.png);}
 	</style>
@@ -120,7 +119,7 @@
 			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast
 			</button><button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-500% 0;">down
 			</button><label><input id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-600% 0;"></input></label><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-400% 0;">up
-			</button><label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label>
+			</button><label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><label><input id="name_" onchange="nameset();" placeholder="untitled"></input></label>
 		</div>
 		<div class="uiPanel">
 		</div>
@@ -166,6 +165,7 @@
 			sty.textContent=main.ts>1?`#disp>.nWrapper:nth-child(${main.ts}n+1){overflow:hidden;}#disp>.nWrapper:nth-child(${main.ts}n+1)::before{content:"";display:block;width:2px;height:100%;background:#feac;}`:'';
 			llog(main.ts);
 		},
+		nameset=()=>{if(name_.value)main.name=name_.value;else name_.value=main.name;llog(main.name);},
 		pset=()=>p=pos2p(Tone.Transport.position)%main.scores.length,
 		curset=()=>{
 			pset();
@@ -223,7 +223,7 @@
 		});
 		document.addEventListener('keydown',e=>{
 			llog(e.code);
-			if(!alcb.checked){
+			if(document.activeElement.tagName!='INPUT'){
 				switch (e.code){
 					case'Space':e.preventDefault();ttoggle();break;
 					case'ArrowUp':e.preventDefault();if(e.shiftKey)bpm_.nextElementSibling.click();else sc_.value=++main.sc;break;
@@ -314,7 +314,7 @@
 
 		const set=()=>{
 			seqset();
-			sc_.value=main.sc;bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();
+			sc_.value=main.sc;bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;nameset();
 			llog(main.name);//Tone.Transport.swing=1;
 			render();
 			tstop();
@@ -327,7 +327,7 @@
 			alert('loading…','none');
 			albox.textContent='';
 			new Array(20).fill({name:'example ',lastm:'xx/xx/xx'}).forEach((x,i)=>{
-				albox.insertAdjacentHTML('beforeend',`<div><input value="${x.name+i}" onchange="alert('test');"><br>${x.lastm}<br><button
+				albox.insertAdjacentHTML('beforeend',`<div>${x.name+i}<br>${x.lastm}<br><button
 					onclick="alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button><button
 					onclick="alert('dupe');"class="grid bg" style="--bp:0 -300%;">dupe</button><button
 					onclick="if(this.style.left=='0px'){this.style.left='52px';this.textContent='really?';this.classList.add('showtxt');setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}
