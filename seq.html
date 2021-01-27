@@ -147,8 +147,8 @@
 		alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';alcb.checked=true;}
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
-		var seq,sc=Number(sc_.value),main,rendered,p=0,curpos=0,userscr=[false,false];
-		const info='Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101272\nMIT License',
+		var seq,sc=Number(sc_.value),main,rendered,curpos=0,userscr=[false,false];
+		const info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101273\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -167,10 +167,9 @@
 			llog(main.ts);
 		},
 		nameset=()=>{if(name_.value)main.name=name_.value;else name_.value=main.name;llog(main.name);},
-		pset=()=>p=pos2p(Tone.Transport.position)%main.scores.length,
-		curset=p_=>{
-			if(typeof p_=='number'&&isFinite(p_)){p=p_;curpos=rendered.p.indexOf(p);}
-			else{pset();curpos=rendered.p.indexOf(Math.floor(p));while(p>=rendered.p[curpos])curpos++;curpos--;}
+		curset=p=>{
+			if(typeof p=='number'&&isFinite(p)){curpos=rendered.p.indexOf(p);}
+			else{p=pos2p(Tone.Transport.position)%main.scores.length;curpos=rendered.p.indexOf(Math.floor(p));while(p>=rendered.p[curpos])curpos++;curpos--;}
 			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
 		},
 		kbset=(x=rendered.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores))=>{
@@ -257,7 +256,6 @@
 			Tone.Transport.pause();styperf.textContent='';
 			curpos+=x;
 			if(curpos<0)curpos+=rendered.length;else if(curpos>=rendered.length)curpos-=rendered.length;
-			p=rendered.p[curpos];
 			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
 			Tone.Transport.position=p2pos(rendered.p[curpos]);
 			scrset();
