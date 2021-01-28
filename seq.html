@@ -147,8 +147,18 @@
 		alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';alcb.checked=true;}
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
-		var seq,sc=Number(sc_.value),main,rendered,curpos=0,userscr=[false,false];
-		const info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101280\nMIT License',
+		var sc=Number(sc_.value),main,rendered,curpos=0,userscr=[false,false];
+		const seq = new Tone.Sequence((time,note)=>{
+			note=note.split(',');
+			//Tone.Draw.schedule(()=>{},time);
+			curset();scrset();kbset(note);
+			if(note[0]){
+				synth.triggerAttackRelease(note.map(toHz),'1m',time,pract.checked?.3:1);
+				llog(`${note.map(x=>n2c[(Number(x)+main.sc+12)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`,1);
+			}
+			llog(Tone.Transport.position);
+		},[],'4n').start(0),
+		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101280\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -186,21 +196,6 @@
 				if(curpos==0){userscr[0]=true;dispScr.scrollLeft=0;}
 				else if(curpos==rendered.length-1){userscr[0]=true;dispScr.scrollLeft=dispScr.scrollWidth-dispScr.clientWidth;}
 			}
-		},
-		seqset=()=>{
-			if(seq)seq.dispose();
-			seq = new Tone.Sequence((time,note)=>{
-				note=note.split(',');
-				//Tone.Draw.schedule(()=>{},time);
-				curset();
-				scrset();
-				kbset(note);
-				if(note[0]){
-					synth.triggerAttackRelease(note.map(toHz),'1m',time,pract.checked?.3:1);
-					llog(`${note.map(x=>n2c[(Number(x)+main.sc+12)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`,1);
-				}
-				llog(Tone.Transport.position);
-			},main.scores,'4n').start(0);
 		};
 
 		main=sample[slc.value];
@@ -328,8 +323,8 @@
 		};
 
 		const set=()=>{
-			seqset();
-			sc_.value=main.sc;bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;nameset();
+			seq.events=main.scores;sc_.value=main.sc;
+			bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;nameset();
 			//Tone.Transport.swing=1;
 			requestIdleCallback(render);
 			requestIdleCallback(tstop);
