@@ -145,7 +145,7 @@
 			'use strict';
 			var synth,synth_,kbmode=0,sc=0;
 			alert=x=>{albox.textContent=x;alcb.checked=true;}
-			const reverb=new Tone.Reverb({wet:0}).toDestination(),
+			const reverb=new Tone.Reverb({wet:0,decay:0}).toDestination(),
 			stdli=(a,b=a+1)=>{
 				var s={};
 				for(var i=a;i<=b;i++){
