@@ -148,7 +148,7 @@
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 		var seq,sc=Number(sc_.value),main,rendered,curpos=0,userscr=[false,false];
-		const info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101273\nMIT License',
+		const info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101280\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -172,8 +172,8 @@
 			else{p=pos2p(Tone.Transport.position)%main.scores.length;curpos=rendered.p.indexOf(Math.floor(p));while(p>=rendered.p[curpos])curpos++;curpos--;}
 			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
 		},
-		kbset=(x=rendered.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores))=>{
-			x=x.split(',');var tmp=x.map(y=>n2i[y]);
+		kbset=(x=rendered.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores).split(','))=>{
+			var tmp=x.map(y=>n2i[y]);
 			document.querySelectorAll('#kb input').forEach((e,i)=>e.checked=tmp.includes(String(i)));
 			return x;
 		},
@@ -190,18 +190,16 @@
 		seqset=()=>{
 			if(seq)seq.dispose();
 			seq = new Tone.Sequence((time,note)=>{
-				if(note){
-					kbset(note);
-					note=note.split(',');
-					synth.triggerAttackRelease(note.map(toHz),'1m',time,pract.checked?.3:1);
-					llog(`${note.map(x=>n2c[(Number(x)+main.sc+12)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`,1);
-				}else kbset('');
-
+				note=note.split(',');
+				//Tone.Draw.schedule(()=>{},time);
 				curset();
 				scrset();
-
+				kbset(note);
+				if(note[0]){
+					synth.triggerAttackRelease(note.map(toHz),'1m',time,pract.checked?.3:1);
+					llog(`${note.map(x=>n2c[(Number(x)+main.sc+12)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`,1);
+				}
 				llog(Tone.Transport.position);
-				llog(p);
 			},main.scores,'4n').start(0);
 		};
 
@@ -214,7 +212,23 @@
 				ev.preventDefault();
 				if(kblock.checked)synth.triggerAttackRelease(toHz(i2n[i]));
 				else{
-					if(e.previousElementSibling.checked==false)synth.triggerAttackRelease(toHz(i2n[i]));
+					var arr=rendered.ind[curpos].split('-').reduce((a,c)=>a[c],main.scores).split(',');
+					if(e.previousElementSibling.checked==false){
+						synth.triggerAttackRelease(toHz(i2n[i]));
+						var note=document.createElement('p');
+						note.style.bottom=i*16+'px';
+						rendered.e[curpos].appendChild(note);
+						arr=[...arr,i2n[i]].filter(x=>x);
+					}else{
+						rendered.e[curpos].querySelectorAll('p').forEach(e=>{
+							if(e.style.bottom==i*16+'px')rendered.e[curpos].removeChild(e);
+						});
+						arr=arr.filter(x=>x!=i2n[i]);
+					}
+					arr=`main.scores[${rendered.ind[curpos].replace(/-/g,'][')}]='${arr.join(',')}';`
+					llog(arr);
+					Function(arr)();
+					seq.events=main.scores;
 					e.previousElementSibling.checked=!e.previousElementSibling.checked;
 				}
 			};
@@ -250,7 +264,7 @@
 			styperf.textContent=Tone.Transport.state=='started'?'':'#dispCur,#kb p::before,#kb p::after{transition: none !important;}';
 			Tone.Transport[Tone.Transport.state=='started'?'pause':'start']();
 		},
-		tstop=()=>{Tone.Transport.stop();styperf.textContent='';curset();scrset();},
+		tstop=()=>{Tone.Transport.stop();styperf.textContent='';curset();scrset();kbset();},
 		tstep=x=>{
 			Tone.start();
 			Tone.Transport.pause();styperf.textContent='';
@@ -327,6 +341,7 @@
 		load=()=>{
 			alert('loading…','none');
 			albox.textContent='';
+			albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
 			new Array(20).fill({name:'example ',lastm:'xx/xx/xx'}).forEach((x,i)=>{
 				albox.insertAdjacentHTML('beforeend',`<div>${x.name+i}<br>${x.lastm}<br><button
 					onclick="alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button><button
