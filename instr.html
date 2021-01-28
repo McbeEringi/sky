@@ -35,13 +35,18 @@
 			.bg_,.fg_{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}.fg_{z-index:10;}.fg_>*{pointer-events:auto;}
 			.bg_>video{width:100%;height:100%;object-fit:cover;transition:2s;}.bg_>div{width:100%;height:64px;position:absolute;top:0;left:0;background:linear-gradient(#0008,#0000);}
 			hr{border:none;}hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
+			input[type=range]{outline:none;appearance:none;-webkit-appearance:none;height:16px;width:100%;
+				background:linear-gradient(45deg, #0000 4px,#0008 4px),linear-gradient(135deg,#0000 4px,#0008 4px),linear-gradient(225deg,#0000 4px,#0008 4px),linear-gradient(315deg,#0000 4px,#0008 4px);
+				background-position:bottom left,top left,top right,bottom right;background-size:50% 50%;background-repeat:no-repeat;
+			}
+			input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;height:11.2px;width:11.2px;background:#aef;box-shadow:0 0 4px #aef;transform:rotateZ(45deg);}
 			#alcb{display:none;}
 			#alcb+label{display:block;width:100%;height:100%;background:#0008;opacity:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);pointer-events:none;transition:.2s;}
 			#alcb:checked+label{opacity:1;pointer-events:auto;}
 			#albox{width:calc(90% - 40px);max-width:256px;min-height:128px;border-radius:16px;padding:20px;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
 		</style>
 		<div class="bg_">
-			<video muted autoplay loop playsinline src="img/hotsprv.mp4" type="video/mp4" id="bgv"></video>
+			<!--<video muted autoplay loop playsinline src="img/hotsprv.mp4" type="video/mp4" id="bgv"></video>-->
 			<div></div>
 		</div>
 		<div class="fg_">
@@ -123,7 +128,10 @@
 				</div><div ontouchstart="" class="grid button" style="--bp:-500% -0%;" onclick="sc++;scale(1);"></div>
 			</div>
 			<hr>
-			<div class="grid button" style="--bp:-0% -0%;" onclick="bga[bga.state=='stopped'?'start':'stop']();bgv.style.opacity=Number(bga.state=='started');">
+			<input type="range" id="slrvw" value="0" min="0" max="1" step="0.02" onchange="reverb.wet.value=this.value;save();">
+			<input type="range" id="slrvd" value="0" min="0" max="6" step="0.1"  onchange="reverb.decay=Math.pow(2,this.value);save();">
+			<hr>
+			<div class="grid button" style="--bp:-0% -0%;" onclick="bga[bga.state=='stopped'?'start':'stop']();">
 			</div><div class="grid button" style="--bp:-300% -0%;" onclick="alert(info);"></div>
 		</div>
 		<label for="menucb"><div id="mico"></div></label>
@@ -136,7 +144,8 @@
 			'use strict';
 			var synth,synth_,kbmode=0,sc=0;
 			alert=x=>{albox.textContent=x;alcb.checked=true;}
-			const stdli=(a,b=a+1)=>{
+			const reverb=new Tone.Reverb({wet:0}).toDestination(),
+			stdli=(a,b=a+1)=>{
 				var s={};
 				for(var i=a;i<=b;i++){
 					s['d#'+i]=`ds${i}.mp3`;
@@ -144,14 +153,14 @@
 				}
 				return s;
 			};
-			const info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @SkyEringi\n\nauthor:@SkyEringi\nbuild:2101200\nMIT License';
+			const info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @SkyEringi\n\nauthor:@SkyEringi\nbuild:2101290\nMIT License';
 			const blli=[
 				{'c4':'c4.mp3','d4':'d4.mp3','g4':'g4.mp3','a4':'a4.mp3'},
 				{'c4':'c4_.mp3','d4':'d4_.mp3','g4':'g4_.mp3','a4':'a4_.mp3'}
 			],instr_li=[//[baseurl, octave, map, (map2)]
 				['audio/instr/musicbox/',1,Object.assign({'a3':'a3.mp3','d#7':'ds7.mp3'},stdli(4,6))],
 				['audio/instr/harp/',-1,stdli(3)],
-					['audio/instr/percussion/',-1,{'a3':'0.mp3','a#3':'1.mp3','b3':'2.mp3','c4':'3.mp3','a4':'4.mp3','a#4':'5.mp3','b4':'6.mp3','c5':'7.mp3'}],
+				['audio/instr/percussion/',-1,{'a3':'0.mp3','a#3':'1.mp3','b3':'2.mp3','c4':'3.mp3','a4':'4.mp3','a#4':'5.mp3','b4':'6.mp3','c5':'7.mp3'}],
 				['audio/instr/contrabass/',-2,stdli(2)],
 				['audio/instr/horn/',-1,stdli(3)],
 					['audio/instr/piano/',0,stdli(4)],
@@ -181,14 +190,14 @@
 				KeyF:'1_0',KeyG:'1_1',KeyH:'1_2',KeyJ:'1_3'
 			}];
 
-
 			/////save & load
-			const save=()=>{localStorage.instr_sc=sc;localStorage.instr_instr=menu.instr.value;console.log('saved')}
+			const save=()=>{localStorage.instr_sc=sc;localStorage.instr_instr=menu.instr.value;localStorage.instr_reverb=`${slrvw.value},${slrvd.value}`;console.log('saved');}
 			function load(){
-				var c=[localStorage.instr_sc,localStorage.instr_instr];
+				var c=[localStorage.instr_sc,localStorage.instr_instr,localStorage.instr_reverb];
 				if(c){
 					if(c[0])sc=parseInt(c[0]);
 					if(c[1])try{menu.instr[parseInt(c[1])].checked=true;}catch(e){console.log(e);}
+					if(c[2])try{[slrvw.value,slrvd.value]=c[2].split(',');[reverb.wet.value,reverb.decay]=[slrvw.value,Math.pow(2,slrvd.value)];}catch(e){console.log(e);}
 					console.log('loaded');
 				}
 			}
@@ -197,9 +206,9 @@
 			/////main fx
 			function setSynth(){
 				synth=new Tone.Sampler(instr_li[menu.instr.value][2],()=>{
-						 kb.style.opacity='1'; kb.style.pointerEvents='auto';
-						pkb.style.opacity='1';pkb.style.pointerEvents='auto';
-					},instr_li[menu.instr.value][0]).toDestination();
+					 kb.style.opacity='1'; kb.style.pointerEvents='auto';
+					pkb.style.opacity='1';pkb.style.pointerEvents='auto';
+				},instr_li[menu.instr.value][0]).connect(reverb);
 			}
 			function set(){
 				kb.style.opacity='.2';kb.style.pointerEvents='none';pkb.style.opacity='.2';pkb.style.pointerEvents='none';
@@ -290,10 +299,10 @@
 			bga.autostart=true;bga.loop=true;bga.fadeIn=5;bga.fadeOut=2;bga.volume.value=-10;
 
 			/////reload
-			document.addEventListener('visibilitychange',()=>{
-				if(document.visibilityState=='visible')bgv.play();/*{console.log('become visible');location.reload(false);}
-				if(document.visibilityState=='hidden')console.log('become hidden');*/
-			})
+			/*document.addEventListener('visibilitychange',()=>{
+				if(document.visibilityState=='visible'){bgv.play();console.log('become visible');location.reload(false);}
+				if(document.visibilityState=='hidden')console.log('become hidden');
+			});+/
 
 			/////fullscreen
 			/*function fsc(){
