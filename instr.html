@@ -27,10 +27,11 @@
 		</script>
 	</head>
 	<body>
-		<script src="style.js"></script>
+		<script src="style.js" async></script>
 		<script src="https://tonejs.github.io/build/Tone.js"></script>
+		<script>var ifwebp=new Image();ifwebp.onerror=()=>document.body.classList.add('nowebp');ifwebp.src='img/tex.webp';</script>
 		<style>
-			:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;overflow:hidden;color:#fff;}
+			:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;overflow:hidden;color:#fff;--tex:url(img/tex.webp);}.nowebp{--tex:url(img/tex.png);}
 			html,body{width:100%;height:100%;position:relative;margin:0;overflow:hidden;}*::-webkit-scrollbar{display:none;}
 			.bg_,.fg_{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}.fg_{z-index:10;}.fg_>*{pointer-events:auto;}
 			.bg_>video{width:100%;height:100%;object-fit:cover;transition:2s;}.bg_>div{width:100%;height:64px;position:absolute;top:0;left:0;background:linear-gradient(#0008,#0000);}
@@ -60,7 +61,7 @@
 			.kb{position:relative;left:50%;transform:translateX(-50%);touch-action:none;display:inline-block;pointer-events:none;opacity:.2;transition:.2s;white-space:nowrap;}
 			.kb>div>div{position:relative;width:20vmin;height:20vmin;max-width:84px;max-height:84px;margin:0;display:inline-block;vertical-align:top;}
 			.kb>div>div>div{position:absolute;top:0;bottom:0;left:0;right:0;margin:auto;width:83.33%;height:83.33%;background:#2228;border-radius:23%;z-index:0;box-shadow:0 0 8px #2228;}
-			.kb>div>div>div::before{content:"";display:block;width:100%;height:100%;animation:bob .6s ease-in-out 0s infinite alternate;background-image:url(img/tex.png);background-size:800% auto;z-index:1;}
+			.kb>div>div>div::before{content:"";display:block;width:100%;height:100%;animation:bob .6s ease-in-out 0s infinite alternate;background:var(--tex);background-size:800% auto;z-index:1;}
 			.kb>div>div:nth-child(2n  ):not(.c)>div::before{background-position:-100% 0;}
 			.kb>div>div:nth-child(2n-1):not(.c)>div::before{background-position:-200% 0;}
 
@@ -82,7 +83,7 @@
 			#menucb+label{position:absolute;top:0;right:0;width:100%;height:100%;display:none;}#menucb:checked+label{display:block;}
 			#menucb+*+*+label{position:absolute;top:2px;right:2px;width:48px;height:48px;transition:.2s;touch-action:none;}
 			/*#menucb:checked+*+*+label{transform:rotateY(180deg);}*/
-			#menucb+*+*+label::before,#mico{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:url(img/tex.png);background-size:800%;transition:.4s;}
+			#menucb+*+*+label::before,#mico{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:var(--tex);background-size:800%;transition:.4s;}
 			#menucb+*+*+label::before{opacity:0;background-position:-400% 0;}#mico{background-position:0 -100%;}
 			#menucb:checked+*+*+label::before{opacity:1;}#menucb:checked+*+*+label>#mico{opacity:0;}
 			.menu{position:fixed;top:0;right:-266px;width:252px;height:calc(100% - 48px);padding:48px 7px 0;background:#4448;opacity:0;box-shadow:0 0 8px #4448;transition:.2s;overflow-y:scroll;}
@@ -90,14 +91,14 @@
 
 			.menu input[type=radio]{display:none;}.menu label,.menu .grid{display:inline-block;vertical-align:top;position:relative;}
 			.menu input[type=radio]+div,.menu .grid{width:70px;height:70px;margin:7px;background:#2228;border-radius:16px;box-shadow:0 0 8px #2228;}
-			.menu input[type=radio]+div::before,.menu .grid::before{position:absolute;content:"";display:block;width:70px;height:70px;background:url(img/tex.png);background-size:560px auto;background-position:var(--bp);}
+			.menu input[type=radio]+div::before,.menu .grid::before{position:absolute;content:"";display:block;width:70px;height:70px;background:var(--tex);background-size:560px auto;background-position:var(--bp);}
 			.menu input[type=radio]:disabled+div{opacity:.5;}
 			.menu input[type=radio]:checked+div{box-shadow:0 0 0 2px #fea inset,0 0 8px #fea4;}
 			.menu input[type=radio]:checked+div::before{animation:flip .4s ease-in-out;}
 			.menu .grid{touch-action:none;}.menu .grid.button:active::before{transform:scale(.8);}.menu .grid.button:not(:active)::before{transition:.2s;}
 
 			#scd,#scd_{transition:.2s}
-			#scd_{position:absolute;top:0;left:0;width:100%;height:100%;background:url(img/tex.png);background-size:560px auto;background-position:-490px 0;}
+			#scd_{position:absolute;top:0;left:0;width:100%;height:100%;background:var(--tex);background-size:560px auto;background-position:-490px 0;}
 		</style>
 		<input type="checkbox" id="menucb" onchange="sfx.player(this.checked?'op':'cl').start();"><label for="menucb" style="pointer-events:none;"></label>
 		<div class="menu">
