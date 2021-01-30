@@ -34,7 +34,7 @@
 		:root{user-select:none;-webkit-user-select:none;}/*::-webkit-scrollbar{display:none;}*/
 		html,body{height:100%;margin:0;position:relative;}.clear_fix::after{content:"";clear:both;display:block;}
 
-		.dispPanel{position:relative;width:100vw;height:240px;overflow:hidden;border:6px solid #0000;border-left:none;border-right:none;touch-action:manipulation;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
+		.dispPanel{position:relative;width:100vw;height:240px;overflow:hidden;border:6px solid #0001;border-left:none;border-right:none;touch-action:manipulation;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 		.dispPanel>*,#dispScr>*{position:absolute;line-height:16px;font-size:12px;}
 		#dispScr{width:100%;height:100%;overflow:scroll;position:relative;}#disp{padding:0 64px 0 16px;display:flex;}
 		#dispCur{width:16px;height:100%;background:#bff;left:17px;transition:.1s;border-radius:4px;}
@@ -42,7 +42,7 @@
 		.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;}
 		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
 
-		.uiPanel{float:right;clear:right;max-width:312px;margin:2px 0;}
+		.uiPanel{float:right;clear:right;margin:2px 0;}
 		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
 		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;}
 		#name_{font-size:large;background:#4448;width:100%;max-width:148px;height:48px;border-radius:12px;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#caf0f6;text-shadow:0 0 4px #688;outline:none;padding:0 2px;margin:2px;}
@@ -90,14 +90,14 @@
 		<div style="opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;top:0;">CBAGFEDCBAGFEDC</div>
 	</div>
 	<div class="clear_fix">
-		<div class="uiPanel">
-			         <label for="rawedit" class="grid bg" style="--bp:-400% -200%;">edit raw
-			</label><button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-300% -100%;">scroll to cursor
+		<div class="uiPanel" style="max-width:312px;">
+			         <button id="undo" class="grid bg" style="--bp:-300% -200%;transform:scaleX(-1);">undo
+			</button><button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-300% -100%;">scroll to cursor
 			</button><button class="grid bg" style="--bp:-200% -100%;transform:scaleX(-1);" onclick="tstep(-1);">back
 			</button><button onclick="ttoggle();" class="grid bg" style="--bp:0 -100%;">start/pause</button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">stop
 			</button><button class="grid bg" style="--bp:-200% -100%;" onclick="tstep(1);">forward
-			</button><button onclick="" class="grid bg" style="--bp:-00% -00%;">copy
-			</button><button onclick="" class="grid bg" style="--bp:-00% -00%;">paste
+			</button><button onclick="" class="grid bg showtxt" style="--bp:-200% -300%;">copy
+			</button><button onclick="" class="grid bg showtxt" style="--bp:-300% -300%;">paste
 			</button><button class="grid bg" style="--bp:-400% -100%;">delete
 			</button><button class="grid bg" style="--bp:-500% -100%;">add
 			</button><button class="grid bg" style="--bp:-600% -100%;">add in
@@ -110,11 +110,13 @@
 				<div><input type="checkbox"id="kbb20"><p></p><input type="checkbox"id="kbb21"><p></p><input type="checkbox"id="kbb22"><p></p><input type="checkbox"id="kbb23"><p></p><input type="checkbox"id="kbb24"><p class="c"></p></div>
 			</div>
 		</div>
-		<div class="uiPanel">
-			         <button onclick="" class="grid bg" style="--bp:-300% -200%;transform:scaleX(-1);">undo
-			</button><button onclick="" class="grid bg" style="--bp:-300% -200%;">redo
+	</div>
+	<div class="clear_fix">
+		<div class="uiPanel" style="max-width:312px;">
+			         <button id="redo" class="grid bg" style="--bp:-300% -200%;">redo
 			</button><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
 			</label><label for="pract" class="grid bg" style="--bp:-200% -200%;">practice
+			</label><label for="rawedit" class="grid bg" style="--bp:-400% -200%;">edit raw
 			</label><button onclick="" class="grid bg" style="--bp:-600% -200%;">save
 			</button><button onclick="Tone.Transport.pause();styperf.textContent='';load();" class="grid bg" style="--bp:-500% -200%;">load
 			</button><button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow
@@ -122,9 +124,7 @@
 			</button><button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-500% 0;">down
 			</button><label><input id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-600% 0;"></input></label><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-400% 0;">up
 			</button><label><input id="name_" onchange="nameset();" placeholder="untitled"></input></label><label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui
-</label><button onclick="alert(info);" class="grid bg" style="--bp:-300% 0;">info</button>
-		</div>
-		<div class="uiPanel">
+			</label><button onclick="alert(info);" class="grid bg" style="--bp:-300% 0;">info</button>
 		</div>
 	</div>
 
@@ -150,7 +150,7 @@
 		alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';alcb.checked=true;}
 		//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
-		var sc=Number(sc_.value),main,rendered,curpos=0,userscr=[false,false];
+		var sc=Number(sc_.value),main,rendered={ind:[],p:[]},curpos=0,userscr=[false,false],urstack;
 		const seq = new Tone.Sequence((time,note)=>{
 			note=note.split(',');
 			//Tone.Draw.schedule(()=>{},time);
@@ -161,7 +161,7 @@
 			}
 			llog(Tone.Transport.position);
 		},[],'4n').start(0),
-		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101300\nMIT License',
+		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101301\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -199,7 +199,8 @@
 				if(curpos==0){userscr[0]=true;dispScr.scrollLeft=0;}
 				else if(curpos==rendered.length-1){userscr[0]=true;dispScr.scrollLeft=dispScr.scrollWidth-dispScr.clientWidth;}
 			}
-		};
+		},
+		urset=()=>{urstack[1]=[];urstack[0].push(JSON.stringify(main.scores));while(urstack[0].length>32)urstack[0].shift();};
 
 		main=sample[slc.value];
 		log.textContent=info;
@@ -211,6 +212,7 @@
 				if(kblock.checked)synth.triggerAttackRelease(toHz(i2n[i]));
 				else{
 					var arr=rendered.ind[curpos].split('-').reduce((a,c)=>a[c],main.scores).split(',');
+					urset();
 					if(e.previousElementSibling.checked==false){
 						synth.triggerAttackRelease(toHz(i2n[i]));
 						var note=document.createElement('p');
@@ -218,12 +220,12 @@
 						rendered.e[curpos].appendChild(note);
 						arr=[...arr,i2n[i]].filter(x=>x);
 					}else{
-						rendered.e[curpos].querySelectorAll('p').forEach(e=>{
-							if(e.style.bottom==i*16+'px')rendered.e[curpos].removeChild(e);
+						rendered.e[curpos].querySelectorAll(`p[style*="${i*16}"]`).forEach(e=>{
+							rendered.e[curpos].removeChild(e);
 						});
 						arr=arr.filter(x=>x!=i2n[i]);
 					}
-					arr=`main.scores[${rendered.ind[curpos].replace(/-/g,'][')}]='${arr.join(',')}';`
+					arr=`main.scores[${rendered.ind[curpos].replace(/-/g,'][')}]='${arr.join(',')}';`;
 					llog(arr);
 					Function(arr)();
 					seq.events=main.scores;
@@ -285,6 +287,8 @@
 			}
 		};
 		dispScr.addEventListener('scroll',e=>{if(userscr[0])userscr[0]=false;else userscr[1]=true;});
+		undo.onclick=()=>{if(urstack[0].length){seq.events=main.scores=JSON.parse(urstack[0][urstack[0].length-1]);urstack[1].unshift(urstack[0].pop());render();}else alert('no data');}
+		redo.onclick=()=>{if(urstack[1].length){seq.events=main.scores=JSON.parse(urstack[1][0]);urstack[0].push(urstack[1].shift());render();}else alert('no data');}
 
 
 		/////render
@@ -326,6 +330,7 @@
 		};
 
 		const set=()=>{
+			urstack=[[],[]];
 			seq.events=main.scores;sc_.value=main.sc;
 			bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;nameset();
 			//Tone.Transport.swing=1;
@@ -339,7 +344,7 @@
 		load=()=>{
 			alert('loading…','none');
 			albox.textContent='';
-			albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
+			albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="main={name:'',sc:0,bpm:120,ts:4,scores:['','','','']};set();alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
 			new Array(20).fill({name:'example ',lastm:'xx/xx/xx'}).forEach((x,i)=>{
 				albox.insertAdjacentHTML('beforeend',`<div>${x.name+i}<br>${x.lastm}<br><button
 					onclick="alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button><button
