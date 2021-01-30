@@ -220,9 +220,9 @@
 						rendered.e[curpos].appendChild(note);
 						arr=[...arr,i2n[i]].filter(x=>x);
 					}else{
-						rendered.e[curpos].querySelectorAll(`p[style*="${i*16}"]`).forEach(e=>{
+						requestIdleCallback(()=>rendered.e[curpos].querySelectorAll(`p[style*="${i*16}"]`).forEach(e=>{
 							rendered.e[curpos].removeChild(e);
-						});
+						}));
 						arr=arr.filter(x=>x!=i2n[i]);
 					}
 					arr=`main.scores[${rendered.ind[curpos].replace(/-/g,'][')}]='${arr.join(',')}';`;
@@ -287,8 +287,8 @@
 			}
 		};
 		dispScr.addEventListener('scroll',e=>{if(userscr[0])userscr[0]=false;else userscr[1]=true;});
-		undo.onclick=()=>{if(urstack[0].length){seq.events=main.scores=JSON.parse(urstack[0][urstack[0].length-1]);urstack[1].unshift(urstack[0].pop());render();}else alert('no data');}
-		redo.onclick=()=>{if(urstack[1].length){seq.events=main.scores=JSON.parse(urstack[1][0]);urstack[0].push(urstack[1].shift());render();}else alert('no data');}
+		undo.onclick=()=>{if(urstack[0].length){seq.events=main.scores=JSON.parse(urstack[0][urstack[0].length-1]);urstack[1].unshift(urstack[0].pop());requestIdleCallback(render);kbset();}else alert('no data');}
+		redo.onclick=()=>{if(urstack[1].length){seq.events=main.scores=JSON.parse(urstack[1][0]);urstack[0].push(urstack[1].shift());requestIdleCallback(render);kbset();}else alert('no data');}
 
 
 		/////render
