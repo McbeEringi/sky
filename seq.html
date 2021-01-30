@@ -34,7 +34,7 @@
 		:root{user-select:none;-webkit-user-select:none;}/*::-webkit-scrollbar{display:none;}*/
 		html,body{height:100%;margin:0;position:relative;}.clear_fix::after{content:"";clear:both;display:block;}
 
-		.dispPanel{position:relative;width:100vw;height:240px;border:6px solid #0000;border-left:none;border-right:none;touch-action:manipulation;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
+		.dispPanel{position:relative;width:100vw;height:240px;overflow:hidden;border:6px solid #0000;border-left:none;border-right:none;touch-action:manipulation;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 		.dispPanel>*,#dispScr>*{position:absolute;line-height:16px;font-size:12px;}
 		#dispScr{width:100%;height:100%;overflow:scroll;position:relative;}#disp{padding:0 64px 0 16px;display:flex;}
 		#dispCur{width:16px;height:100%;background:#bff;left:17px;transition:.1s;border-radius:4px;}
@@ -45,7 +45,7 @@
 		.uiPanel{float:right;clear:right;max-width:312px;margin:2px 0;}
 		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
 		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;}
-		#name_{font-size:large;background:#4448;width:calc(100% - 56px);height:48px;border-radius:12px;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#caf0f6;text-shadow:0 0 4px #688;outline:none;padding:0;margin:2px;}
+		#name_{font-size:large;background:#4448;width:100%;max-width:148px;height:48px;border-radius:12px;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#caf0f6;text-shadow:0 0 4px #688;outline:none;padding:0 2px;margin:2px;}
 
 		.kbPanel{position:relative;width:100%;max-width:360px;float:left;clear:left;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;background:#0004;border-radius:8px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
@@ -60,9 +60,10 @@
 
 		body>input[type="checkbox"]{display:none;}
 		#uiflip:checked~* .uiPanel{float:left;clear:left;}#uiflip:checked~* .kbPanel{float:right;clear:right;}
-		label[for="kblock"],label[for="pract"]{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
-		#kblock:checked~* label[for="kblock"],#pract:checked~* label[for="pract"]{box-shadow:0 0 2px 4px #fea inset;}
+		label.grid{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
+		#kblock:checked~* label[for="kblock"],#pract:checked~* label[for="pract"],#rawedit:checked~* label[for="rawedit"]{box-shadow:0 0 2px 4px #fea inset;}
 		#pract:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;}
+		#rawedit:checked~* #dispScr{transform-origin:126px;transform:rotateZ(90deg);}
 
 		.fg_{position:fixed;width:100%;height:100%;z-index:10;pointer-events:none;}
 		#alcb{display:none;}#alcb+label,#albox{opacity:0;pointer-events:none;transition:.2s;}
@@ -74,6 +75,7 @@
 		.nowebp .bg,.nowebp #kb p::after{background-image:url(img/seq.png);}
 	</style>
 	<style id="sty"></style><style id="styperf"></style>
+	<input type="checkbox" id="rawedit">
 	<input type="checkbox" id="uiflip">
 	<input type="checkbox" id="kblock">
 	<input type="checkbox" id="pract" onchange="kblock.checked=this.checked;">
@@ -89,13 +91,13 @@
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel">
-			         <button onclick="" class="grid bg" style="--bp:-400% -200%;">raw
-			</button><button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-300% -100%;">scroll to cursor
+			         <label for="rawedit" class="grid bg" style="--bp:-400% -200%;">edit raw
+			</label><button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-300% -100%;">scroll to cursor
 			</button><button class="grid bg" style="--bp:-200% -100%;transform:scaleX(-1);" onclick="tstep(-1);">back
 			</button><button onclick="ttoggle();" class="grid bg" style="--bp:0 -100%;">start/pause</button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">stop
 			</button><button class="grid bg" style="--bp:-200% -100%;" onclick="tstep(1);">forward
-			</button><button onclick="" class="grid bg" style="--bp:-300% -200%;transform:scaleX(-1);">undo
-			</button><button onclick="" class="grid bg" style="--bp:-300% -200%;">redo
+			</button><button onclick="" class="grid bg" style="--bp:-00% -00%;">copy
+			</button><button onclick="" class="grid bg" style="--bp:-00% -00%;">paste
 			</button><button class="grid bg" style="--bp:-400% -100%;">delete
 			</button><button class="grid bg" style="--bp:-500% -100%;">add
 			</button><button class="grid bg" style="--bp:-600% -100%;">add in
@@ -109,17 +111,18 @@
 			</div>
 		</div>
 		<div class="uiPanel">
-			        <label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui
-			</label><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
+			         <button onclick="" class="grid bg" style="--bp:-300% -200%;transform:scaleX(-1);">undo
+			</button><button onclick="" class="grid bg" style="--bp:-300% -200%;">redo
+			</button><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
 			</label><label for="pract" class="grid bg" style="--bp:-200% -200%;">practice
 			</label><button onclick="" class="grid bg" style="--bp:-600% -200%;">save
 			</button><button onclick="Tone.Transport.pause();styperf.textContent='';load();" class="grid bg" style="--bp:-500% -200%;">load
-			</button><button onclick="alert(info);" class="grid bg" style="--bp:-300% 0;">info
 			</button><button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow
 			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast
 			</button><button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-500% 0;">down
 			</button><label><input id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-600% 0;"></input></label><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-400% 0;">up
-			</button><label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><label><input id="name_" onchange="nameset();" placeholder="untitled"></input></label>
+			</button><label><input id="name_" onchange="nameset();" placeholder="untitled"></input></label><label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui
+</label><button onclick="alert(info);" class="grid bg" style="--bp:-300% 0;">info</button>
 		</div>
 		<div class="uiPanel">
 		</div>
@@ -158,7 +161,7 @@
 			}
 			llog(Tone.Transport.position);
 		},[],'4n').start(0),
-		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101281\nMIT License',
+		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101300\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
