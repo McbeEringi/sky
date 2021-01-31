@@ -161,7 +161,7 @@
 			}
 			llog(Tone.Transport.position);
 		},[],'4n').start(0),
-		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101301\nMIT License',
+		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101310\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{var s={};for(var i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -200,7 +200,7 @@
 				else if(curpos==rendered.length-1){userscr[0]=true;dispScr.scrollLeft=dispScr.scrollWidth-dispScr.clientWidth;}
 			}
 		},
-		urset=()=>{urstack[1]=[];urstack[0].push(JSON.stringify(main.scores));while(urstack[0].length>32)urstack[0].shift();};
+		urset=()=>{urstack[2]=[];urstack[0].push(urstack[1]);urstack[1]=JSON.stringify(main.scores);while(urstack[0].length>32)urstack[0].shift();};
 
 		main=sample[slc.value];
 		log.textContent=info;
@@ -212,7 +212,6 @@
 				if(kblock.checked)synth.triggerAttackRelease(toHz(i2n[i]));
 				else{
 					var arr=rendered.ind[curpos].split('-').reduce((a,c)=>a[c],main.scores).split(',');
-					urset();
 					if(e.previousElementSibling.checked==false){
 						synth.triggerAttackRelease(toHz(i2n[i]));
 						var note=document.createElement('p');
@@ -230,6 +229,7 @@
 					Function(arr)();
 					seq.events=main.scores;
 					e.previousElementSibling.checked=!e.previousElementSibling.checked;
+					urset();
 				}
 			};
 			e.addEventListener('touchstart',keyfx,{passive:false});
@@ -287,8 +287,8 @@
 			}
 		};
 		dispScr.addEventListener('scroll',e=>{if(userscr[0])userscr[0]=false;else userscr[1]=true;});
-		undo.onclick=()=>{if(urstack[0].length){seq.events=main.scores=JSON.parse(urstack[0][urstack[0].length-1]);urstack[1].unshift(urstack[0].pop());requestIdleCallback(render);kbset();}else alert('no data');}
-		redo.onclick=()=>{if(urstack[1].length){seq.events=main.scores=JSON.parse(urstack[1][0]);urstack[0].push(urstack[1].shift());requestIdleCallback(render);kbset();}else alert('no data');}
+		undo.onclick=()=>{if(urstack[0].length){seq.events=main.scores=JSON.parse(urstack[0][urstack[0].length-1]);urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();requestIdleCallback(render);kbset();}else alert('no data');}
+		redo.onclick=()=>{if(urstack[2].length){seq.events=main.scores=JSON.parse(urstack[2][0]);urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();requestIdleCallback(render);kbset();}else alert('no data');}
 
 
 		/////render
@@ -330,7 +330,7 @@
 		};
 
 		const set=()=>{
-			urstack=[[],[]];
+			urstack=[[],JSON.stringify(main.scores),[]];
 			seq.events=main.scores;sc_.value=main.sc;
 			bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;nameset();
 			//Tone.Transport.swing=1;
