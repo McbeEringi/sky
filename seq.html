@@ -41,14 +41,14 @@
 		.nWrapper{display:flex;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background-color:#0004;}
 		.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;}
 		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
-		#rawtxt{resize:none;width:100%;padding:0;border:0;position:absolute;top:0;left:0;right:0;bottom:0;background:#0000;display:none;font-family:monospace;font-size:16px;color:#fff;}#rawtxt::placeholder{color:#fff4;}
+		#rawtxt{resize:none;width:100%;padding:0;border:0;margin:0;position:absolute;top:0;left:0;right:0;bottom:0;background:#0000;display:none;font-family:monospace;font-size:16px;color:#fff;}#rawtxt::placeholder{color:#fff4;}
 
 		.uiPanel{float:right;clear:right;margin:2px 0;}
 		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
 		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;}
 		#name_{font-size:large;background:#4448;width:100%;max-width:148px;height:48px;border-radius:12px;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#caf0f6;text-shadow:0 0 4px #688;outline:none;padding:0 2px;margin:2px;}
 
-		.kbPanel{position:relative;width:100%;max-width:360px;float:left;clear:left;background:#0004;border-radius:8px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
+		.kbPanel{overflow:hidden;position:relative;width:100%;max-width:360px;float:left;clear:left;background:#0004;border-radius:8px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
 		#kb p{display:inline-block;width:20%;height:100%;margin:0;position:relative;}
 		#kb p::before,#kb p::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
@@ -163,7 +163,7 @@
 			}
 			llog(Tone.Transport.position);
 		},[],'4n').start(0),
-		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101311\nMIT License',
+		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2101312\nMIT License',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{let s={};for(let i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -202,7 +202,23 @@
 				else if(curpos==rendered.length-1){userscr[0]=true;dispScr.scrollLeft=dispScr.scrollWidth-dispScr.clientWidth;}
 			}
 		},
-		urset=()=>{urstack[2]=[];urstack[0].push(urstack[1]);urstack[1]=JSON.stringify(main.scores);while(urstack[0].length>32)urstack[0].shift();};
+		urset=()=>{urstack[2]=[];urstack[0].push(urstack[1]);urstack[1]=JSON.stringify(main.scores);while(urstack[0].length>32)urstack[0].shift();},
+		ttoggle=()=>{
+			Tone.start();
+			styperf.textContent=Tone.Transport.state=='started'?'':'#dispCur,#kb p::before,#kb p::after{transition: none !important;}';
+			Tone.Transport[Tone.Transport.state=='started'?'pause':'start']();
+		},
+		tstop=()=>{Tone.Transport.stop();styperf.textContent='';curset();scrset();kbset();},
+		tstep=x=>{
+			Tone.start();
+			Tone.Transport.pause();styperf.textContent='';
+			curpos+=x;
+			if(curpos<0)curpos+=rendered.length;else if(curpos>=rendered.length)curpos-=rendered.length;
+			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
+			Tone.Transport.position=p2pos(rendered.p[curpos]);
+			scrset();
+			let note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
+		};
 
 		main=sample[slc.value];
 		log.textContent=info;
@@ -261,24 +277,6 @@
 				}
 			}
 		});
-
-		/////from gui
-		const ttoggle=()=>{
-			Tone.start();
-			styperf.textContent=Tone.Transport.state=='started'?'':'#dispCur,#kb p::before,#kb p::after{transition: none !important;}';
-			Tone.Transport[Tone.Transport.state=='started'?'pause':'start']();
-		},
-		tstop=()=>{Tone.Transport.stop();styperf.textContent='';curset();scrset();kbset();},
-		tstep=x=>{
-			Tone.start();
-			Tone.Transport.pause();styperf.textContent='';
-			curpos+=x;
-			if(curpos<0)curpos+=rendered.length;else if(curpos>=rendered.length)curpos-=rendered.length;
-			dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
-			Tone.Transport.position=p2pos(rendered.p[curpos]);
-			scrset();
-			let note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
-		};
 		disp.onclick=e=>{
 			if(e.target.classList.contains('t')){
 				Tone.start();
@@ -288,14 +286,32 @@
 				Tone.Transport.position=p2pos(e.target.dataset.p);
 				curset(Number(e.target.dataset.p));
 				let note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
+				if(rawedit.checked)rawedit.onchange();
 			}
 		};
-		dispScr.addEventListener('scroll',e=>{if(userscr[0])userscr[0]=false;else userscr[1]=true;});
-		undo.onclick=()=>{if(urstack[0].length){seq.events=main.scores=JSON.parse(urstack[0][urstack[0].length-1]);urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();requestIdleCallback(render);kbset();}else alert('no data');}
-		redo.onclick=()=>{if(urstack[2].length){seq.events=main.scores=JSON.parse(urstack[2][0]);urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();requestIdleCallback(render);kbset();}else alert('no data');}
-		rawedit.onchange=e=>{
-			if(e.currentTarget.checked){
-				rawtxt.value=JSON.stringify(main.scores);
+		dispScr.onscroll=e=>{if(userscr[0])userscr[0]=false;else userscr[1]=true;};
+		undo.onclick=()=>{if(urstack[0].length){
+			seq.events=main.scores=JSON.parse(urstack[0][urstack[0].length-1]);
+			if(rawedit.checked)rawtxt.value=urstack[0][urstack[0].length-1];
+			urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();
+			requestIdleCallback(render);kbset();
+		}else alert('no data');}
+		redo.onclick=()=>{if(urstack[2].length){
+			seq.events=main.scores=JSON.parse(urstack[2][0]);
+			if(rawedit.checked)rawtxt.value=urstack[2][0];
+			urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();
+			requestIdleCallback(render);kbset();
+		}else alert('no data');}
+		rawedit.onchange=()=>{
+			if(rawedit.checked){
+				Tone.Transport.pause();styperf.textContent='';
+				rawtxt.focus();
+				if(!rawtxt.value)rawtxt.value=JSON.stringify(main.scores);
+				requestIdleCallback(()=>{
+					let ind=0;
+					for(let i=0;i<curpos*2+1;i++)ind=rawtxt.value.indexOf('"',ind+1);
+					rawtxt.setSelectionRange(ind+1,rawtxt.value.indexOf('"',ind+1));
+				});
 			}else{
 				rawtxt.value='';
 			}
@@ -350,18 +366,8 @@
 			});
 			rendered.length=rendered.e.length;
 			console.log('render',rendered);
-		};
-
-		const init=()=>{
-			urstack=[[],JSON.stringify(main.scores),[]];
-			seq.events=main.scores;sc_.value=main.sc;
-			bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;nameset();
-			//Tone.Transport.swing=1;
-			requestIdleCallback(render);
-			requestIdleCallback(tstop);
-		};
-		init();
-		const save=()=>{
+		},
+		save=()=>{
 
 		},
 		load=()=>{
@@ -376,7 +382,17 @@
 					else{alert('del');}"
 					class="grid bg" style="--bp:-700% -200%;position:relative;left:0px;transition:left .2s;">delete</button></div>`);
 			});
-		}
+		},
+		init=()=>{
+			rawedit.checked=false;rawtxt.value='';
+			urstack=[[],JSON.stringify(main.scores),[]];
+			seq.events=main.scores;sc_.value=main.sc;
+			bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;nameset();
+			//Tone.Transport.swing=1;
+			requestIdleCallback(render);
+			requestIdleCallback(tstop);
+		};
+		init();
 	</script>
 </body>
 </html>
