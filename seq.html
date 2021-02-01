@@ -41,12 +41,13 @@
 		.nWrapper{display:flex;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background-color:#0004;}
 		.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;}
 		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
-		#rawtxt{resize:none;width:100%;height:100%;padding:0;border:0;margin:0;position:absolute;top:0;left:0;right:0;bottom:0;background:#0000;display:none;font-family:monospace;font-size:16px;color:#fff;}#rawtxt::placeholder{color:#fff4;}
+		#rawtxt{resize:none;width:100%;height:100%;padding:0;border:0;margin:0;position:absolute;top:0;left:0;right:0;bottom:0;background:#0000;display:none;font-family:monospace;font-size:16px;color:#fff;}
+		#rawtxt::placeholder,#name_::placeholder{color:#fff4;}
 
 		.uiPanel{float:right;clear:right;margin:2px 0;}
 		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;touch-action:manipulation;}
 		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;}
-		#name_{font-size:large;background:#4448;width:100%;max-width:148px;height:48px;border-radius:12px;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#caf0f6;text-shadow:0 0 4px #688;outline:none;padding:0 2px;margin:2px;}
+		#name_{font-size:large;background:#4448;width:100%;max-width:200px;height:48px;border-radius:12px;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#caf0f6;text-shadow:0 0 4px #688;outline:none;padding:0 2px;margin:2px;}
 
 		.kbPanel{overflow:hidden;position:relative;width:100%;max-width:360px;float:left;clear:left;background:#0004;border-radius:8px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
@@ -125,8 +126,7 @@
 			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast
 			</button><button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-500% 0;">down
 			</button><label><input id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-600% 0;"></input></label><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-400% 0;">up
-			</button><label><input id="name_" onchange="nameset();" placeholder="untitled"></input></label><label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui
-			</label><button onclick="alert(info);" class="grid bg" style="--bp:-300% 0;">info</button>
+			</button><label><input id="name_" onchange="nameset();" placeholder="untitled"></input></label><label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><button id="ibut" class="grid bg" style="--bp:-300% 0;">info</button>
 		</div>
 	</div>
 
@@ -163,7 +163,7 @@
 			}
 			llog(Tone.Transport.position);
 		},[],'4n').start(0),
-		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102010\nMIT License',
+		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102010\nMIT License\n',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{let s={};for(let i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -223,6 +223,7 @@
 		main=sample[slc.value];
 		log.textContent=info;
 
+		ibut.onclick=()=>{alert(info,' ');albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label>`;}
 		document.querySelectorAll('#kb p').forEach((e,i)=>{
 			const keyfx=ev=>{
 				Tone.start();
@@ -373,7 +374,7 @@
 		load=()=>{
 			alert('loading…','none');
 			albox.textContent='';
-			albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="main={name:'',sc:0,bpm:120,ts:4,scores:['','','','']};init();alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
+			albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="main=null;init();alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
 			new Array(20).fill({name:'example ',lastm:'xx/xx/xx'}).forEach((x,i)=>{
 				albox.insertAdjacentHTML('beforeend',`<div>${x.name+i}<br>${x.lastm}<br><button
 					onclick="alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button><button
@@ -384,6 +385,7 @@
 			});
 		},
 		init=()=>{
+			if(!main)main={name:'',sc:0,bpm:120,ts:4,scores:new Array(16).fill('')};
 			rawedit.checked=false;rawtxt.value='';
 			urstack=[[],JSON.stringify(main.scores),[]];
 			seq.events=main.scores;sc_.value=main.sc;
