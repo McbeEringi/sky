@@ -25,25 +25,59 @@
 		<script>
 			if('serviceWorker'in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('[ServiceWorker] Registered',reg);});});
 		</script>
+		<link rel="stylesheet" href="https://mcbeeringi.github.io/src/menu.css">
 	</head>
 	<body>
 		<script src="style.js"></script>
-		<h1>Sky</h1>
-
 		<style>
-			:root{--bp:0;}
+			:root{
+				--pos:fixed;
+				--bar_col:#888;
+				--button_col:#aaa;
+				/*40px*40px*/
+				--o_img:url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='20' cx='20' cy='20' fill='%23444'/%3E%3Ccircle r='2' cx='10' cy='12.5' fill='%23fff'/%3E%3Cpolygon points='15,14 15,11 30,11 30,14' fill='%23fff'%3E%3C/polygon%3E%3Ccircle r='2' cx='10' cy='20' fill='%23fff'/%3E%3Cpolygon points='15,21.5 15,18.5 30,18.5 30,21.5' fill='%23fff'%3E%3C/polygon%3E%3Ccircle r='2' cx='10' cy='27.5' fill='%23fff'/%3E%3Cpolygon points='15,29 15,26 30,26 30,29' fill='%23fff'%3E%3C/polygon%3E%3C/svg%3E%0A");
+				--c_img:url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='20' cx='20' cy='20' fill='%23444'/%3E%3Cpolygon points='9,11 11,9 20,18 29,9 31,11 22,20 31,29 29,31 20,22 11,31 9,29 18,20' fill='%23fff'%3E%3C/polygon%3E%3C/svg%3E%0A");
+				--transition:.5s;
+				--menu_w:200px;/*-45px*/
+				--menu_h:300px;
+				--bg_col:#6668;
+			}
+			label{display:block;}textarea{display:block;resize:none;width:calc(100% - 8px);height:3em;padding:4px;border:0;background:#2228;color:#fff;}
 			.links>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;}
 			@media(max-width:504px){.links{text-align:center;}}
 			.links>a::before{content:"";display:block;height:150px;background-size:100%;border-radius:20%;background-image:var(--url);}
 			.links>a:hover{transform:scale(1.05);filter:brightness(1.2)saturate(1.2)drop-shadow(0 0 8px #fea);}
 		</style>
+		<h1>Sky</h1>
 		<div class="links">
 			<a href="instr.html" style="--url:url(img/ico/instr.jpg);">sky_instruments</a>
 			<a href="info.html" style="--url:url(img/ico/info.jpg);">sky_info</a>
 			<a href="stuff.html" style="--url:url(img/ico/sky.jpg);" class="nopwa">sky_stuff</a>
 			<a href="seq.html" style="--url:url(img/ico/seq.jpg);" class="nopwa">sky_sequencer(indev)</a>
 		</div>
+		<div class="menu">
+			<input type="checkbox" id="example">
+			<label for="example"></label><div><div></div></div>
+			<div>
+				<h3>background</h3>
+				<form id="bgmode">
+					<label><input type="radio" name="bgmode" value="0" checked>default</label>
+					<br>
+					<label><input type="radio" name="bgmode" value="1">image</label>
+					<input type="file" style="display:block;width:100%;" accept="image/*" onchange="reader.readAsDataURL(this.files[0]);">
+					<br>
+					<label><input type="radio" name="bgmode" value="2">custom</label>
+					<textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;bgset();"></textarea>
+					<a href="https://developer.mozilla.org/docs/Web/CSS/background-image">reference</a>
+				</form>
+			</div>
+		</div>
+
 		<script>
+			bgmode.bgmode[Number(localStorage.sky_bgmode)||0].checked=true;
+			bgmode.onchange=()=>{localStorage.sky_bgmode=bgmode.bgmode.value;bgset();}
+			bgcode.value=localStorage.sky_bgcode||'linear-gradient(0deg,#000,#fff)';
+			let reader=new FileReader();reader.onload=()=>{localStorage.sky_bgimg=reader.result;bgset();};
 			document.querySelectorAll('a').forEach(e=>e.ontouchstart=()=>{});
 			if(urlq.pwa){
 				document.querySelectorAll('a').forEach(e=>e.href=e.href+'?pwa=1');
