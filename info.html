@@ -105,7 +105,8 @@
 				}
 			};
 			const limited=(x,i)=>{
-				var cal=calendar[x.getFullYear()][x.getMonth()+1][x.getDate()];if(!cal)return 1;
+				var cal;
+				try{cal=calendar[x.getFullYear()][x.getMonth()+1][x.getDate()];}catch(e){return 1;}
 				document.getElementById(`_${i}t`).textContent=`${cal[2]+1?'DOUBLE TREASURE CANDLES ~Jan 3rd\n\n':''}${c_dic[cal[0]][0]}\n${c_dic[cal[0]][cal[1]+1]}\n${c_dic[cal[0]][cal[2]+1]||''}`;
 				document.getElementById(`_${i}i`).src=`img/candle/${cal[0]}${cal[1]}.JPG`;
 				if(cal[2]+1)document.getElementById(`_${i}i_`).src=`img/candle/${cal[0]}${cal[2]}.JPG`;
