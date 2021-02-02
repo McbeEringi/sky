@@ -20,7 +20,7 @@ var urlq={};location.search.substr(1).split('&').map(x=>x.split('=')).map(x=>url
 const e_bg=document.createElement('div');e_bg.setAttribute('id','bg');document.body.appendChild(e_bg);
 const e_img=document.createElement('img');e_img.setAttribute('src','https://mcbeeringi.github.io/sky/img/sky.svg');e_img.setAttribute('alt','background');e_bg.appendChild(e_img);
 const e_bb=document.createElement('div');e_bb.setAttribute('id','hisbackb');e_bb.onclick=()=>history.back();document.body.appendChild(e_bb);
-if(urlq.pwa=='1')hisbackb.setAttribute('style','display:block;');
+if(urlq.pwa=='1')e_bb.setAttribute('style','display:block;');
 //document.addEventListener('readystatechange',e=>{if(e.target.readyState=='interactive'){}},false);
 const bgcol=[
 	"#fff1cf,#ced980",//morn
