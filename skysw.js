@@ -9,7 +9,7 @@ const cacheName='cache210203_0',STATIC_DATA=[
 	//index
 	'index.html?pwa=0',
 	'img/ico/sky.jpg','img/ico/instr.jpg','img/ico/info.jpg','img/ico/seq.jpg',
-	'https://mcbeeringi.github.io/src/menu.css'
+	'https://mcbeeringi.github.io/src/menu.css',
 	//info
 	'info.html?pwa=1',
 	'img/candle/00.webp','img/candle/01.webp','img/candle/02.webp',
