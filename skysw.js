@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache210202_1',STATIC_DATA=[
+const cacheName='cache210203_0',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg',
 	'img/sky.png',
@@ -12,11 +12,11 @@ const cacheName='cache210202_1',STATIC_DATA=[
 	'https://mcbeeringi.github.io/src/menu.css'
 	//info
 	'info.html?pwa=1',
-	'img/candle/00.JPG','img/candle/01.JPG','img/candle/02.JPG',
-	'img/candle/10.JPG','img/candle/11.JPG','img/candle/12.JPG',
-	'img/candle/20.JPG','img/candle/21.JPG',
-	'img/candle/30.JPG','img/candle/31.JPG','img/candle/32.JPG',
-	'img/candle/40.JPG','img/candle/41.JPG',
+	'img/candle/00.webp','img/candle/01.webp','img/candle/02.webp',
+	'img/candle/10.webp','img/candle/11.webp','img/candle/12.webp',
+	'img/candle/20.webp','img/candle/21.webp',
+	'img/candle/30.webp','img/candle/31.webp','img/candle/32.webp',
+	'img/candle/40.webp','img/candle/41.webp',
 	//instr
 	'instr.html?pwa=1',
 	'https://tonejs.github.io/build/Tone.js',
