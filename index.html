@@ -64,7 +64,7 @@
 					<label><input type="radio" name="bgmode" value="0" checked>default</label>
 					<br>
 					<label><input type="radio" name="bgmode" value="1">image</label>
-					<input type="file" style="display:block;width:100%;" accept="image/*" onchange="reader.readAsDataURL(this.files[0]);">
+					<input type="file" style="display:block;width:100%;" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg');bgset();">
 					<br>
 					<label><input type="radio" name="bgmode" value="2">custom</label>
 					<textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;bgset();"></textarea>
@@ -77,7 +77,7 @@
 			bgmode.bgmode[Number(localStorage.sky_bgmode)||0].checked=true;
 			bgmode.onchange=()=>{localStorage.sky_bgmode=bgmode.bgmode.value;bgset();}
 			if(!localStorage.sky_bgcode)localStorage.sky_bgcode='linear-gradient(0deg,#000,#fff)';bgcode.value=localStorage.sky_bgcode;
-			let reader=new FileReader();reader.onload=()=>{localStorage.sky_bgimg=reader.result;bgset();};
+
 			document.querySelectorAll('a').forEach(e=>e.ontouchstart=()=>{});
 			if(urlq.pwa){
 				document.querySelectorAll('a').forEach(e=>e.href=e.href+'?pwa=1');
