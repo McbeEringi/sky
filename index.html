@@ -38,11 +38,12 @@
 				--o_img:url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='20' cx='20' cy='20' fill='%23444'/%3E%3Ccircle r='2' cx='10' cy='12.5' fill='%23fff'/%3E%3Cpolygon points='15,14 15,11 30,11 30,14' fill='%23fff'%3E%3C/polygon%3E%3Ccircle r='2' cx='10' cy='20' fill='%23fff'/%3E%3Cpolygon points='15,21.5 15,18.5 30,18.5 30,21.5' fill='%23fff'%3E%3C/polygon%3E%3Ccircle r='2' cx='10' cy='27.5' fill='%23fff'/%3E%3Cpolygon points='15,29 15,26 30,26 30,29' fill='%23fff'%3E%3C/polygon%3E%3C/svg%3E%0A");
 				--c_img:url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='20' cx='20' cy='20' fill='%23444'/%3E%3Cpolygon points='9,11 11,9 20,18 29,9 31,11 22,20 31,29 29,31 20,22 11,31 9,29 18,20' fill='%23fff'%3E%3C/polygon%3E%3C/svg%3E%0A");
 				--transition:.5s;
-				--menu_w:200px;/*-45px*/
-				--menu_h:300px;
+				--menu_w:240px;/*-45px*/
+				--menu_h:440px;
 				--bg_col:#6668;
 			}
-			label{display:block;}textarea{display:block;resize:none;width:calc(100% - 8px);height:3em;padding:4px;border:0;background:#2228;color:#fff;}
+			label{display:block;}textarea{display:block;resize:none;width:calc(100% - 8px);height:3em;padding:4px;border:0;border-radius:0;background:#2228;color:#fff;}
+			input[type=radio]{display:none;}input[type=radio]+span{background-color:#6668;transition:.2s;padding:0 8px;box-shadow:0 0 8px #0004 inset;}input[type=radio]:checked+span{background-color:#48f;}
 			.links>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;}
 			@media(max-width:504px){.links{text-align:center;}}
 			.links>a::before{content:"";display:block;height:150px;background-size:100%;border-radius:20%;background-image:var(--url);}
@@ -61,15 +62,18 @@
 			<div>
 				<p style="font-size:1.5em;">background</p>
 				<form id="bgmode">
-					<label><input type="radio" name="bgmode" value="0" checked>default</label>
+					<label><input type="radio" name="bgmode" value="0" checked><span style="font-size:1.2em;">default</span></label>
 					<br>
-					<label><input type="radio" name="bgmode" value="1">image</label>
-					<label><input type="file" style="display:block;width:100%;" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg');bgset();"></label>
+					<label><input type="radio" name="bgmode" value="1"><span style="font-size:1.2em;">image</span></label>
+					<label>choose image<input type="file" style="display:block;width:100%;" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg');bgset();"></label>
 					<br>
-					<label><input type="radio" name="bgmode" value="2">custom</label>
-					<label><textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;if(localStorage.sky_bgmode=='2')bgset();"></textarea></label>
-					<a href="https://developer.mozilla.org/docs/Web/CSS/background-image">reference</a>
+					<label><input type="radio" name="bgmode" value="2"><span style="font-size:1.2em;">custom</span></label>
+					<label><a href="https://developer.mozilla.org/docs/Web/CSS/background-image">background-image</a>:<textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;if(localStorage.sky_bgmode=='2')bgset();"></textarea></label>
 				</form>
+				<p>
+					sky_menu <br>
+					build:2102030
+				</p>
 			</div>
 		</div>
 
