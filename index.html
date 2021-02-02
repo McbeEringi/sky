@@ -67,7 +67,7 @@
 					<input type="file" style="display:block;width:100%;" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg');bgset();">
 					<br>
 					<label><input type="radio" name="bgmode" value="2">custom</label>
-					<textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;bgset();"></textarea>
+					<textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;if(localStorage.sky_bgmode=='2')bgset();"></textarea>
 					<a href="https://developer.mozilla.org/docs/Web/CSS/background-image">reference</a>
 				</form>
 			</div>
