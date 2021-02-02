@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache210202_1',STATIC_DATA=[
+const cacheName='cache210202_2',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg',
 	'img/sky.png',
@@ -9,7 +9,7 @@ const cacheName='cache210202_1',STATIC_DATA=[
 	//index
 	'index.html?pwa=0',
 	'img/ico/sky.jpg','img/ico/instr.jpg','img/ico/info.jpg','img/ico/seq.jpg',
-	'https://mcbeeringi.github.io/src/menu.css'
+	'https://mcbeeringi.github.io/src/menu.css',
 	//info
 	'info.html?pwa=1',
 	'img/candle/00.JPG','img/candle/01.JPG','img/candle/02.JPG',
