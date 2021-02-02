@@ -59,15 +59,15 @@
 			<input type="checkbox" id="example">
 			<label for="example"></label><div><div></div></div>
 			<div>
-				<h3>background</h3>
+				<p style="font-size:1.5em;">background</p>
 				<form id="bgmode">
 					<label><input type="radio" name="bgmode" value="0" checked>default</label>
 					<br>
 					<label><input type="radio" name="bgmode" value="1">image</label>
-					<input type="file" style="display:block;width:100%;" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg');bgset();">
+					<label><input type="file" style="display:block;width:100%;" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg');bgset();"></label>
 					<br>
 					<label><input type="radio" name="bgmode" value="2">custom</label>
-					<textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;if(localStorage.sky_bgmode=='2')bgset();"></textarea>
+					<label><textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;if(localStorage.sky_bgmode=='2')bgset();"></textarea></label>
 					<a href="https://developer.mozilla.org/docs/Web/CSS/background-image">reference</a>
 				</form>
 			</div>
