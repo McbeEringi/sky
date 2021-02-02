@@ -42,7 +42,7 @@ const bgset=(x,b)=>{
 	}
 };
 {
-	const bgset_=()=>{if(['0',undefined].includes(localStorage.sky_bgmode))bgset();};
+	const bgset_=()=>{console.log('_');if(['0',undefined].includes(localStorage.sky_bgmode))bgset();};
 	bgset_();
 	setTimeout(()=>{bgset_();setInterval(bgset_,3600000)},new Date().getTime()%3600000);
 }
