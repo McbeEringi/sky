@@ -48,6 +48,7 @@
 			@media(max-width:504px){.links{text-align:center;}}
 			.links>a::before{content:"";display:block;height:150px;background-size:100%;border-radius:20%;background-image:var(--url);}
 			.links>a:hover{transform:scale(1.05);filter:brightness(1.2)saturate(1.2)drop-shadow(0 0 8px #fea);}
+			#pwab{width:100%;max-width:256px;height:auto;image-rendering:pixelated;background:#0004;border-radius:8px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;}
 		</style>
 		<h1>Sky</h1>
 		<div class="links">
@@ -56,6 +57,7 @@
 			<a href="stuff.html" style="--url:url(img/ico/sky.jpg);" class="nopwa">sky_stuff</a>
 			<a href="seq.html" style="--url:url(img/ico/seq.jpg);" class="nopwa">sky_sequencer(indev)</a>
 		</div>
+		<img id="pwab" width="2" height="1" alt="pwa_banner">
 		<div class="menu">
 			<input type="checkbox" id="example">
 			<label for="example"></label><div><div></div></div>
@@ -71,8 +73,8 @@
 					<label><a href="https://developer.mozilla.org/docs/Web/CSS/background-image">background-image</a>:<textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;if(localStorage.sky_bgmode=='2')bgset();"></textarea></label>
 				</form>
 				<p>
-					sky_menu <br>
-					build:2102030
+					[sky_menu] build:2102030 <br>
+					<a href="https://twitter.com/mcbeeringi">@SkyEringi</a> MITLicense
 				</p>
 			</div>
 		</div>
@@ -86,6 +88,9 @@
 			if(urlq.pwa){
 				document.querySelectorAll('a').forEach(e=>e.href=e.href+'?pwa=1');
 				document.querySelectorAll('.nopwa').forEach(e=>e.style.display='none');
+			}else{
+				pwab.style.display='inline';
+				pwab.src='img/pwab.png';
 			}
 		</script>
 	</body>
