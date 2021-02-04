@@ -36,15 +36,15 @@
 
 		.dispPanel{position:relative;width:100vw;height:240px;overflow:hidden;border:6px solid #0001;border-left:none;border-right:none;touch-action:manipulation;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 		.dispPanel>*,#dispScr>*{position:absolute;line-height:16px;font-size:12px;}
-		#dispScr{width:100%;height:100%;overflow:scroll;position:relative;}#disp{padding:0 64px 0 16px;display:flex;}
+		#dispScr{width:100%;height:100%;overflow:scroll;position:relative;}#disp{height:100%;padding:0 64px 0 16px;white-space:nowrap;}
 		#dispCur{width:16px;height:100%;background:#bff;left:17px;transition:.1s;border-radius:4px;}
-		.nWrapper{display:flex;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background-color:#0004;}
+		.nWrapper{display:inline-block;white-space:nowrap;vertical-align:bottom;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background-color:#0004;}
 		.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;}
 		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
 		#rawtxt{resize:none;width:100%;height:100%;padding:0;border:0;margin:0;position:absolute;top:0;left:0;right:0;bottom:0;background:#0000;display:none;font-family:monospace;font-size:16px;color:#fff;}
 		#rawtxt::placeholder,#name_::placeholder{color:#fff4;}
 
-		.uiPanel{float:right;clear:right;margin:2px 0;}
+		.uiPanel{float:right;clear:right;}
 		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
 		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;}
 		#name_{font-size:large;background:#4448;width:100%;max-width:200px;height:48px;border-radius:12px;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#caf0f6;text-shadow:0 0 4px #688;outline:none;padding:0 2px;margin:2px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
@@ -76,7 +76,7 @@
 
 		.nowebp .bg,.nowebp #kb p::after{background-image:url(img/seq.png);}
 	</style>
-	<style id="sty"></style><style id="styperf"></style>
+	<style id="stybeat"></style><style id="styperf"></style>
 	<input type="checkbox" id="rawedit">
 	<input type="checkbox" id="uiflip">
 	<input type="checkbox" id="kblock">
@@ -90,11 +90,12 @@
 	<div class="dispPanel">
 		<div id="dispScr"><div id="dispCur"></div><div id="disp">loading…</div></div>
 		<div style="opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;top:0;">CBAGFEDCBAGFEDC</div>
+		<button onclick="curct();" class="grid bg" style="--bp:-300% -100%;position:absolute;top:0;right:0;width:32px;height:32px;margin:2px 4px;opacity:.8;">scroll to cursor</button>
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel" style="max-width:312px;">
-			         <button id="undo" class="grid bg" style="--bp:-300% -200%;transform:scaleX(-1);">undo
-			</button><button onclick="userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;" class="grid bg" style="--bp:-300% -100%;">scroll to cursor
+			         <button onclick="urdo(-1);" class="grid bg" style="--bp:-300% -200%;transform:scaleX(-1);">undo
+			</button><button onclick="urdo(1);" class="grid bg" style="--bp:-300% -200%;">redo
 			</button><button class="grid bg" style="--bp:-200% -100%;transform:scaleX(-1);" onclick="tstep(-1);">back
 			</button><button onclick="ttoggle();" class="grid bg" style="--bp:0 -100%;">start/pause</button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">stop
 			</button><button class="grid bg" style="--bp:-200% -100%;" onclick="tstep(1);">forward
@@ -116,7 +117,7 @@
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel" style="max-width:312px;">
-			         <button id="redo" class="grid bg" style="--bp:-300% -200%;">redo
+			         <button onclick="alert('ぷぇーーーっっ');" class="grid bg" style="--bp:-00% -00%;">null
 			</button><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
 			</label><label for="pract" class="grid bg" style="--bp:-200% -200%;">practice
 			</label><label for="rawedit" class="grid bg" style="--bp:-400% -200%;">edit raw
@@ -163,7 +164,7 @@
 			}
 			llog(Tone.Transport.position);
 		},[],'4n').start(0),
-		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102040\nMIT License\n',
+		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102050\nMIT License\n',
 		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{let s={};for(let i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -178,7 +179,7 @@
 		scset=()=>{if(Number.isInteger(Number(sc_.value)))main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
 		bpmset=()=>{let tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
 		tsset=()=>{let tmp=Number(ts_.value);if(tmp){main.ts=tmp;Tone.Transport.timeSignature=tmp||4;}else ts_.value=main.ts;
-			sty.textContent=main.ts>1?`#disp>.nWrapper:nth-child(${main.ts}n+1){overflow:hidden;}#disp>.nWrapper:nth-child(${main.ts}n+1)::before{content:"";display:block;width:2px;height:100%;background:#feac;}`:'';
+			stybeat.textContent=main.ts>1?`#disp>.nWrapper:nth-child(${main.ts}n+1){overflow:hidden;}#disp>.nWrapper:nth-child(${main.ts}n+1)::before{content:"";position:absolute;display:block;width:2px;height:100%;background:#feac;}`:'';
 			llog(main.ts);
 		},
 		nameset=()=>{if(name_.value)main.name=name_.value;else name_.value=main.name;llog(main.name);},
@@ -218,6 +219,12 @@
 			Tone.Transport.position=p2pos(rendered.p[curpos]);
 			scrset();
 			let note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
+		},
+		curct=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;},
+		urdo=x=>{
+			while(x<0){if(urstack[0].length){urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();x++;console.log('undo');}else{alert('undo nodata');break;}}
+			while(0<x){if(urstack[2].length){urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();x--;console.log('redo');}else{alert('redo nodata');break;}}
+			seq.events=main.scores=JSON.parse(urstack[1]);if(rawedit.checked)rawtxt.value=urstack[1];requestIdleCallback(render);kbset();
 		};
 
 		main=sample[slc.value];
@@ -265,7 +272,7 @@
 					case'ArrowDown':e.preventDefault();if(e.shiftKey)bpm_.previousElementSibling.click();else sc_.value=--main.sc;break;
 					case'ArrowLeft':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value--;bpm_.value=--main.bpm;}else tstep(-1);break;
 					case'ArrowRight':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value++;bpm_.value=++main.bpm;}else tstep(1);break;
-					case'KeyZ':if(e.metaKey){e.preventDefault();window[e.shiftKey?'redo':'undo'].click();}break;
+					case'KeyZ':if(e.metaKey){e.preventDefault();urdo(e.shiftKey?1:-1);}break;
 					default:
 						const keymap={
 							KeyR:'kbb00',KeyT:'kbb01',KeyY:'kbb02',KeyU:'kbb03',KeyI:'kbb04',
@@ -292,18 +299,6 @@
 			}
 		};
 		dispScr.onscroll=e=>{if(userscr[0])userscr[0]=false;else userscr[1]=true;};
-		undo.onclick=()=>{if(urstack[0].length){
-			seq.events=main.scores=JSON.parse(urstack[0][urstack[0].length-1]);
-			if(rawedit.checked)rawtxt.value=urstack[0][urstack[0].length-1];
-			urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();
-			requestIdleCallback(render);kbset();
-		}else alert('no data');}
-		redo.onclick=()=>{if(urstack[2].length){
-			seq.events=main.scores=JSON.parse(urstack[2][0]);
-			if(rawedit.checked)rawtxt.value=urstack[2][0];
-			urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();
-			requestIdleCallback(render);kbset();
-		}else alert('no data');}
 		rawedit.onchange=()=>{
 			if(rawedit.checked){
 				Tone.Transport.pause();styperf.textContent='';
