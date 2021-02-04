@@ -265,7 +265,7 @@
 					case'ArrowDown':e.preventDefault();if(e.shiftKey)bpm_.previousElementSibling.click();else sc_.value=--main.sc;break;
 					case'ArrowLeft':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value--;bpm_.value=--main.bpm;}else tstep(-1);break;
 					case'ArrowRight':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value++;bpm_.value=++main.bpm;}else tstep(1);break;
-					case'KeyZ':if(e.metaKey)window[e.shiftKey?'redo':'undo'].click();break;
+					case'KeyZ':if(e.metaKey){e.preventDefault();window[e.shiftKey?'redo':'undo'].click();}break;
 					default:
 						const keymap={
 							KeyR:'kbb00',KeyT:'kbb01',KeyY:'kbb02',KeyU:'kbb03',KeyI:'kbb04',
