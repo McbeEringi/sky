@@ -45,8 +45,8 @@
 		#rawtxt::placeholder,#name_::placeholder{color:#fff4;}
 
 		.uiPanel{float:right;clear:right;}
-		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;font-size:18px;font-family:"M PLUS Rounded 1c",sans-serif;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
-		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;}
+		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
+		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;font-size:18px;line-height:1.1em;font-family:"M PLUS Rounded 1c",sans-serif;}
 		#name_{font-size:large;background:#4448;width:100%;max-width:200px;height:48px;border-radius:12px;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#caf0f6;text-shadow:0 0 4px #688;outline:none;padding:0 2px;margin:2px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 
 		.kbPanel{overflow:hidden;position:relative;width:100%;max-width:360px;float:left;clear:left;background:#0004;border-radius:8px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
@@ -63,9 +63,10 @@
 		body>input[type="checkbox"]{display:none;}
 		#uiflip:checked~* .uiPanel{float:left;clear:left;}#uiflip:checked~* .kbPanel{float:right;clear:right;}
 		label.grid{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
-		#kblock:checked~* label[for="kblock"],#pract:checked~* label[for="pract"],#rawedit:checked~* label[for="rawedit"]{box-shadow:0 0 2px 4px #fea inset;}
-		#pract:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;}
+		#kblock:checked~* label[for="kblock"],#kbfixed:checked~* label[for="kbfixed"],#rawedit:checked~* label[for="rawedit"]{box-shadow:0 0 2px 4px #fea inset;}
+		#kbfixed:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;}
 		#rawedit:checked~* #rawtxt{display:block;}#rawedit:checked~* #kb{display:none;}
+		#logcb:not(:checked)~#log{display:none;}
 
 		.fg_{position:fixed;width:100%;height:100%;z-index:10;pointer-events:none;}
 		#alcb{display:none;}#alcb+label,#albox{opacity:0;pointer-events:none;transition:.2s;}
@@ -77,10 +78,11 @@
 		.nowebp .bg,.nowebp #kb p::after{background-image:url(img/seq.png);}
 	</style>
 	<style id="stybeat"></style><style id="styperf"></style>
+	<input type="checkbox" id="kblock">
+	<input type="checkbox" id="kbfixed" onchange="kblock.checked=this.checked;">
 	<input type="checkbox" id="rawedit">
 	<input type="checkbox" id="uiflip">
-	<input type="checkbox" id="kblock">
-	<input type="checkbox" id="pract" onchange="kblock.checked=this.checked;">
+	<input type="checkbox" id="logcb" checked>
 	<div class="fg_">
 		<pre id="jswarn">Please enable JavaScript to use this app.</pre><script>jswarn.style.display='none';</script>
 		<input type="checkbox" id="alcb"><label for="alcb"></label><pre id="albox" class="style"></pre>
@@ -99,12 +101,12 @@
 			</button><button class="grid bg" style="--bp:-200% -100%;transform:scaleX(-1);" onclick="tstep(-1);">back
 			</button><button onclick="ttoggle();" class="grid bg" style="--bp:0 -100%;">start/pause</button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">stop
 			</button><button class="grid bg" style="--bp:-200% -100%;" onclick="tstep(1);">forward
-			</button><button onclick="" class="grid bg showtxt" style="--bp:-200% -300%;">copy
-			</button><button onclick="" class="grid bg showtxt" style="--bp:-300% -300%;">paste
-			</button><button class="grid bg" style="--bp:-400% -100%;">delete
-			</button><button class="grid bg" style="--bp:-500% -100%;">add
-			</button><button class="grid bg" style="--bp:-600% -100%;">add in
-			</button><button class="grid bg" style="--bp:-700% -100%;">add out</button><br>
+			</button><button onclick="alert('コピー予定地');" class="grid bg showtxt" style="--bp:-200% -300%;">copy
+			</button><button onclick="alert('ペースト予定地');" class="grid bg showtxt" style="--bp:-300% -300%;">paste
+			</button><button onclick="alert('note削除予定地');" class="grid bg" style="--bp:-400% -100%;">del
+			</button><button onclick="alert('note追加予定地');" class="grid bg" style="--bp:-500% -100%;">add
+			</button><button onclick="alert('notein予定地');" class="grid bg" style="--bp:-600% -100%;">in
+			</button><button onclick="alert('noteout予定地');" class="grid bg" style="--bp:-700% -100%;">out</button><br>
 		</div>
 		<div class="kbPanel">
 			<div id="kb">
@@ -117,17 +119,17 @@
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel" style="max-width:312px;">
-			         <button onclick="alert('ぷぇーーーっっ');" class="grid bg" style="--bp:-00% -00%;">null
-			</button><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
-			</label><label for="pract" class="grid bg" style="--bp:-200% -200%;">practice
+			        <label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
+			</label><label for="kbfixed" class="grid bg" style="--bp:-200% -200%;">practice
 			</label><label for="rawedit" class="grid bg" style="--bp:-400% -200%;">edit raw
-			</label><button onclick="" class="grid bg" style="--bp:-600% -200%;">save
+			</label><button onclick="alert('セーブ予定地');" class="grid bg" style="--bp:-600% -200%;">save
 			</button><button onclick="Tone.Transport.pause();styperf.textContent='';load();" class="grid bg" style="--bp:-500% -200%;">load
+			</button><button onclick="alert('エクスポート予定地');" class="grid bg" style="--bp:-00% -00%;">null
 			</button><button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow
 			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast
 			</button><button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-500% 0;">down
 			</button><label><input id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-600% 0;"></input></label><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-400% 0;">up
-			</button><label><input id="name_" onchange="nameset();" placeholder="untitled"></input></label><label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><button id="ibut" class="grid bg" style="--bp:-300% 0;">info</button>
+			</button><label><input id="name_" onchange="nameset();" placeholder="untitled"></input></label><label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><button id="ibtn" class="grid bg" style="--bp:-300% 0;">info</button>
 		</div>
 	</div>
 
@@ -159,13 +161,13 @@
 			//Tone.Draw.schedule(()=>{},time);
 			curset();scrset();kbset(note);
 			if(note[0]){
-				synth.triggerAttackRelease(note.map(toHz),'1m',time,pract.checked?.3:1);
+				synth.triggerAttackRelease(note.map(toHz),'1m',time,kbfixed.checked?.3:1);
 				llog(`${note.map(x=>n2c[(Number(x)+main.sc+12)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`,1);
 			}
 			llog(Tone.Transport.position);
 		},[],'4n').start(0),
-		info='in development\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102050\nMIT License\n',
-		llog=(x,c)=>{if(c)log.textContent='';log.textContent+=`${c?'':'\n'}${x}`;},
+		info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102051\nMIT License\n',
+		llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{let s={};for(let i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
 		synth=new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination()),
@@ -222,15 +224,15 @@
 		},
 		curct=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;},
 		urdo=x=>{
-			while(x<0){if(urstack[0].length){urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();x++;console.log('undo');}else{alert('undo nodata');break;}}
-			while(0<x){if(urstack[2].length){urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();x--;console.log('redo');}else{alert('redo nodata');break;}}
+			while(x<0){if(urstack[0].length){urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();x++;llog('undo');}else{alert('undo nodata');break;}}
+			while(0<x){if(urstack[2].length){urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();x--;llog('redo');}else{alert('redo nodata');break;}}
 			seq.events=main.scores=JSON.parse(urstack[1]);if(rawedit.checked)rawtxt.value=urstack[1];requestIdleCallback(render);kbset();
 		};
 
 		main=sample[slc.value];
 		log.textContent=info;
 
-		ibut.onclick=()=>{alert(info,' ');albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label>`;}
+		ibtn.onclick=()=>{alert(info,' ');albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><label for="logcb" class="grid showtxt">debuglog</label>`;}
 		document.querySelectorAll('#kb p').forEach((e,i)=>{
 			const keyfx=ev=>{
 				Tone.start();
