@@ -55,9 +55,9 @@
 		#kb p::before,#kb p::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
 		#kb p::before{background:#4448;filter:drop-shadow(0 0 4px #444);transition:.02s;}#kb p:not(.press)::before{transition:.2s;}
 		#kb p.press::before{background:#fea8;filter:drop-shadow(0 0 4px #fea);transform:scale(.8);}
-		#kb p::after{background:url(img/seq.webp);background-size:800%;transition:.4s;}#kb p:not(.press)::after{transition:.01s;}
+		#kb p::after{background:url(img/seq.webp);background-size:800%;transition:.4s;background-position:-100% 0;}#kb p:not(.press)::after{transition:.01s;}
 		#kb p:nth-child(2n):not(.c)::after{background-position:-200% 0;}
-		#kb p:nth-child(4n):not(.c)::after{background-position:-100% 0;}
+		#kb p.c::after{background-position:0 0;}
 		#kb p.press::after{transform:rotateY(360deg)scale(.8);}
 
 		body>input[type="checkbox"]{display:none;}
