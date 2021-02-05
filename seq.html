@@ -144,7 +144,7 @@
 		<option value="4" selected>nyan-cat</option>
 		<option value="5">LOSER</option>
 	</select></label>
-	<button onclick="caches.keys().then(x=>caches.open(x[0])).then(x=>x.delete('/sky/seq.html')).then(x=>log.textContent+=`\ncache del: ${x}`)">cache del</button><br>
+	<button onclick="caches.keys().then(x=>caches.open(x[0])).then(x=>[x,x.delete('/sky/seq.html')]).then(x=>[...x,x[0].delete('/sky/seq.js')]).then(x=>log.textContent+=`\ncache del: ${JSON.stringify(x.slice(1))}`)">cache del</button><br>
 	<!--
 	<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="sky_sequencer" data-size="large" data-url="https://mcbeeringi.github.io/sky/seq.html" data-hashtags="">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 	-->
