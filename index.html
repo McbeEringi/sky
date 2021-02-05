@@ -31,20 +31,14 @@
 		<script src="style.js"></script>
 		<style>
 			:root{
-				--pos:fixed;
-				--bar_col:#888;
-				--button_col:#aaa;
-				/*40px*40px*/
+				--bar_col:#888;--button_col:#aaa;--bg_col:#6668;
 				--o_img:url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='20' cx='20' cy='20' fill='%23444'/%3E%3Ccircle r='2' cx='10' cy='12.5' fill='%23fff'/%3E%3Cpolygon points='15,14 15,11 30,11 30,14' fill='%23fff'%3E%3C/polygon%3E%3Ccircle r='2' cx='10' cy='20' fill='%23fff'/%3E%3Cpolygon points='15,21.5 15,18.5 30,18.5 30,21.5' fill='%23fff'%3E%3C/polygon%3E%3Ccircle r='2' cx='10' cy='27.5' fill='%23fff'/%3E%3Cpolygon points='15,29 15,26 30,26 30,29' fill='%23fff'%3E%3C/polygon%3E%3C/svg%3E%0A");
 				--c_img:url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='20' cx='20' cy='20' fill='%23444'/%3E%3Cpolygon points='9,11 11,9 20,18 29,9 31,11 22,20 31,29 29,31 20,22 11,31 9,29 18,20' fill='%23fff'%3E%3C/polygon%3E%3C/svg%3E%0A");
-				--transition:.5s;
-				--menu_w:240px;/*-45px*/
-				--menu_h:440px;
-				--bg_col:#6668;
+				--pos:fixed;--menu_w:240px;--menu_h:440px;--transition:.5s;
 			}
 			label{display:block;}textarea{display:block;resize:none;width:calc(100% - 8px);height:3em;padding:4px;border:0;border-radius:0;background:#2228;color:#fff;}
 			input[type=radio]{display:none;}input[type=radio]+span{background-color:#6668;transition:.2s;padding:0 8px;box-shadow:0 0 8px #0004 inset;}input[type=radio]:checked+span{background-color:#48f;}
-			.links>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;}
+			.links>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;transform:none;filter:none;}
 			@media(max-width:504px){.links{text-align:center;}}
 			.links>a::before{content:"";display:block;height:150px;background-size:100%;border-radius:20%;background-image:var(--url);}
 			.links>a:hover{transform:scale(1.05);filter:brightness(1.2)saturate(1.2)drop-shadow(0 0 8px #fea);}
@@ -73,7 +67,7 @@
 					<label><a href="https://developer.mozilla.org/docs/Web/CSS/gradient">background-image</a>:<textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;if(localStorage.sky_bgmode=='2')bgset();"></textarea></label>
 				</form>
 				<p>
-					[sky_menu] build:2102031 <br>
+					[sky_menu] build:2102050 <br>
 					<a href="https://twitter.com/mcbeeringi">@SkyEringi</a> MITLicense
 				</p>
 			</div>
