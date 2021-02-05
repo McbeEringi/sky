@@ -36,9 +36,14 @@
 				--c_img:url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='20' cx='20' cy='20' fill='%23444'/%3E%3Cpolygon points='9,11 11,9 20,18 29,9 31,11 22,20 31,29 29,31 20,22 11,31 9,29 18,20' fill='%23fff'%3E%3C/polygon%3E%3C/svg%3E%0A");
 				--pos:fixed;--menu_w:240px;--menu_h:440px;--transition:.5s;
 			}
-			label{display:block;}textarea{display:block;resize:none;width:calc(100% - 8px);height:3em;padding:4px;border:0;border-radius:0;background:#2228;color:#fff;}
-			input[type=radio]{display:none;}input[type=radio]+span{background-color:#6668;transition:.2s;padding:0 8px;box-shadow:0 0 8px #0004 inset;}input[type=radio]:checked+span{background-color:#48f;}
-			.links>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;transform:none;filter:none;}
+			label{display:inline-block;}input[type=radio]{display:none;}
+			textarea{display:block;resize:none;width:calc(100% - 8px);height:80px;padding:4px;border:0;border-radius:0;background:#2228;color:#fff;}
+			input[type=radio]+label{background-color:#6668;transition:.2s;padding:0 8px;box-shadow:0 0 8px #0004 inset;font-size:1.2em;}
+			input[type=radio]:checked+label{background-color:#48f;}
+			#bgmode>div{height:128px;}#bgmode>div>label{height:100%;display:none;position:relative;}
+			#bgmode1:checked~div>label:nth-child(1),#bgmode2:checked~div>label:nth-child(2){display:block;}
+			
+			.links>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;}
 			@media(max-width:504px){.links{text-align:center;}}
 			.links>a::before{content:"";display:block;height:150px;background-size:100%;border-radius:20%;background-image:var(--url);}
 			.links>a:hover{transform:scale(1.05);filter:brightness(1.2)saturate(1.2)drop-shadow(0 0 8px #fea);}
@@ -58,16 +63,16 @@
 			<div>
 				<p style="font-size:1.5em;">background</p>
 				<form id="bgmode">
-					<label><input type="radio" name="bgmode" value="0" checked><span style="font-size:1.2em;">default</span></label>
-					<br>
-					<label><input type="radio" name="bgmode" value="1"><span style="font-size:1.2em;">image</span></label>
-					<label>choose image<input type="file" style="display:block;width:100%;" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg');bgset();"></label>
-					<br>
-					<label><input type="radio" name="bgmode" value="2"><span style="font-size:1.2em;">custom</span></label>
-					<label><a href="https://developer.mozilla.org/docs/Web/CSS/gradient">background-image</a>:<textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;if(localStorage.sky_bgmode=='2')bgset();"></textarea></label>
+					<input type="radio" name="bgmode" value="0" id="bgmode0"><label for="bgmode0">default</label>
+					<input type="radio" name="bgmode" value="1" id="bgmode1"><label for="bgmode1">image</label>
+					<input type="radio" name="bgmode" value="2" id="bgmode2"><label for="bgmode2">custom</label>
+					<div>
+						<label>choose image<br><input type="file" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg');bgset();"></label>
+						<label><a href="https://developer.mozilla.org/docs/Web/CSS/gradient">background-image</a>:<br><textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;bgset();"></textarea></label>
+					</div>
 				</form>
 				<p>
-					[sky_menu] build:2102050 <br>
+					[sky_menu] build:2102051 <br>
 					<a href="https://twitter.com/mcbeeringi">@SkyEringi</a> MITLicense
 				</p>
 			</div>
