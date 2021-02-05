@@ -84,14 +84,14 @@
 	<input type="checkbox" id="uiflip">
 	<input type="checkbox" id="logcb" checked>
 	<div class="fg_">
-		<pre id="jswarn">Please enable JavaScript to use this app.</pre><script>jswarn.style.display='none';</script>
+		<pre id="jswarn" style="margin:24px 40px 0 16px;white-space:pre-wrap;">Please enable JavaScript to use this app.</pre><script>jswarn.style.display='none';</script>
 		<input type="checkbox" id="alcb"><label for="alcb"></label><pre id="albox" class="style"></pre>
 	</div>
 
 
 	<div class="dispPanel">
-		<div id="dispScr"><div id="dispCur"></div><div id="disp">loading…</div></div>
-		<div style="opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;top:0;">CBAGFEDCBAGFEDC</div>
+		<div id="dispScr"><div id="dispCur"></div><div id="disp">Please wait…</div></div>
+		<div style="opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;top:0;word-break:break-all;">CBAGFEDCBAGFEDC</div>
 		<button onclick="curct();" class="grid bg" style="--bp:-300% -100%;position:absolute;top:0;right:0;width:32px;height:32px;margin:2px 4px;opacity:.8;">scroll to cursor</button>
 	</div>
 	<div class="clear_fix">
@@ -166,7 +166,7 @@
 			}
 			llog(Tone.Transport.position);
 		},[],'4n').start(0),
-		info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102051\nMIT License\n',
+		info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102052\nMIT License\n',
 		llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 		//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 		mbxli=()=>{let s={};for(let i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
@@ -384,7 +384,7 @@
 		},
 		init=()=>{
 			if(!main)main={name:'',sc:0,bpm:120,ts:4,scores:new Array(16).fill('')};
-			rawedit.checked=false;rawtxt.value='';
+			rawedit.checked=false;rawtxt.value='';disp.textContent='Loading…';
 			urstack=[[],JSON.stringify(main.scores),[]];
 			seq.events=main.scores;sc_.value=main.sc;
 			bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;nameset();

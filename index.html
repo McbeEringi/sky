@@ -37,17 +37,17 @@
 				--pos:fixed;--menu_w:240px;--menu_h:320px;--transition:.5s;
 			}
 			label{display:inline-block;}input[type=radio]{display:none;}
-			textarea{display:block;resize:none;width:calc(100% - 8px);height:80px;padding:4px;border:0;border-radius:0;background:#2228;color:#fff;}
+			textarea{display:block;resize:none;width:calc(100% - 8px);height:64px;font-size:14px;line-height:16px;padding:4px;border:0;border-radius:0;background:#2228;color:#fff;}
 			input[type=radio]+label{background-color:#6668;transition:.2s;padding:0 8px;box-shadow:0 0 8px #0004 inset;font-size:1.2em;}
 			input[type=radio]:checked+label{background-color:#48f;}
-			#bgmode>div{height:128px;}#bgmode>div>label{height:100%;display:none;position:relative;}
+			#bgmode>div{height:112px;}#bgmode>div>label{height:100%;display:none;position:relative;}
 			#bgmode1:checked~div>label:nth-child(1),#bgmode2:checked~div>label:nth-child(2){display:block;}
-			
+
 			.links>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;}
 			@media(max-width:504px){.links{text-align:center;}}
 			.links>a::before{content:"";display:block;height:150px;background-size:100%;border-radius:20%;background-image:var(--url);}
 			.links>a:hover{transform:scale(1.05);filter:brightness(1.2)saturate(1.2)drop-shadow(0 0 8px #fea);}
-			#pwab{width:100%;max-width:256px;height:auto;image-rendering:pixelated;background:#0004;border-radius:8px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;}
+			#pwab{width:100%;max-width:256px;height:auto;image-rendering:pixelated;background:#0004;border-radius:8px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;pointer-events:none;}
 		</style>
 		<h1>Sky</h1>
 		<div class="links">
@@ -72,7 +72,7 @@
 					</div>
 				</form>
 				<p>
-					[sky_menu] build:2102051 <br>
+					[sky_menu] build:2102052 <br>
 					<a href="https://twitter.com/mcbeeringi">@SkyEringi</a> MITLicense
 				</p>
 			</div>
@@ -81,7 +81,7 @@
 		<script>
 			bgmode.bgmode[Number(localStorage.sky_bgmode)||0].checked=true;
 			bgmode.onchange=()=>{localStorage.sky_bgmode=bgmode.bgmode.value;bgset();}
-			if(!localStorage.sky_bgcode)localStorage.sky_bgcode='linear-gradient(0deg,#000,#fff)';bgcode.value=localStorage.sky_bgcode;
+			if(!localStorage.sky_bgcode)localStorage.sky_bgcode='linear-gradient(0deg,#fff,#000)';bgcode.value=localStorage.sky_bgcode;
 
 			document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
 			if(urlq.pwa){
