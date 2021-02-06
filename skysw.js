@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache210205_0',STATIC_DATA=[
+const cacheName='cache210206_0',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg',
 	'img/sky.png',
@@ -9,7 +9,7 @@ const cacheName='cache210205_0',STATIC_DATA=[
 	//index
 	'index.html?pwa=0',
 	'img/ico/sky.jpg','img/ico/instr.jpg','img/ico/info.jpg','img/ico/seq.jpg',
-	'https://mcbeeringi.github.io/src/menu.css',
+	'https://mcbeeringi.github.io/src/menu.css','img/fog.png',
 	//info
 	'info.html?pwa=1',
 	'img/candle/00.webp','img/candle/01.webp','img/candle/02.webp',
@@ -31,6 +31,12 @@ const cacheName='cache210205_0',STATIC_DATA=[
 	'audio/instr/musicbox/ds5.mp3',
 	'audio/instr/musicbox/ds6.mp3',
 	'audio/instr/musicbox/ds7.mp3'
+	//seq
+	/*
+	'seq.html?pwa=1',
+	'seq.js',
+	'https://mcbeeringi.github.io/src/requestIdleCallback.min.js'
+	*/
 ];
 
 self.addEventListener('install',(e)=>{

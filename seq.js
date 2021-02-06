@@ -2,7 +2,7 @@
 alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';alcb.checked=true;}
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
-let sc=Number(sc_.value),main,rendered={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet;
+let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet;
 const info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102053\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
@@ -32,11 +32,11 @@ tsset=()=>{let tmp=Number(ts_.value);if(tmp){main.ts=tmp;Tone.Transport.timeSign
 },
 nameset=()=>{if(name_.value)main.name=name_.value;else name_.value=main.name;llog(main.name);},
 curset=p=>{
-	if(typeof p=='number'&&isFinite(p)){curpos=rendered.p.indexOf(p);}
-	else{p=pos2p(Tone.Transport.position)%main.scores.length;curpos=rendered.p.indexOf(Math.floor(p));while(p>=rendered.p[curpos])curpos++;curpos--;}
-	dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
+	if(typeof p=='number'&&isFinite(p)){curpos=calced.p.indexOf(p);}
+	else{p=pos2p(Tone.Transport.position)%main.scores.length;curpos=calced.p.indexOf(Math.floor(p));while(p>=calced.p[curpos])curpos++;curpos--;}
+	dispCur.style.left=calced.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
 },
-kbset=(x=rendered.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores).split(','))=>{
+kbset=(x=calced.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores).split(','))=>{
 	let tmp=x.map(y=>n2i[y]);
 	document.querySelectorAll('#kb p').forEach((e,i)=>e.classList[tmp.includes(String(i))?'add':'remove']('press'));
 	return x;
@@ -48,10 +48,20 @@ scrset=()=>{
 		if(dcbl>=dispScr.clientWidth-64){userscr[0]=true;dispScr.scrollLeft+=dcbl-16;}
 		else if(dcbl<=16){userscr[0]=true;dispScr.scrollLeft+=dcbl+64-dispScr.clientWidth;}
 		if(curpos==0){userscr[0]=true;dispScr.scrollLeft=0;}
-		else if(curpos==rendered.length-1){userscr[0]=true;dispScr.scrollLeft=dispScr.scrollWidth-dispScr.clientWidth;}
+		else if(curpos==calced.length-1){userscr[0]=true;dispScr.scrollLeft=dispScr.scrollWidth-dispScr.clientWidth;}
 	}
 },
 urset=()=>{urstack[2]=[];urstack[0].push(urstack[1]);urstack[1]=JSON.stringify(main.scores);while(urstack[0].length>32)urstack[0].shift();},
+ccset=()=>{
+	calced={ind:[],p:[]};
+	calced.e=document.querySelectorAll('#disp .t');
+	calced.e.forEach(e=>{
+		calced.ind.push(e.dataset.ind);
+		calced.p.push(Number(e.dataset.p));
+	});
+	calced.length=calced.e.length;
+	console.log('calced',calced);
+},
 ttoggle=()=>{
 	Tone.start();
 	styperf.textContent=Tone.Transport.state=='started'?'':'#dispCur,#kb p::before,#kb p::after{transition: none !important;}';
@@ -62,9 +72,9 @@ tstep=x=>{
 	Tone.start();
 	Tone.Transport.pause();styperf.textContent='';
 	curpos+=x;
-	if(curpos<0)curpos+=rendered.length;else if(curpos>=rendered.length)curpos-=rendered.length;
-	dispCur.style.left=rendered.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
-	Tone.Transport.position=p2pos(rendered.p[curpos]);
+	if(curpos<0)curpos+=calced.length;else if(curpos>=calced.length)curpos-=calced.length;
+	dispCur.style.left=calced.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
+	Tone.Transport.position=p2pos(calced.p[curpos]);
 	scrset();
 	let note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
 },
@@ -84,16 +94,16 @@ document.querySelectorAll('#kb p').forEach((e,i)=>{
 		ev.preventDefault();Tone.start();
 		if(kblock.checked)synth.triggerAttackRelease(toHz(i2n[i]));
 		else{
-			let arr=rendered.ind[curpos].split('-').reduce((a,c)=>a[c],main.scores).split(',');
+			let arr=calced.ind[curpos].split('-').reduce((a,c)=>a[c],main.scores).split(',');
 			if(e.classList.contains('press')==false){
 				synth.triggerAttackRelease(toHz(i2n[i]));
-				requestIdleCallback(()=>{let note=document.createElement('p');note.style.bottom=i*16+'px';rendered.e[curpos].appendChild(note);});
+				requestIdleCallback(()=>{let note=document.createElement('p');note.style.bottom=i*16+'px';calced.e[curpos].appendChild(note);});
 				arr=[...arr,i2n[i]].filter(x=>x);
 			}else{
-				requestIdleCallback(()=>rendered.e[curpos].querySelectorAll(`p[style*="${i*16}"]`).forEach(e=>rendered.e[curpos].removeChild(e)));
+				requestIdleCallback(()=>calced.e[curpos].querySelectorAll(`p[style*="${i*16}"]`).forEach(e=>calced.e[curpos].removeChild(e)));
 				arr=arr.filter(x=>x!=i2n[i]);
 			}
-			arr=`main.scores[${rendered.ind[curpos].replace(/-/g,'][')}]='${arr.join(',')}';`;llog(arr);
+			arr=`main.scores[${calced.ind[curpos].replace(/-/g,'][')}]='${arr.join(',')}';`;llog(arr);
 			Function(arr)();seq.events=main.scores;
 			e.classList.toggle('press');
 			urset();
@@ -172,7 +182,7 @@ const render=()=>{
 			let div = document.createElement('div');
 			div.classList.add('nWrapper');
 			e.appendChild(div);
-			div.dataset.ind=(div.parentNode.dataset.ind?div.parentNode.dataset.ind+'-':'')+i;
+			div.dataset.ind=(b?'':div.parentNode.dataset.ind+'-')+i;
 			div.dataset.p=(b?i:Number(div.parentNode.dataset.p)+l*i);
 			if(x){
 				switch(typeof x){
@@ -191,14 +201,15 @@ const render=()=>{
 	}
 	rcore(main.scores,disp,1);
 	console.timeEnd();
-	rendered={ind:[],p:[]};
-	rendered.e=document.querySelectorAll('#disp .t');
-	rendered.e.forEach(e=>{
-		rendered.ind.push(e.dataset.ind);
-		rendered.p.push(Number(e.dataset.p));
-	});
-	rendered.length=rendered.e.length;
-	console.log('render',rendered);
+	ccset();
+},
+recalc=x=>{
+	let pr=x.parentNode;
+	if(pr.id=='disp'){
+
+	}else{
+		
+	}
 },
 save=()=>{
 
@@ -215,6 +226,9 @@ load=()=>{
 			setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}else{alert('del');}"
 			class="grid bg" style="--bp:-700% -200%;position:relative;left:0px;transition:left .2s;">delete</button></div>`);
 	});
+},
+exp=()=>{
+
 },
 init=()=>{
 	if(!main)main={name:'',sc:0,bpm:120,ts:4,scores:new Array(16).fill('')};
