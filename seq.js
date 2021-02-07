@@ -3,7 +3,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet;
-const info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102053\nMIT License\n',
+const info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102070\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq = new Tone.Sequence((time,note)=>{
@@ -184,6 +184,7 @@ const render=()=>{
 			e.appendChild(div);
 			div.dataset.ind=(b?'':div.parentNode.dataset.ind+'-')+i;
 			div.dataset.p=(b?i:Number(div.parentNode.dataset.p)+l*i);
+			div.dataset.l=l;
 			if(x){
 				switch(typeof x){
 					case'string':
@@ -203,13 +204,24 @@ const render=()=>{
 	console.timeEnd();
 	ccset();
 },
-recalc=x=>{
+recalc=(x=disp.firstElementChild)=>{
+	console.time();
 	let pr=x.parentNode;
+	const ccore=(y,l)=>y.childNodes.forEach((e,i)=>{
+		e.dataset.ind=`${y.dataset.ind}-${i}`;
+		e.dataset.p=(Number(y.dataset.p)+l*i);
+		e.dataset.l=l;
+		if(e.querySelector('.nWrapper'))ccore(e,l/Number(y.childNodes.length));
+	});
 	if(pr.id=='disp'){
-
-	}else{
-		
-	}
+		while(true){
+			x.dataset.p=x.dataset.ind=(x.previousElementSibling?Number(x.previousElementSibling.dataset.p)+1:0);
+			if(x.querySelector('.nWrapper'))ccore(x,1/Number(x.childNodes.length));
+			if(!(x=x.nextElementSibling))break;
+		}
+	}else ccore(pr,Number(pr.dataset.l)/Number(pr.childNodes.length));
+	console.timeEnd();
+	ccset();
 },
 save=()=>{
 
