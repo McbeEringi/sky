@@ -211,7 +211,7 @@ recalc=(x=disp.firstElementChild)=>{
 		e.dataset.ind=`${y.dataset.ind}-${i}`;
 		e.dataset.p=(Number(y.dataset.p)+l*i);
 		e.dataset.l=l;
-		if(e.querySelector('.nWrapper'))ccore(e,l/Number(y.childNodes.length));
+		if(e.querySelector('.nWrapper'))ccore(e,l/Number(e.childNodes.length));
 	});
 	if(pr.id=='disp'){
 		while(true){
