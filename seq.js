@@ -3,12 +3,12 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet;
-const info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102070\nMIT License\n',
+const info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102080\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq = new Tone.Sequence((time,note)=>{
 	note=note.split(',');
-	curset();scrset();kbset(note);//Tone.Draw.schedule(()=>{},time);
+	curpset();scrset();kbset(note);//Tone.Draw.schedule(()=>{},time);
 	if(note[0]){
 		synth.triggerAttackRelease(note.map(toHz),'1m',time,kbfixed.checked?.3:1);
 		llog(`${note.map(x=>n2c[(Number(x)+main.sc+12)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`,1);
@@ -31,10 +31,11 @@ tsset=()=>{let tmp=Number(ts_.value);if(tmp){main.ts=tmp;Tone.Transport.timeSign
 	llog(main.ts);
 },
 nameset=()=>{if(name_.value)main.name=name_.value;else name_.value=main.name;llog(main.name);},
-curset=p=>{
+curset=()=>dispCur.style.left=calced.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px',
+curpset=p=>{
 	if(typeof p=='number'&&isFinite(p)){curpos=calced.p.indexOf(p);}
 	else{p=pos2p(Tone.Transport.position)%main.scores.length;curpos=calced.p.indexOf(Math.floor(p));while(p>=calced.p[curpos])curpos++;curpos--;}
-	dispCur.style.left=calced.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
+	curset();
 },
 kbset=(x=calced.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores).split(','))=>{
 	let tmp=x.map(y=>n2i[y]);
@@ -51,7 +52,7 @@ scrset=()=>{
 		else if(curpos==calced.length-1){userscr[0]=true;dispScr.scrollLeft=dispScr.scrollWidth-dispScr.clientWidth;}
 	}
 },
-urset=()=>{urstack[2]=[];urstack[0].push(urstack[1]);urstack[1]=JSON.stringify(main.scores);while(urstack[0].length>32)urstack[0].shift();},
+urset=()=>{urstack[2]=[];urstack[0].push(urstack[1]);urstack[1]=JSON.stringify(main.scores);while(urstack[0].length>Number(localStorage.seq_undoMax))urstack[0].shift();},
 ccset=()=>{
 	calced={ind:[],p:[]};
 	calced.e=document.querySelectorAll('#disp .t');
@@ -67,7 +68,7 @@ ttoggle=()=>{
 	styperf.textContent=Tone.Transport.state=='started'?'':'#dispCur,#kb p::before,#kb p::after{transition: none !important;}';
 	Tone.Transport[Tone.Transport.state=='started'?'pause':'start']();
 },
-tstop=()=>{Tone.Transport.stop();styperf.textContent='';curset();scrset();kbset();},
+tstop=()=>{Tone.Transport.stop();styperf.textContent='';curpos=0;curset();scrset();kbset();},
 tstep=x=>{
 	Tone.start();
 	Tone.Transport.pause();styperf.textContent='';
@@ -82,11 +83,8 @@ curct=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().le
 urdo=x=>{
 	while(x<0){if(urstack[0].length){urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();x++;llog('undo');}else{alert('undo nodata');break;}}
 	while(0<x){if(urstack[2].length){urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();x--;llog('redo');}else{alert('redo nodata');break;}}
-	seq.events=main.scores=JSON.parse(urstack[1]);if(rawedit.checked)rawtxt.value=urstack[1];requestIdleCallback(render);kbset();
+	seq.events=main.scores=JSON.parse(urstack[1]);if(rawedit.checked)rawtxt.value=urstack[1];requestIdleCallback(render);requestIdleCallback(curset);requestIdleCallback(()=>kbset());
 };
-
-main=sample[slc.value];
-log.textContent=info;
 
 ibtn.onclick=()=>{alert(info,' ');albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><label for="logcb" class="grid showtxt">debuglog</label>`;}
 document.querySelectorAll('#kb p').forEach((e,i)=>{
@@ -104,9 +102,8 @@ document.querySelectorAll('#kb p').forEach((e,i)=>{
 				arr=arr.filter(x=>x!=i2n[i]);
 			}
 			arr=`main.scores[${calced.ind[curpos].replace(/-/g,'][')}]='${arr.join(',')}';`;llog(arr);
-			Function(arr)();seq.events=main.scores;
+			Function(arr)();seq.events=main.scores;urset();
 			e.classList.toggle('press');
-			urset();
 		}
 	};
 	e.addEventListener('touchstart',keyfx,{passive:false});
@@ -138,10 +135,9 @@ document.addEventListener('keydown',e=>{
 disp.onclick=e=>{
 	if(e.target.classList.contains('t')){
 		Tone.start();llog(e.target.dataset.p);
-		e.target.style.background='#fea8';
-		setTimeout(()=>e.target.style.background='',100);
+		e.target.style.background='#fea8';setTimeout(()=>e.target.style.background='',100);
 		Tone.Transport.position=p2pos(e.target.dataset.p);
-		curset(Number(e.target.dataset.p));
+		curpset(Number(e.target.dataset.p));
 		let note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
 		if(rawedit.checked)rawedit.onchange();
 	}
@@ -157,20 +153,41 @@ rawedit.onchange=()=>{
 			for(let i=0;i<curpos*2+1;i++)ind=rawtxt.value.indexOf('"',ind+1);
 			rawtxt.setSelectionRange(ind+1,rawtxt.value.indexOf('"',ind+1));
 		});
-	}else rawtxt.value='';
+	}else{
+		rawtxt.value='';
+		kbset();
+	}
 };
 rawtxt.oninput=e=>{
 	clearTimeout(rawexet);rawexet=setTimeout(()=>{
 		let tmp;
 		try{tmp=JSON.parse(rawtxt.value);}catch(e){console.log(e);}
 		if(tmp){
-			seq.events=main.scores=tmp;
-			urset();
+			seq.events=main.scores=tmp;urset();
+			curset();
 			requestIdleCallback(render);
 			synth.triggerAttackRelease('a5');
 		}
 	},1000);
-}
+};
+notedel.onclick=()=>{
+	let tmp=calced.ind[curpos].split('-');tmp=[`main.scores${tmp.length>1?`[${tmp.slice(0,-1).join('][')}]`:''}`,tmp[tmp.length-1]];
+	Function(`${tmp[0]}.splice(${tmp[1]},1);`)();
+	if(tmp[0].length>11)Function(`if(typeof ${tmp[0]}!='string'&&${tmp[0]}.length==0)${tmp[0]}='';`)();
+	seq.events=main.scores;urset();
+	tmp=calced.e[curpos].parentNode;
+	calced.e[curpos].remove();if(!(tmp.childNodes.length))tmp.classList.add('t');
+	recalc(tmp.firstElementChild||tmp);curset();kbset();
+};
+noteadd.onclick=()=>{
+	let tmp=calced.ind[curpos].split('-');tmp=[`main.scores${tmp.length>1?`[${tmp.slice(0,-1).join('][')}]`:''}`,tmp[tmp.length-1]];
+	Function(`${tmp[0]}.splice(${Number(tmp[1])+1},0,'');`)();
+	seq.events=main.scores;urset();
+	let div=document.createElement('div');
+	div.classList.add('nWrapper','t');
+	calced.e[curpos].parentNode.insertBefore(div,calced.e[curpos].nextSibling);
+	recalc(div);curset();
+};
 
 
 /////render
@@ -208,7 +225,7 @@ recalc=(x=disp.firstElementChild)=>{
 	console.time();
 	let pr=x.parentNode;
 	const ccore=(y,l)=>y.childNodes.forEach((e,i)=>{
-		e.dataset.ind=`${y.dataset.ind}-${i}`;
+		e.dataset.ind=(y.dataset.ind?y.dataset.ind+'-':'')+i;
 		e.dataset.p=(Number(y.dataset.p)+l*i);
 		e.dataset.l=l;
 		if(e.querySelector('.nWrapper'))ccore(e,l/Number(e.childNodes.length));
@@ -252,5 +269,9 @@ init=()=>{
 	requestIdleCallback(render);
 	requestIdleCallback(tstop);
 };
+
+if(!localStorage.seq_undoMax)localStorage.seq_undoMax=48;
+main=sample[slc.value];
+log.textContent=info;
 init();
 focus();
