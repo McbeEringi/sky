@@ -83,7 +83,7 @@ curct=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().le
 urdo=x=>{
 	while(x<0){if(urstack[0].length){urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();x++;llog('undo');}else{alert('undo nodata');break;}}
 	while(0<x){if(urstack[2].length){urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();x--;llog('redo');}else{alert('redo nodata');break;}}
-	seq.events=main.scores=JSON.parse(urstack[1]);if(rawedit.checked)rawtxt.value=urstack[1];requestIdleCallback(render);requestIdleCallback(curset);requestIdleCallback(()=>kbset());
+	seq.events=main.scores=JSON.parse(urstack[1]);if(rawedit.checked)rawtxt.value=urstack[1];requestIdleCallback(render);requestIdleCallback(()=>curpset());requestIdleCallback(()=>kbset());
 };
 
 ibtn.onclick=()=>{alert(info,' ');albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><label for="logcb" class="grid showtxt">debuglog</label>`;}
