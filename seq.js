@@ -3,7 +3,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet;
-const info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102081\nMIT License\n',
+const info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102082\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq = new Tone.Sequence((time,note)=>{
@@ -81,10 +81,11 @@ tstep=x=>{
 },
 curct=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;},
 urdo=x=>{
-	while(x<0){if(urstack[0].length){urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();x++;llog('undo');}else{alert('undo nodata');break;}}
-	while(0<x){if(urstack[2].length){urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();x--;llog('redo');}else{alert('redo nodata');break;}}
+	while(x<0){if(urstack[0].length){urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();x++;llog('undo');}else{domshake(undobtn);break;}}
+	while(0<x){if(urstack[2].length){urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();x--;llog('redo');}else{domshake(redobtn);break;}}
 	seq.events=main.scores=JSON.parse(urstack[1]);if(rawedit.checked)rawtxt.value=urstack[1];requestIdleCallback(render);requestIdleCallback(()=>curpset());requestIdleCallback(()=>kbset());
-};
+},
+domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('shake');};
 
 ibtn.onclick=()=>{alert(info,' ');albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><label for="logcb" class="grid showtxt">debuglog</label>`;}
 document.querySelectorAll('#kb p').forEach((e,i)=>{
@@ -170,6 +171,7 @@ rawtxt.oninput=e=>{
 		}
 	},1000);
 };
+undobtn.onclick=()=>urdo(-1);redobtn.onclick=()=>urdo(1);
 notedel.onclick=()=>{
 	if(calced.length>main.ts){
 		let tmp=calced.ind[curpos].split('-');tmp=[`main.scores${tmp.length>1?`[${tmp.slice(0,-1).join('][')}]`:''}`,tmp[tmp.length-1]];
@@ -188,7 +190,24 @@ noteadd.onclick=()=>{
 	let div=document.createElement('div');
 	div.classList.add('nWrapper','t');
 	calced.e[curpos].parentNode.insertBefore(div,calced.e[curpos].nextSibling);
-	recalc(div);curset();
+	recalc(div);curpos++;curset();
+};
+notein.onclick=()=>{
+	alert('notein予定地');
+};
+noteout.onclick=()=>{
+	let tmp=calced.ind[curpos].split('-');
+	if(tmp.length>1){
+		tmp=[`main.scores[${tmp.slice(0,-1).join('][')}]`,tmp[tmp.length-1],`main.scores${tmp.length>2?`[${tmp.slice(0,-2).join('][')}]`:''}`,Number(tmp[tmp.length-2])+1];
+		console.log(tmp)
+		Function(`${tmp[2]}.splice(${tmp[3]},0,${tmp[0]}.splice(${tmp[1]},1)[0]);`)();
+		Function(`if(typeof ${tmp[0]}!='string'&&${tmp[0]}.length==0)${tmp[0]}='';`)();
+		seq.events=main.scores;urset();
+		tmp=calced.e[curpos].parentNode;let tmp_=calced.e[curpos]!=tmp.firstChild?true:false;
+		tmp.parentNode.insertBefore(calced.e[curpos],tmp.nextSibling);
+		if(!tmp.childNodes.length)tmp.classList.add('t');
+		recalc(tmp);if(tmp_)curpos--;curset();
+	}else domshake(noteout);
 };
 
 

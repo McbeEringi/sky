@@ -48,7 +48,7 @@
 		#rawtxt::placeholder,#name_::placeholder{color:#fff4;}
 
 		.uiPanel{float:right;clear:right;}
-		.grid{display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
+		.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
 		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;font-size:18px;line-height:1.1em;font-family:"M PLUS Rounded 1c",sans-serif;}
 		#name_{font-size:large;background:#4448;width:100%;max-width:200px;height:48px;border-radius:12px;border:none;font-family:"M PLUS Rounded 1c",sans-serif;color:#caf0f6;text-shadow:0 0 4px #688;outline:none;padding:0 2px;margin:2px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 
@@ -79,6 +79,8 @@
 		#albox>div{display:inline-block;background:#8884;margin:4px;width:260px;text-align:left;}#albox>div:first-line{font-size:large;}
 
 		.nowebp .bg,.nowebp #kb p::after{background-image:url(img/seq.png);}
+		.shake{animation:.3s shake;filter:saturate(0);}
+		@keyframes shake{0%{left:-10px;}20%{left:8px;}40%{left:-6px;}60%{left:4px;}80%{left:-2px;}100%{left:0px;}}
 	</style>
 	<style id="stybeat"></style><style id="styperf"></style>
 	<input type="checkbox" id="kblock">
@@ -99,8 +101,8 @@
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel" style="max-width:312px;">
-			         <button onclick="urdo(-1);" class="grid bg" style="--bp:-300% -200%;transform:scaleX(-1);">undo
-			</button><button onclick="urdo(1);" class="grid bg" style="--bp:-300% -200%;">redo
+			         <button id="undobtn" class="grid bg" style="--bp:-300% -200%;transform:scaleX(-1);">undo
+			</button><button id="redobtn" class="grid bg" style="--bp:-300% -200%;">redo
 			</button><button class="grid bg" style="--bp:-200% -100%;transform:scaleX(-1);" onclick="tstep(-1);">back
 			</button><button onclick="ttoggle();" class="grid bg" style="--bp:0 -100%;">start/pause</button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">stop
 			</button><button class="grid bg" style="--bp:-200% -100%;" onclick="tstep(1);">forward
@@ -108,8 +110,8 @@
 			</button><button onclick="alert('ペースト予定地');" class="grid bg showtxt" style="--bp:-300% -300%;">paste
 			</button><button id="notedel" class="grid bg" style="--bp:-400% -100%;">del
 			</button><button id="noteadd" class="grid bg" style="--bp:-500% -100%;">add
-			</button><button onclick="alert('notein予定地');" class="grid bg" style="--bp:-600% -100%;">in
-			</button><button onclick="alert('noteout予定地');" class="grid bg" style="--bp:-700% -100%;">out</button><br>
+			</button><button id="notein" class="grid bg" style="--bp:-600% -100%;">in
+			</button><button id="noteout" class="grid bg" style="--bp:-700% -100%;">out</button><br>
 		</div>
 		<div class="kbPanel">
 			<div id="kb">
