@@ -38,7 +38,8 @@
 
 		.dispPanel{position:relative;width:100%;height:240px;overflow:hidden;border:6px solid #0001;border-left:none;border-right:none;touch-action:manipulation;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
 			background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
-		.dispPanel>*,#dispScr>*{position:absolute;line-height:16px;font-size:12px;}
+		.dispPanel::after{position:absolute;line-height:16px;font-size:12px;opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;top:0;word-break:break-all;content:"CBAGFEDCBAGFEDC";}
+		#dispScr>*{position:absolute;line-height:16px;font-size:12px;}
 		#dispScr{width:100%;height:100%;overflow:scroll;position:relative;}#disp{height:100%;padding:0 64px 0 16px;white-space:nowrap;}
 		#dispCur{width:16px;height:100%;background:#bff;left:17px;transition:.1s;border-radius:4px;}
 		.nWrapper{display:inline-block;white-space:nowrap;vertical-align:bottom;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background-color:#0004;}
@@ -96,7 +97,6 @@
 
 	<div class="dispPanel">
 		<div id="dispScr"><div id="dispCur"></div><div id="disp">Please wait…</div></div>
-		<div style="opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;top:0;word-break:break-all;">CBAGFEDCBAGFEDC</div>
 		<button onclick="curct();" class="grid bg" style="--bp:-300% -100%;position:absolute;top:0;right:0;width:32px;height:32px;margin:2px 4px;opacity:.8;">scroll to cursor</button>
 	</div>
 	<div class="clear_fix">
