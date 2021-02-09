@@ -3,7 +3,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,noteclip;
-const info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102085\nMIT License\n',
+const info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102086\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq = new Tone.Sequence((time,note)=>{
@@ -61,7 +61,6 @@ ccset=()=>{
 		calced.p.push(Number(e.dataset.p));
 	});
 	calced.length=calced.e.length;
-	console.log('calced',calced);
 },
 ttoggle=()=>{
 	Tone.start();
@@ -166,7 +165,7 @@ rawtxt.oninput=e=>{
 		if(tmp){
 			seq.events=main.scores=tmp;urset();
 			llog('raw good');
-			requestIdleCallback(render);curset();
+			requestIdleCallback(render);curpset();
 			synth.triggerAttackRelease(440*Math.pow(2,(3 +main.sc)/12),'1m',now);
 			synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m',now+.05,.9);
 			synth.triggerAttackRelease(440*Math.pow(2,(10+main.sc)/12),'1m',now+.1,.8);
@@ -180,10 +179,17 @@ rawtxt.oninput=e=>{
 };
 undobtn.onclick=()=>urdo(-1);redobtn.onclick=()=>urdo(1);
 notecopy.onclick=()=>{
-	alert('コピー予定地');
+	noteclip=[calced.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores),calced.e[curpos]];
+	llog(noteclip);
 };
 notepaste.onclick=()=>{
-	alert('ペースト予定地');
+	if(noteclip){
+		let tmp=calced.ind[curpos].split('-');tmp=[`main.scores${tmp.length>1?`[${tmp.slice(0,-1).join('][')}]`:''}`,tmp[tmp.length-1]];
+		Function(`${tmp[0]}.splice(${Number(tmp[1])+1},0,'${noteclip[0]}');`)();
+		seq.events=main.scores;urset();
+		calced.e[curpos].parentNode.insertBefore(noteclip[1].cloneNode(true),calced.e[curpos].nextSibling);
+		recalc(calced.e[curpos]);kbset(noteclip[0].split(','));
+	}else domshake(notepaste);
 };
 notedel.onclick=()=>{
 	if(calced.length>main.ts){
@@ -217,7 +223,7 @@ notein.onclick=()=>{
 				div.classList.add('nWrapper');
 				calced.e[curpos].parentNode.insertBefore(div,calced.e[curpos+1]);
 				div.appendChild(calced.e[curpos+1]);
-			}
+			}else calced.e[curpos+1].classList.remove('t');
 		}
 		Function(`${tmp[2]}.unshift(${tmp[0]}.splice(${tmp[1]},1)[0]);`)();
 		seq.events=main.scores;urset();
@@ -327,3 +333,13 @@ main=sample[slc.value];
 log.textContent=info;
 init();
 focus();
+
+/*
+let opt={
+	group:{name:"group_",pull:true,put:true},
+	draggable:".nWrapper",
+	animation:150,invertSwap:true,
+	delay:75,delayOnTouchOnly:true
+};
+document.querySelectorAll('#disp').forEach(x=>new Sortable(x,opt));
+*/
