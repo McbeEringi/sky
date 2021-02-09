@@ -2,8 +2,8 @@
 alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';alcb.checked=true;}
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
-let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet;
-const info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102083\nMIT License\n',
+let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,noteclip;
+const info='⚠️in development⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@SkyEringi\nbuild:2102084\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq = new Tone.Sequence((time,note)=>{
@@ -168,17 +168,23 @@ rawtxt.oninput=e=>{
 			llog('raw good');
 			requestIdleCallback(render);curset();
 			synth.triggerAttackRelease(440*Math.pow(2,(3 +main.sc)/12),'1m',now);
-			synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m',now+.05);
-			synth.triggerAttackRelease(440*Math.pow(2,(10+main.sc)/12),'1m',now+.1);
+			synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m',now+.05,.9);
+			synth.triggerAttackRelease(440*Math.pow(2,(10+main.sc)/12),'1m',now+.1,.8);
 		}else{
 			llog('raw bad');
 			synth.triggerAttackRelease(440*Math.pow(2,(8 +main.sc)/12),'1m',now);
-			synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m',now+.05);
-			synth.triggerAttackRelease(440*Math.pow(2,(2+main.sc)/12),'1m',now+.1);
+			synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m',now+.05,.9);
+			synth.triggerAttackRelease(440*Math.pow(2,(1+main.sc)/12),'1m',now+.1,.8);
 		}
 	},1000);
 };
 undobtn.onclick=()=>urdo(-1);redobtn.onclick=()=>urdo(1);
+notecopy.onclick=()=>{
+	alert('コピー予定地');
+};
+notepaste.onclick=()=>{
+	alert('ペースト予定地');
+};
 notedel.onclick=()=>{
 	if(calced.length>main.ts){
 		let tmp=calced.ind[curpos].split('-');tmp=[`main.scores${tmp.length>1?`[${tmp.slice(0,-1).join('][')}]`:''}`,tmp[tmp.length-1]];
@@ -200,7 +206,23 @@ noteadd.onclick=()=>{
 	recalc(div);curpos++;curset();
 };
 notein.onclick=()=>{
-	alert('notein予定地');
+	let tmp=calced.ind[curpos].split('-');
+	tmp=[`main.scores${tmp.length>1?`[${tmp.slice(0,-1).join('][')}]`:''}`,tmp[tmp.length-1],`main.scores[${(tmp.slice(0,-1).concat(Number(tmp[tmp.length-1])+1)).join('][')}]`];
+	let tmp_=Function('return '+tmp[2])();
+	if(tmp_){
+		if(typeof tmp_=='string'){
+			Function(`${tmp[2]}=[${tmp[2]}];`)();
+			let div=document.createElement('div');
+			div.classList.add('nWrapper');
+			calced.e[curpos].parentNode.insertBefore(div,calced.e[curpos+1]);
+			div.appendChild(calced.e[curpos+1]);
+		}
+		Function(`${tmp[2]}.unshift(${tmp[0]}.splice(${tmp[1]},1)[0]);`)();
+		seq.events=main.scores;urset();
+		tmp=calced.e[curpos].nextElementSibling;
+		tmp.insertBefore(calced.e[curpos],tmp.firstElementChild);
+		recalc(tmp);if(curpos>0)curpos--;curset();kbset();
+	}else domshake(notein);
 };
 noteout.onclick=()=>{
 	let tmp=calced.ind[curpos].split('-');
@@ -210,10 +232,10 @@ noteout.onclick=()=>{
 		Function(`${tmp[2]}.splice(${tmp[3]},0,${tmp[0]}.splice(${tmp[1]},1)[0]);`)();
 		Function(`if(typeof ${tmp[0]}!='string'&&${tmp[0]}.length==0)${tmp[0]}='';`)();
 		seq.events=main.scores;urset();
-		tmp=calced.e[curpos].parentNode;let tmp_=calced.e[curpos]!=tmp.firstChild?true:false;
+		tmp=calced.e[curpos].parentNode;let tmp_=calced.e[curpos]!=tmp.firstChild;
 		tmp.parentNode.insertBefore(calced.e[curpos],tmp.nextSibling);
 		if(!tmp.childNodes.length)tmp.classList.add('t');
-		recalc(tmp);if(tmp_)curpos--;curset();
+		recalc(tmp);if(tmp_)curpos--;curset();kbset();
 	}else domshake(noteout);
 };
 
