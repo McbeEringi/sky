@@ -209,13 +209,15 @@ notein.onclick=()=>{
 	let tmp=calced.ind[curpos].split('-');
 	tmp=[`main.scores${tmp.length>1?`[${tmp.slice(0,-1).join('][')}]`:''}`,tmp[tmp.length-1],`main.scores[${(tmp.slice(0,-1).concat(Number(tmp[tmp.length-1])+1)).join('][')}]`];
 	let tmp_=Function('return '+tmp[2])();
-	if(tmp_){
+	if(tmp_!=undedined){
 		if(typeof tmp_=='string'){
-			Function(`${tmp[2]}=[${tmp[2]}];`)();
-			let div=document.createElement('div');
-			div.classList.add('nWrapper');
-			calced.e[curpos].parentNode.insertBefore(div,calced.e[curpos+1]);
-			div.appendChild(calced.e[curpos+1]);
+			Function(tmp_.length?`${tmp[2]}=[${tmp[2]}];`:`${tmp[2]}=[];`)();
+			if(tmp_.length){
+				let div=document.createElement('div');
+				div.classList.add('nWrapper');
+				calced.e[curpos].parentNode.insertBefore(div,calced.e[curpos+1]);
+				div.appendChild(calced.e[curpos+1]);
+			}
 		}
 		Function(`${tmp[2]}.unshift(${tmp[0]}.splice(${tmp[1]},1)[0]);`)();
 		seq.events=main.scores;urset();
