@@ -209,7 +209,7 @@ notein.onclick=()=>{
 	let tmp=calced.ind[curpos].split('-');
 	tmp=[`main.scores${tmp.length>1?`[${tmp.slice(0,-1).join('][')}]`:''}`,tmp[tmp.length-1],`main.scores[${(tmp.slice(0,-1).concat(Number(tmp[tmp.length-1])+1)).join('][')}]`];
 	let tmp_=Function('return '+tmp[2])();
-	if(tmp_!=undedined){
+	if(tmp_!=undefined){
 		if(typeof tmp_=='string'){
 			Function(tmp_.length?`${tmp[2]}=[${tmp[2]}];`:`${tmp[2]}=[];`)();
 			if(tmp_.length){
