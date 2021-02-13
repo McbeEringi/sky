@@ -3,7 +3,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102120\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102130\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq = new Tone.Sequence((time,note)=>{
@@ -185,40 +185,28 @@ notecopy.onclick=()=>{
 };
 notepaste.onclick=()=>{
 	if(noteclip){
-		let tmp=calced.ind[curpos].split('-');tmp=[`main.scores${tmp.length>1?`[${tmp.slice(0,-1).join('][')}]`:''}`,tmp[tmp.length-1]];
-		Function(`${tmp[0]}.splice(${Number(tmp[1])+1},0,'${noteclip[0]}');`)();
-		seq.events=main.scores;urset();
 		calced.e[curpos].parentNode.insertBefore(noteclip[1].cloneNode(true),calced.e[curpos].nextSibling);
-		recalc(calced.e[curpos]);kbset(noteclip[0].split(','));
+		d2a();recalc(calced.e[curpos]);kbset(noteclip[0].split(','));
 	}else domshake(notepaste);
 };
 notedel.onclick=()=>{
 	if(calced.length>main.ts){
-		let tmp=calced.ind[curpos].split('-');tmp=[`main.scores${tmp.length>1?`[${tmp.slice(0,-1).join('][')}]`:''}`,tmp[tmp.length-1]];
-		Function(`${tmp[0]}.splice(${tmp[1]},1);`)();
-		if(tmp[0].length>11)Function(`if(typeof ${tmp[0]}!='string'&&${tmp[0]}.length==0)${tmp[0]}='';`)();
-		seq.events=main.scores;urset();
-		tmp=calced.e[curpos].parentNode;
+		let tmp=calced.e[curpos].parentNode;
 		calced.e[curpos].remove();if(!(tmp.childNodes.length))tmp.classList.add('t');
-		recalc(tmp.firstElementChild||tmp);if(!calced.e[curpos])curpos--;curset();kbset();
+		d2a();recalc(tmp.firstElementChild||tmp);if(!calced.e[curpos])curpos--;curset();kbset();
 	}else domshake(notedel);
 };
 noteadd.onclick=()=>{
-	let tmp=calced.ind[curpos].split('-');tmp=[`main.scores${tmp.length>1?`[${tmp.slice(0,-1).join('][')}]`:''}`,tmp[tmp.length-1]];
-	Function(`${tmp[0]}.splice(${Number(tmp[1])+1},0,'');`)();
-	seq.events=main.scores;urset();
 	let div=document.createElement('div');
 	div.classList.add('nWrapper','t');
 	calced.e[curpos].parentNode.insertBefore(div,calced.e[curpos].nextSibling);
-	recalc(div);curpos++;curset();
+	d2a();recalc(div);curpos++;curset();
 };
 notein.onclick=()=>{
 	let tmp=calced.ind[curpos].split('-');
-	tmp=[`main.scores${tmp.length>1?`[${tmp.slice(0,-1).join('][')}]`:''}`,tmp[tmp.length-1],`main.scores[${(tmp.slice(0,-1).concat(Number(tmp[tmp.length-1])+1)).join('][')}]`];
-	let tmp_=Function('return '+tmp[2])();
+	let tmp_=Function(`return main.scores[${(tmp.slice(0,-1).concat(Number(tmp[tmp.length-1])+1)).join('][')}]`)();
 	if(tmp_!=undefined){
 		if(typeof tmp_=='string'){
-			Function(tmp_.length?`${tmp[2]}=[${tmp[2]}];`:`${tmp[2]}=[];`)();
 			if(tmp_.length){
 				let div=document.createElement('div');
 				div.classList.add('nWrapper');
@@ -226,25 +214,18 @@ notein.onclick=()=>{
 				div.appendChild(calced.e[curpos+1]);
 			}else calced.e[curpos+1].classList.remove('t');
 		}
-		Function(`${tmp[2]}.unshift(${tmp[0]}.splice(${tmp[1]},1)[0]);`)();
-		seq.events=main.scores;urset();
 		tmp=calced.e[curpos].nextElementSibling;
 		tmp.insertBefore(calced.e[curpos],tmp.firstElementChild);
-		recalc(tmp);if(curpos>0)curpos--;curset();kbset();
+		d2a();recalc(tmp);if(curpos>0)curpos--;curset();kbset();
 	}else domshake(notein);
 };
 noteout.onclick=()=>{
 	let tmp=calced.ind[curpos].split('-');
 	if(tmp.length>1){
-		tmp=[`main.scores[${tmp.slice(0,-1).join('][')}]`,tmp[tmp.length-1],`main.scores${tmp.length>2?`[${tmp.slice(0,-2).join('][')}]`:''}`,Number(tmp[tmp.length-2])+1];
-		console.log(tmp)
-		Function(`${tmp[2]}.splice(${tmp[3]},0,${tmp[0]}.splice(${tmp[1]},1)[0]);`)();
-		Function(`if(typeof ${tmp[0]}!='string'&&${tmp[0]}.length==0)${tmp[0]}='';`)();
-		seq.events=main.scores;urset();
 		tmp=calced.e[curpos].parentNode;let tmp_=calced.e[curpos]!=tmp.firstChild;
 		tmp.parentNode.insertBefore(calced.e[curpos],tmp.nextSibling);
 		if(!tmp.childNodes.length)tmp.classList.add('t');
-		recalc(tmp);if(tmp_)curpos--;curset();kbset();
+		d2a();recalc(tmp);if(tmp_)curpos--;curset();kbset();
 	}else domshake(noteout);
 };
 
@@ -277,6 +258,17 @@ const render=()=>{
 	rcore(main.scores,disp,1);
 	console.timeEnd();
 	ccset();
+},
+d2a=()=>{
+	const core=e=>
+		Array.from(e.children,x=>{
+			if(x.classList.contains('t'))return Array.from(x.children,y=>i2n_[y.style.bottom.slice(0,-2)/16]).join(',');
+			else return core(x);
+		});
+	console.time();
+	seq.events=main.scores=core(disp);
+	console.timeEnd();
+	urset();
 },
 recalc=(x=disp.firstElementChild)=>{
 	console.time();
@@ -333,17 +325,7 @@ log.textContent=info;
 init();
 focus();
 
-const d2a=()=>{
-	const core=e=>
-		Array.from(e.children,x=>{
-			if(x.classList.contains('t'))return Array.from(x.children,y=>i2n_[y.style.bottom.slice(0,-2)/16]).join(',');
-			else return core(x);
-		});
-	console.time();
-	let s=core(disp);
-	console.timeEnd();
-	return s;
-}
+
 /*
 let opt={
 	group:{name:"group_",pull:true,put:true},
