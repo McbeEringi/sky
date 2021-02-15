@@ -36,15 +36,15 @@
 		:root{user-select:none;-webkit-user-select:none;}/*::-webkit-scrollbar{display:none;}*/
 		html,body{height:100%;margin:0;position:relative;}.clear_fix::after{content:"";clear:both;display:block;}
 
-		.dispPanel{position:relative;width:100%;height:240px;overflow:hidden;border:6px solid #0001;border-left:none;border-right:none;touch-action:manipulation;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+		.dispPanel{position:relative;width:100%;height:240px;border:6px solid #0001;border-left:none;border-right:none;touch-action:manipulation;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
 			background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 		.dispPanel::after{position:absolute;line-height:16px;font-size:12px;opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;top:0;word-break:break-all;content:"CBAGFEDCBAGFEDC";}
 		#dispScr>*{position:absolute;line-height:16px;font-size:12px;}
 		#dispScr{width:100%;height:100%;overflow:scroll;position:relative;}#disp{height:100%;padding:0 64px 0 16px;white-space:nowrap;}
 		#dispCur{width:16px;height:100%;background:#bff;left:17px;transition:.1s;border-radius:4px;}
-		.nWrapper{display:inline-block;white-space:nowrap;vertical-align:bottom;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background-color:#0004;}
-		.nWrapper *{color:#fff8;}.nWrapper p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;}
-		.nWrapper .nWrapper{background:#0002;}.nWrapper .nWrapper:first-child{margin-left:8px;}.nWrapper .nWrapper:last-child{margin-right:8px;}
+		.noteW{display:inline-block;white-space:nowrap;vertical-align:bottom;position:relative;min-width:16px;height:240px;margin-left:1px;border-radius:4px;text-align:center;background:#0004;color:#fff8;}
+		.noteW p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;}
+		.sortW{overflow:hidden;}.sort{min-width:16px;height:100%;margin:0 8px;padding:0 8px;box-sizing:border-box;background:#fff4;box-shadow:0 0 8px #fff8;}
 		#rawtxt{resize:none;width:100%;height:100%;padding:0;border:0;margin:0;position:absolute;top:0;left:0;right:0;bottom:0;background:#0000;display:none;font-family:monospace;font-size:16px;color:#fff;}
 		#rawtxt::placeholder,#name_::placeholder{color:#fff4;}
 
@@ -80,8 +80,16 @@
 		#albox>div{display:inline-block;background:#8884;margin:4px;width:260px;text-align:left;}#albox>div:first-line{font-size:large;}
 
 		.nowebp .bg,.nowebp #kb p::after{background-image:url(img/seq.png);}
-		.shake{animation:.3s shake;filter:saturate(0);}
-		@keyframes shake{0%{left:-10px;}20%{left:8px;}40%{left:-6px;}60%{left:4px;}80%{left:-2px;}100%{left:0px;}}
+		.shake{animation:.3s xshake;filter:saturate(0);}
+		@keyframes xshake{0%{left:-10px;}20%{left:8px;}40%{left:-6px;}60%{left:4px;}80%{left:-2px;}100%{left:0px;}}
+
+		.sortable-chosen{background:#feac;}
+		.sortable-ghost{}.sortable-drag{animation:.5s infinite alternate wink;}
+		#temp,#clip{background:#fff4;display:inline-block;padding:8px;}
+		#trash{background:#f44 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64px' viewBox='0 0 5 5' %3E%3Cpath d='M1,1l3,3m-3,0l3,-3' stroke='%23fff' stroke-width='.2'/%3E%3C/svg%3E");width:64px;height:64px;border-radius:8px;overflow:hidden;display:inline-block;vertical-align:bottom;}
+		#trash .sortable-ghost{background:#f88;animation:.2s shake infinite;}
+		@keyframes wink{0%{opacity:.2;}100%{opacity:.4;}}
+		@keyframes shake{0%{transform:translate(1px,1px) rotate(0deg);}10%{transform:translate(-1px,-2px) rotate(-1deg);}20%{transform:translate(-3px,0px) rotate(1deg);}30%{transform:translate(3px,2px) rotate(0deg);}40%{transform:translate(1px,-1px) rotate(1deg);}50%{transform:translate(-1px,2px) rotate(-1deg);}60%{transform:translate(-3px,1px) rotate(0deg);}70%{transform:translate(3px,1px) rotate(-1deg);}80%{transform:translate(-1px,-1px) rotate(1deg);}90%{transform:translate(1px,2px) rotate(0deg);}100% { transform: translate(1px,-2px) rotate(-1deg);}}
 	</style>
 	<style id="stybeat"></style><style id="styperf"></style>
 	<input type="checkbox" id="kblock">
@@ -106,12 +114,6 @@
 			</button><button onclick="tstep(-1);" class="grid bg" style="--bp:-200% -100%;transform:scaleX(-1);">back
 			</button><button onclick="ttoggle();" class="grid bg" style="--bp:0 -100%;">start/pause</button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">stop
 			</button><button onclick="tstep(1);" class="grid bg" style="--bp:-200% -100%;">forward
-			</button><button id="notecopy" class="grid bg" style="--bp:-200% -300%;">copy
-			</button><button id="notepaste" class="grid bg" style="--bp:-300% -300%;">paste
-			</button><button id="notedel" class="grid bg" style="--bp:-400% -100%;">del
-			</button><button id="noteadd" class="grid bg" style="--bp:-500% -100%;">add
-			</button><button id="notein" class="grid bg" style="--bp:-600% -100%;">in
-			</button><button id="noteout" class="grid bg" style="--bp:-700% -100%;">out</button><br>
 		</div>
 		<div class="kbPanel">
 			<div id="kb">
@@ -147,6 +149,14 @@
 		<option value="5">LOSER</option>
 	</select></label>
 	<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>alert(x))">cache del</button><br>
+	<div id="temp">
+		<div class="noteW t"></div><div class="noteW sortW"><div class="sort"></div></div>
+	</div>
+	<div id="trash"></div>
+	<div id="clip">
+		<div class="noteW t">clip board</div>
+	</div>
+
 	<!--
 	caches.keys().then(x=>caches.open(x[0])).then(x=>x.delete('/sky/seq.html')).then(x=>log.textContent+=`\ncache del: ${x}`)
 	<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="sky_sequencer" data-size="large" data-url="https://mcbeeringi.github.io/sky/seq.html" data-hashtags="">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
@@ -155,7 +165,7 @@
 
 
 	<script src="https://tonejs.github.io/build/Tone.js"></script>
-	<!--<script src="http://sortablejs.github.io/Sortable/Sortable.min.js"></script>-->
+	<script src="https://unpkg.com/sortablejs/Sortable.min.js"></script>
 	<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js"></script>
 	<script src="seq.js"></script>
 </body>
