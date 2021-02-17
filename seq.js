@@ -271,6 +271,7 @@ load=()=>{
 		albox.insertAdjacentHTML('beforeend',`<div>${x.name+i}<br>${x.lastm}<br><button
 			onclick="alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button><button
 			onclick="alert('dupe');"class="grid bg" style="--bp:0 -300%;">dupe</button><button
+			onclick="alert('export');" class="grid bg" style="--bp:-400% -100%;">export</button><button
 			onclick="if(this.style.left=='0px'){this.style.left='52px';this.textContent='really?';this.classList.add('showtxt');
 			setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}else{alert('del');}"
 			class="grid bg" style="--bp:-700% -200%;position:relative;left:0px;transition:left .2s;">delete</button></div>`);
