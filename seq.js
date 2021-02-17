@@ -188,8 +188,7 @@ const sopt={
 		pull:(to,from)=>to.el.id=='clip'?'clone':true,
 		put:true,
 	},
-	onStart:()=>dispCur.style.opacity='0',
-	onEnd:()=>dispCur.style.opacity='1',
+	onStart:()=>dispCur.style.opacity='0',onEnd:()=>dispCur.style.opacity='1',
 	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
 	onSort:e=>{if(e.to.id!='clip')requestIdleCallback(()=>{curset();d2a();d2d();});}
 },
@@ -304,6 +303,7 @@ new Sortable(temp,{
 		pull:'clone',
 		put:false
 	},
+	onStart:()=>dispCur.style.opacity='0',onEnd:()=>dispCur.style.opacity='1',
 	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
 	sort:false,draggable:'.noteW',
 	onEnd:e=>{
@@ -324,6 +324,7 @@ new Sortable(clip,{
 		pull:(to,from)=>to.el.id=='trash'?true:'clone',
 		put:true
 	},
+	onStart:()=>dispCur.style.opacity='0',onEnd:()=>dispCur.style.opacity='1',
 	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
 });
 new Sortable(trash,{group:'group_',onAdd:e=>e.item.parentNode.removeChild(e.item)});
