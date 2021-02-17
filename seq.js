@@ -4,7 +4,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onerror=()=>{alert('Please reboot browser');}
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102170\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102171\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
@@ -20,7 +20,6 @@ mbxli=()=>{let s={};for(let i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`
 synth=new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination()),
 toHz=x=>880*Math.pow(2,(Number(x)+main.sc)/12),//C5~C7
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
-i2n_={'0':'-9','1':'-7','2':'-5','3':'-4','4':'-2','5':'0','6':'2','7':'3','8':'5','9':'7','10':'8','11':'10','12':'12','13':'14','14':'15','5.5':'1','7.5':'4','8.5':'6','10.5':'9','11.5':'11','12.5':'13','0.5':'-8','1.5':'-6','3.5':'-3','4.5':'-1'},
 n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6',
 	'3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
 n2c=['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'],
@@ -57,7 +56,7 @@ scrset=()=>{
 urset=()=>{urstack[2]=[];urstack[0].push(urstack[1]);urstack[1]=JSON.stringify(main.scores);while(urstack[0].length>Number(localStorage.seq_undoMax))urstack[0].shift();llog('urstacked')},
 ccset=()=>{
 	calced={ind:[],p:[]};
-	calced.e=document.querySelectorAll('#disp .t');
+	calced.e=document.querySelectorAll('#disp .note');
 	calced.e.forEach(e=>{
 		calced.ind.push(e.dataset.ind);
 		calced.p.push(Number(e.dataset.p));
@@ -136,7 +135,7 @@ document.addEventListener('keydown',e=>{
 	}
 });
 disp.onclick=e=>{
-	if(e.target.classList.contains('t')){
+	if(e.target.classList.contains('note')){
 		Tone.start();llog(e.target.dataset.p);
 		e.target.style.background='#fea8';setTimeout(()=>e.target.style.background='',100);
 		Tone.Transport.position=p2pos(e.target.dataset.p);
@@ -213,12 +212,13 @@ a2d=()=>{
 			}
 			div.dataset.l=l;
 			if(typeof x=='string'){
+				div.dataset.note=x;
 				x.split(',').forEach(y=>{
 					let note=document.createElement('p');
 					note.style.bottom=((n2i[y]+1?Number(n2i[y]):15)*16)+'px';
 					div.appendChild(note);
 				});
-				div.classList.add('t');
+				div.classList.add('note');
 			}else core(x,div,0,l/x.length);
 		});
 	};
@@ -230,7 +230,7 @@ a2d=()=>{
 d2a=()=>{
 	const core=e=>
 		Array.from(e.children,x=>{
-			if(x.classList.contains('t'))return x.dataset.note;//Array.from(x.children,y=>i2n_[y.style.bottom.slice(0,-2)/16]).join(',');
+			if(x.classList.contains('note'))return x.dataset.note;//Array.from(x.children,y=>i2n_[y.style.bottom.slice(0,-2)/16]).join(',');
 			else if(x.classList.contains('sortW'))return core(x.children[0]);
 		});
 	console.time('d2a');
@@ -325,13 +325,3 @@ new Sortable(clip,{
 });
 new Sortable(trash,{group:'group_',onAdd:e=>e.item.parentNode.removeChild(e.item)});
 new Sortable(disp,sopt);
-
-/*
-let opt={
-	group:{name:"group_",pull:true,put:true},
-	draggable:".noteW",
-	animation:150,invertSwap:true,
-	delay:75,delayOnTouchOnly:false
-};
-document.querySelectorAll('#disp').forEach(x=>new Sortable(x,opt));
-*/

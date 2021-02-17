@@ -132,7 +132,7 @@
 			</label><label for="rawedit" class="grid bg" style="--bp:-400% -200%;">edit raw
 			</label><button onclick="alert('セーブ予定地');" class="grid bg" style="--bp:-600% -200%;">save
 			</button><button onclick="Tone.Transport.pause();styperf.textContent='';load();" class="grid bg" style="--bp:-500% -200%;">load
-			</button><button onclick="alert('エクスポート予定地');" class="grid bg" style="--bp:-00% -00%;">null
+			</button><button onclick="alert('エクスポート予定地');" class="grid bg" style="--bp:-400% -100%;">null
 			</button><button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow
 			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast
 			</button><button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-500% 0;">down
@@ -151,11 +151,11 @@
 	</select></label>
 	<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>alert(x))">cache del</button><br>
 	<div id="temp">
-		<div class="noteW t"></div><div class="noteW sortW"><div class="sort"></div></div>
+		<div class="noteW note"></div><div class="noteW sortW"><div class="sort"></div></div>
 	</div>
 	<div id="trash"></div>
 	<div id="clip">
-		<div class="noteW t">clip board</div>
+		<div class="noteW note">clip board</div>
 	</div>
 
 	<!--
