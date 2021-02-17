@@ -4,7 +4,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onerror=()=>{alert('Please reboot browser');}
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102150\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102170\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
@@ -103,7 +103,8 @@ document.querySelectorAll('#kb p').forEach((e,i)=>{
 				requestIdleCallback(()=>calced.e[curpos].querySelectorAll(`p[style*="${i*16}"]`).forEach(e=>calced.e[curpos].removeChild(e)));
 				arr=arr.filter(x=>x!=i2n[i]);
 			}
-			arr=`main.scores[${calced.ind[curpos].replace(/-/g,'][')}]='${arr.join(',')}';`;llog(arr);
+			arr=arr.join(',');calced.e[curpos].dataset.note=arr;
+			arr=`main.scores[${calced.ind[curpos].replace(/-/g,'][')}]='${arr}';`;llog(arr);
 			Function(arr)();seq.events=main.scores;urset();
 			e.classList.toggle('press');
 		}
@@ -229,7 +230,7 @@ a2d=()=>{
 d2a=()=>{
 	const core=e=>
 		Array.from(e.children,x=>{
-			if(x.classList.contains('t'))return Array.from(x.children,y=>i2n_[y.style.bottom.slice(0,-2)/16]).join(',');
+			if(x.classList.contains('t'))return x.dataset.note;//Array.from(x.children,y=>i2n_[y.style.bottom.slice(0,-2)/16]).join(',');
 			else if(x.classList.contains('sortW'))return core(x.children[0]);
 		});
 	console.time('d2a');
