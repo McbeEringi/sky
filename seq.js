@@ -4,7 +4,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onerror=()=>{alert('Please reboot browser');}
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102173\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102174\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
@@ -303,19 +303,13 @@ new Sortable(temp,{
 		pull:'clone',
 		put:false
 	},
-	onStart:()=>dispCur.style.opacity='0',onEnd:()=>dispCur.style.opacity='1',
+	onStart:()=>dispCur.style.opacity='0',
 	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
 	sort:false,draggable:'.noteW',
 	onEnd:e=>{
+		dispCur.style.opacity='1';
 		console.log(e);
-		if(e.pullMode=='clone'&&e.item.children.length)Array.from(e.item.children).forEach(e=>new Sortable(e,{
-			group:{
-				name:"group_",
-				pull:(to,from)=>to.el.id=='clip'?'clone':true,
-				put:true,
-			},
-			invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
-		}));
+		if(e.pullMode=='clone'&&e.item.children.length)Array.from(e.item.children,e=>new Sortable(e,sopt));
 	},
 });
 new Sortable(clip,{
