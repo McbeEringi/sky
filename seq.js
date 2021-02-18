@@ -283,6 +283,7 @@ exp=()=>{
 
 },
 init=()=>{
+	Tone.Transport.pause();
 	if(!main)main={name:'',sc:0,bpm:120,ts:4,scores:new Array(16).fill('')};
 	rawedit.checked=false;rawtxt.value='';disp.textContent='Loading…';
 	urstack=[[],JSON.stringify(main.scores),[]];
