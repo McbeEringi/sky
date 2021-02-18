@@ -190,7 +190,7 @@ const sopt={
 	},
 	onStart:()=>dispCur.style.opacity='0',onEnd:()=>dispCur.style.opacity='1',
 	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
-	onSort:e=>{if(e.to.id!='clip')requestIdleCallback(()=>{d2a();d2d();curset();});}
+	onSort:e=>{if(e.to.id!='clip')requestIdleCallback(()=>{d2d();curset();d2a();});}
 },
 a2d=()=>{
 	const core=(scores,e,b,l=1)=>{
