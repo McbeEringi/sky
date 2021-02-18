@@ -3,8 +3,8 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 //window.onerror=()=>{alert('Please reboot browser');}
 
-let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102181\nMIT License\n',
+let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip;
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102182\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
@@ -32,7 +32,13 @@ tsset=()=>{let tmp=Number(ts_.value);if(tmp){main.ts=tmp;Tone.Transport.timeSign
 	llog(main.ts);
 },
 nameset=()=>{if(name_.value)main.name=name_.value;else name_.value=main.name;llog(main.name);},
-curset=()=>dispCur.style.left=calced.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px',
+curset=()=>{
+	let tmp=calced.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX;
+	let dbpds=dispBar.clientWidth/dispScr.scrollWidth;
+	dispCur.style.left=tmp+'px';
+	dispBar.children[1].style.width=(16*dbpds)+'px';
+	dispBar.children[1].style.left=(tmp*dbpds)+'px';
+},
 curpset=p=>{
 	if(typeof p=='number'&&isFinite(p)){curpos=calced.p.indexOf(p);}
 	else{p=pos2p(Tone.Transport.position)%main.scores.length;curpos=calced.p.indexOf(Math.floor(p));while(p>=calced.p[curpos])curpos++;curpos--;}
@@ -74,7 +80,7 @@ tstep=x=>{
 	Tone.Transport.pause();styperf.textContent='';
 	curpos+=x;
 	if(curpos<0)curpos+=calced.length;else if(curpos>=calced.length)curpos-=calced.length;
-	dispCur.style.left=calced.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX+'px';
+	curset();
 	Tone.Transport.position=p2pos(calced.p[curpos]);
 	scrset();
 	let note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
@@ -147,7 +153,18 @@ disp.onclick=e=>{
 		if(rawedit.checked)rawedit.onchange();
 	}
 };
-dispScr.onscroll=e=>{if(userscr[0])userscr[0]=false;else userscr[1]=true;};
+dispScr.onscroll=e=>{
+	if(userscr[0])userscr[0]=false;else userscr[1]=true;
+	if(screxet)return;
+	const tmp=()=>{
+		screxet=null;
+		let dbpds=dispBar.clientWidth/dispScr.scrollWidth;
+		dispBar.children[0].style.width=(dispBar.clientWidth*dbpds)+'px';
+		dispBar.children[0].style.left=(dispScr.scrollLeft*dbpds)+'px';
+		//dispBar.children[0].style.opacity=userscr[1]?1:0.2;
+	};
+	tmp();screxet=setTimeout(tmp,100);
+};
 rawedit.onchange=()=>{
 	if(rawedit.checked){
 		Tone.Transport.pause();styperf.textContent='';
@@ -229,7 +246,7 @@ a2d=()=>{
 	console.time('a2d');
 	core(main.scores,disp,1);
 	console.timeEnd('a2d');
-	ccset();
+	ccset();dispScr.onscroll();
 },
 d2a=()=>{
 	const core=e=>

@@ -33,21 +33,20 @@
 	<script src="sample.js"></script>
 	<script>let ifwebp=new Image();ifwebp.onerror=()=>document.body.classList.add('nowebp');ifwebp.src='img/seq.webp';</script>
 	<style>
-		:root{user-select:none;-webkit-user-select:none;}/*::-webkit-scrollbar{display:none;}*/
+		:root{user-select:none;-webkit-user-select:none;}
 		html,body{height:100%;margin:0;position:relative;}.clear_fix::after{content:"";clear:both;display:block;}
 
-		.dispPanel{position:relative;width:100%;height:240px;border:6px solid #0001;border-left:none;border-right:none;touch-action:manipulation;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+		.dispPanel{position:relative;width:100%;border-top:6px solid #0004;touch-action:manipulation;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
 			background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 		.dispPanel::after{position:absolute;line-height:16px;font-size:12px;opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;top:0;word-break:break-all;content:"CBAGFEDCBAGFEDC";}
-		#dispScr>*{position:absolute;line-height:16px;font-size:12px;}
-		#dispScr{width:100%;height:100%;overflow:scroll;position:relative;}#disp{height:100%;padding:0 64px 0 16px;white-space:nowrap;}
+		#dispScr>*{position:absolute;line-height:16px;font-size:12px;}#dispScr::-webkit-scrollbar{display:none;}
+		#dispScr{width:100%;height:240px;overflow:scroll;position:relative;}#disp{height:100%;padding:0 64px 0 16px;white-space:nowrap;}
 		#dispCur{width:16px;height:100%;background:#bff8;left:17px;transition:.1s;border-radius:4px;z-index:1;pointer-events:none;}
+		#dispBar{height:6px;position:relative;overflow:hidden;}#dispBar>div{width:0;height:100%;position:absolute;background:#aef;transition:.1s;}#dispBar>div:first-child{background:#0004;transition:.2s;}
 		.noteW,.sort{min-width:16px;height:100%;min-height:16px;}
 		.noteW{display:inline-block;white-space:nowrap;vertical-align:bottom;position:relative;margin-left:1px;border-radius:4px;text-align:center;background:#0004;color:#fff8;}
 		.noteW p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;z-index:2;}
 		.sortW{overflow:hidden;}.sort{;margin:0 8px;padding:0 8px;box-sizing:border-box;background:#fff4;box-shadow:0 0 8px #fff8;}
-		#rawtxt{resize:none;width:100%;height:100%;padding:0;border:0;margin:0;position:absolute;top:0;left:0;right:0;bottom:0;background:#0000;display:none;font-family:monospace;font-size:16px;color:#fff;}
-		#rawtxt::placeholder,#name_::placeholder{color:#fff4;}
 
 		.uiPanel{float:right;clear:right;max-width:312px;}
 		.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
@@ -64,6 +63,8 @@
 		#kb p:nth-child(2n):not(.c)::after{background-position:-200% 0;}
 		#kb p.c::after{background-position:0 0;}
 		#kb p.press::after{transform:rotateY(360deg)scale(.8);}
+		#rawtxt{resize:none;width:100%;height:100%;padding:0;border:0;margin:0;position:absolute;top:0;left:0;right:0;bottom:0;background:#0000;display:none;font-family:monospace;font-size:16px;color:#fff;}
+		#rawtxt::placeholder,#name_::placeholder{color:#fff4;}
 
 		body>input[type="checkbox"]{display:none;}
 		#uiflip:checked~* .uiPanel{float:left;clear:left;}#uiflip:checked~* .kbPanel{float:right;clear:right;}
@@ -108,6 +109,7 @@
 
 	<div class="dispPanel">
 		<div id="dispScr"><div id="dispCur"></div><div id="disp">Please wait or reboot browser…</div></div>
+		<div id="dispBar"><div></div><div></div></div>
 		<button onclick="curct();" class="grid bg" style="--bp:-300% -100%;position:absolute;top:0;right:0;width:32px;height:32px;margin:2px 4px;opacity:.8;">scroll to cursor</button>
 	</div>
 	<div class="clear_fix">
