@@ -153,10 +153,10 @@ disp.onclick=e=>{
 		if(rawedit.checked)rawedit.onchange();
 	}
 };
-dispScr.addEventListener('wheel',e=>{
+dispScr.onwheel=e=>{
 	e.preventDefault();
 	dispScr.scrollLeft+=e.deltaX+e.deltaY;
-},{passive:true});
+};
 dispScr.onscroll=e=>{
 	if(userscr[0])userscr[0]=false;else userscr[1]=true;
 	if(screxet)return;
