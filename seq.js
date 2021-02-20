@@ -4,7 +4,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onerror=()=>{alert('Please reboot browser');}
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102182\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102200\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
@@ -153,6 +153,10 @@ disp.onclick=e=>{
 		if(rawedit.checked)rawedit.onchange();
 	}
 };
+dispScr.addEventListener('wheel',e=>{
+	e.preventDefault();
+	dispScr.scrollLeft+=e.deltaX+e.deltaY;
+},{passive:true});
 dispScr.onscroll=e=>{
 	if(userscr[0])userscr[0]=false;else userscr[1]=true;
 	if(screxet)return;
