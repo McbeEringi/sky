@@ -4,7 +4,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onerror=()=>{alert('Please reboot browser');}
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102240\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102241\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
@@ -53,10 +53,13 @@ scrset=()=>{
 	let dcbl=dispCur.getBoundingClientRect().left+window.scrollX;
 	if(16<dcbl&&dcbl<dispScr.clientWidth-64)userscr[1]=false;
 	if(!userscr[1]){
-		if(dcbl>=dispScr.clientWidth-64){userscr[0]=true;dispScr.scrollLeft+=dcbl-16;}
-		else if(dcbl<=16){userscr[0]=true;dispScr.scrollLeft+=dcbl+64-dispScr.clientWidth;}
-		if(curpos==0){userscr[0]=true;dispScr.scrollLeft=0;}
-		else if(curpos==calced.length-1){userscr[0]=true;dispScr.scrollLeft=dispScr.scrollWidth-dispScr.clientWidth;}
+		//userscr[0]=true;dispCur.scrollIntoView();
+		userscr[0]=true;
+		if(curpos==0)dispScr.scrollLeft=0;
+		else if(curpos==calced.length-1)dispScr.scrollLeft=dispScr.scrollWidth;
+		else if(dcbl>=dispScr.clientWidth-64)dispScr.scrollLeft+=dcbl-16;
+		else if(dcbl<=16)dispScr.scrollLeft-=dispScr.clientWidth-dcbl-64;
+		else userscr[0]=false;
 	}
 },
 urset=()=>{urstack[2]=[];urstack[0].push(urstack[1]);urstack[1]=JSON.stringify(main.scores);while(urstack[0].length>Number(localStorage.seq_undoMax))urstack[0].shift();llog('urstacked')},
@@ -80,9 +83,8 @@ tstep=x=>{
 	Tone.Transport.pause();styperf.textContent='';
 	curpos+=x;
 	if(curpos<0)curpos+=calced.length;else if(curpos>=calced.length)curpos-=calced.length;
-	curset();
 	Tone.Transport.position=p2pos(calced.p[curpos]);
-	scrset();
+	curset();setTimeout(scrset,100);
 	let note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
 },
 curct=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;},
@@ -125,10 +127,10 @@ document.addEventListener('keydown',e=>{
 	if(!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){
 		switch(e.code){
 			case'Space':e.preventDefault();ttoggle();break;
-			case'ArrowUp':e.preventDefault();if(e.shiftKey)bpm_.nextElementSibling.click();else sc_.value=++main.sc;break;
-			case'ArrowDown':e.preventDefault();if(e.shiftKey)bpm_.previousElementSibling.click();else sc_.value=--main.sc;break;
-			case'ArrowLeft':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value--;bpm_.value=--main.bpm;}else tstep(-1);break;
-			case'ArrowRight':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value++;bpm_.value=++main.bpm;}else tstep(1);break;
+			case'ArrowUp':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value++;bpm_.value=++main.bpm;}else sc_.value=++main.sc;break;
+			case'ArrowDown':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value--;bpm_.value=--main.bpm;}else sc_.value=--main.sc;break;
+			case'ArrowLeft':e.preventDefault();if(e.shiftKey)tstep(-10);else tstep(-1);break;
+			case'ArrowRight':e.preventDefault();if(e.shiftKey)tstep(10);else tstep(1);break;
 			case'KeyZ':if(e.metaKey){e.preventDefault();urdo(e.shiftKey?1:-1);}break;
 			default:
 				const keymap={
