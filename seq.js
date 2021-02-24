@@ -4,7 +4,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onerror=()=>{alert('Please reboot browser');}
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102241\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102242\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
@@ -51,7 +51,7 @@ kbset=(x=calced.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores).split(','
 },
 scrset=()=>{
 	let dcbl=dispCur.getBoundingClientRect().left+window.scrollX;
-	if(16<dcbl&&dcbl<dispScr.clientWidth-64)userscr[1]=false;
+	if(16<dcbl&&dcbl<dispScr.clientWidth-64&&userscr[1]){userscr[1]=false;dispBar.children[0].style.opacity=.5;}
 	if(!userscr[1]){
 		//userscr[0]=true;dispCur.scrollIntoView();
 		userscr[0]=true;
@@ -167,7 +167,7 @@ dispScr.onscroll=e=>{
 		let dbpds=dispBar.clientWidth/dispScr.scrollWidth;
 		dispBar.children[0].style.width=(dispBar.clientWidth*dbpds)+'px';
 		dispBar.children[0].style.left=(dispScr.scrollLeft*dbpds)+'px';
-		//dispBar.children[0].style.opacity=userscr[1]?1:0.2;
+		if(userscr[1])dispBar.children[0].style.opacity=1;
 	};
 	tmp();screxet=setTimeout(tmp,100);
 };
@@ -180,7 +180,6 @@ rawedit.onchange=()=>{
 			let ind=0;
 			for(let i=0;i<curpos*2+1;i++)ind=rawtxt.value.indexOf('"',ind+1);
 			rawtxt.setSelectionRange(ind+1,rawtxt.value.indexOf('"',ind+1));
-			//window.getSelection().getRangeAt(0).getBoundingClientRect();
 		});
 	}else{
 		rawtxt.value='';
