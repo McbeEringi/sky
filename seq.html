@@ -30,7 +30,6 @@
 </head>
 <body>
 	<script src="style.js" async></script>
-	<script src="sample.js"></script>
 	<script>let ifwebp=new Image();ifwebp.onerror=()=>document.body.classList.add('nowebp');ifwebp.src='img/seq.webp';</script>
 	<style>
 		:root{user-select:none;-webkit-user-select:none;}
@@ -149,15 +148,10 @@
 		</div>
 	</div>
 
-	<label>sample: <select id="slc" onchange="main=sample[this.value];init();">
-		<option value="0">新宝島</option>
-		<option value="1">LINE</option>
-		<option value="2">\ｵﾌﾛｶﾞﾜｷﾏｼﾀ/</option>
-		<option value="3">前前前世</option>
-		<option value="4" selected>nyan-cat</option>
-		<option value="5">LOSER</option>
-	</select></label>
-	<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>alert(x))">cache del</button><br>
+	<button onclick="idb.result.transaction('stuff','readwrite').objectStore('stuff').get('seq_ezsave').onsuccess=e=>{main=e.target.result;init();focus();};">recover</button>
+	<button onclick="fetch('sample.json').then(x=>x.json()).then(x=>x.forEach(y=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>llog(y.name)));">import sample</button>
+	<button onclick="datafx.delAll();">del all sheets</button>
+	<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>alert(x));">cache del</button>
 
 
 	<!--

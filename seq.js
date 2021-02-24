@@ -1,10 +1,8 @@
 'use strict';
 alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';alcb.checked=true;}
-//window.onbeforeunload=e=>{e.preventDefault();return'';};
-//window.onerror=()=>{alert('Please reboot browser');}
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102244\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102246\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
@@ -285,7 +283,13 @@ d2d=(x=disp)=>{
 	console.timeEnd('d2d');
 	ccset();
 },
+ezsave=()=>{
+	let req=idb.result.transaction('stuff','readwrite').objectStore('stuff').put(main,'seq_ezsave');
+	req.onerror=e=>console.log('ezsave error',e.target.error,e);
+	req.onsuccess=e=>console.log('ezsaved');
+},
 save=()=>{
+	main.name=name_.value='untitled '+new Date().toLocaleString();
 	let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
 	req.onerror=e=>{
 		console.log(e.target.error);
@@ -340,7 +344,7 @@ datafx={
 		req.onsuccess=load;
 		req.onerror=e=>albox.textContent=`⚠️\ncoudnt delete datas.\n\n${e.target.error}`;
 	},
-	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear()
+	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>llog('delall done')
 },
 init=()=>{
 	Tone.Transport.pause();
@@ -348,17 +352,23 @@ init=()=>{
 	rawedit.checked=false;rawtxt.value='';disp.textContent='Loading…';
 	urstack=[[],JSON.stringify(main.scores),[]];
 	seq.events=main.scores;sc_.value=main.sc;
-	bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;nameset();
+	bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;
 	//Tone.Transport.swing=1;
 	requestIdleCallback(a2d);
 	requestIdleCallback(tstop);
 };
 
 if(!localStorage.seq_undoMax)localStorage.seq_undoMax=48;
-main=sample[slc.value];
 log.textContent=info;
-init();
-focus();
+/*{
+	console.log(idb)
+	let req=idb.result.transaction('stuff','readwrite').objectStore('stuff').get('seq_ezsave');
+	req.onsuccess=e=>{main=e.target.result;init();focus();};
+	req.onerror=e=>{init();focus();};
+}*/
+init();focus();
+window.onbeforeunload=e=>{ezsave();e.preventDefault();return'';};setInterval(ezsave,60000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='hidden')ezsave();});
 
 
 new Sortable(temp,{
