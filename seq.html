@@ -139,7 +139,7 @@
 			</label><label for="kbfixed" class="grid bg" style="--bp:-200% -200%;">practice
 			</label><label for="rawedit" class="grid bg" style="--bp:-400% -200%;">edit raw
 			</label><button onclick="save();" class="grid bg" style="--bp:-600% -200%;">save
-			</button><button onclick="Tone.Transport.pause();styperf.textContent='';load();" class="grid bg" style="--bp:-500% -200%;">load
+			</button><button onclick="Tone.Transport.pause();styperf.textContent='';alert('Loading…','none');load();" class="grid bg" style="--bp:-500% -200%;">load
 			</button><button id="ibtn" class="grid bg" style="--bp:-300% 0;">info
 			</button><button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow
 			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast

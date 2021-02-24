@@ -4,7 +4,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onerror=()=>{alert('Please reboot browser');}
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102243\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102244\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
@@ -290,52 +290,55 @@ save=()=>{
 	req.onerror=e=>{
 		console.log(e.target.error);
 		req=idb.result.transaction('seq','readwrite').objectStore('seq').put(main);
-		req.onerror=e=>alert(`⚠️\noverwrite failed.\n${e.target.error}`);
-		req.onsuccess=()=>alert('✅\noverwrited.');
+		req.onerror=e=>alert(`⚠️\noverwrite save failed.\n\n${e.target.error}`);
+		req.onsuccess=()=>alert('✅\noverwrite saved.');
 	};
 	req.onsuccess=()=>{alert('✅\nsaved.')};
-
 },
 load=()=>{
-	alert('Loading…','none');
 	let req=idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys();
 	req.onsuccess=e=>{
 		console.log(e.target.result);
 		albox.textContent='';
 		albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="main=null;init();alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
+		datafx.tmp=e.target.result;
 		e.target.result.forEach((x,i)=>requestIdleCallback(()=>{
-			let div=document.createElement('div');
-			albox.insertAdjacentHTML('beforeend',`<div>${x}<br>${'xx/xx/xx'}<br><button
-				onclick="datafx.open('${x}');"class="grid bg" style="--bp:0 -100%;">open</button><button
-				onclick="datafx.dupe('${x}');"class="grid bg" style="--bp:0 -300%;">dupe</button><button
-				onclick="datafx.exp('${x}');" class="grid bg" style="--bp:-400% -100%;">export</button><button
+			albox.insertAdjacentHTML('beforeend',`<div>${x}<br><br><button
+				onclick="datafx.open(${i});"class="grid bg" style="--bp:0 -100%;">open</button><button
+				onclick="datafx.dupe(${i});"class="grid bg" style="--bp:0 -300%;">dupe</button><button
+				onclick="datafx.exp(${i});" class="grid bg" style="--bp:-400% -100%;">export</button><button
 				onclick="if(this.style.left=='0px'){this.style.left='52px';this.textContent='really?';this.classList.add('showtxt');
-				setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}else{datafx.del('${x}');}"
+				setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}else{datafx.del('${i}');}"
 				class="grid bg" style="--bp:-700% -200%;position:relative;left:0px;transition:left .2s;">delete</button></div>`
 			);
 		}));
 	};
 	req.onerror=e=>{
-		albox.textContent=`coudnt load datas.\n${e.target.error}`;
+		albox.textContent=`⚠️\ncoudnt load datas.\n\n${e.target.error}`;
 		albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="main=null;init();alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
 	};
 },
 datafx={
-	get:(x,sfx,efx=e=>albox.textContent=`coudnt load datas.\n${e.target.error}`)=>{
-		let req=idb.result.transaction('seq','readwrite').objectStore('seq').get(x);
-		req.onsuccess=sfx;req.onerror=efx;
+	tmp:[],
+	get:function(i,sfx,efx){
+		console.log(this.tmp[i]);
+		let req=idb.result.transaction('seq','readwrite').objectStore('seq').get(this.tmp[i]);
+		req.onsuccess=sfx;req.onerror=efx||(e=>albox.textContent=`⚠️\ncoudnt load datas.\n\n${e.target.error}`);
 	},
-	open:x=>datafx.get(x,e=>{main=e.target.result;init();alcb.checked=false;}),
-	dupe:x=>{
-		alert('dupe')
+	open:i=>datafx.get(i,e=>{main=e.target.result;init();alcb.checked=false;}),
+	dupe:i=>datafx.get(i,e=>{
+		let dup=e.target.result;dup.name+=' copy';
+		let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(dup);
+		req.onsuccess=load;
+		req.onerror=e=>albox.textContent=`⚠️\ncoudnt duplicate datas.\n\n${e.target.error}`;
+	}),
+	exp:i=>{
+		alert('export')
 	},
-	exp:x=>{
-		alert('exp')
-	},
-	del:x=>{
-		alert('del')
-		/*let req=idb.result.transaction('seq','readwrite').objectStore('seq').delete(x);
-		req.onsuccess=sfx;req.onerror=efx;*/
+	del:function(i){
+		let req=idb.result.transaction('seq','readwrite').objectStore('seq').delete(this.tmp[i]);
+		req.onsuccess=load;
+		req.onerror=e=>albox.textContent=`⚠️\ncoudnt delete datas.\n\n${e.target.error}`;
 	},
 	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear()
 },
