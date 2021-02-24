@@ -178,6 +178,7 @@ rawedit.onchange=()=>{
 			let ind=0;
 			for(let i=0;i<curpos*2+1;i++)ind=rawtxt.value.indexOf('"',ind+1);
 			rawtxt.setSelectionRange(ind+1,rawtxt.value.indexOf('"',ind+1));
+			//window.getSelection().getRangeAt(0).getBoundingClientRect();
 		});
 	}else{
 		rawtxt.value='';
