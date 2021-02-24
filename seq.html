@@ -40,9 +40,10 @@
 			background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 		.dispPanel::after{position:absolute;line-height:16px;font-size:12px;opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;top:0;word-break:break-all;content:"CBAGFEDCBAGFEDC";}
 		#dispScr>*{position:absolute;line-height:16px;font-size:12px;}#dispScr::-webkit-scrollbar{display:none;}
-		#dispScr{width:100%;height:240px;overflow:scroll;position:relative;scrollbar-width:none;}#disp{height:100%;padding:0 64px 0 16px;white-space:nowrap;}
+		#dispScr{width:100%;height:240px;overflow:scroll;position:relative;scrollbar-width:none;}#disp{height:100%;min-width:100%;padding:0 64px 0 16px;box-sizing:border-box;white-space:nowrap;}
 		#dispCur{width:16px;height:100%;background:#bff8;left:17px;transition:.1s;border-radius:4px;z-index:1;pointer-events:none;}
 		#dispBar{height:6px;position:relative;overflow:hidden;}#dispBar>div{width:0;height:100%;position:absolute;background:#aef;transition:.1s;}#dispBar>div:first-child{background:#0004;transition:.2s;}
+		#curct{--bp:-300% -100%;position:absolute;top:0;right:0;width:32px;height:32px;margin:2px 4px;opacity:.8;}
 		.noteW,.sort{min-width:16px;height:100%;min-height:16px;}
 		.noteW{display:inline-block;white-space:nowrap;vertical-align:bottom;position:relative;margin-left:1px;border-radius:4px;text-align:center;background:#0004;color:#fff8;}
 		.noteW p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;z-index:2;}
@@ -110,7 +111,7 @@
 	<div class="dispPanel">
 		<div id="dispScr"><div id="dispCur"></div><div id="disp">Please wait or reboot browser…</div></div>
 		<div id="dispBar"><div></div><div></div></div>
-		<button onclick="curct();" class="grid bg" style="--bp:-300% -100%;position:absolute;top:0;right:0;width:32px;height:32px;margin:2px 4px;opacity:.8;">scroll to cursor</button>
+		<button id="curct" class="grid bg">scroll to cursor</button>
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel">
@@ -137,7 +138,7 @@
 			        <label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
 			</label><label for="kbfixed" class="grid bg" style="--bp:-200% -200%;">practice
 			</label><label for="rawedit" class="grid bg" style="--bp:-400% -200%;">edit raw
-			</label><button onclick="alert('セーブ予定地');" class="grid bg" style="--bp:-600% -200%;">save
+			</label><button onclick="save();" class="grid bg" style="--bp:-600% -200%;">save
 			</button><button onclick="Tone.Transport.pause();styperf.textContent='';load();" class="grid bg" style="--bp:-500% -200%;">load
 			</button><button id="ibtn" class="grid bg" style="--bp:-300% 0;">info
 			</button><button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow

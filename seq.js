@@ -4,7 +4,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onerror=()=>{alert('Please reboot browser');}
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102242\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102243\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
@@ -51,7 +51,7 @@ kbset=(x=calced.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores).split(','
 },
 scrset=()=>{
 	let dcbl=dispCur.getBoundingClientRect().left+window.scrollX;
-	if(16<dcbl&&dcbl<dispScr.clientWidth-64&&userscr[1]){userscr[1]=false;dispBar.children[0].style.opacity=.5;}
+	if(16<dcbl&&dcbl<dispScr.clientWidth-64&&userscr[1]){userscr[1]=false;curct.style.display='none';}
 	if(!userscr[1]){
 		//userscr[0]=true;dispCur.scrollIntoView();
 		userscr[0]=true;
@@ -87,7 +87,6 @@ tstep=x=>{
 	curset();setTimeout(scrset,100);
 	let note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
 },
-curct=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;},
 urdo=x=>{
 	let tmp=false;
 	while(x<0){if(urstack[0].length){urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();x++;tmp=true;llog('undo');}else{domshake(undobtn);break;}}
@@ -98,7 +97,8 @@ urdo=x=>{
 },
 domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('shake');};
 
-ibtn.onclick=()=>{alert(info,' ');albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><label for="logcb" class="grid showtxt">debuglog</label>`;}
+ibtn.onclick=()=>{alert(info,' ');albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><label for="logcb" class="grid showtxt">debuglog</label>`;};
+curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;};
 document.querySelectorAll('#kb p').forEach((e,i)=>{
 	const keyfx=ev=>{
 		ev.preventDefault();Tone.start();
@@ -127,8 +127,8 @@ document.addEventListener('keydown',e=>{
 	if(!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){
 		switch(e.code){
 			case'Space':e.preventDefault();ttoggle();break;
-			case'ArrowUp':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value++;bpm_.value=++main.bpm;}else sc_.value=++main.sc;break;
-			case'ArrowDown':e.preventDefault();if(e.shiftKey){Tone.Transport.bpm.value--;bpm_.value=--main.bpm;}else sc_.value=--main.sc;break;
+			case'ArrowUp':e.preventDefault();if(e.shiftKey)bpm_.parentNode.nextElementSibling.onclick();else sc_.value=++main.sc;break;
+			case'ArrowDown':e.preventDefault();if(e.shiftKey)bpm_.parentNode.previousElementSibling.onclick();else sc_.value=--main.sc;break;
 			case'ArrowLeft':e.preventDefault();if(e.shiftKey)tstep(-10);else tstep(-1);break;
 			case'ArrowRight':e.preventDefault();if(e.shiftKey)tstep(10);else tstep(1);break;
 			case'KeyZ':if(e.metaKey){e.preventDefault();urdo(e.shiftKey?1:-1);}break;
@@ -167,7 +167,7 @@ dispScr.onscroll=e=>{
 		let dbpds=dispBar.clientWidth/dispScr.scrollWidth;
 		dispBar.children[0].style.width=(dispBar.clientWidth*dbpds)+'px';
 		dispBar.children[0].style.left=(dispScr.scrollLeft*dbpds)+'px';
-		if(userscr[1])dispBar.children[0].style.opacity=1;
+		if(userscr[1])curct.style.display='block';
 	};
 	tmp();screxet=setTimeout(tmp,100);
 };
@@ -286,24 +286,58 @@ d2d=(x=disp)=>{
 	ccset();
 },
 save=()=>{
+	let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
+	req.onerror=e=>{
+		console.log(e.target.error);
+		req=idb.result.transaction('seq','readwrite').objectStore('seq').put(main);
+		req.onerror=e=>alert(`⚠️\noverwrite failed.\n${e.target.error}`);
+		req.onsuccess=()=>alert('✅\noverwrited.');
+	};
+	req.onsuccess=()=>{alert('✅\nsaved.')};
 
 },
 load=()=>{
 	alert('Loading…','none');
-	albox.textContent='';
-	albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="main=null;init();alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
-	new Array(20).fill({name:'example ',lastm:'xx/xx/xx'}).forEach((x,i)=>{
-		albox.insertAdjacentHTML('beforeend',`<div>${x.name+i}<br>${x.lastm}<br><button
-			onclick="alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button><button
-			onclick="alert('dupe');"class="grid bg" style="--bp:0 -300%;">dupe</button><button
-			onclick="alert('export');" class="grid bg" style="--bp:-400% -100%;">export</button><button
-			onclick="if(this.style.left=='0px'){this.style.left='52px';this.textContent='really?';this.classList.add('showtxt');
-			setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}else{alert('del');}"
-			class="grid bg" style="--bp:-700% -200%;position:relative;left:0px;transition:left .2s;">delete</button></div>`);
-	});
+	let req=idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys();
+	req.onsuccess=e=>{
+		console.log(e.target.result);
+		albox.textContent='';
+		albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="main=null;init();alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
+		e.target.result.forEach((x,i)=>requestIdleCallback(()=>{
+			let div=document.createElement('div');
+			albox.insertAdjacentHTML('beforeend',`<div>${x}<br>${'xx/xx/xx'}<br><button
+				onclick="datafx.open('${x}');"class="grid bg" style="--bp:0 -100%;">open</button><button
+				onclick="datafx.dupe('${x}');"class="grid bg" style="--bp:0 -300%;">dupe</button><button
+				onclick="datafx.exp('${x}');" class="grid bg" style="--bp:-400% -100%;">export</button><button
+				onclick="if(this.style.left=='0px'){this.style.left='52px';this.textContent='really?';this.classList.add('showtxt');
+				setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}else{datafx.del('${x}');}"
+				class="grid bg" style="--bp:-700% -200%;position:relative;left:0px;transition:left .2s;">delete</button></div>`
+			);
+		}));
+	};
+	req.onerror=e=>{
+		albox.textContent=`coudnt load datas.\n${e.target.error}`;
+		albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="main=null;init();alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
+	};
 },
-exp=()=>{
-
+datafx={
+	get:(x,sfx,efx=e=>albox.textContent=`coudnt load datas.\n${e.target.error}`)=>{
+		let req=idb.result.transaction('seq','readwrite').objectStore('seq').get(x);
+		req.onsuccess=sfx;req.onerror=efx;
+	},
+	open:x=>datafx.get(x,e=>{main=e.target.result;init();alcb.checked=false;}),
+	dupe:x=>{
+		alert('dupe')
+	},
+	exp:x=>{
+		alert('exp')
+	},
+	del:x=>{
+		alert('del')
+		/*let req=idb.result.transaction('seq','readwrite').objectStore('seq').delete(x);
+		req.onsuccess=sfx;req.onerror=efx;*/
+	},
+	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear()
 },
 init=()=>{
 	Tone.Transport.pause();

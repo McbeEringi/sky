@@ -1,8 +1,9 @@
-const idbName='sky_idb',idbVer=1;
+const idbName='sky_idb',idbVer=2;
 let idb=indexedDB.open(idbName,idbVer);
 idb.onupgradeneeded=e=>{
 	console.log('idb upgrade');
-	idb.result.createObjectStore('stuff');
+	try{idb.result.createObjectStore('stuff');}catch(e){}
+	try{idb.result.createObjectStore('seq',{keyPath:'name'});}catch(e){}
 }
 idb.onsuccess=e=>{console.log('idb open success');if(!['0',undefined].includes(localStorage.sky_bgmode))bgset();};
 idb.onerror=e=>{console.log('idb open error: '+idb.errorCode);localStorage.sky_bgmode='0';bgset();};
