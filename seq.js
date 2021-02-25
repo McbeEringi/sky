@@ -3,7 +3,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102250\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102251\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
@@ -286,11 +286,6 @@ d2d=(x=disp)=>{
 	console.timeEnd('d2d');
 	ccset();
 },
-ezsave=()=>{
-	let req=idb.result.transaction('stuff','readwrite').objectStore('stuff').put(main,'seq_ezsave');
-	req.onerror=e=>console.log('ezsave error',e.target.error,e);
-	req.onsuccess=e=>console.log('ezsaved');
-},
 save=()=>{
 	if(!main.name)main.name=name_.value='untitled '+new Date().toLocaleString();
 	let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
@@ -359,17 +354,12 @@ init=()=>{
 	//Tone.Transport.swing=1;
 	requestIdleCallback(a2d);
 	requestIdleCallback(tstop);
-};
+},
+ezsave=()=>localStorage.seq_ezsave=JSON.stringify(main);
 
 if(!localStorage.seq_undoMax)localStorage.seq_undoMax=48;
 log.textContent=info;
-window.onload=()=>{
-	console.log(idb)
-	let req=idb.result.transaction('stuff','readwrite').objectStore('stuff').get('seq_ezsave');
-	req.onsuccess=e=>{main=e.target.result;init();focus();};
-	req.onerror=e=>{init();focus();};
-};
-//init();focus();
+if(localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);init();focus();
 setInterval(ezsave,60000);
 document.onvisibilitychange=()=>{if(document.visibilityState=='hidden')ezsave();};
 
