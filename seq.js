@@ -1,5 +1,6 @@
 'use strict';
 alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';alcb.checked=true;}
+//window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip;
 const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102250\nMIT License\n',
@@ -72,8 +73,10 @@ ccset=()=>{
 },
 ttoggle=()=>{
 	Tone.start();
-	styperf.textContent=Tone.Transport.state=='started'?'':'#dispCur,#kb p::before,#kb p::after{transition: none !important;}';
-	Tone.Transport[Tone.Transport.state=='started'?'pause':'start']();
+	let state=Tone.Transport.state=='started';
+	styperf.textContent=state?'':'#dispCur,#kb p::before,#kb p::after{transition: none !important;}';
+	if(!state)ezsave();
+	Tone.Transport.toggle();
 },
 tstop=()=>{Tone.Transport.stop();styperf.textContent='';curpos=0;curset();scrset();kbset();},
 tstep=x=>{
@@ -367,7 +370,7 @@ window.onload=()=>{
 	req.onerror=e=>{init();focus();};
 };
 //init();focus();
-window.onbeforeunload=e=>{ezsave();e.preventDefault();return'';};setInterval(ezsave,60000);
+setInterval(ezsave,60000);
 document.onvisibilitychange=()=>{if(document.visibilityState=='hidden')ezsave();};
 
 
