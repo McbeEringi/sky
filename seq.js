@@ -2,7 +2,7 @@
 alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';alcb.checked=true;}
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102246\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102250\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
@@ -360,15 +360,15 @@ init=()=>{
 
 if(!localStorage.seq_undoMax)localStorage.seq_undoMax=48;
 log.textContent=info;
-/*{
+window.onload=()=>{
 	console.log(idb)
 	let req=idb.result.transaction('stuff','readwrite').objectStore('stuff').get('seq_ezsave');
 	req.onsuccess=e=>{main=e.target.result;init();focus();};
 	req.onerror=e=>{init();focus();};
-}*/
-init();focus();
-window.onbeforeunload=e=>{ezsave();e.preventDefault();return'';};setInterval(ezsave,60000);
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='hidden')ezsave();});
+};
+//init();focus();
+window.onbeforeunload=e=>{ezsave();e.preventDefault();return'';};
+window.onpagehide=ezsave;setInterval(ezsave,60000);
 
 
 new Sortable(temp,{
