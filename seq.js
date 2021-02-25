@@ -289,7 +289,7 @@ ezsave=()=>{
 	req.onsuccess=e=>console.log('ezsaved');
 },
 save=()=>{
-	main.name=name_.value='untitled '+new Date().toLocaleString();
+	if(!main.name)main.name=name_.value='untitled '+new Date().toLocaleString();
 	let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
 	req.onerror=e=>{
 		console.log(e.target.error);
