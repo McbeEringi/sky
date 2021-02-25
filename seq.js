@@ -367,8 +367,8 @@ window.onload=()=>{
 	req.onerror=e=>{init();focus();};
 };
 //init();focus();
-window.onbeforeunload=e=>{ezsave();e.preventDefault();return'';};
-window.onpagehide=ezsave;setInterval(ezsave,60000);
+window.onbeforeunload=e=>{ezsave();e.preventDefault();return'';};setInterval(ezsave,60000);
+document.onvisibilitychange=()=>{if(document.visibilityState=='hidden')ezsave();};
 
 
 new Sortable(temp,{
