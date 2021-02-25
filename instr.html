@@ -29,7 +29,7 @@
 	<body>
 		<script src="style.js" async></script>
 		<script src="https://cdn.jsdelivr.net/npm/tone/build/Tone.js"></script>
-		<script>var ifwebp=new Image();ifwebp.onerror=()=>document.body.classList.add('nowebp');ifwebp.src='img/tex.webp';</script>
+		<script>let ifwebp=new Image();ifwebp.onerror=()=>document.body.classList.add('nowebp');ifwebp.src='img/tex.webp';</script>
 		<style>
 			:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;overflow:hidden;color:#fff;}
 			html,body{width:100%;height:100%;position:relative;margin:0;overflow:hidden;}*::-webkit-scrollbar{display:none;}
@@ -45,17 +45,8 @@
 			#alcb+label{display:block;width:100%;height:100%;background:#0008;opacity:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);pointer-events:none;transition:.2s;}
 			#alcb:checked+label{opacity:1;pointer-events:auto;}
 			#albox{width:calc(90% - 40px);max-width:256px;min-height:128px;border-radius:16px;padding:20px;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
-		</style>
-		<div class="bg_">
-			<!--<video muted autoplay loop playsinline src="img/hotsprv.mp4" type="video/mp4" id="bgv"></video>-->
-			<div></div>
-		</div>
-		<div class="fg_">
-			<pre id="jswarn">Please enable JavaScript to use this app.</pre><script>jswarn.style.display='none';</script>
-			<input type="checkbox" id="alcb"><label for="alcb"><pre id="albox" class="style"></pre></label>
-		</div>
 
-		<style>
+
 			@keyframes bob{0%{transform:scale(.95);}100%{transform:scale(.9);}}
 			@keyframes flip{0%{transform:rotateY(0deg);}100%{transform:rotateY(360deg);}}
 			.kb{position:relative;left:50%;transform:translateX(-50%);touch-action:none;display:inline-block;pointer-events:none;opacity:.2;transition:.2s;white-space:nowrap;}
@@ -68,22 +59,12 @@
 
 			.kb>div>div.pushed>div{transform:scale(.8);}.kb>div>div:not(.pushed)>div{transition:.1s;}
 			.kb>div>div.anm>div::before{animation:flip .4s ease-in-out;}
-		</style>
-		<div id="kb" class="kb">
-			<div><div id="_-9" class="c"></div><div id="_-7"></div><div id="_-5"></div><div id="_-4"></div><div id="_-2"></div></div>
-			<div><div id="_0"></div><div id="_2"></div><div id="_3"  class="c"></div><div id="_5" ></div><div id="_7" ></div></div>
-			<div><div id="_8" ></div><div id="_10" ></div><div id="_12"  ></div><div id="_14"  ></div><div id="_15"   class="c"></div></div>
-		</div>
-		<div id="pkb" class="kb" style="display:none;">
-			<div><div id="0_0"></div><div id="0_1"></div><div id="0_2"></div><div id="0_3"></div></div>
-			<div><div id="1_0"></div><div id="1_1"></div><div id="1_2"></div><div id="1_3"></div></div>
-		</div>
 
-		<style>
+
 			#menucb{display:none;}
 			#menucb+label{position:absolute;top:0;right:0;width:100%;height:100%;display:none;}#menucb:checked+label{display:block;}
 			#menucb+*+*+label{position:absolute;top:2px;right:2px;width:48px;height:48px;transition:.2s;touch-action:none;}
-			/*#menucb:checked+*+*+label{transform:rotateY(180deg);}*/
+			#menucb:checked+*+*+label{transform:rotateY(180deg);}
 			#menucb+*+*+label::before,#mico{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:url(img/tex.webp);background-size:800%;transition:.4s;}
 			.nowebp #menucb+*+*+label::before,.nowebp #mico{background:url(img/tex.png);}
 			#menucb+*+*+label::before{opacity:0;background-position:-400% 0;}#mico{background-position:0 -100%;}
@@ -104,6 +85,23 @@
 			#scd_{position:absolute;top:0;left:0;width:100%;height:100%;background:url(img/tex.webp);background-size:560px auto;background-position:-490px 0;}
 			.nowebp #scd_{background:url(img/tex.png);}
 		</style>
+		<div class="bg_">
+			<!--<video muted autoplay loop playsinline src="img/hotsprv.mp4" type="video/mp4" id="bgv"></video>-->
+			<div></div>
+		</div>
+		<div class="fg_">
+			<pre id="jswarn">Please enable JavaScript to use this app.</pre><script>jswarn.style.display='none';</script>
+			<input type="checkbox" id="alcb"><label for="alcb"><pre id="albox" class="style"></pre></label>
+		</div>
+		<div id="kb" class="kb">
+			<div><div id="_-9" class="c"></div><div id="_-7"></div><div id="_-5"></div><div id="_-4"></div><div id="_-2"></div></div>
+			<div><div id="_0"></div><div id="_2"></div><div id="_3"  class="c"></div><div id="_5" ></div><div id="_7" ></div></div>
+			<div><div id="_8" ></div><div id="_10" ></div><div id="_12"  ></div><div id="_14"  ></div><div id="_15"   class="c"></div></div>
+		</div>
+		<div id="pkb" class="kb" style="display:none;">
+			<div><div id="0_0"></div><div id="0_1"></div><div id="0_2"></div><div id="0_3"></div></div>
+			<div><div id="1_0"></div><div id="1_1"></div><div id="1_2"></div><div id="1_3"></div></div>
+		</div>
 		<input type="checkbox" id="menucb" onchange="sfx.player(this.checked?'op':'cl').start();"><label for="menucb" style="pointer-events:none;"></label>
 		<div class="menu">
 			<form id="menu" onchange="set();sfx.player('cs').start();">
@@ -136,33 +134,30 @@
 			<input type="range" id="slrvw" value="0" min="0" max="1" step="0.02" onchange="reverb.wet.value=this.value;save();">
 			<input type="range" id="slrvd" value="0" min="0" max="6" step="0.1"  onchange="reverb.decay=Math.pow(2,this.value);save();">
 			<hr>
-			<div class="grid button" style="--bp:-0% -0%;" onclick="bga[bga.state=='stopped'?'start':'stop']();">
+			<div class="grid button" style="--bp:-0% -0%;" onclick="bgs[bgs.state=='stopped'?'start':'stop']();">
 			</div><div class="grid button" style="--bp:-300% -0%;" onclick="alert(info);"></div>
 		</div>
 		<label for="menucb"><div id="mico"></div></label>
 
-		<!--<br>
-		<button onclick="fsc()">fullscreen</button>-->
-
 
 		<script>
 			'use strict';
-			var synth,synth_,kbmode=0,sc=0;
+			let synth,synth_,kbmode=0,sc=0;
 			alert=x=>{albox.textContent=x;alcb.checked=true;}
 			const reverb=new Tone.Reverb({wet:0,decay:0}).toDestination(),
-			stdli=(a,b=a+1)=>{
-				var s={};
-				for(var i=a;i<=b;i++){
+			stdli=(a,b=a+1,s={})=>{
+				for(let i=a;i<=b;i++){
 					s['d#'+i]=`ds${i}.mp3`;
 					s['a' +i]=`a${i}.mp3`;
 				}
 				return s;
-			};
-			const info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2101291\nMIT License';
-			const blli=[
+			},
+			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2102250\nMIT License',
+			blli=[
 				{'c4':'c4.mp3','d4':'d4.mp3','g4':'g4.mp3','a4':'a4.mp3'},
 				{'c4':'c4_.mp3','d4':'d4_.mp3','g4':'g4_.mp3','a4':'a4_.mp3'}
-			],instr_li=[//[baseurl, octave, map, (map2)]
+			],
+			instr_li=[//[baseurl, octave, map, (map2)]
 				['audio/instr/musicbox/',1,Object.assign({'a3':'a3.mp3','d#7':'ds7.mp3'},stdli(4,6))],
 				['audio/instr/harp/',-1,stdli(3)],
 				['audio/instr/percussion/',-1,{'a3':'0.mp3','a#3':'1.mp3','b3':'2.mp3','c4':'3.mp3','a4':'4.mp3','a#4':'5.mp3','b4':'6.mp3','c5':'7.mp3'}],
@@ -180,73 +175,62 @@
 				['audio/instr/handpan/',-1,stdli(3)],
 				['audio/instr/dundun/',-1,{'a3':'0.mp3','a#3':'1.mp3','b3':'2.mp3','c4':'3.mp3','a4':'4.mp3','a#4':'5.mp3','b4':'6.mp3','c5':'7.mp3'}],
 					['audio/instr/pipa/',-1,stdli(3)]
-			],pmap={
+			],
+			pmap={
 				2:[[0,1,2,3],[12,13,14,15]],
 				6:[[-9,-7,-2,0],[-9,-7,-2,0]],
 				7:[[-9,-7,-2,0],[-9,-7,-2,0]],
 				14:[[-7,0,3,5],[8,10,12,15]],
 				15:[[0,1,2,3],[12,13,14,15]]
-			},keymap=[{
+			},
+			keymap=[{
 				KeyR:'_-9',KeyT:'_-7',KeyY:'_-5',KeyU:'_-4',KeyI:'_-2',
 				KeyF:'_0' ,KeyG:'_2' ,KeyH:'_3' ,KeyJ:'_5' ,KeyK:'_7' ,
 				KeyC:'_8' ,KeyV:'_10',KeyB:'_12',KeyN:'_14',KeyM:'_15'
 			},{
 				KeyR:'0_0',KeyT:'0_1',KeyY:'0_2',KeyU:'0_3',
 				KeyF:'1_0',KeyG:'1_1',KeyH:'1_2',KeyJ:'1_3'
-			}];
-
-			/////save & load
-			const save=()=>{localStorage.instr_sc=sc;localStorage.instr_instr=menu.instr.value;localStorage.instr_reverb=`${slrvw.value},${slrvd.value}`;console.log('saved');}
-			function load(){
-				var c=[localStorage.instr_sc,localStorage.instr_instr,localStorage.instr_reverb];
+			}],
+			save=()=>{localStorage.instr_sc=sc;localStorage.instr_instr=menu.instr.value;localStorage.instr_reverb=`${slrvw.value},${slrvd.value}`;console.log('saved');},
+			load=()=>{
+				let c=[localStorage.instr_sc,localStorage.instr_instr,localStorage.instr_reverb];
 				if(c){
 					if(c[0])sc=parseInt(c[0]);
 					if(c[1])try{menu.instr[parseInt(c[1])].checked=true;}catch(e){console.log(e);}
 					if(c[2])try{[slrvw.value,slrvd.value]=c[2].split(',');[reverb.wet.value,reverb.decay]=[slrvw.value,Math.pow(2,slrvd.value)];}catch(e){console.log(e);}
 					console.log('loaded');
 				}
-			}
-			load();
-
-			/////main fx
-			function setSynth(){
+			},
+			setSynth=()=>{
 				synth=new Tone.Sampler(instr_li[menu.instr.value][2],()=>{
 					 kb.style.opacity='1'; kb.style.pointerEvents='auto';
 					pkb.style.opacity='1';pkb.style.pointerEvents='auto';
 				},instr_li[menu.instr.value][0]).connect(reverb);
-			}
-			function set(){
+			},
+			set=()=>{
 				kb.style.opacity='.2';kb.style.pointerEvents='none';pkb.style.opacity='.2';pkb.style.pointerEvents='none';
 				//keyboard switch
 				kbmode=1;
-				kb.style.display='none';pkb.style.display='inline-block';
+				kb.style.display='none';pkb.style.display='';
 				scd.style.opacity='1';scd.style.pointerEvents='auto';
-				scale();
+				scale();setSynth();
 				switch(menu.instr.value){
 					case '2':case '15':
 						scd.style.opacity='.2';scd.style.pointerEvents='none';scd_.style.transform='none';
-						setSynth();
 						synth_=synth;
 						break;
 					case '6':case '7':
-						setSynth();
 						synth_=new Tone.Sampler(instr_li[menu.instr.value][3],()=>{},instr_li[menu.instr.value][0]).toDestination();
 						break;
-					case '14':
-						setSynth();
-						synth_=synth;
-						break;
-					default:
-						kbmode=0;synth_=null;
-						pkb.style.display='none';kb.style.display='inline-block';
-						setSynth();
+					case '14':synth_=synth;break;
+					default:kbmode=0;synth_=null;pkb.style.display='none';kb.style.display='';
 				}
 				save();
 				//icon
-				var pos=[menu.instr.value%8,Math.floor(menu.instr.value*.125+1)];console.log('ico',pos);
+				let pos=[menu.instr.value%8,Math.floor(menu.instr.value*.125+1)];console.log('ico',pos);
 				mico.style.backgroundPosition=pos.map(x=>(x*-100)+'%').join(' ');
-			}
-			function trigger(id){
+			},
+			trigger=id=>{
 				switch(kbmode){
 					case 0:
 						//C4~C6
@@ -259,14 +243,25 @@
 					default:
 						console.log('unknown id');
 				}
-			}
+			},
+			scale=x=>{
+				scd_.style.transform=`rotate(${sc*30})deg)`;
+				if(x){
+					save();
+					synth.triggerAttackRelease(440*Math.pow(2,(3+sc)/12+instr_li[menu.instr.value][1]),'1m');
+					if(kbmode==0){
+						synth.triggerAttackRelease(440*Math.pow(2,(7 +sc)/12+instr_li[menu.instr.value][1]),'1m','+.05');
+						synth.triggerAttackRelease(440*Math.pow(2,(10+sc)/12+instr_li[menu.instr.value][1]),'1m','+.1');
+					}
+				}
+			};
 
 
-			/////main
-			set();
+			load();set();scale(0);
+
 			document.querySelectorAll('.kb>div>div').forEach(key=>{
 				key.appendChild(document.createElement('div'));
-				//sound & animation
+				//sound & anm
 				function up(e){this.classList.remove('pushed');e.preventDefault();}
 				key.addEventListener('touchstart',function(e){
 					e.preventDefault();trigger(this.id);
@@ -284,39 +279,20 @@
 			document.addEventListener('keydown',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('touchstart'));});
 			document.addEventListener('keyup',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('touchend'));});
 
-			/////scale
-			function scale(x){
-				scd_.style.transform='rotate('+(sc*30)+'deg)';
-				if(x){
-					save();
-					var now=Tone.now();
-					synth.triggerAttackRelease(440*Math.pow(2,(3+sc)/12+instr_li[menu.instr.value][1]),'1m',now);
-					if(kbmode==0){
-						synth.triggerAttackRelease(440*Math.pow(2,(7 +sc)/12+instr_li[menu.instr.value][1]),'1m',now+.05);
-						synth.triggerAttackRelease(440*Math.pow(2,(10+sc)/12+instr_li[menu.instr.value][1]),'1m',now+.1);
-					}
-				}
-			}
-			scale(0);
-
-			const bga=new Tone.Player('audio/hotspra.mp3').toDestination(),
+			const bgs=new Tone.Player({url:'audio/hotspra.mp3',volume:-10,autostart:true,loop:true,fadeIn:5,fadeOut:2}).toDestination(),
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination();
-			bga.autostart=true;bga.loop=true;bga.fadeIn=5;bga.fadeOut=2;bga.volume.value=-10;
 
-			/////reload
 			/*document.addEventListener('visibilitychange',()=>{
 				if(document.visibilityState=='visible'){bgv.play();console.log('become visible');location.reload(false);}
 				if(document.visibilityState=='hidden')console.log('become hidden');
-			});+/
-
-			/////fullscreen
-			/*function fsc(){
-				var doc=window.document,docEl=doc.documentElement;
-				var init=docEl.requestFullscreen||docEl.mozRequestFullScreen||docEl.webkitRequestFullScreen||docEl.msRequestFullscreen;
-				var exit=doc.exitFullscreen||doc.mozCancelFullScreen||doc.webkitExitFullscreen||doc.msExitFullscreen;
+			});
+			const fsc=()=>{
+				let doc=window.document,docEl=doc.documentElement;
+				let init=docEl.requestFullscreen||docEl.mozRequestFullScreen||docEl.webkitRequestFullScreen||docEl.msRequestFullscreen;
+				let exit=doc.exitFullscreen||doc.mozCancelFullScreen||doc.webkitExitFullscreen||doc.msExitFullscreen;
 				if(doc.fullscreenElement||doc.mozFullScreenElement||doc.webkitFullscreenElement||doc.msFullscreenElement)exit.call(doc);
 				else init.call(docEl);
-			}*/
+			};*/
 		</script>
 	</body>
 </html>

@@ -22,7 +22,7 @@ const cacheName='cache210224_0',STATIC_DATA=[
 	'https://cdn.jsdelivr.net/npm/tone/build/Tone.js',
 	'img/tex.webp',
 	//'img/hotsprv.mp4',
-	'audio/hotspra.mp3',
+	'audio/hotspra.mp3','audio/open.mp3','audio/close.mp3','audio/choose.mp3',
 	'audio/instr/musicbox/a3.mp3',
 	'audio/instr/musicbox/a4.mp3',
 	'audio/instr/musicbox/a5.mp3',
