@@ -3,17 +3,17 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102251\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102260\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 //url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
-	curpset();scrset();kbset(note);//Tone.Draw.schedule(()=>{},time);
-	if(note[0]){
-		synth.triggerAttackRelease(note.map(toHz),'1m',time,kbfixed.checked?.3:1);
-		llog(`${note.map(x=>n2c[(Number(x)+main.sc+12)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`,1);
-	}
-	llog(Tone.Transport.position);
+	Tone.Draw.schedule(()=>{
+		curpset();scrset();kbset(note);
+		if(note[0])llog(`${note.map(x=>n2c[(Number(x)+main.sc+12)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`,1);
+		llog(Tone.Transport.position);
+	},time);
+	if(note[0])synth.triggerAttackRelease(note.map(toHz),'1m',time,kbfixed.checked?.3:1);
 },[],'4n').start(0),
 mbxli=()=>{let s={};for(let i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
 synth=new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination()),
@@ -76,7 +76,7 @@ ttoggle=()=>{
 	let state=Tone.Transport.state=='started';
 	styperf.textContent=state?'':'#dispCur,#kb p::before,#kb p::after{transition: none !important;}';
 	if(!state)ezsave();
-	Tone.Transport.toggle();
+	Tone.Transport[state?'pause':'start']();
 },
 tstop=()=>{Tone.Transport.stop();styperf.textContent='';curpos=0;curset();scrset();kbset();},
 tstep=x=>{
