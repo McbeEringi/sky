@@ -152,7 +152,7 @@
 				}
 				return s;
 			},
-			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2102250\nMIT License',
+			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2102260\nMIT License',
 			blli=[
 				{'c4':'c4.mp3','d4':'d4.mp3','g4':'g4.mp3','a4':'a4.mp3'},
 				{'c4':'c4_.mp3','d4':'d4_.mp3','g4':'g4_.mp3','a4':'a4_.mp3'}
@@ -245,7 +245,7 @@
 				}
 			},
 			scale=x=>{
-				scd_.style.transform=`rotate(${sc*30})deg)`;
+				scd_.style.transform=`rotate(${sc*30}deg)`;
 				if(x){
 					save();
 					synth.triggerAttackRelease(440*Math.pow(2,(3+sc)/12+instr_li[menu.instr.value][1]),'1m');
