@@ -102,13 +102,12 @@
 	<input type="checkbox" id="uiflip">
 	<input type="checkbox" id="logcb">
 	<div class="fg_">
-		<pre id="jswarn" style="margin:24px 40px 0 16px;white-space:pre-wrap;">Please enable JavaScript to use this app.</pre><script>jswarn.style.display='none';</script>
 		<input type="checkbox" id="alcb"><label for="alcb"></label><pre id="albox" class="style"></pre>
 	</div>
 
 
 	<div class="dispPanel">
-		<div id="dispScr"><div id="dispCur"></div><div id="disp">Please wait…<br>if you can't see content here, please reboot browser</div></div>
+		<div id="dispScr"><div id="dispCur"></div><div id="disp">Please enable JavaScript to use this app.</div></div>
 		<div id="dispBar"><div></div><div></div></div>
 		<button id="curct" class="grid bg">scroll to cursor</button>
 	</div>
@@ -160,7 +159,9 @@
 	-->
 	<pre id="log"></pre>
 
-
+	<script>
+		disp.textContent=`Downloading assets. Please wait… if you can't see content here, please reboot browser`;
+	</script>
 	<script src="https://cdn.jsdelivr.net/npm/tone/build/Tone.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sortablejs/Sortable.min.js"></script>
 	<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js"></script>
