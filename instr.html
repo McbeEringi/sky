@@ -153,19 +153,15 @@
 				return s;
 			},
 			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2102260\nMIT License',
-			blli=[
-				{'c4':'c4.mp3','d4':'d4.mp3','g4':'g4.mp3','a4':'a4.mp3'},
-				{'c4':'c4_.mp3','d4':'d4_.mp3','g4':'g4_.mp3','a4':'a4_.mp3'}
-			],
 			instr_li=[//[baseurl, octave, map, (map2)]
-				['audio/instr/musicbox/',1,Object.assign({'a3':'a3.mp3','d#7':'ds7.mp3'},stdli(4,6))],
+				['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
 				['audio/instr/harp/',-1,stdli(3)],
-				['audio/instr/percussion/',-1,{'a3':'0.mp3','a#3':'1.mp3','b3':'2.mp3','c4':'3.mp3','a4':'4.mp3','a#4':'5.mp3','b4':'6.mp3','c5':'7.mp3'}],
+				['audio/instr/percussion/',-1,{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],
 				['audio/instr/contrabass/',-2,stdli(2)],
 				['audio/instr/horn/',-1,stdli(3)],
 					['audio/instr/piano/',0,stdli(4)],
-					['audio/instr/',1].concat([{'d#5':'musicbox/ds5.mp3','a5':'musicbox/a5.mp3'},{'d#5':'glock/ds5.mp3','a5':'glock/a5.mp3'}]),
-					['audio/instr/bell2/',1].concat(blli),
+					['audio/instr/',1].concat([{'d#5':'musicbox/ds5.mp3',a5:'musicbox/a5.mp3'},{'d#5':'glock/ds5.mp3',a5:'glock/a5.mp3'}]),
+					['audio/instr/bell2/',1].concat([{c4:'c4.mp3',d4:'d4.mp3',g4:'g4.mp3',a4:'a4.mp3'},{c4:'c4_.mp3',d4:'d4_.mp3',g4:'g4_.mp3',a4:'a4_.mp3'}]),
 					['audio/instr/flute/',0,stdli(4)],
 				['audio/instr/quena/',0,stdli(4)],
 				['audio/instr/guitar/',-1,stdli(3)],
@@ -173,7 +169,7 @@
 					['audio/instr/piano/',1,stdli(5)],
 					['audio/instr/glock/',1,stdli(5)],
 				['audio/instr/handpan/',-1,stdli(3)],
-				['audio/instr/dundun/',-1,{'a3':'0.mp3','a#3':'1.mp3','b3':'2.mp3','c4':'3.mp3','a4':'4.mp3','a#4':'5.mp3','b4':'6.mp3','c5':'7.mp3'}],
+				['audio/instr/dundun/',-1,{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],
 					['audio/instr/pipa/',-1,stdli(3)]
 			],
 			pmap={
@@ -276,8 +272,8 @@
 				key.addEventListener('touchcancel',up,{passive:false});
 				key.addEventListener('animationend',function(){this.classList.remove('anm');});
 			})
-			document.addEventListener('keydown',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('touchstart'));});
-			document.addEventListener('keyup',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')document.getElementById(keymap[kbmode][e.code]).dispatchEvent(new Event('touchend'));});
+			document.addEventListener('keydown',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchstart'));});
+			document.addEventListener('keyup',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchend'));});
 
 			const bgs=new Tone.Player({url:'audio/hotspra.mp3',volume:-10,autostart:true,loop:true,fadeIn:5,fadeOut:2}).toDestination(),
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination();
