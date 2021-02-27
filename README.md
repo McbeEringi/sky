@@ -3,7 +3,7 @@
 PWA, offline support  
 [page link](https://mcbeeringi.github.io/sky)  
 
-![img](sky.ico)  
+![img](img/sky.png)  
 - sky_instrments  
 	- various instrments
 	- custom key
