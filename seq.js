@@ -2,18 +2,18 @@
 alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';alcb.checked=true;}
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
-let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102260\nMIT License\n',
+let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip,from_url;
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102280\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
-//url_o=(x)=>JSON.stringify(x).replace(/\"/g,"'").replace(/,/g,'.').replace(/\[/g,'(').replace(/\]/g,')'), url_i=(x)=>JSON.parse(x.replace(/'/g,'"').replace(/\./g,',').replace(/\(/g,'[').replace(/\)/g,']')),
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
-	Tone.Draw.schedule(()=>{
-		curpset();scrset();kbset(note);
-		if(note[0])llog(`${note.map(x=>n2c[(Number(x)+main.sc+12)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`,1);
-		llog(Tone.Transport.position);
-	},time);
-	if(note[0])synth.triggerAttackRelease(note.map(toHz),'1m',time,kbfixed.checked?.3:1);
+	//Tone.Draw.schedule(()=>{},time);
+	curpset();scrset();kbset(note);
+	llog(Tone.Transport.position);
+	if(note[0]){
+		synth.triggerAttackRelease(note.map(toHz),'1m',time,kbfixed.checked?.3:1);
+		llog(`${note.map(x=>n2c[(Number(x)+main.sc+12)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`,1);
+	}
 },[],'4n').start(0),
 mbxli=()=>{let s={};for(let i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`ds${i+1}.mp3`;}return s;},
 synth=new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination()),
@@ -335,7 +335,9 @@ datafx={
 		req.onerror=e=>albox.textContent=`⚠️\ncoudnt duplicate datas.\n\n${e.target.error}`;
 	}),
 	exp:i=>{
-		alert('export')
+		albox.textContent='';
+		albox.insertAdjacentHTML('beforeend',`Ready to export<p contenteditable style="color:#aef;background:#0004;padding:8px;border-radius:4px;white-space:nowrap;overflow:scroll;">${urlfx.e()}</p><button
+		onclick="alert(this.previousElementSibling.textContent);"class="grid bg" style="--bp:0 -300%;">copy</button>`);
 	},
 	del:function(i){
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').delete(this.tmp[i]);
@@ -355,13 +357,34 @@ init=()=>{
 	requestIdleCallback(a2d);
 	requestIdleCallback(tstop);
 },
-ezsave=()=>localStorage.seq_ezsave=JSON.stringify(main);
+ezsave=()=>localStorage.seq_ezsave=JSON.stringify(main),
+urlfx={
+	dmap:(x,fx)=>x.map(y=>{if(Array.isArray(y))return urlfx.dmap(y,fx);else return fx(y);}),
+	e:(dat=Object.assign({},main))=>{
+		dat.scores=urlfx.dmap(dat.scores,x=>x.split(',').map(y=>{y=Number(y);return(y<0?'-':'')+Math.abs(y).toString(36);}).join('.'));
+		dat.scores=JSON.stringify(dat.scores).replace(/\"/g,'').replace(/,/g,'~').replace(/\[/g,'!').replace(/\]/g,'_');
+		return location.href.split('#')[0]+'#'+encodeURIComponent(JSON.stringify(dat));
+	},
+	l:(str=decodeURIComponent(location.hash.slice(1)))=>{
+		if(!str)return;
+		let dat=JSON.parse(str);
+		dat.scores=dat.scores.replace(/~/g,',').replace(/!/g,'[').replace(/_/g,']');
+		dat.scores=JSON.parse(dat.scores.replace(/([\[\,])([^\[\]\,\"]+)([\]\,])/g,'$1"$2"$3').replace(/([\[\,])([^\[\]\,\"]+)([\]\,])/g,'$1"$2"$3'));
+		dat.scores=urlfx.dmap(dat.scores,x=>x.split('.').map(y=>parseInt(y,36)).join(','));
+		llog('load url');
+		return dat;
+	}
+};
 
-if(!localStorage.seq_undoMax)localStorage.seq_undoMax=48;
+if(!localStorage.seq_undoMax)localStorage.seq_undoMax=32;
 log.textContent=info;
-if(localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);init();focus();
-setInterval(ezsave,60000);
-document.onvisibilitychange=()=>{if(document.visibilityState=='hidden')ezsave();};
+from_url=Boolean(main=urlfx.l());
+if(!from_url&&localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
+init();focus();
+if(!from_url){
+	setInterval(ezsave,60000);
+	document.onvisibilitychange=()=>{if(document.visibilityState=='hidden')ezsave();};
+}
 
 
 new Sortable(temp,{
