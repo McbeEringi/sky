@@ -389,7 +389,7 @@ if(!from_url){
 }
 
 
-new Sortable(temp,{
+new Sortable(tpl,{
 	group:{
 		name:'group_',
 		pull:'clone',
