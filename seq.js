@@ -3,7 +3,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip,from_url;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103011\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103012\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
@@ -216,7 +216,7 @@ const sopt={
 	},
 	onStart:()=>dispCur.style.opacity='0',onEnd:()=>dispCur.style.opacity='1',
 	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
-	onClone:e=>new Sortable(e.clone.children[0],sopt),
+	onClone:e=>e.clone.querySelectorAll('.sort').forEach(x=>new Sortable(x,sopt)),
 	onSort:e=>{if(e.to.id!='clip')requestIdleCallback(()=>{d2d();curset();d2a();});else ccset();}
 },
 a2d=()=>{
