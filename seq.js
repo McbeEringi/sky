@@ -3,7 +3,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip,from_url;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103012\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103013\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
@@ -242,9 +242,11 @@ a2d=()=>{
 			if(typeof x=='string'){
 				div.dataset.note=x;
 				x.split(',').forEach(y=>{
-					let note=document.createElement('p');
-					note.style.bottom=((n2i[y]+1?Number(n2i[y]):15)*16)+'px';
-					div.appendChild(note);
+					if(n2i[y]+1){
+						let note=document.createElement('p');
+						note.style.bottom=Number(n2i[y])*16+'px';
+						div.appendChild(note);
+					}
 				});
 				div.classList.add('note');
 			}else core(x,div,0,l/x.length);
