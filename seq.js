@@ -373,7 +373,7 @@ urlfx={
 		dat.scores=dat.scores.replace(/~/g,',').replace(/!/g,'[').replace(/_/g,']');
 		dat.scores=JSON.parse(dat.scores.replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3').replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3'));
 		dat.scores=urlfx.dmap(dat.scores,x=>x.split('.').map(y=>{if(y)return parseInt(y,36)-15;}).join(','));
-		llog('load url');
+		console.log('load url',dat);
 		return dat;
 	}
 };
