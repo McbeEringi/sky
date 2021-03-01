@@ -93,7 +93,7 @@ urdo=x=>{
 	while(x<0){if(urstack[0].length){urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();x++;tmp=true;llog('undo');}else{domshake(undobtn);break;}}
 	while(0<x){if(urstack[2].length){urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();x--;tmp=true;llog('redo');}else{domshake(redobtn);break;}}
 	if(tmp){
-		seq.events=main.scores=JSON.parse(urstack[1]);if(rawedit.checked)rawtxt.value=JSON.stringify(main.scores,null,'	');requestIdleCallback(a2d);requestIdleCallback(()=>curpset());requestIdleCallback(()=>kbset());
+		seq.events=main.scores=JSON.parse(urstack[1]);/*if(rawedit.checked)rawtxt.value=JSON.stringify(main.scores,null,'	');*/requestIdleCallback(a2d);requestIdleCallback(()=>curpset());requestIdleCallback(()=>kbset());
 	}
 },
 domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('shake');};
@@ -171,7 +171,7 @@ dispScr.onscroll=e=>{
 		if(userscr[1])curct.style.display='block';
 	};
 	tmp();screxet=setTimeout(tmp,100);
-};
+};/*
 rawedit.onchange=()=>{
 	if(rawedit.checked){
 		Tone.Transport.pause();styperf.textContent='';
@@ -205,7 +205,7 @@ rawtxt.oninput=e=>{
 			synth.triggerAttackRelease(440*Math.pow(2,(1+main.sc)/12),'1m',now+.1,.8);
 		}
 	},1000);
-};
+};*/
 undobtn.onclick=()=>urdo(-1);redobtn.onclick=()=>urdo(1);
 
 
@@ -351,7 +351,7 @@ dbfx={
 init=()=>{
 	Tone.Transport.pause();
 	if(!main)main={name:'',sc:0,bpm:120,ts:4,scores:new Array(16).fill('')};
-	rawedit.checked=false;rawtxt.value='';disp.textContent='Loading…';
+	disp.textContent='Loading…';//rawedit.checked=false;rawtxt.value='';
 	urstack=[[],JSON.stringify(main.scores),[]];
 	seq.events=main.scores;sc_.value=main.sc;
 	bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;
