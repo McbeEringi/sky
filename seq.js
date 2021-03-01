@@ -338,7 +338,7 @@ datafx={
 		datafx.get(i,e=>{
 			albox.textContent='';
 			albox.insertAdjacentHTML('beforeend',`Ready to export<p contenteditable style="color:#aef;background:#0004;padding:8px;border-radius:4px;white-space:nowrap;overflow:scroll;">${urlfx.e(e.target.result)}</p><button
-			onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent);"class="grid bg" style="--bp:0 -300%;">copy</button>`);
+			onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>alcb.checked=false);"class="grid bg" style="--bp:0 -300%;">copy</button>`);
 		});
 	},
 	del:function(i){
