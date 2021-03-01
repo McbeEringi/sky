@@ -3,7 +3,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip,from_url;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2102281\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103010\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
@@ -363,7 +363,7 @@ ezsave=()=>localStorage.seq_ezsave=JSON.stringify(main),
 urlfx={
 	dmap:(x,fx)=>x.map(y=>{if(Array.isArray(y))return urlfx.dmap(y,fx);else return fx(y);}),
 	e:(dat=Object.assign({},main))=>{
-		dat.scores=urlfx.dmap(dat.scores,x=>x.split(',').map(y=>{if(y){y=Number(y);return(y<0?'-':'')+Math.abs(y).toString(36);}}).join('.'));
+		dat.scores=urlfx.dmap(dat.scores,x=>x.split(',').map(y=>{if(y){y=Number(y)+15;return(y<0?'-':'')+Math.abs(y).toString(36);}}).join('.'));
 		dat.scores=JSON.stringify(dat.scores).replace(/\"/g,'').replace(/,/g,'~').replace(/\[/g,'!').replace(/\]/g,'_');
 		return location.href.split('#')[0]+'#'+encodeURIComponent(JSON.stringify(dat));
 	},
@@ -372,7 +372,7 @@ urlfx={
 		let dat=JSON.parse(str);
 		dat.scores=dat.scores.replace(/~/g,',').replace(/!/g,'[').replace(/_/g,']');
 		dat.scores=JSON.parse(dat.scores.replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3').replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3'));
-		dat.scores=urlfx.dmap(dat.scores,x=>x.split('.').map(y=>{if(y)return parseInt(y,36);}).join(','));
+		dat.scores=urlfx.dmap(dat.scores,x=>x.split('.').map(y=>{if(y)return parseInt(y,36)-15;}).join(','));
 		llog('load url');
 		return dat;
 	}
