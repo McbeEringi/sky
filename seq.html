@@ -34,7 +34,8 @@
 	<script>let ifwebp=new Image();ifwebp.onerror=()=>document.body.classList.add('nowebp');ifwebp.src='img/seq.webp';</script>
 	<style>
 		:root{user-select:none;-webkit-user-select:none;}[contenteditable],.usa{user-select:auto;-webkit-user-select:auto;}
-		html,body{height:100%;margin:0;position:relative;}.clear_fix::after{content:"";clear:both;display:block;}
+		html,body{height:100%;margin:0;position:relative;}
+		.float_l{float:left;clear:left;}.float_r{float:right;clear:right;}.clear_fix::after{content:"";clear:both;display:block;}
 
 		.dispPanel{position:relative;width:100%;border-top:6px solid #0004;touch-action:manipulation;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
 			background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
@@ -49,12 +50,13 @@
 		.noteW p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;z-index:2;}
 		.sortW{overflow:hidden;}.sort{;margin:0 8px;padding:0 8px;box-sizing:border-box;background:#fff4;box-shadow:0 0 8px #fff8;}
 
-		.uiPanel{float:right;clear:right;max-width:312px;}
+		.uiPanel{max-width:312px;}
 		.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
 		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;font-size:18px;line-height:1.1em;font-family:"M PLUS Rounded 1c",sans-serif;}
 		#name_{font-size:large;background:#4448;width:100%;max-width:308px;height:48px;border-radius:12px;border:none;padding:0 2px;margin:2px;box-sizing:border-box;font-family:"M PLUS Rounded 1c",sans-serif;color:#caf0f6;text-shadow:0 0 4px #688;outline:none;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 
-		.kbPanel{overflow:hidden;position:relative;width:100%;max-width:360px;float:left;clear:left;background:#0004;border-radius:8px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
+		.kbPanel,#clip{position:relative;width:100%;background:#0004;border-radius:8px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+		.kbPanel{overflow:hidden;max-width:360px;touch-action:none;}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
 		#kb p{display:inline-block;width:20%;height:100%;margin:0;position:relative;}
 		#kb p::before,#kb p::after{content:"";display:block;width:84%;height:84%;margin:8%;border-radius:20%;position:absolute;}
@@ -78,9 +80,9 @@
 
 		.sortable-chosen{background:#feac;}
 		.sortable-ghost{animation:.5s infinite alternate wink;}.sortable-drag{}
-		.clipW{display:none;position:absolute;top:0;left:0;right:0;bottom:0;background:#fff4;overflow-x:scroll;}
 		#tpl,#clip{display:inline-block;vertical-align:top;}
-		#clip{padding:6px;height:100%;min-width:100%;box-sizing:border-box;white-space:nowrap;}
+		#clip{display:none;padding:6px 0;height:240px;max-width:480px;white-space:nowrap;overflow-x:scroll;}
+		#clip>.noteW{margin:0 8px;}
 		#tpl>*{margin:2px;width:48px;height:48px;border-radius:25%;overflow:hidden;display:inline-block;vertical-align:top;}
 		#tpl>.noteW{background:#484 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48px' viewBox='0 0 6 6' %3E%3Cpath d='M3,1l0,4m-2,-2l4,0' stroke='%23fff' stroke-width='.2'/%3E%3C/svg%3E");}
 		#trash{background:#f44 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48px' viewBox='0 0 5 5' %3E%3Cpath d='M1,1l3,3m-3,0l3,-3' stroke='%23fff' stroke-width='.2'/%3E%3C/svg%3E");}
@@ -89,11 +91,11 @@
 		@keyframes shake{0%{transform:translate(1px,1px) rotate(0deg);}10%{transform:translate(-1px,-2px) rotate(-1deg);}20%{transform:translate(-3px,0px) rotate(1deg);}30%{transform:translate(3px,2px) rotate(0deg);}40%{transform:translate(1px,-1px) rotate(1deg);}50%{transform:translate(-1px,2px) rotate(-1deg);}60%{transform:translate(-3px,1px) rotate(0deg);}70%{transform:translate(3px,1px) rotate(-1deg);}80%{transform:translate(-1px,-1px) rotate(1deg);}90%{transform:translate(1px,2px) rotate(0deg);}100% { transform: translate(1px,-2px) rotate(-1deg);}}
 
 		body>input[type="checkbox"]{display:none;}
-		#uiflip:checked~* .uiPanel{float:left;clear:left;}#uiflip:checked~* .kbPanel{float:right;clear:right;}
+		#uiflip:checked~* .float_r{float:left;clear:left;}#uiflip:checked~* .float_l{float:right;clear:right;}
 		label.grid{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
 		#kblock:checked~* label[for="kblock"],#kbfixed:checked~* label[for="kbfixed"],#clipcb:checked~* label[for="clipcb"]{box-shadow:0 0 2px 4px #fea inset;}
 		#kbfixed:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;}
-		#clipcb:checked~* .clipW{display:block;}#clipcb:checked~* #kb{display:none;}
+		#clipcb:checked~* #clip{display:block;}#clipcb:checked~* .kbPanel{display:none;}
 		#logcb:not(:checked)~#log{display:none;}
 	</style>
 	<style id="stybeat"></style><style id="styperf"></style>
@@ -113,31 +115,29 @@
 		<button id="curct" class="grid bg">scroll to cursor</button>
 	</div>
 	<div class="clear_fix">
-		<div class="uiPanel">
+		<div class="uiPanel float_r">
 			         <button id="undobtn" class="grid bg" style="--bp:-300% -200%;transform:scaleX(-1);">undo
 			</button><button id="redobtn" class="grid bg" style="--bp:-300% -200%;">redo
 			</button><button onclick="tstep(-1);" class="grid bg" style="--bp:-200% -100%;transform:scaleX(-1);">back
 			</button><button onclick="ttoggle();" class="grid bg" style="--bp:0 -100%;">start/pause
 			</button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">stop
 			</button><button onclick="tstep(1);" class="grid bg" style="--bp:-200% -100%;">forward
-			</button><div id="tpl"><div class="noteW note" data-note=""></div><div class="noteW sortW"><div class="sort"></div></div><div id="trash"></div></div><label for="clipcb" class="grid bg showtxt" style="--bp:-500% -100%;">clipbobard
+			</button><div id="tpl"><div class="noteW note" data-note=""></div><div class="noteW sortW"><div class="sort"></div></div><div id="trash"></div></div><label for="clipcb" class="grid bg" style="--bp:-500% -100%;">clipbobard
 			</label><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
 			</label><button onclick="save();" class="grid bg" style="--bp:-600% -200%;">save
 			</button>
 		</div>
-		<div class="kbPanel">
+		<div class="kbPanel float_l">
 			<div id="kb">
 				<div><p id="kbb00" class="c"></p><p id="kbb01"></p><p id="kbb02"></p><p id="kbb03"></p><p id="kbb04"></p></div>
 				<div><p id="kbb10"></p><p id="kbb11"></p><p id="kbb12" class="c"></p><p id="kbb13"></p><p id="kbb14"></p></div>
 				<div><p id="kbb20"></p><p id="kbb21"></p><p id="kbb22"></p><p id="kbb23"></p><p id="kbb24" class="c"></p></div>
 			</div>
-			<div class="clipW">
-				<div id="clip"></div>
-			</div>
 		</div>
+		<div id="clip" class="float_l"></div>
 	</div>
 	<div class="clear_fix">
-		<div class="uiPanel">
+		<div class="uiPanel float_r">
 			        <label for="kbfixed" class="grid bg" style="--bp:-200% -200%;">practice
 			</label><button onclick="Tone.Transport.pause();styperf.textContent='';alert('Loading…','none');load();" class="grid bg" style="--bp:-500% -200%;">load
 			</button><button id="ibtn" class="grid bg" style="--bp:-300% 0;">info
