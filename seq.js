@@ -303,14 +303,14 @@ load=()=>{
 		console.log(e.target.result);
 		albox.textContent='';
 		albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="main=null;init();alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
-		datafx.tmp=e.target.result;
+		dbfx.tmp=e.target.result;
 		e.target.result.forEach((x,i)=>requestIdleCallback(()=>{
 			albox.insertAdjacentHTML('beforeend',`<div>${x}<br><br><button
-				onclick="datafx.open(${i});"class="grid bg" style="--bp:0 -100%;">open</button><button
-				onclick="datafx.dupe(${i});"class="grid bg" style="--bp:0 -300%;">dupe</button><button
-				onclick="datafx.exp(${i});" class="grid bg" style="--bp:-400% -100%;">export</button><button
+				onclick="dbfx.open(${i});"class="grid bg" style="--bp:0 -100%;">open</button><button
+				onclick="dbfx.dupe(${i});"class="grid bg" style="--bp:0 -300%;">dupe</button><button
+				onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-400% -100%;">export</button><button
 				onclick="if(this.style.left=='0px'){this.style.left='52px';this.textContent='really?';this.classList.add('showtxt');
-				setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}else{datafx.del('${i}');}"
+				setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}else{dbfx.del('${i}');}"
 				class="grid bg" style="--bp:-700% -200%;position:relative;left:0px;transition:left .2s;">delete</button></div>`
 			);
 		}));
@@ -320,22 +320,22 @@ load=()=>{
 		albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="main=null;init();alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
 	};
 },
-datafx={
+dbfx={
 	tmp:[],
 	get:function(i,sfx,efx){
 		console.log(this.tmp[i]);
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').get(this.tmp[i]);
 		req.onsuccess=sfx;req.onerror=efx||(e=>albox.textContent=`⚠️\ncoudnt load datas.\n\n${e.target.error}`);
 	},
-	open:i=>datafx.get(i,e=>{main=e.target.result;init();alcb.checked=false;}),
-	dupe:i=>datafx.get(i,e=>{
+	open:i=>dbfx.get(i,e=>{main=e.target.result;init();alcb.checked=false;}),
+	dupe:i=>dbfx.get(i,e=>{
 		let dup=e.target.result;dup.name+=' copy';
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(dup);
 		req.onsuccess=load;
 		req.onerror=e=>albox.textContent=`⚠️\ncoudnt duplicate datas.\n\n${e.target.error}`;
 	}),
 	exp:i=>{
-		datafx.get(i,e=>{
+		dbfx.get(i,e=>{
 			albox.textContent='';
 			albox.insertAdjacentHTML('beforeend',`Ready to export<p contenteditable style="color:#aef;background:#0004;padding:8px;border-radius:4px;white-space:nowrap;overflow:scroll;">${urlfx.e(e.target.result)}</p><button
 			onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>alcb.checked=false);"class="grid bg" style="--bp:0 -300%;">copy</button>`);

@@ -150,7 +150,7 @@
 
 	<button onclick="if(localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);init();focus();">recover</button>
 	<button onclick="fetch('sample.json').then(x=>x.json()).then(x=>x.forEach(y=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>llog(y.name)));">import sample</button>
-	<button onclick="datafx.delAll();">del all sheets</button>
+	<button onclick="dbfx.delAll();">del all sheets</button>
 	<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>alert(x));">cache del</button>
 
 
