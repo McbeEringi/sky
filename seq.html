@@ -84,8 +84,9 @@
 		#clip>.noteW{margin:0 8px;}
 		#tpl>*{margin:2px;width:48px;height:48px;border-radius:25%;overflow:hidden;display:inline-block;vertical-align:top;}
 		#tpl>.noteW{background:#484 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48px' viewBox='0 0 6 6' %3E%3Cpath d='M3,1l0,4m-2,-2l4,0' stroke='%23fff' stroke-width='.2'/%3E%3C/svg%3E");}
+		#tpl>.noteW *{padding:0;pointer-events:none;}#tpl>.noteW .noteW{min-width:0;width:10px;opacity:.5;}
 		#trash{background:#f44 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48px' viewBox='0 0 5 5' %3E%3Cpath d='M1,1l3,3m-3,0l3,-3' stroke='%23fff' stroke-width='.2'/%3E%3C/svg%3E");}
-		#trash .sortable-ghost{background:#f88;animation:.2s shake infinite;}
+		#trash .sortable-ghost{display:none;/*background:#f88;animation:.2s shake infinite;*/}
 		@keyframes wink{0%{opacity:.2;}100%{opacity:.4;}}
 		@keyframes shake{0%{transform:translate(1px,1px) rotate(0deg);}10%{transform:translate(-1px,-2px) rotate(-1deg);}20%{transform:translate(-3px,0px) rotate(1deg);}30%{transform:translate(3px,2px) rotate(0deg);}40%{transform:translate(1px,-1px) rotate(1deg);}50%{transform:translate(-1px,2px) rotate(-1deg);}60%{transform:translate(-3px,1px) rotate(0deg);}70%{transform:translate(3px,1px) rotate(-1deg);}80%{transform:translate(-1px,-1px) rotate(1deg);}90%{transform:translate(1px,2px) rotate(0deg);}100% { transform: translate(1px,-2px) rotate(-1deg);}}
 
@@ -121,8 +122,11 @@
 			</button><button onclick="ttoggle();" class="grid bg" style="--bp:0 -100%;">start/pause
 			</button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">stop
 			</button><button onclick="tstep(1);" class="grid bg" style="--bp:-200% -100%;">forward
-			</button><div id="tpl"><div class="noteW note" data-note=""></div><div class="noteW sortW"><div class="sort"></div></div><div id="trash"></div></div><label for="clipcb" class="grid bg" style="--bp:-500% -100%;">clipbobard
-			</label><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
+			</button><div
+				id="tpl"><div class="noteW note" data-note=""></div><div
+				class="noteW sortW"><div class="sort"><div class="noteW note" data-note=""></div><div class="noteW note" data-note=""></div></div></div><div
+				class="noteW sortW"><div class="sort"><div class="noteW note" data-note=""></div><div class="noteW note" data-note=""></div><div class="noteW note" data-note=""></div></div></div><div
+				id="trash"></div></div><label for="clipcb" class="grid bg" style="--bp:-500% -100%;">clipbobard
 			</label><button onclick="save();" class="grid bg" style="--bp:-600% -200%;">save
 			</button>
 		</div>
@@ -137,7 +141,8 @@
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel float_r">
-			        <label for="kbfixed" class="grid bg" style="--bp:-200% -200%;">practice
+			        <label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
+			</label><label for="kbfixed" class="grid bg" style="--bp:-200% -200%;">practice
 			</label><button onclick="Tone.Transport.pause();styperf.textContent='';alert('Loading…','none');load();" class="grid bg" style="--bp:-500% -200%;">load
 			</button><button id="ibtn" class="grid bg" style="--bp:-300% 0;">info
 			</button><label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><br><button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow
