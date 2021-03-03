@@ -1,9 +1,9 @@
 'use strict';
-alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';alcb.checked=true;}
+alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';albox.contentEditable=false;alcb.checked=true;}
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip,from_url;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103013\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103030\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
@@ -170,41 +170,41 @@ dispScr.onscroll=e=>{
 		if(userscr[1])curct.style.display='block';
 	};
 	tmp();screxet=setTimeout(tmp,100);
-};/*
-rawedit.onchange=()=>{
-	if(rawedit.checked){
-		Tone.Transport.pause();styperf.textContent='';
-		rawtxt.focus();
-		if(!rawtxt.value)rawtxt.value=JSON.stringify(main.scores,null,'	');
-		requestIdleCallback(()=>{
-			let ind=0;
-			for(let i=0;i<curpos*2+1;i++)ind=rawtxt.value.indexOf('"',ind+1);
-			rawtxt.setSelectionRange(ind+1,rawtxt.value.indexOf('"',ind+1));
-		});
-	}else{
-		rawtxt.value='';
-		kbset();
-	}
 };
-rawtxt.oninput=e=>{
-	clearTimeout(rawexet);rawexet=setTimeout(()=>{
-		let tmp,now=Tone.now();
-		try{tmp=JSON.parse(rawtxt.value);}catch(e){console.log(e);}
-		if(tmp){
-			seq.events=main.scores=tmp;urset();
-			llog('raw good');
-			requestIdleCallback(a2d);curpset();
-			synth.triggerAttackRelease(440*Math.pow(2,(3 +main.sc)/12),'1m',now);
-			synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m',now+.05,.9);
-			synth.triggerAttackRelease(440*Math.pow(2,(10+main.sc)/12),'1m',now+.1,.8);
-		}else{
-			llog('raw bad');
-			synth.triggerAttackRelease(440*Math.pow(2,(8 +main.sc)/12),'1m',now);
-			synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m',now+.05,.9);
-			synth.triggerAttackRelease(440*Math.pow(2,(1+main.sc)/12),'1m',now+.1,.8);
-		}
-	},1000);
-};*/
+rawedit.onclick=()=>{
+	Tone.Transport.pause();styperf.textContent='';
+	alert('','none');
+	let str=JSON.stringify(main.scores,null,'	');
+	let txta=document.createElement('textarea');
+	albox.appendChild(txta);
+	txta.value=str;
+	txta.classList.add('style');
+	requestIdleCallback(()=>{
+		let ind=0;
+		for(let i=0;i<curpos*2+1;i++)ind=txta.value.indexOf('"',ind+1);
+		txta.setSelectionRange(ind+1,txta.value.indexOf('"',ind+1));
+	});
+	txta.oninput=()=>{
+		clearTimeout(rawexet);
+		rawexet=setTimeout(()=>{
+			let tmp;
+			try{tmp=JSON.parse(txta.value);}catch(e){console.log(e);}
+			if(tmp){
+				seq.events=main.scores=tmp;urset();
+				llog('raw good');
+				requestIdleCallback(a2d);curpset();
+				synth.triggerAttackRelease(440*Math.pow(2,(3 +main.sc)/12),'1m');
+				synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m','+.05',.9);
+				synth.triggerAttackRelease(440*Math.pow(2,(10+main.sc)/12),'1m','+.1',.8);
+			}else{
+				llog('raw bad');
+				/*synth.triggerAttackRelease(440*Math.pow(2,(8 +main.sc)/12),'1m');
+				synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m','+.05',.9);
+				synth.triggerAttackRelease(440*Math.pow(2,(1+main.sc)/12),'1m','+.1',.8);*/
+			}
+		},1000);
+	};
+};
 undobtn.onclick=()=>urdo(-1);redobtn.onclick=()=>urdo(1);
 
 
@@ -352,7 +352,7 @@ dbfx={
 },
 init=()=>{
 	Tone.Transport.pause();
-	if(!main)main={name:'',sc:0,bpm:120,ts:4,scores:new Array(16).fill('')};
+	if(!main)main={name:'',sc:0,bpm:120,ts:4,scores:new Array(8).fill('')};
 	disp.textContent='Loading…';
 	urstack=[[],JSON.stringify(main.scores),[]];
 	seq.events=main.scores;sc_.value=main.sc;
@@ -413,6 +413,7 @@ new Sortable(clip,{
 		put:true
 	},
 	onStart:()=>dispCur.style.opacity='0',onEnd:()=>dispCur.style.opacity='1',
+	onClone:e=>e.clone.querySelectorAll('.sort').forEach(x=>new Sortable(x,sopt)),
 	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
 });
 new Sortable(trash,{group:'group_',onAdd:e=>e.item.parentNode.removeChild(e.item)});
