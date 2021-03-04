@@ -23,7 +23,7 @@
 	<link rel="manifest" href="skymf.json">
 	<meta name="theme-color" content="#fea"/>
 	<script>
-		//if('serviceWorker'in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('[ServiceWorker] Registered',reg);});});
+		if('serviceWorker'in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('[ServiceWorker] Registered',reg);});});
 	</script>
 	<link rel="preload" href="https://cdn.jsdelivr.net/npm/tone/build/Tone.js" as="script">
 	<link rel="preload" href="https://cdn.jsdelivr.net/npm/sortablejs/Sortable.min.js" as="script">
@@ -142,10 +142,10 @@
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel float_r">
-			        <label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
+			         <button onclick="Tone.Transport.pause();styperf.textContent='';alert('Loading…','none');load();" class="grid bg" style="--bp:-500% -200%;">load
+			</button><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
 			</label><label for="kbfixed" class="grid bg" style="--bp:-200% -200%;">practice
-			</label><button onclick="Tone.Transport.pause();styperf.textContent='';alert('Loading…','none');load();" class="grid bg" style="--bp:-500% -200%;">load
-			</button><button id="rawedit" class="grid bg" style="--bp:-400% -200%;">raw edit
+			</label><button id="rawedit" class="grid bg" style="--bp:-400% -200%;">raw edit
 			</button><button id="ibtn" class="grid bg" style="--bp:-300% 0;">info
 			</button><label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><br><button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow
 			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast

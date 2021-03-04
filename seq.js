@@ -3,7 +3,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip,from_url;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103030\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103040\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
@@ -124,8 +124,8 @@ document.querySelectorAll('#kb p').forEach((e,i)=>{
 	e.addEventListener('mousedown',keyfx,{passive:false});
 });
 document.addEventListener('keydown',e=>{
-	llog(e.code);
-	if(!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){
+	if(!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)&&!alcb.checked){
+		llog(e.code);
 		switch(e.code){
 			case'Space':e.preventDefault();ttoggle();break;
 			case'ArrowUp':e.preventDefault();if(e.shiftKey)bpm_.parentNode.nextElementSibling.onclick();else sc_.value=++main.sc;break;
@@ -217,7 +217,15 @@ const sopt={
 	onStart:()=>dispCur.style.opacity='0',onEnd:()=>dispCur.style.opacity='1',
 	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
 	onClone:e=>e.clone.querySelectorAll('.sort').forEach(x=>new Sortable(x,sopt)),
-	onSort:e=>{if(e.to.id!='clip')requestIdleCallback(()=>{d2d();curset();d2a();});else ccset();}
+	onSort:e=>{
+		if(e.to.id!='clip')
+			requestIdleCallback(()=>{
+				d2d();
+				if(curpos<0)curpos=0;else if(calced.length-1<curpos)curpos=calced.length-1;
+				curset();d2a();kbset();
+			});
+		else ccset();
+	}
 },
 a2d=()=>{
 	const core=(scores,e,b,l=1)=>{
@@ -260,7 +268,7 @@ a2d=()=>{
 d2a=()=>{
 	const core=e=>
 		Array.from(e.children,x=>{
-			if(x.classList.contains('note'))return x.dataset.note;//Array.from(x.children,y=>i2n_[y.style.bottom.slice(0,-2)/16]).join(',');
+			if(x.classList.contains('note'))return x.dataset.note;
 			else if(x.classList.contains('sortW'))return core(x.children[0]);
 		});
 	console.time('d2a');
@@ -300,11 +308,12 @@ save=()=>{
 	req.onsuccess=()=>{alert('✅\nsaved.')};
 },
 load=()=>{
-	let req=idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys();
+	let req=idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),
+		tpl=`<button onclick="main=null;init();alcb.checked=false;"class="grid bg" style="--bp:-700% -100%;">new</button><button onclick="dbfx.inp();"class="grid bg" style="--bp:-600% -100%;">inport</button><br>`;
 	req.onsuccess=e=>{
 		console.log(e.target.result);
 		albox.textContent='';
-		albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="main=null;init();alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
+		albox.insertAdjacentHTML('beforeend',tpl);
 		dbfx.tmp=e.target.result;
 		e.target.result.forEach((x,i)=>requestIdleCallback(()=>{
 			albox.insertAdjacentHTML('beforeend',`<div>${x}<br><br><button
@@ -319,7 +328,7 @@ load=()=>{
 	};
 	req.onerror=e=>{
 		albox.textContent=`⚠️\ncoudnt load datas.\n\n${e.target.error}`;
-		albox.insertAdjacentHTML('beforeend',`<div>New sheet<br><br><button onclick="main=null;init();alcb.checked=false;"class="grid bg" style="--bp:0 -100%;">open</button></div>`);
+		albox.insertAdjacentHTML('beforeend',tpl);
 	};
 },
 dbfx={
@@ -339,9 +348,15 @@ dbfx={
 	exp:i=>{
 		dbfx.get(i,e=>{
 			albox.textContent='';
-			albox.insertAdjacentHTML('beforeend',`Ready to export<p contenteditable style="color:#aef;background:#0004;padding:8px;border-radius:4px;white-space:nowrap;overflow:scroll;">${urlfx.e(e.target.result)}</p><button
-			onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>alcb.checked=false);"class="grid bg" style="--bp:0 -300%;">copy</button>`);
+			albox.insertAdjacentHTML('beforeend',`Ready to export "${e.target.result.name}"<p contenteditable style="color:#aef;background:#0004;padding:8px;border-radius:4px;white-space:nowrap;overflow:scroll;">${urlfx.e(e.target.result)}</p><button
+			onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>alcb.checked=false);" class="grid bg" style="--bp:0 -300%;">copy</button><button
+			onclick="window.open('https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}%0Aby%20sky_sequencer&url='+encodeURIComponent(this.previousElementSibling.previousElementSibling.textContent));alcb.checked=false;" class="grid bg" style="--bp:-700% -300%;">tweet</button>`);
 		});
+	},
+	inp:()=>{
+		albox.textContent='';
+		albox.insertAdjacentHTML('beforeend',`Inport from URL<p contenteditable style="color:#aef;background:#0004;padding:8px;border-radius:4px;white-space:nowrap;overflow:scroll;"></p><button
+		onclick="main=urlfx.l(this.previousElementSibling.textContent.split('#',2)[1]);alcb.checked=false;init();"class="grid bg" style="--bp:-600% -100%;">inport</button>`);
 	},
 	del:function(i){
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').delete(this.tmp[i]);
@@ -367,11 +382,11 @@ urlfx={
 	e:(dat=Object.assign({},main))=>{
 		dat.scores=urlfx.dmap(dat.scores,x=>x.split(',').map(y=>{if(y){y=Number(y)+15;return(y<0?'-':'')+Math.abs(y).toString(36);}}).join('.'));
 		dat.scores=JSON.stringify(dat.scores).replace(/\"/g,'').replace(/\],\[/g,'*').replace(/,/g,'~').replace(/\[/g,'!').replace(/\]/g,'_');
-		return location.href.split('#')[0]+'#'+encodeURIComponent(JSON.stringify(dat));
+		return 'https://mcbeeringi.github.io/sky/seq.html#'+encodeURIComponent(JSON.stringify(dat));
 	},
-	l:(str=decodeURIComponent(location.hash.slice(1)))=>{
+	l:(str=location.hash.slice(1))=>{
 		if(!str)return;
-		let dat=JSON.parse(str);
+		let dat=JSON.parse(decodeURIComponent(str));
 		dat.scores=dat.scores.replace(/\*/g,'],[').replace(/~/g,',').replace(/!/g,'[').replace(/_/g,']');
 		dat.scores=JSON.parse(dat.scores.replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3').replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3'));
 		dat.scores=urlfx.dmap(dat.scores,x=>x.split('.').map(y=>{if(y)return parseInt(y,36)-15;}).join(','));
