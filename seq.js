@@ -3,7 +3,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip,from_url;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103040\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103050\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
@@ -63,6 +63,7 @@ scrset=()=>{
 },
 urset=()=>{urstack[2]=[];urstack[0].push(urstack[1]);urstack[1]=JSON.stringify(main.scores);while(urstack[0].length>Number(localStorage.seq_undoMax))urstack[0].shift();llog('urstacked')},
 ccset=()=>{
+	console.time('ccset');
 	calced={ind:[],p:[]};
 	calced.e=document.querySelectorAll('#disp .note');
 	calced.e.forEach(e=>{
@@ -70,6 +71,7 @@ ccset=()=>{
 		calced.p.push(Number(e.dataset.p));
 	});
 	calced.length=calced.e.length;
+	console.timeEnd('ccset');
 },
 ttoggle=()=>{
 	Tone.start();
@@ -132,9 +134,9 @@ document.addEventListener('keydown',e=>{
 			case'ArrowDown':e.preventDefault();if(e.shiftKey)bpm_.parentNode.previousElementSibling.click();else sc_.value=--main.sc;break;
 			case'ArrowLeft':e.preventDefault();if(e.shiftKey)tstep(-10);else tstep(-1);break;
 			case'ArrowRight':e.preventDefault();if(e.shiftKey)tstep(10);else tstep(1);break;
-			case'KeyE':if(e.metaKey||e.ctrlKey){e.preventDefault();console.log(urlfx.e());}break;
-			case'KeyO':if(e.metaKey||e.ctrlKey){e.preventDefault();load();}break;
-			case'KeyS':if(e.metaKey||e.ctrlKey){e.preventDefault();save();}break;
+			case'KeyE':if(e.metaKey||e.ctrlKey){console.log(urlfx.e());}break;
+			case'KeyO':if(e.metaKey||e.ctrlKey){if(!e.shiftKey){e.preventDefault();load();}}break;
+			case'KeyS':if(e.metaKey||e.ctrlKey){if(!e.shiftKey){e.preventDefault();save();}}break;
 			case'KeyZ':if(e.metaKey||e.ctrlKey){e.preventDefault();urdo(e.shiftKey?1:-1);}break;
 			default:
 				const keymap={
@@ -220,13 +222,17 @@ const sopt={
 	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
 	onClone:e=>e.clone.querySelectorAll('.sort').forEach(x=>new Sortable(x,sopt)),
 	onSort:e=>{
-		if(e.to.id!='clip')
-			requestIdleCallback(()=>{
-				d2d();
-				if(curpos<0)curpos=0;else if(calced.length-1<curpos)curpos=calced.length-1;
-				curset();d2a();kbset();
-			});
-		else ccset();
+			console.log(e,e.from,e.to);
+			if(e.to.id=='clip')ccset();
+			else if(e.from.id=='clip'||e.target.isEqualNode(e.from))
+				requestIdleCallback(()=>{
+					if(e.to.id=='trash'||e.from.contains(e.to))d2d(e.from);
+					else if(e.from.id=='clip'||e.to.contains(e.from))d2d(e.to);
+					else{d2d(e.from);d2d(e.to);}
+					ccset();
+					if(curpos<0)curpos=0;else if(calced.length-1<curpos)curpos=calced.length-1;
+					curset();d2a();urset();kbset();
+				});
 	}
 },
 a2d=()=>{
@@ -276,7 +282,6 @@ d2a=()=>{
 	console.time('d2a');
 	seq.events=main.scores=core(disp);
 	console.timeEnd('d2a');
-	urset();
 },
 d2d=(x=disp)=>{
 	const core=y=>{
@@ -294,9 +299,8 @@ d2d=(x=disp)=>{
 			y.dataset.p=y.dataset.ind=i;y.dataset.l=1;
 			if(y.classList.contains('sortW'))core(y);
 		})
-	}else core(x);
+	}else core(x.parentNode);
 	console.timeEnd('d2d');
-	ccset();
 },
 save=()=>{
 	if(!main.name)main.name=name_.value='untitled '+new Date().toLocaleString();
@@ -358,7 +362,7 @@ dbfx={
 	inp:()=>{
 		albox.textContent='';
 		albox.insertAdjacentHTML('beforeend',`Inport from URL<p contenteditable style="color:#aef;background:#0004;padding:8px;border-radius:4px;white-space:nowrap;overflow:scroll;"></p><button
-		onclick="main=urlfx.l(this.previousElementSibling.textContent.split('#',2)[1]);alcb.checked=false;init();"class="grid bg" style="--bp:-600% -100%;">inport</button>`);
+		onclick="dbfx[0]=urlfx.l(this.previousElementSibling.textContent.split('#',2)[1]);if(dbfx[0]){main=dbfx[0];alcb.checked=false;init();idb.result.transaction('seq','readwrite').objectStore('seq').add(dbfx[0]);}" class="grid bg" style="--bp:-600% -100%;">inport</button>`);
 	},
 	del:function(i){
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').delete(this.tmp[i]);
@@ -389,6 +393,7 @@ urlfx={
 	l:(str=location.hash.slice(1))=>{
 		if(!str)return;
 		let dat=JSON.parse(decodeURIComponent(str));
+		if(!dat.scores)return;
 		dat.scores=dat.scores.replace(/\*/g,'],[').replace(/~/g,',').replace(/!/g,'[').replace(/_/g,']');
 		dat.scores=JSON.parse(dat.scores.replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3').replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3'));
 		dat.scores=urlfx.dmap(dat.scores,x=>x.split('.').map(y=>{if(y)return parseInt(y,36)-15;}).join(','));
