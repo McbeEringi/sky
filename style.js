@@ -8,7 +8,7 @@ idb.onupgradeneeded=e=>{
 idb.onsuccess=e=>{console.log('idb open success');if(!['0',undefined].includes(localStorage.sky_bgmode))bgset();};
 idb.onerror=e=>{console.log('idb open error: '+idb.errorCode);localStorage.sky_bgmode='0';bgset();};
 
-document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c&display=swap" rel="stylesheet" />
+document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c&display=swap" media="print" onload="this.media='all'">
 <style>
 :root,.style{background:#222;font-family:"M PLUS Rounded 1c",sans-serif;color:#fff;text-shadow:0 0 4px #222;word-wrap:break-word;}
 #bg{position:fixed;top:0;left:0;z-index:-16;width:100vw;height:100vh;transition:background 1s;pointer-events:none;background-size:cover;background-position:center;user-select:none;-webkit-user-select:none;}

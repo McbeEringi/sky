@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache210225_0',STATIC_DATA=[
+const cacheName='cache210307_0',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg',
 	'img/sky.png',
@@ -32,11 +32,10 @@ const cacheName='cache210225_0',STATIC_DATA=[
 	'audio/instr/musicbox/ds6.mp3',
 	'audio/instr/musicbox/ds7.mp3'
 	//seq
-	/*
 	'seq.html?pwa=1',
 	'seq.js',
+	'https://cdn.jsdelivr.net/npm/sortablejs/Sortable.min.js',
 	'https://mcbeeringi.github.io/src/requestIdleCallback.min.js'
-	*/
 ];
 
 self.addEventListener('install',(e)=>{

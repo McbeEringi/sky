@@ -39,7 +39,8 @@
 
 		.dispPanel{position:relative;width:100%;border-top:6px solid #0004;touch-action:manipulation;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
 			background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
-		.dispPanel::after{position:absolute;line-height:16px;font-size:12px;opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;top:0;word-break:break-all;content:"CBAGFEDCBAGFEDC";}
+		.dispPanel::after{position:absolute;top:0;line-height:16px;font-size:12px;opacity:.5;pointer-events:none;width:8px;color:#000;text-shadow:0 0 4px #fff;word-break:break-all;content:"CBAGFEDCBAGFEDC";z-index:3;}
+		#name_{position:absolute;bottom:0;right:0;line-height:16px;margin-bottom:6px;color:#0008;text-shadow:none;}
 		#dispScr>*{position:absolute;line-height:16px;font-size:12px;}#dispScr::-webkit-scrollbar{display:none;}
 		#dispScr{width:100%;height:240px;overflow:scroll;position:relative;scrollbar-width:none;}#disp{height:100%;min-width:100%;padding:0 64px 0 16px;box-sizing:border-box;white-space:nowrap;}
 		#dispCur{width:16px;height:100%;background:#bff8;left:17px;transition:.1s;border-radius:4px;z-index:1;pointer-events:none;}
@@ -53,7 +54,6 @@
 		.uiPanel{max-width:312px;}
 		.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
 		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;font-size:18px;line-height:1.1em;font-family:"M PLUS Rounded 1c",sans-serif;}
-		#name_{font-size:large;background:#4448;width:100%;max-width:308px;height:48px;border-radius:12px;border:none;padding:0 2px;margin:2px;box-sizing:border-box;font-family:"M PLUS Rounded 1c",sans-serif;color:#caf0f6;text-shadow:0 0 4px #688;outline:none;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 
 		.kbPanel{overflow:hidden;max-width:360px;position:relative;width:100%;background:#0004;border-radius:8px;touch-action:none;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
@@ -71,8 +71,8 @@
 		#alcb+label{display:block;width:100%;height:100%;background:#0008;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 		#albox{width:calc(90% - 64px);max-width:256px;min-height:128px;max-height:calc(90% - 40px);border-radius:16px;padding:20px;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);overflow-x:hidden;overflow-y:scroll;text-align:center;}
 		#alcb:checked~*{opacity:1;pointer-events:auto;}
-		#albox>div{display:inline-block;background:#8884;margin:4px;width:260px;text-align:left;max-width:100%;}#albox>div:first-line{font-size:large;}
-		#albox>textarea{width:100%;height:90vh;}
+		#albox>div{display:inline-block;background:#8884;margin:4px;width:260px;text-align:left;max-width:100%;vertical-align:top;}#albox>div>span{display:inline-block;font-size:large;background:#0002;padding:0 8px;vertical-align:top;}
+		#albox>textarea{width:100%;height:90vh;}#albox>p[contenteditable]{color:#aef;background:#0004;padding:8px;border-radius:4px;white-space:nowrap;overflow:scroll;}
 
 		.nowebp .bg,.nowebp #kb p::after{background-image:url(img/seq.png);}
 		.shake{animation:.3s xshake;filter:saturate(0);}
@@ -97,20 +97,23 @@
 		#kblock:checked~* label[for="kblock"],#kbfixed:checked~* label[for="kbfixed"],#clipcb:checked~* label[for="clipcb"]{box-shadow:0 0 2px 4px #fea inset;}
 		#kbfixed:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;}
 		#clipcb:checked~* #clip{display:block;}#clipcb:checked~* .kbPanel{display:none;}
-		#logcb:not(:checked)~#log{display:none;}
+		#dbgcb:not(:checked)~.debug{display:none;}
+		#distrs:checked~* #dispCur,#distrs:checked~* #kb p::before,#distrs:checked~* #kb p::after{transition: none !important;}
 	</style>
 	<style id="stybeat"></style><style id="styperf"></style>
 	<input type="checkbox" id="kblock">
 	<input type="checkbox" id="kbfixed" onchange="kblock.checked=this.checked;">
 	<input type="checkbox" id="clipcb">
 	<input type="checkbox" id="uiflip">
-	<input type="checkbox" id="logcb">
+	<input type="checkbox" id="dbgcb">
+	<input type="checkbox" id="distrs">
 	<div class="fg_">
 		<input type="checkbox" id="alcb"><label for="alcb"></label><pre id="albox" class="style"></pre>
 	</div>
 
 
 	<div class="dispPanel">
+		<span id="name_"></span>
 		<div id="dispScr"><div id="dispCur"></div><div id="disp">Please enable JavaScript to use this app.</div></div>
 		<div id="dispBar"><div></div><div></div></div>
 		<button id="curct" class="grid bg">scroll to cursor</button>
@@ -139,8 +142,6 @@
 			</div>
 		</div>
 		<div id="clip" class="float_l"></div>
-	</div>
-	<div class="clear_fix">
 		<div class="uiPanel float_r">
 			         <button onclick="Tone.Transport.pause();styperf.textContent='';alert('Loading…','none');load();" class="grid bg" style="--bp:-500% -200%;">load
 			</button><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
@@ -151,21 +152,20 @@
 			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast
 			</button><button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-500% 0;">down
 			</button><label><input id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-600% 0;"></input></label><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-400% 0;">up
-			</button><label><input id="name_" onchange="nameset();" placeholder="untitled"></input></label>
+			</button>
 		</div>
 	</div>
 
-	<button onclick="if(localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);init();">recover</button>
-	<button onclick="fetch('sample.json').then(x=>x.json()).then(x=>x.forEach(y=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>llog(y.name)));">import sample</button>
-	<button onclick="dbfx.delAll();">del all sheets</button>
-	<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>alert(x));">cache del</button>
-
-
+	<div class="debug">
+		<button onclick="if(localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);init();">recover</button>
+		<button onclick="fetch('sample.json').then(x=>x.json()).then(x=>x.forEach(y=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>llog(y.name)));alcb.checked=false;">import sample</button>
+		<button onclick="dbfx.delAll();">del all sheets</button>
+		<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>alert(x));">cache del</button>
+	</div>
 	<!--
 	caches.keys().then(x=>caches.open(x[0])).then(x=>x.delete('/sky/seq.html')).then(x=>log.textContent+=`\ncache del: ${x}`)
-	<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="sky_sequencer" data-size="large" data-url="https://mcbeeringi.github.io/sky/seq.html" data-hashtags="">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 	-->
-	<pre id="log"></pre>
+	<pre id="log" class="debug"></pre>
 
 	<script>
 		disp.textContent=`Downloading assets. Please wait… if you can't see content here, please reboot browser`;

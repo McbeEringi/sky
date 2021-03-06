@@ -1,10 +1,10 @@
 'use strict';
-alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';albox.contentEditable=false;alcb.checked=true;}
+alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';alcb.checked=true;}
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip,from_url;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103060\nMIT License\n',
-llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
+const info='⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103070\nMIT License\n',
+llog=(x,c)=>{if(dbgcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
 	//Tone.Draw.schedule(()=>{},time);
@@ -30,7 +30,6 @@ tsset=()=>{let tmp=Number(ts_.value);if(tmp){main.ts=tmp;Tone.Transport.timeSign
 	stybeat.textContent=main.ts>1?`#disp>.noteW:nth-child(${main.ts}n+1){overflow:hidden;}#disp>.noteW:nth-child(${main.ts}n+1)::before{content:"";position:absolute;display:block;width:2px;height:100%;background:#feac;}`:'';
 	llog(main.ts);
 },
-nameset=()=>{if(name_.value)main.name=name_.value;else name_.value=main.name;llog(main.name);},
 curset=()=>{
 	let tmp=calced.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX;
 	let dbpds=dispBar.clientWidth/dispScr.scrollWidth;
@@ -75,15 +74,15 @@ ccset=()=>{
 },
 ttoggle=()=>{
 	Tone.start();
-	let state=Tone.Transport.state=='started';
-	styperf.textContent=state?'':'#dispCur,#kb p::before,#kb p::after{transition: none !important;}';
-	if(!state)ezsave();
-	Tone.Transport[state?'pause':'start']();
+	let state=Tone.Transport.state!='started';
+	distrs.checked=state;
+	if(state)ezsave();
+	Tone.Transport[state?'start':'pause']();
 },
-tstop=()=>{Tone.Transport.stop();styperf.textContent='';curpos=0;curset();scrset();kbset();},
+tstop=()=>{Tone.Transport.stop();distrs.checked=false;curpos=0;curset();scrset();kbset();},
 tstep=x=>{
 	Tone.start();
-	Tone.Transport.pause();styperf.textContent='';
+	Tone.Transport.pause();distrs.checked=false;
 	curpos+=x;
 	if(curpos<0)curpos=calced.length+curpos%calced.length;else if(curpos>=calced.length)curpos=curpos%calced.length;
 	Tone.Transport.position=p2pos(calced.p[curpos]);
@@ -100,7 +99,7 @@ urdo=x=>{
 },
 domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('shake');};
 
-ibtn.onclick=()=>{alert(info,' ');albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><label for="logcb" class="grid showtxt">debuglog</label>`;};
+ibtn.onclick=()=>{alert(info,' ');albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><label for="dbgcb" class="grid showtxt">debug</label>`;};
 curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;};
 document.querySelectorAll('#kb p').forEach((e,i)=>{
 	const keyfx=ev=>{
@@ -126,7 +125,7 @@ document.querySelectorAll('#kb p').forEach((e,i)=>{
 	e.addEventListener('mousedown',keyfx,{passive:false});
 });
 document.addEventListener('keydown',e=>{
-	if(!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)&&!alcb.checked){
+	if(!['impUT','TEXTAREA'].includes(document.activeElement.tagName)&&!alcb.checked){
 		llog(e.code);
 		switch(e.code){
 			case'Space':e.preventDefault();ttoggle();break;
@@ -176,7 +175,7 @@ dispScr.onscroll=e=>{
 	tmp();screxet=setTimeout(tmp,100);
 };
 rawedit.onclick=()=>{
-	Tone.Transport.pause();styperf.textContent='';
+	Tone.Transport.pause();distrs.checked=false;
 	alert('','none');
 	let str=JSON.stringify(main.scores,null,'	');
 	let txta=document.createElement('textarea');
@@ -305,25 +304,28 @@ d2d=(x=disp)=>{
 	console.timeEnd('d2d');
 },
 save=()=>{
-	if(!main.name)main.name=name_.value='untitled '+new Date().toLocaleString();
-	dbfx.save();
+	if(!main.name){
+		alert('','none');
+		albox.insertAdjacentHTML('beforeend',`enter title<p contenteditable></p><button
+		onclick="{let tmp=this.previousElementSibling.textContent||('untitled '+new Date().toLocaleString());name_.textContent=main.name=tmp;document.title='sky_seq '+tmp;dbfx.save();}" class="grid bg" style="--bp:-600% -200%;">save</button>`);
+	}else dbfx.save();
 },
 load=()=>{
 	let req=idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),
-		tpl=`<button onclick="main=null;init();alcb.checked=false;"class="grid bg" style="--bp:-700% -100%;">new</button><button onclick="dbfx.inp();"class="grid bg" style="--bp:-600% -100%;">inport</button><br>`;
+		tpl=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-700% -100%;">new</button><button onclick="dbfx.imp();"class="grid bg" style="--bp:-600% -100%;">import</button><br>`;
 	req.onsuccess=e=>{
 		console.log(e.target.result);
 		albox.textContent='';
 		albox.insertAdjacentHTML('beforeend',tpl);
 		dbfx.tmp=e.target.result;
+		if(!e.target.result.length)albox.insertAdjacentHTML('beforeend',`no sheets yet<br><button onclick="fetch('sample.json').then(x=>x.json()).then(x=>x.forEach(y=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>llog(y.name)));alcb.checked=false;">download sample</button>`);
 		e.target.result.forEach((x,i)=>requestIdleCallback(()=>{
-			albox.insertAdjacentHTML('beforeend',`<div>${x}<br><br><button
+			albox.insertAdjacentHTML('beforeend',`<div><span>${x}</span><br><br><button
 				onclick="dbfx.open(${i});"class="grid bg" style="--bp:0 -100%;">open</button><button
+				onclick="dbfx.renameW(${i});"class="grid bg" style="--bp:-200% -300%;">rename</button><button
 				onclick="dbfx.dupe(${i});"class="grid bg" style="--bp:0 -300%;">dupe</button><button
 				onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-400% -100%;">export</button><button
-				onclick="if(this.style.left=='0px'){this.style.left='52px';this.textContent='really?';this.classList.add('showtxt');
-				setTimeout(()=>{this.style.left='0px';this.textContent='delete';this.classList.remove('showtxt');},1000);}else{dbfx.del('${i}');}"
-				class="grid bg" style="--bp:-700% -200%;position:relative;left:0px;transition:left .2s;">delete</button></div>`
+				onclick="dbfx.delW(${i});" class="grid bg" style="--bp:-700% -200%;">delete</button></div>`
 			);
 		}));
 	};
@@ -349,15 +351,21 @@ dbfx={
 	exp:i=>{
 		dbfx.get(i,e=>{
 			albox.textContent='';
-			albox.insertAdjacentHTML('beforeend',`Ready to export "${e.target.result.name}"<p contenteditable style="color:#aef;background:#0004;padding:8px;border-radius:4px;white-space:nowrap;overflow:scroll;">${urlfx.e(e.target.result)}</p><button
+			albox.insertAdjacentHTML('beforeend',`Ready to export "${e.target.result.name}"<p contenteditable>${urlfx.e(e.target.result)}</p><button
 			onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>alcb.checked=false);" class="grid bg" style="--bp:0 -300%;">copy</button><button
 			onclick="window.open('https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}%0Aby%20sky_sequencer&url='+encodeURIComponent(this.previousElementSibling.previousElementSibling.textContent));alcb.checked=false;" class="grid bg" style="--bp:-700% -300%;">tweet</button>`);
 		});
 	},
-	inp:()=>{
+	imp:()=>{
 		albox.textContent='';
-		albox.insertAdjacentHTML('beforeend',`Inport from URL<p contenteditable style="color:#aef;background:#0004;padding:8px;border-radius:4px;white-space:nowrap;overflow:scroll;"></p><button
-		onclick="dbfx[0]=urlfx.l(this.previousElementSibling.textContent.split('#',2)[1]);if(dbfx[0]){main=dbfx[0];alcb.checked=false;init();idb.result.transaction('seq','readwrite').objectStore('seq').add(dbfx[0]);}" class="grid bg" style="--bp:-600% -100%;">inport</button>`);
+		albox.insertAdjacentHTML('beforeend',`import from URL<p contenteditable></p><button
+		onclick="{let tmp=urlfx.l(this.previousElementSibling.textContent.split('#',2)[1]);if(tmp){main=tmp;alcb.checked=false;init();idb.result.transaction('seq','readwrite').objectStore('seq').add(tmp);}}" class="grid bg" style="--bp:-600% -100%;">import</button>`);
+	},
+	delW:function(i){
+		albox.textContent='';
+		albox.insertAdjacentHTML('beforeend',`Are you sure you want to delete "${this.tmp[i]}"?<br><br><button
+		onclick="dbfx.del(${i});" class="style" style="display:inline-block;background:#f448;font-size:16px;border:none;border-radius:8px;text-align:center;outline:none;padding:8px 0;margin:4px;width:40%;min-width:256px;">delete</button><button
+		onclick="load();" class="style" style="display:inline-block;background:#fff8;font-size:16px;border:none;border-radius:8px;text-align:center;outline:none;padding:8px 0;margin:4px;width:40%;min-width:256px;">cancel</button>`);
 	},
 	del:function(i){
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').delete(this.tmp[i]);
@@ -367,13 +375,24 @@ dbfx={
 	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>llog('delall done'),
 	save:()=>{
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
-		req.onerror=e=>{
-			console.log(e.target.error);
+		req.onerror=()=>{
 			req=idb.result.transaction('seq','readwrite').objectStore('seq').put(main);
 			req.onerror=e=>alert(`⚠️\noverwrite save failed.\n\n${e.target.error}`);
 			req.onsuccess=()=>alert('✅\noverwrite saved.');
 		};
 		req.onsuccess=()=>{alert('✅\nsaved.')};
+	},
+	renameW:function(i){
+		albox.textContent='';
+		albox.insertAdjacentHTML('beforeend',`new name…<p contenteditable>${this.tmp[i]}</p><button
+		onclick="dbfx.rename(${i},this.previousElementSibling.textContent);" class="grid bg" style="--bp:-200% -300%;">rename</button>`);
+	},
+	rename:(i,x)=>{
+		dbfx.get(i,e=>{
+			let dat=e.target.result;dat.name=x;
+			let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(dat);
+			req.onerror=e=>{console.log(e);load();};req.onsuccess=()=>dbfx.del(i);
+		});
 	}
 },
 init=()=>{
@@ -382,8 +401,8 @@ init=()=>{
 	disp.textContent='Loading…';
 	urstack=[[],JSON.stringify(main.scores),[]];
 	seq.events=main.scores;sc_.value=main.sc;
-	bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();name_.value=main.name;
-	//Tone.Transport.swing=1;
+	bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();//Tone.Transport.swing=1;
+	name_.textContent=main.name;document.title='sky_seq '+main.name;
 	requestIdleCallback(a2d);
 	requestIdleCallback(tstop);
 },
