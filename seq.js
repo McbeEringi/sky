@@ -3,7 +3,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip,from_url;
-const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103050\nMIT License\n',
+const info='⚠️alpha test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103060\nMIT License\n',
 llog=(x,c)=>{if(logcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
@@ -222,17 +222,19 @@ const sopt={
 	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
 	onClone:e=>e.clone.querySelectorAll('.sort').forEach(x=>new Sortable(x,sopt)),
 	onSort:e=>{
-			console.log(e,e.from,e.to);
-			if(e.to.id=='clip')ccset();
-			else if(e.from.id=='clip'||e.target.isEqualNode(e.from))
-				requestIdleCallback(()=>{
-					if(e.to.id=='trash'||e.from.contains(e.to))d2d(e.from);
-					else if(e.from.id=='clip'||e.to.contains(e.from))d2d(e.to);
-					else{d2d(e.from);d2d(e.to);}
-					ccset();
-					if(curpos<0)curpos=0;else if(calced.length-1<curpos)curpos=calced.length-1;
-					curset();d2a();urset();kbset();
-				});
+		console.log(e);
+		const clto=(e.pullMode=='clone'&&e.target.isEqualNode(e.to)),
+			clfrom=(e.pullMode=='clone'&&e.target.isEqualNode(e.from));
+		if(clfrom)ccset();
+		else if(clto||e.target.isEqualNode(e.from))
+			requestIdleCallback(()=>{
+				if(e.to.id=='trash'||e.from.contains(e.to))d2d(e.from);
+				else if(clto||e.to.contains(e.from))d2d(e.to);
+				else{d2d(e.from);d2d(e.to);}
+				ccset();
+				if(curpos<0)curpos=0;else if(calced.length-1<curpos)curpos=calced.length-1;
+				curset();d2a();urset();kbset();
+			});
 	}
 },
 a2d=()=>{
@@ -304,14 +306,7 @@ d2d=(x=disp)=>{
 },
 save=()=>{
 	if(!main.name)main.name=name_.value='untitled '+new Date().toLocaleString();
-	let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
-	req.onerror=e=>{
-		console.log(e.target.error);
-		req=idb.result.transaction('seq','readwrite').objectStore('seq').put(main);
-		req.onerror=e=>alert(`⚠️\noverwrite save failed.\n\n${e.target.error}`);
-		req.onsuccess=()=>alert('✅\noverwrite saved.');
-	};
-	req.onsuccess=()=>{alert('✅\nsaved.')};
+	dbfx.save();
 },
 load=()=>{
 	let req=idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),
@@ -369,7 +364,17 @@ dbfx={
 		req.onsuccess=load;
 		req.onerror=e=>albox.textContent=`⚠️\ncoudnt delete datas.\n\n${e.target.error}`;
 	},
-	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>llog('delall done')
+	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>llog('delall done'),
+	save:()=>{
+		let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
+		req.onerror=e=>{
+			console.log(e.target.error);
+			req=idb.result.transaction('seq','readwrite').objectStore('seq').put(main);
+			req.onerror=e=>alert(`⚠️\noverwrite save failed.\n\n${e.target.error}`);
+			req.onsuccess=()=>alert('✅\noverwrite saved.');
+		};
+		req.onsuccess=()=>{alert('✅\nsaved.')};
+	}
 },
 init=()=>{
 	Tone.Transport.pause();
