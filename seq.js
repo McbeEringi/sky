@@ -438,7 +438,7 @@ init();document.body.focus();
 if(!from_url){
 	setInterval(ezsave,60000);
 	document.onvisibilitychange=()=>{if(document.visibilityState=='hidden')ezsave();};
-}
+}else idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
 
 new Sortable(tpl,{
 	group:{
