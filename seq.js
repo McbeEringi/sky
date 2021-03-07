@@ -3,7 +3,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let sc=Number(sc_.value),main,calced={ind:[],p:[]},curpos=0,userscr=[false,false],urstack,rawexet,screxet,noteclip,from_url;
-const info='⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103070\nMIT License\n',
+const info='⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103071\nMIT License\n',
 llog=(x,c)=>{if(dbgcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
@@ -257,12 +257,15 @@ a2d=()=>{
 			div.dataset.l=l;
 			if(typeof x=='string'){
 				div.dataset.note=x;
-				x.split(',').forEach(y=>{
-					if(n2i[y]+1){
-						let note=document.createElement('p');
-						note.style.bottom=Number(n2i[y])*16+'px';
-						div.appendChild(note);
+				if(x)x.split(',').forEach(y=>{
+					let note=document.createElement('p');
+					if(n2i[y]==undefined){
+						if(Number(y)>0)y=String((Number(y)+9)%24-9);
+						else y=String((Number(y)+10)%24+14);
+						note.style.opacity=.5;
 					}
+					note.style.bottom=Number(n2i[y])*16+'px';
+					div.appendChild(note);
 				});
 				div.classList.add('note');
 			}else core(x,div,0,l/x.length);
