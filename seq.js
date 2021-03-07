@@ -177,7 +177,7 @@ dispScr.onscroll=e=>{
 rawedit.onclick=()=>{
 	Tone.Transport.pause();distrs.checked=false;
 	alert('','none');
-	let str=JSON.stringify(main.scores/*,null,'	'*/);
+	let str=JSON.stringify(main.scores/*,null,'	'*/).replace(/,/g,', ');
 	let txta=document.createElement('textarea');
 	albox.appendChild(txta);
 	txta.value=str;
