@@ -19,8 +19,7 @@ mbxli=()=>{let s={};for(let i=3;i<=6;i++){s[`a${i}`]=`a${i}.mp3`;s[`d#${i+1}`]=`
 synth=new Tone.Sampler(mbxli(),()=>{},"https://mcbeeringi.github.io/sky/audio/instr/musicbox/").connect(new Tone.Volume(-10).toDestination()),
 toHz=x=>880*Math.pow(2,(Number(x)+main.sc)/12),//C5~C7
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
-n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6',
-	'3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
+n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6','3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
 n2c=['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'],
 pos2p=pos_=>{let tmp=pos_.split(':').map(x=>Number(x));return tmp[0]*Tone.Transport.timeSignature+tmp[1]+tmp[2]*.25;},
 p2pos=p_=>`${Math.floor(p_/Tone.Transport.timeSignature)}:${Math.floor(p_)%Tone.Transport.timeSignature}:${(p_*4)%4}`,
@@ -191,7 +190,7 @@ rawedit.onclick=()=>{
 		clearTimeout(rawexet);
 		rawexet=setTimeout(()=>{
 			let tmp;
-			try{tmp=JSON.parse(txta.value);}catch(e){console.log(e);}
+			try{tmp=JSON.parse(txta.value.replace(/\s/g,''));}catch(e){console.log(e);}
 			if(tmp){
 				seq.events=main.scores=tmp;urset();
 				llog('raw good');
