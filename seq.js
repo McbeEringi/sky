@@ -3,7 +3,7 @@ alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,rawexet,screxet,noteclip,from_url;
-const info='⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103071\nMIT License\n',
+const info='⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103072\nMIT License\n',
 llog=(x,c)=>{if(dbgcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
