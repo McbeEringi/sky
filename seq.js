@@ -125,7 +125,7 @@ document.querySelectorAll('#kb p').forEach((e,i)=>{
 	e.addEventListener('mousedown',keyfx,{passive:false});
 });
 document.addEventListener('keydown',e=>{
-	if(!['impUT','TEXTAREA'].includes(document.activeElement.tagName)&&!alcb.checked){
+	if(!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)&&!alcb.checked){
 		llog(e.code);
 		switch(e.code){
 			case'Space':e.preventDefault();ttoggle();break;
