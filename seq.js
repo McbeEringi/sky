@@ -428,7 +428,7 @@ urlfx={
 
 
 if(!localStorage.seq_undoMax){
-	localStorage.seq_undoMax=32;
+	localStorage.seq_undoMax=24;
 	fetch('sample.json').then(x=>x.json()).then(x=>x.forEach(y=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>llog(y.name)));
 }
 synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/musicbox/').toDestination();
