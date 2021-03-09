@@ -1,9 +1,9 @@
 'use strict';
-alert=(x,mw)=>{albox.textContent=x;albox.style.pointerEvents=mw?'':'none';albox.style.maxWidth=mw?mw:'';alcb.checked=true;}
+alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';albox.style.maxWidth=mw?'100%':'';alcb.checked=true;}
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,rawexet,screxet,noteclip,from_url;
-const info='⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103072\nMIT License\n',
+const info='⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103100\nMIT License\n',
 llog=(x,c)=>{if(dbgcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
@@ -92,12 +92,12 @@ urdo=x=>{
 	while(x<0){if(urstack[0].length){urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();x++;tmp=true;llog('undo');}else{domshake(undobtn);break;}}
 	while(0<x){if(urstack[2].length){urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();x--;tmp=true;llog('redo');}else{domshake(redobtn);break;}}
 	if(tmp){
-		seq.events=main.scores=JSON.parse(urstack[1]);requestIdleCallback(a2d);requestIdleCallback(()=>curpset());requestIdleCallback(()=>kbset());
+		main.scores=JSON.parse(urstack[1]);requestIdleCallback(()=>seq.events=main.scores);requestIdleCallback(()=>{a2d();curpset();kbset();});
 	}
 },
 domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('shake');};
 
-ibtn.onclick=()=>{alert(info,' ');albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><label for="dbgcb" class="grid showtxt">debug</label>`;};
+ibtn.onclick=()=>{alert(info,1);albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><label for="dbgcb" class="grid showtxt">debug</label>`;};
 curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;};
 document.querySelectorAll('#kb p').forEach((e,i)=>{
 	const keyfx=ev=>{
@@ -115,7 +115,7 @@ document.querySelectorAll('#kb p').forEach((e,i)=>{
 			}
 			arr=arr.join(',');calced.e[curpos].dataset.note=arr;
 			arr=`main.scores[${calced.ind[curpos].replace(/-/g,'][')}]='${arr}';`;llog(arr);
-			Function(arr)();seq.events=main.scores;urset();
+			Function(arr)();requestIdleCallback(()=>{seq.events=main.scores;});urset();
 			e.classList.toggle('press');
 		}
 	};
@@ -132,7 +132,7 @@ document.addEventListener('keydown',e=>{
 			case'ArrowLeft':e.preventDefault();if(e.shiftKey)tstep(-10);else tstep(-1);break;
 			case'ArrowRight':e.preventDefault();if(e.shiftKey)tstep(10);else tstep(1);break;
 			case'KeyE':if(e.metaKey||e.ctrlKey){console.log(urlfx.e());}break;
-			case'KeyO':if(e.metaKey||e.ctrlKey){if(!e.shiftKey){e.preventDefault();load();}}break;
+			case'KeyO':if(e.metaKey||e.ctrlKey){if(!e.shiftKey){e.preventDefault();alert('Loading…',1,1);load();}}break;
 			case'KeyS':if(e.metaKey||e.ctrlKey){if(!e.shiftKey){e.preventDefault();save();}}break;
 			case'KeyZ':if(e.metaKey||e.ctrlKey){e.preventDefault();urdo(e.shiftKey?1:-1);}break;
 			default:
@@ -174,7 +174,7 @@ dispScr.onscroll=e=>{
 };
 rawedit.onclick=()=>{
 	Tone.Transport.pause();distrs.checked=false;
-	alert('','none');
+	alert('',1,1);
 	let str=JSON.stringify(main.scores/*,null,'	'*/).replace(/,/g,', ');
 	let txta=document.createElement('textarea');
 	albox.appendChild(txta);
@@ -191,7 +191,7 @@ rawedit.onclick=()=>{
 			let tmp;
 			try{tmp=JSON.parse(txta.value.replace(/\s/g,''));}catch(e){console.log(e);}
 			if(tmp){
-				seq.events=main.scores=tmp;urset();
+				main.scores=tmp;requestIdleCallback(()=>seq.events=main.scores);urset();
 				llog('raw good');
 				requestIdleCallback(a2d);curpset();
 				synth.triggerAttackRelease(440*Math.pow(2,(3 +main.sc)/12),'1m');
@@ -282,7 +282,7 @@ d2a=()=>{
 			else if(x.classList.contains('sortW'))return core(x.children[0]);
 		});
 	console.time('d2a');
-	seq.events=main.scores=core(disp);
+	main.scores=core(disp);requestIdleCallback(()=>seq.events=main.scores);
 	console.timeEnd('d2a');
 },
 d2d=(x=disp)=>{
@@ -306,7 +306,7 @@ d2d=(x=disp)=>{
 },
 save=()=>{
 	if(!main.name){
-		alert('','none');
+		alert('');
 		albox.insertAdjacentHTML('beforeend',`enter title<p contenteditable></p><button
 		onclick="{let tmp=this.previousElementSibling.textContent||('untitled '+new Date().toLocaleString());name_.textContent=main.name=tmp;document.title='sky_seq '+tmp;dbfx.save();}" class="grid bg" style="--bp:-600% -200%;">save</button>`);
 	}else dbfx.save();
@@ -399,15 +399,15 @@ dbfx={
 init=()=>{
 	Tone.Transport.pause();
 	if(!main)main={name:'',sc:0,bpm:120,ts:4,scores:new Array(8).fill('')};
-	disp.textContent='Loading…';
+	disp.textContent='Loading sheet…';
 	urstack=[[],JSON.stringify(main.scores),[]];
-	seq.events=main.scores;sc_.value=main.sc;
+	requestIdleCallback(()=>seq.events=main.scores);sc_.value=main.sc;
 	bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();//Tone.Transport.swing=1;
 	name_.textContent=main.name;document.title='sky_seq '+main.name;
 	requestIdleCallback(a2d);
 	requestIdleCallback(tstop);
 },
-ezsave=()=>localStorage.seq_ezsave=JSON.stringify(main),
+ezsave=()=>{localStorage.seq_ezsave=JSON.stringify(main);console.log('ezsave');},
 urlfx={
 	dmap:(x,fx)=>x.map(y=>{if(Array.isArray(y))return urlfx.dmap(y,fx);else return fx(y);}),
 	e:(dat=Object.assign({},main))=>{
@@ -430,10 +430,10 @@ urlfx={
 
 if(!localStorage.seq_undoMax){
 	localStorage.seq_undoMax=24;
-	fetch('sample.json').then(x=>x.json()).then(x=>x.forEach(y=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>llog(y.name)));
+	requestIdleCallback(()=>{alert('Loading…',1,1);load();});
 }
 synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/musicbox/').toDestination();
-log.textContent=info;
+log.textContent=info;//Tone.Transport.loop=true;
 from_url=Boolean(main=urlfx.l());
 if(!from_url&&localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
 init();document.body.focus();

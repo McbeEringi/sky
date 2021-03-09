@@ -52,8 +52,9 @@
 		.sortW{overflow:hidden;}.sort{;margin:0 8px;padding:0 8px;box-sizing:border-box;background:#fff4;box-shadow:0 0 8px #fff8;}
 
 		.uiPanel{max-width:312px;}
-		.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
-		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;font-size:18px;line-height:1.1em;font-family:"M PLUS Rounded 1c",sans-serif;}
+		.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
+		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);transition:.1s;}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;font-size:18px;line-height:1.1em;font-family:"M PLUS Rounded 1c",sans-serif;}
+		.bg:active{background-color:#8888;}
 
 		.kbPanel{overflow:hidden;max-width:360px;position:relative;width:100%;background:#0004;border-radius:8px;touch-action:none;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
@@ -80,15 +81,17 @@
 
 		.sortable-chosen{background:#feac;}
 		.sortable-ghost{animation:.5s infinite alternate wink;}.sortable-drag{}
-		#tpl,#clip{display:inline-block;vertical-align:top;}
+		#tpl,#clip{display:inline-block;vertical-align:top;position:relative;}
 		#clip{display:none;padding:6px 0;width:100%;height:240px;max-width:480px;white-space:nowrap;overflow-x:scroll;position:relative;background:#fff4;border-radius:8px;}
 		#clip>.noteW{margin:0 8px;}
+		#tpl:hover:not(:active)::after{position:absolute;content:"drag me!";left:50%;top:50%;transform:translate(-50%,-50%);background:#0008;padding:0 8px;border-radius:4px;animation:3s fadeout;opacity:0;}
 		#tpl>*{margin:2px;width:48px;height:48px;border-radius:25%;overflow:hidden;display:inline-block;vertical-align:top;}
 		#tpl>.noteW{background:#484 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48px' viewBox='0 0 6 6' %3E%3Cpath d='M3,1l0,4m-2,-2l4,0' stroke='%23fff' stroke-width='.2'/%3E%3C/svg%3E");}
 		#tpl>.noteW *{padding:0;pointer-events:none;}#tpl>.noteW .noteW{min-width:0;width:10px;opacity:.5;}
 		#trash{background:#f44 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48px' viewBox='0 0 5 5' %3E%3Cpath d='M1,1l3,3m-3,0l3,-3' stroke='%23fff' stroke-width='.2'/%3E%3C/svg%3E");}
 		#trash .sortable-ghost{display:none;/*background:#f88;animation:.2s shake infinite;*/}
 		@keyframes wink{0%{opacity:.2;}100%{opacity:.4;}}
+		@keyframes fadeout{0%,50%{opacity:1;}100%{opacity:0;}}
 		@keyframes shake{0%{transform:translate(1px,1px) rotate(0deg);}10%{transform:translate(-1px,-2px) rotate(-1deg);}20%{transform:translate(-3px,0px) rotate(1deg);}30%{transform:translate(3px,2px) rotate(0deg);}40%{transform:translate(1px,-1px) rotate(1deg);}50%{transform:translate(-1px,2px) rotate(-1deg);}60%{transform:translate(-3px,1px) rotate(0deg);}70%{transform:translate(3px,1px) rotate(-1deg);}80%{transform:translate(-1px,-1px) rotate(1deg);}90%{transform:translate(1px,2px) rotate(0deg);}100% { transform: translate(1px,-2px) rotate(-1deg);}}
 
 		body>input[type="checkbox"]{display:none;}
@@ -143,7 +146,7 @@
 		</div>
 		<div id="clip" class="float_l"></div>
 		<div class="uiPanel float_r">
-			         <button onclick="Tone.Transport.pause();styperf.textContent='';alert('Loading…','none');load();" class="grid bg" style="--bp:-500% -200%;">load
+			         <button onclick="Tone.Transport.pause();styperf.textContent='';alert('Loading…',1,1);load();" class="grid bg" style="--bp:-500% -200%;">load
 			</button><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
 			</label><label for="kbfixed" class="grid bg" style="--bp:-200% -200%;">practice
 			</label><button id="rawedit" class="grid bg" style="--bp:-400% -200%;">raw edit
@@ -170,11 +173,13 @@
 	<pre id="log" class="debug"></pre>
 
 	<script>
-		disp.textContent=`Downloading assets. Please wait… if you can't see content here, please reboot browser`;
+		disp.textContent=`Downloading assets…`;
+		window.onerror=e=>disp.textContent=`Oops, something went wrong:( Please reboot browser.`;
 	</script>
 	<script src="https://cdn.jsdelivr.net/npm/tone/build/Tone.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sortablejs/Sortable.min.js"></script>
 	<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js"></script>
 	<script src="seq.js"></script>
+	<script>window.onerror=null;</script>
 </body>
 </html>
