@@ -354,7 +354,7 @@ dbfx={
 			albox.textContent='';
 			albox.insertAdjacentHTML('beforeend',`Ready to export "${e.target.result.name}"<p contenteditable>${urlfx.e(e.target.result)}</p><button
 			onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>alcb.checked=false);" class="grid bg" style="--bp:0 -300%;">copy</button><button
-			onclick="window.open('https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}%0Aby%20sky_sequencer&url='+encodeURIComponent(this.previousElementSibling.previousElementSibling.textContent));alcb.checked=false;" class="grid bg" style="--bp:-700% -300%;">tweet</button>`);
+			onclick="window.open('https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_sequencer&url='+encodeURIComponent(this.previousElementSibling.previousElementSibling.textContent));alcb.checked=false;" class="grid bg" style="--bp:-700% -300%;">tweet</button>`);
 		});
 	},
 	imp:()=>{
