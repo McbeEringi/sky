@@ -11,6 +11,7 @@ seq=new Tone.Sequence((time,note)=>{
 	llog(Tone.Transport.position,1);
 	if(note[0]){
 		synth.triggerAttackRelease(note.map(toHz),'1m',time,kbfixed.checked?.3:1);
+		//note.map(toHz).forEach((x,i)=>synth.triggerAttackRelease(x,'1m',time+.05*i,kbfixed.checked?.3:1));
 		llog(`${note.map(x=>n2c[(Number(x)+main.sc+48)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`);
 	}
 },[],'4n').start(0),
