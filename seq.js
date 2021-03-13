@@ -10,10 +10,7 @@ seq=new Tone.Sequence((time,note)=>{
 	curpset();scrset();kbset(note);//Tone.Draw.schedule(()=>{},time);
 	llog(Tone.Transport.position,1);
 	if(note[0]){
-		if(main.arp){
-			let sec=Tone.Time('128n').toSeconds();
-			note.map(toHz).forEach((x,i)=>synth.triggerAttackRelease(x,'1m',time+sec*i,kbfixed.checked?.3:1));
-		}
+		if(main.arp)note.map(toHz).forEach((x,i)=>synth.triggerAttackRelease(x,'1m',time+main.arp*i,kbfixed.checked?.3:1));
 		else synth.triggerAttackRelease(note.map(toHz),'1m',time,kbfixed.checked?.3:1);
 		llog(`${note.map(x=>n2c[(Number(x)+main.sc+48)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`);
 	}
