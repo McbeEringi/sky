@@ -3,15 +3,18 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url;
-const info='⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103100\nMIT License\n',
+const info='⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103130\nMIT License\n',
 llog=(x,c)=>{if(dbgcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
 	curpset();scrset();kbset(note);//Tone.Draw.schedule(()=>{},time);
 	llog(Tone.Transport.position,1);
 	if(note[0]){
-		synth.triggerAttackRelease(note.map(toHz),'1m',time,kbfixed.checked?.3:1);
-		//note.map(toHz).forEach((x,i)=>synth.triggerAttackRelease(x,'1m',time+.05*i,kbfixed.checked?.3:1));
+		if(main.arp){
+			let sec=Tone.Time('128n').toSeconds();
+			note.map(toHz).forEach((x,i)=>synth.triggerAttackRelease(x,'1m',time+sec*i,kbfixed.checked?.3:1));
+		}
+		else synth.triggerAttackRelease(note.map(toHz),'1m',time,kbfixed.checked?.3:1);
 		llog(`${note.map(x=>n2c[(Number(x)+main.sc+48)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`);
 	}
 },[],'4n').start(0),
