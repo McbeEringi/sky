@@ -2,7 +2,7 @@
 alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';albox.style.maxWidth=mw?'100%':'';alcb.checked=true;}
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
-let synth,sc,main,calced,curpos,userscr=[false,false],urstack,rawexet,screxet,noteclip,from_url;
+let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url;
 const info='⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103100\nMIT License\n',
 llog=(x,c)=>{if(dbgcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
@@ -104,6 +104,7 @@ document.querySelectorAll('#kb p').forEach((e,i)=>{
 		ev.preventDefault();Tone.start();
 		if(kblock.checked)synth.triggerAttackRelease(toHz(i2n[i]));
 		else{
+			clearTimeout(seqsett);
 			let arr=calced.ind[curpos].split('-').reduce((a,c)=>a[c],main.scores).split(',');
 			if(e.classList.contains('press')==false){
 				synth.triggerAttackRelease(toHz(i2n[i]));
@@ -115,7 +116,8 @@ document.querySelectorAll('#kb p').forEach((e,i)=>{
 			}
 			arr=arr.join(',');calced.e[curpos].dataset.note=arr;
 			arr=`main.scores[${calced.ind[curpos].replace(/-/g,'][')}]='${arr}';`;llog(arr);
-			Function(arr)();requestIdleCallback(()=>{seq.events=main.scores;});urset();
+			Function(arr)();
+			seqsett=setTimeout(()=>{requestIdleCallback(()=>seq.events=main.scores);urset();},500);
 			e.classList.toggle('press');
 		}
 	};
@@ -186,8 +188,8 @@ rawedit.onclick=()=>{
 		txta.setSelectionRange(ind+1,txta.value.indexOf('"',ind+1));
 	});
 	txta.oninput=()=>{
-		clearTimeout(rawexet);
-		rawexet=setTimeout(()=>{
+		clearTimeout(seqsett);
+		seqsett=setTimeout(()=>{
 			let tmp;
 			try{tmp=JSON.parse(txta.value.replace(/\s/g,''));}catch(e){console.log(e);}
 			if(tmp){
