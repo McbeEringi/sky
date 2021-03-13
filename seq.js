@@ -323,10 +323,9 @@ load=()=>{
 		dbfx.tmp=e.target.result;
 		if(!e.target.result.length)albox.insertAdjacentHTML('beforeend',`no sheets yet<br><button onclick="fetch('sample.json').then(x=>x.json()).then(x=>x.forEach(y=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>llog(y.name)));alcb.checked=false;">download sample</button>`);
 		e.target.result.forEach((x,i)=>requestIdleCallback(()=>{
-			albox.insertAdjacentHTML('beforeend',`<div><span>${x}</span><br><br><button
-				onclick="dbfx.open(${i});"class="grid bg" style="--bp:0 -100%;">open</button><button
-				onclick="dbfx.renameW(${i});"class="grid bg" style="--bp:-200% -300%;">rename</button><button
-				onclick="dbfx.dupe(${i});"class="grid bg" style="--bp:0 -300%;">dupe</button><button
+			albox.insertAdjacentHTML('beforeend',`<div><span onclick="dbfx.open(${i});">${x}</span><br><br><button
+				onclick="dbfx.renameW(${i});" class="grid bg" style="--bp:-200% -300%;">rename</button><button
+				onclick="dbfx.dupe(${i});" class="grid bg" style="--bp:0 -300%;">dupe</button><button
 				onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-400% -100%;">export</button><button
 				onclick="dbfx.delW(${i});" class="grid bg" style="--bp:-700% -200%;">delete</button></div>`
 			);
