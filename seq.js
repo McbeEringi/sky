@@ -367,8 +367,8 @@ dbfx={
 	delW:function(i){
 		albox.textContent='';
 		albox.insertAdjacentHTML('beforeend',`Are you sure you want to delete "${this.tmp[i]}"?<br><br><button
-		onclick="dbfx.del(${i});" class="style" style="display:inline-block;background:#f448;font-size:16px;border:none;border-radius:8px;text-align:center;outline:none;padding:8px 0;margin:4px;width:40%;min-width:256px;">delete</button><button
-		onclick="load();" class="style" style="display:inline-block;background:#fff8;font-size:16px;border:none;border-radius:8px;text-align:center;outline:none;padding:8px 0;margin:4px;width:40%;min-width:256px;">cancel</button>`);
+		onclick="dbfx.del(${i});" class="style dialogb" style="background:#f448;">delete</button><button
+		onclick="load();" class="style dialogb">cancel</button>`);
 	},
 	del:function(i){
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').delete(this.tmp[i]);
