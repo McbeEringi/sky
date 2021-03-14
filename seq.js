@@ -3,14 +3,14 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url;
-const info='⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103130\nMIT License\n',
+const info='⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103140\nMIT License\n',
 llog=(x,c)=>{if(dbgcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
 	curpset();scrset();kbset(note);//Tone.Draw.schedule(()=>{},time);
 	llog(Tone.Transport.position,1);
 	if(note[0]){
-		if(main.arp)note.map(toHz).forEach((x,i)=>synth.triggerAttackRelease(x,'1m',time+main.arp*i,kbfixed.checked?.3:1));
+		if(main.arp){let arp=main.arp*.01;note.map(toHz).forEach((x,i)=>synth.triggerAttackRelease(x,'1m',time+arp*i,kbfixed.checked?.3:1));}
 		else synth.triggerAttackRelease(note.map(toHz),'1m',time,kbfixed.checked?.3:1);
 		llog(`${note.map(x=>n2c[(Number(x)+main.sc+48)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`);
 	}
@@ -23,7 +23,8 @@ n2c=['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'],
 pos2p=pos_=>{let tmp=pos_.split(':').map(x=>Number(x));return tmp[0]*Tone.Transport.timeSignature+tmp[1]+tmp[2]*.25;},
 p2pos=p_=>`${Math.floor(p_/Tone.Transport.timeSignature)}:${Math.floor(p_)%Tone.Transport.timeSignature}:${(p_*4)%4}`,
 scset=()=>{if(Number.isInteger(Number(sc_.value)))main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
-bpmset=()=>{let tmp=Number(bpm_.value);if(tmp){main.bpm=tmp;Tone.Transport.bpm.value=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
+arpset=()=>{if(Number.isInteger(Number(arp_.value)))main.arp=Number(arp_.value);else arp_.value=main.arp;llog(main.arp);},
+bpmset=()=>{let tmp=Number(bpm_.value);if(tmp){Tone.Transport.bpm.value=tmp;main.bpm=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
 tsset=()=>{let tmp=Number(ts_.value);if(tmp){main.ts=tmp;Tone.Transport.timeSignature=tmp||4;}else ts_.value=main.ts;
 	stybeat.textContent=main.ts>1?`#disp>.noteW:nth-child(${main.ts}n+1){overflow:hidden;}#disp>.noteW:nth-child(${main.ts}n+1)::before{content:"";position:absolute;display:block;width:2px;height:100%;background:#feac;}`:'';
 	llog(main.ts);
@@ -95,9 +96,43 @@ urdo=x=>{
 		main.scores=JSON.parse(urstack[1]);requestIdleCallback(()=>seq.events=main.scores);requestIdleCallback(()=>{a2d();curpset();kbset();});
 	}
 },
+rawedit=()=>{
+	Tone.Transport.pause();distrs.checked=false;
+	alert('',1,1);
+	let str=JSON.stringify(main.scores/*,null,'	'*/).replace(/,/g,', ');
+	let txta=document.createElement('textarea');
+	albox.appendChild(txta);
+	txta.value=str;
+	txta.classList.add('style');
+	requestIdleCallback(()=>{
+		let ind=0;
+		for(let i=0;i<curpos*2+1;i++)ind=txta.value.indexOf('"',ind+1);
+		txta.setSelectionRange(ind+1,txta.value.indexOf('"',ind+1));
+	});
+	txta.oninput=()=>{
+		clearTimeout(seqsett);
+		seqsett=setTimeout(()=>{
+			let tmp;
+			try{tmp=JSON.parse(txta.value.replace(/\s/g,''));}catch(e){console.log(e);}
+			if(tmp){
+				main.scores=tmp;requestIdleCallback(()=>seq.events=main.scores);urset();
+				llog('raw good');
+				requestIdleCallback(a2d);curpset();
+				synth.triggerAttackRelease(440*Math.pow(2,(3 +main.sc)/12),'1m');
+				synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m','+.05',.9);
+				synth.triggerAttackRelease(440*Math.pow(2,(10+main.sc)/12),'1m','+.1',.8);
+			}else{
+				llog('raw bad');
+				/*synth.triggerAttackRelease(440*Math.pow(2,(8 +main.sc)/12),'1m');
+				synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m','+.05',.9);
+				synth.triggerAttackRelease(440*Math.pow(2,(1+main.sc)/12),'1m','+.1',.8);*/
+			}
+		},1000);
+	};
+},
 domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('shake');};
 
-ibtn.onclick=()=>{alert(info,1);albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><label for="dbgcb" class="grid showtxt">debug</label>`;};
+ibtn.onclick=()=>{alert(info,1);albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
 curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;};
 document.querySelectorAll('#kb p').forEach((e,i)=>{
 	const keyfx=ev=>{
@@ -170,43 +205,9 @@ dispScr.onscroll=e=>{
 		let dbpds=dispBar.clientWidth/dispScr.scrollWidth;
 		dispBar.children[0].style.width=(dispBar.clientWidth*dbpds)+'px';
 		dispBar.children[0].style.left=(dispScr.scrollLeft*dbpds)+'px';
-		if(userscr[1])curct.style.display='block';
+		if(userscr[1])curct.style.display='';
 	};
 	tmp();screxet=setTimeout(tmp,100);
-};
-rawedit.onclick=()=>{
-	Tone.Transport.pause();distrs.checked=false;
-	alert('',1,1);
-	let str=JSON.stringify(main.scores/*,null,'	'*/).replace(/,/g,', ');
-	let txta=document.createElement('textarea');
-	albox.appendChild(txta);
-	txta.value=str;
-	txta.classList.add('style');
-	requestIdleCallback(()=>{
-		let ind=0;
-		for(let i=0;i<curpos*2+1;i++)ind=txta.value.indexOf('"',ind+1);
-		txta.setSelectionRange(ind+1,txta.value.indexOf('"',ind+1));
-	});
-	txta.oninput=()=>{
-		clearTimeout(seqsett);
-		seqsett=setTimeout(()=>{
-			let tmp;
-			try{tmp=JSON.parse(txta.value.replace(/\s/g,''));}catch(e){console.log(e);}
-			if(tmp){
-				main.scores=tmp;requestIdleCallback(()=>seq.events=main.scores);urset();
-				llog('raw good');
-				requestIdleCallback(a2d);curpset();
-				synth.triggerAttackRelease(440*Math.pow(2,(3 +main.sc)/12),'1m');
-				synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m','+.05',.9);
-				synth.triggerAttackRelease(440*Math.pow(2,(10+main.sc)/12),'1m','+.1',.8);
-			}else{
-				llog('raw bad');
-				/*synth.triggerAttackRelease(440*Math.pow(2,(8 +main.sc)/12),'1m');
-				synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m','+.05',.9);
-				synth.triggerAttackRelease(440*Math.pow(2,(1+main.sc)/12),'1m','+.1',.8);*/
-			}
-		},1000);
-	};
 };
 undobtn.onclick=()=>urdo(-1);redobtn.onclick=()=>urdo(1);
 
@@ -399,10 +400,11 @@ dbfx={
 },
 init=()=>{
 	Tone.Transport.pause();
-	if(!main)main={name:'',sc:0,bpm:120,ts:4,scores:new Array(8).fill('')};
+	if(!main)main={name:'',sc:0,bpm:120,ts:4,arp:0,scores:new Array(8).fill('')};
+	if(main.arp==undefined)main.arp=0;
 	disp.textContent='Loading sheet…';
 	urstack=[[],JSON.stringify(main.scores),[]];
-	requestIdleCallback(()=>seq.events=main.scores);sc_.value=main.sc;
+	requestIdleCallback(()=>seq.events=main.scores);sc_.value=main.sc;arp_.value=main.arp;
 	bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();//Tone.Transport.swing=1;
 	name_.textContent=main.name;document.title='sky_seq '+main.name;
 	requestIdleCallback(a2d);

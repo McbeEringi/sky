@@ -45,17 +45,18 @@
 		#dispScr{width:100%;height:240px;overflow:scroll;position:relative;scrollbar-width:none;}#disp{height:100%;min-width:100%;padding:0 50vw 0 16px;box-sizing:border-box;white-space:nowrap;}
 		#dispCur{width:16px;height:100%;background:#bff8;left:17px;transition:.1s;border-radius:4px;z-index:1;pointer-events:none;}
 		#dispBar{height:6px;position:relative;overflow:hidden;}#dispBar>div{width:0;height:100%;position:absolute;background:#aef;transition:.1s;}#dispBar>div:first-child{background:#0004;transition:.2s;}
-		#curct{--bp:-300% -100%;position:absolute;top:0;right:0;width:32px;height:32px;margin:2px 4px;opacity:.8;}
 		.noteW,.sort{min-width:16px;height:100%;min-height:16px;}
 		.noteW{display:inline-block;white-space:nowrap;vertical-align:bottom;position:relative;margin-left:1px;border-radius:4px;text-align:center;background:#0004;color:#fff8;}
 		.noteW p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;z-index:2;}
 		.sortW{overflow:hidden;}.sort{;margin:0 8px;padding:0 8px;box-sizing:border-box;background:#fff4;box-shadow:0 0 8px #fff8;}
+		.dispPanel>.ui{position:absolute;top:0;right:4px;text-align:right;z-index:4;pointer-events:none;}.dispPanel>.ui .grid{width:40px;height:40px;margin:1px;pointer-events:auto;}
+		#scfg{display:none;}#scfg:checked+*+div{display:none;}
 
 		.uiPanel{max-width:312px;}
 		.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
 		.grid:not(input){cursor:pointer;}
+		.grid:active{background-color:#8888;}
 		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);transition:.1s;}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;font-size:18px;line-height:1.1em;font-family:"M PLUS Rounded 1c",sans-serif;}
-		.bg:active{background-color:#8888;}
 
 		.kbPanel{overflow:hidden;max-width:360px;position:relative;width:100%;background:#0004;border-radius:8px;touch-action:none;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}.kbPanel:before{content:"";display:block;padding-top:60%;}
 		#kb{position:absolute;top:0;left:0;right:0;bottom:0;perspective:1000px;overflow:hidden;}#kb input{position:absolute;display:none;}#kb>div{height:33.3%;margin:0;}
@@ -96,10 +97,10 @@
 		@keyframes shake{0%{transform:translate(1px,1px) rotate(0deg);}10%{transform:translate(-1px,-2px) rotate(-1deg);}20%{transform:translate(-3px,0px) rotate(1deg);}30%{transform:translate(3px,2px) rotate(0deg);}40%{transform:translate(1px,-1px) rotate(1deg);}50%{transform:translate(-1px,2px) rotate(-1deg);}60%{transform:translate(-3px,1px) rotate(0deg);}70%{transform:translate(3px,1px) rotate(-1deg);}80%{transform:translate(-1px,-1px) rotate(1deg);}90%{transform:translate(1px,2px) rotate(0deg);}100% { transform: translate(1px,-2px) rotate(-1deg);}}
 
 		body>input[type="checkbox"]{display:none;}
-		#uiflip:checked~* .float_r{float:left;clear:left;}#uiflip:checked~* .float_l{float:right;clear:right;}
+		#uiflip:checked~* .float_r{float:left;clear:left;}#uiflip:checked~* .float_l{float:right;clear:right;}/*#uiflip:checked~.dispPanel .ui{left:16px;right:unset;direction:rtl;text-align:left;}*/
 		label.grid{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
 		#kblock:checked~* label[for="kblock"],#kbfixed:checked~* label[for="kbfixed"],#clipcb:checked~* label[for="clipcb"]{box-shadow:0 0 2px 4px #fea inset;}
-		#kbfixed:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;}
+		#kbfixed:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;z-index:1;}#kbfixed:checked~.dispPanel{}
 		#clipcb:checked~* #clip{display:block;}#clipcb:checked~* .kbPanel{display:none;}
 		#dbgcb:not(:checked)~.debug{display:none;}
 		#distrs:checked~* #dispCur,#distrs:checked~* #kb p::before,#distrs:checked~* #kb p::after{transition: none !important;}
@@ -120,7 +121,21 @@
 		<span id="name_"></span>
 		<div id="dispScr"><div id="dispCur"></div><div id="disp">Please enable JavaScript to use this app.</div></div>
 		<div id="dispBar"><div></div><div></div></div>
-		<button id="curct" class="grid bg">scroll to cursor</button>
+		<div class="ui">
+			<button id="curct" class="grid bg" style="--bp:-300% -100%;">scroll to cursor</button><input type="checkbox" id="scfg" checked><label for="scfg" class="grid bg" style="--bp:-400% -300%;"></label>
+			<div>
+				<label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><br><button
+				onclick="Tone.Transport.bpm.value-=6;main.bpm-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow</button><label><input
+				id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button
+				onclick="Tone.Transport.bpm.value+=6;main.bpm+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast</button><br><button
+				onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-500% 0;">down</button><label><input
+				id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-600% 0;"></input></label><button
+				onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-400% 0;">up</button><br><button
+				onclick="arp_.value=--main.arp;" class="grid bg" style="--bp:-500% 0;">dec</button><label><input
+				id="arp_" class="grid bg showtxt" onchange="arpset();" style="--bp:-300% -300%;"></input></label><button
+				onclick="arp_.value=++main.arp;" class="grid bg" style="--bp:-400% 0;">inc</button>
+			</div>
+		</div>
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel float_r">
@@ -150,12 +165,7 @@
 			         <button onclick="Tone.Transport.pause();styperf.textContent='';alert('Loading…',1,1);load();" class="grid bg" style="--bp:-500% -200%;">load
 			</button><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
 			</label><label for="kbfixed" class="grid bg" style="--bp:-200% -200%;">practice
-			</label><button id="rawedit" class="grid bg" style="--bp:-400% -200%;">raw edit
-			</button><button id="ibtn" class="grid bg" style="--bp:-300% 0;">info
-			</button><label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><br><button onclick="main.bpm-=6;Tone.Transport.bpm.value-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow
-			</button><label><input id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button onclick="main.bpm+=6;Tone.Transport.bpm.value+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast
-			</button><button onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-500% 0;">down
-			</button><label><input id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-600% 0;"></input></label><button onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-400% 0;">up
+			</label><button id="ibtn" class="grid bg" style="--bp:-300% 0;">info
 			</button>
 		</div>
 	</div>
