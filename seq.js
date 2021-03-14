@@ -364,6 +364,7 @@ dbfx={
 		alert('',1);
 		albox.insertAdjacentHTML('beforeend',`import from URL<p contenteditable></p><button
 		onclick="{let tmp=urlfx.l(this.previousElementSibling.textContent.split('#',2)[1]);if(tmp){main=tmp;alcb.checked=false;init();idb.result.transaction('seq','readwrite').objectStore('seq').add(tmp);}}" class="grid bg" style="--bp:-600% -100%;">import</button>`);
+		requestIdleCallback(()=>navigator.clipboard.readText().then(x=>albox.querySelector('p').textContent=x));
 	},
 	delW:function(i){
 		alert('',1);

@@ -87,7 +87,7 @@
 		#tpl,#clip{display:inline-block;vertical-align:top;position:relative;}
 		#clip{display:none;padding:6px 0;width:100%;height:240px;max-width:480px;white-space:nowrap;overflow-x:scroll;position:relative;background:#fff4;border-radius:8px;}
 		#clip>.noteW{margin:0 8px;}
-		#tpl:hover:not(:active)::after{position:absolute;content:"drag me!";left:50%;top:50%;transform:translate(-50%,-50%);background:#0008;padding:0 8px;border-radius:4px;animation:3s fadeout;opacity:0;}
+		#tpl:hover:not(:active)::after{position:absolute;content:"drag me!";left:50%;top:50%;transform:translate(-50%,-50%);background:#0008;text-align:center;padding:0 8px;border-radius:4px;pointer-events:none;animation:3s fadeout;opacity:0;}
 		#tpl>*{margin:2px;width:48px;height:48px;border-radius:25%;overflow:hidden;display:inline-block;vertical-align:top;}
 		#tpl>.noteW{background:#484 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48px' viewBox='0 0 6 6' %3E%3Cpath d='M3,1l0,4m-2,-2l4,0' stroke='%23fff' stroke-width='.2'/%3E%3C/svg%3E");}
 		#tpl>.noteW *{padding:0;pointer-events:none;}#tpl>.noteW .noteW{min-width:0;width:10px;opacity:.5;}
@@ -149,8 +149,8 @@
 			</button><div
 				id="tpl"><div class="noteW note" data-note=""></div><div
 				class="noteW sortW"><div class="sort"><div class="noteW note" data-note=""></div><div class="noteW note" data-note=""></div></div></div><div
-				class="noteW sortW"><div class="sort"><div class="noteW note" data-note=""></div><div class="noteW note" data-note=""></div><div class="noteW note" data-note=""></div></div></div><div
-				id="trash"></div></div><label for="clipcb" class="grid bg" style="--bp:-500% -100%;">clipbobard
+				id="trash"></div></div><button onclick="" class="grid bg" style="--bp:-500% -300%; opacity:0;pointer-events:none;">mark
+				</button><label for="clipcb" class="grid bg" style="--bp:-500% -100%;">clipbobard
 			</label><button onclick="save();" class="grid bg" style="--bp:-600% -200%;">save
 			</button>
 		</div>
@@ -161,7 +161,7 @@
 				<div><p id="kbb20"></p><p id="kbb21"></p><p id="kbb22"></p><p id="kbb23"></p><p id="kbb24" class="c"></p></div>
 			</div>
 		</div>
-		<div id="clip" class="float_l"></div>
+		<div id="clip" class="float_l"><div class="noteW note" data-note=""></div></div>
 		<div class="uiPanel float_r">
 			         <button onclick="Tone.Transport.pause();styperf.textContent='';load();" class="grid bg" style="--bp:-500% -200%;">load
 			</button><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
