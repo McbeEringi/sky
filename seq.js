@@ -3,7 +3,22 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url;
-const info='⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103150\nMIT License\n',
+const texts=Object.assign({
+	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
+	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',
+	nodat:'no datas found',loadf:'coudnt load datas.',dupef:'coudnt duplicate datas.',delf:'coudnt delete datas.',savef:'coudnt save datas.',
+	exp:x=>`Ready to export "${x}"`,imp:'import from URL',
+	delq:x=>`Are you sure you want to delete "${x}"?`,
+	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103151\nMIT License\n'
+},{
+	ja:{
+		notice:'⚠️\nこのページはβテスト中です。\n不具合や未実装の機能があることがあります。',
+		title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',
+		nodat:'データがありません',loadf:'データの読み込みに失敗しました',dupef:'データの複製に失敗しました',delf:'データの削除に失敗しました',savef:'データの保存に失敗しました',
+		exp:x=>`「${x}」を書き出し`,imp:'URLから読みこむ',
+		delq:x=>`「${x}」を削除してよろしいですか？`
+	}
+}[window.navigator.language.slice(0,2)]),
 llog=(x,c)=>{if(dbgcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
 seq=new Tone.Sequence((time,note)=>{
 	note=note.split(',');
@@ -132,7 +147,7 @@ rawedit=()=>{
 },
 domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('shake');};
 
-ibtn.onclick=()=>{alert(info,1);albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
+ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
 curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;};
 document.querySelectorAll('#kb p').forEach((e,i)=>{
 	const keyfx=ev=>{
@@ -310,7 +325,7 @@ d2d=(x=disp)=>{
 save=()=>{
 	if(!main.name){
 		alert('',1,1);
-		albox.insertAdjacentHTML('beforeend',`enter title<p contenteditable></p><button
+		albox.insertAdjacentHTML('beforeend',`${texts.title}<p contenteditable></p><button
 		onclick="{let tmp=this.previousElementSibling.textContent||('untitled '+new Date().toLocaleString());name_.textContent=main.name=tmp;document.title='sky_seq '+tmp;dbfx.save();}" class="grid bg" style="--bp:-600% -200%;">save</button>`);
 		albox.querySelector('p').focus();
 	}else dbfx.save();
@@ -323,7 +338,7 @@ load=()=>{
 		let tmp=e.target.result;//sort
 		albox.insertAdjacentHTML('beforeend',tpl);
 		console.log(tmp);dbfx.tmp=tmp;
-		if(!tmp.length)albox.insertAdjacentHTML('beforeend',`no sheets found<br><button onclick="fetch('sample.json').then(x=>x.json()).then(x=>x.forEach(y=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>llog(y.name)));alcb.checked=false;">download sample</button>`);
+		if(!tmp.length)albox.insertAdjacentHTML('beforeend',`${texts.nodat}<br><button onclick="fetch('sample.json').then(x=>x.json()).then(x=>x.forEach(y=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>llog(y.name)));alcb.checked=false;">download sample</button>`);
 		tmp.forEach((x,i)=>requestIdleCallback(()=>{
 			albox.insertAdjacentHTML('beforeend',`<div><span onclick="dbfx.open(${i});">${x}</span><br><button
 				onclick="dbfx.renameW(${i});" class="grid bg" style="--bp:-200% -300%;">rename</button><button
@@ -334,7 +349,7 @@ load=()=>{
 		}));
 	};
 	req.onerror=e=>{
-		albox.textContent=`⚠️\ncoudnt load datas.\n\n${e.target.error}`;
+		albox.textContent=`⚠️\n${texts.loadf}\n\n${e.target.error}`;
 		albox.insertAdjacentHTML('beforeend',tpl);
 	};
 },
@@ -343,53 +358,53 @@ dbfx={
 	get:function(i,sfx,efx){
 		console.log(this.tmp[i]);
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').get(this.tmp[i]);
-		req.onsuccess=sfx;req.onerror=efx||(e=>albox.textContent=`⚠️\ncoudnt load datas.\n\n${e.target.error}`);
+		req.onsuccess=sfx;req.onerror=efx||(e=>albox.textContent=`⚠️\n${texts.loadf}\n\n${e.target.error}`);
 	},
 	open:i=>dbfx.get(i,e=>{main=e.target.result;init();alcb.checked=false;}),
 	dupe:i=>dbfx.get(i,e=>{
 		let dup=e.target.result;dup.name+=' copy';
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(dup);
 		req.onsuccess=load;
-		req.onerror=e=>albox.textContent=`⚠️\ncoudnt duplicate datas.\n\n${e.target.error}`;
+		req.onerror=e=>albox.textContent=`⚠️\n${texts.dupef}\n\n${e.target.error}`;
 	}),
 	exp:i=>{
 		dbfx.get(i,e=>{
 			alert('',1);
-			albox.insertAdjacentHTML('beforeend',`Ready to export "${e.target.result.name}"<p contenteditable>${urlfx.e(e.target.result)}</p><button
+			albox.insertAdjacentHTML('beforeend',`${texts.exp(e.target.result.name)}<p contenteditable>${urlfx.e(e.target.result)}</p><button
 			onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>alcb.checked=false);" class="grid bg" style="--bp:0 -300%;">copy</button><button
 			onclick="window.open('https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_sequencer&url='+encodeURIComponent(this.previousElementSibling.previousElementSibling.textContent));alcb.checked=false;" class="grid bg" style="--bp:-700% -300%;">tweet</button>`);
 		});
 	},
 	imp:()=>{
 		alert('',1);
-		albox.insertAdjacentHTML('beforeend',`import from URL<p contenteditable></p><button
+		albox.insertAdjacentHTML('beforeend',`${texts.imp}<p contenteditable></p><button
 		onclick="{let tmp=urlfx.l(this.previousElementSibling.textContent.split('#',2)[1]);if(tmp){main=tmp;alcb.checked=false;init();idb.result.transaction('seq','readwrite').objectStore('seq').add(tmp);}}" class="grid bg" style="--bp:-600% -100%;">import</button>`);
 		requestIdleCallback(()=>navigator.clipboard.readText().then(x=>albox.querySelector('p').textContent=x));
 	},
 	delW:function(i){
 		alert('',1);
-		albox.insertAdjacentHTML('beforeend',`Are you sure you want to delete "${this.tmp[i]}"?<br><br><button
-		onclick="dbfx.del(${i});" class="style dialogb" style="background:#f448;">delete</button><button
-		onclick="load();" class="style dialogb">cancel</button>`);
+		albox.insertAdjacentHTML('beforeend',`${texts.delq(this.tmp[i])}<br><br><button
+		onclick="dbfx.del(${i});" class="style dialogb" style="background:#f448;">${texts.del}</button><button
+		onclick="load();" class="style dialogb">${texts.cancel}</button>`);
 	},
 	del:function(i){
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').delete(this.tmp[i]);
 		req.onsuccess=load;
-		req.onerror=e=>albox.textContent=`⚠️\ncoudnt delete datas.\n\n${e.target.error}`;
+		req.onerror=e=>albox.textContent=`⚠️\n${texts.delf}\n\n${e.target.error}`;
 	},
 	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>llog('delall done'),
 	save:()=>{
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
 		req.onerror=()=>{
 			req=idb.result.transaction('seq','readwrite').objectStore('seq').put(main);
-			req.onerror=e=>alert(`⚠️\noverwrite save failed.\n\n${e.target.error}`);
-			req.onsuccess=()=>alert('✅\noverwrite saved.');
+			req.onerror=e=>alert(`⚠️\n${texts.savef}\n\n${e.target.error}`);
+			req.onsuccess=()=>alert(`✅\n${texts.osave}`);
 		};
-		req.onsuccess=()=>{alert('✅\nsaved.')};
+		req.onsuccess=()=>{alert(`✅\n${texts.save}`)};
 	},
 	renameW:function(i){
 		albox.textContent='';
-		albox.insertAdjacentHTML('beforeend',`new name…<p contenteditable>${this.tmp[i]}</p><button
+		albox.insertAdjacentHTML('beforeend',`${texts.title}<p contenteditable>${this.tmp[i]}</p><button
 		onclick="dbfx.rename(${i},this.previousElementSibling.textContent);" class="grid bg" style="--bp:-200% -300%;">rename</button>`);
 		albox.querySelector('p').focus();
 	},
@@ -433,7 +448,7 @@ urlfx={
 	}
 };
 
-
+alert(texts.notice);
 if(!localStorage.seq_undoMax){
 	localStorage.seq_undoMax=24;
 	requestIdleCallback(()=>{
@@ -441,7 +456,7 @@ if(!localStorage.seq_undoMax){
 	});
 }
 synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/musicbox/').toDestination();
-log.textContent=info;//Tone.Transport.loop=true;
+log.textContent=texts.info;//Tone.Transport.loop=true;
 from_url=Boolean(main=urlfx.l());
 if(!from_url&&localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
 init();document.body.focus();
