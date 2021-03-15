@@ -30,13 +30,8 @@ const bgcol=[
 	"#192f60,#274a78"//night
 ];
 const bgset=(x,b)=>{
-	let bgimg;
 	switch(b||localStorage.sky_bgmode){
-		case'1':
-			e_img.setAttribute('style','display:none;');
-			bgimg=idb.result.transaction('stuff','readwrite').objectStore('stuff').get('bgimg');
-			bgimg.onsuccess=e=>bg.style.backgroundImage=`url(${e.target.result!=undefined?URL.createObjectURL(e.target.result):'https://mcbeeringi.github.io/sky/img/hotspr.jpg'})`;
-			break;
+		case'1':e_img.setAttribute('style','display:none;');idb.result.transaction('stuff','readwrite').objectStore('stuff').get('bgimg').onsuccess=e=>bg.style.backgroundImage=`url(${e.target.result?URL.createObjectURL(e.target.result):'https://mcbeeringi.github.io/sky/img/hotspr.jpg'})`;break;
 		case'2':e_img.setAttribute('style','display:none;');bg.style.backgroundImage=localStorage.sky_bgcode;break;
 		default:e_img.setAttribute('style','');bg.style.backgroundImage=`linear-gradient(${bgcol[x!=undefined?x:([3,0,1,1,2,3][Math.floor(Math.max(new Date().getHours()-1,0)*.25)])]})`;
 	}
