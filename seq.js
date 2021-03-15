@@ -338,7 +338,7 @@ load=()=>{
 		let tmp=e.target.result;//sort
 		albox.insertAdjacentHTML('beforeend',tpl);
 		console.log(tmp);dbfx.tmp=tmp;
-		if(!tmp.length)albox.insertAdjacentHTML('beforeend',`${texts.nodat}<br><button onclick="fetch('sample.json').then(x=>x.json()).then(x=>x.forEach(y=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>llog(y.name)));alcb.checked=false;">download sample</button>`);
+		if(!tmp.length)albox.insertAdjacentHTML('beforeend',`${texts.nodat}<br><button onclick="this.textContent='Loading…';this.disabled=true;impsample(load);">download sample</button>`);
 		tmp.forEach((x,i)=>requestIdleCallback(()=>{
 			albox.insertAdjacentHTML('beforeend',`<div><span onclick="dbfx.open(${i});">${x}</span><br><button
 				onclick="dbfx.renameW(${i});" class="grid bg" style="--bp:-200% -300%;">rename</button><button
@@ -446,6 +446,15 @@ urlfx={
 		console.log('load url',dat);
 		return dat;
 	}
+},
+impsample=fx=>{
+	fetch('sample.json').then(x=>x.json()).then(x=>
+		Promise.allSettled(x.map(y=>new Promise((t,c)=>{
+			let tmp=idb.result.transaction('seq','readwrite').objectStore('seq').add(y);
+			tmp.onerror=()=>c();
+			tmp.onsuccess=()=>t(y.name);
+		}))).then(fx)
+	);
 };
 
 alert(texts.notice);
