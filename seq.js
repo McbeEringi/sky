@@ -175,6 +175,7 @@ document.querySelectorAll('#kb p').forEach((e,i)=>{
 	e.addEventListener('mousedown',keyfx,{passive:false});
 });
 document.addEventListener('keydown',e=>{
+	if(alcb.checked&&albox.style.pointerEvents){alcb.checked=false;return;}
 	if(!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)&&!alcb.checked){
 		llog(e.code);
 		switch(e.code){
