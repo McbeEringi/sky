@@ -9,7 +9,7 @@ const texts=Object.assign({
 	nodat:'no datas found',loadf:'coudnt load datas.',dupef:'coudnt duplicate datas.',delf:'coudnt delete datas.',savef:'coudnt save datas.',
 	exp:x=>`Ready to export "${x}"`,imp:'import from URL',
 	delq:x=>`Are you sure you want to delete "${x}"?`,
-	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103151\nMIT License\n'
+	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103160\nMIT License\n'
 },{
 	ja:{
 		notice:'⚠️\nこのページはβテスト中です。\n不具合や未実装の機能があることがあります。',
@@ -447,15 +447,12 @@ urlfx={
 		return dat;
 	}
 },
-impsample=fx=>{
-	fetch('sample.json').then(x=>x.json()).then(x=>
-		Promise.allSettled(x.map(y=>new Promise((t,c)=>{
-			let tmp=idb.result.transaction('seq','readwrite').objectStore('seq').add(y);
-			tmp.onerror=()=>c();
-			tmp.onsuccess=()=>t(y.name);
-		}))).then(fx)
-	);
-};
+impsample=fx=>fetch('sample.json').then(x=>x.json()).then(x=>
+	Promise.allSettled(x.map(y=>new Promise((t,c)=>{
+		let tmp=idb.result.transaction('seq','readwrite').objectStore('seq').add(y);
+		tmp.onsuccess=()=>{llog(y.name);t(y.name);};tmp.onerror=()=>c();
+	}))).then(fx||(()=>{}))
+);
 
 alert(texts.notice);
 if(!localStorage.seq_undoMax){
