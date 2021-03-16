@@ -50,7 +50,7 @@
 		.noteW p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;z-index:2;}
 		.sortW{overflow:hidden;}.sort{;margin:0 8px;padding:0 8px;box-sizing:border-box;background:#fff4;box-shadow:0 0 8px #fff8;}
 		.dispPanel>.ui{position:absolute;top:0;right:4px;text-align:right;z-index:4;pointer-events:none;}.dispPanel>.ui .grid{width:40px;height:40px;margin:1px;pointer-events:auto;}
-		#scfg{display:none;}#scfg:checked+*+div{display:none;}
+		#scfg{display:none;}#scfg+*+div{opacity:0;transition:.2s;}#scfg+*+div *{pointer-events:none;}#scfg:checked+*+div{opacity:1;}#scfg:checked+*+div *{pointer-events:auto;}
 
 		.uiPanel{max-width:312px;}
 		.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
@@ -123,7 +123,7 @@
 		<div id="dispScr"><div id="dispCur"></div><div id="disp">Please enable JavaScript to use this app.</div></div>
 		<div id="dispBar"><div></div><div></div></div>
 		<div class="ui">
-			<button id="curct" class="grid bg" style="--bp:-300% -100%;">scroll to cursor</button><input type="checkbox" id="scfg" checked><label for="scfg" class="grid bg" style="--bp:-400% -300%;"></label>
+			<button id="curct" class="grid bg" style="--bp:-300% -100%;">scroll to cursor</button><input type="checkbox" id="scfg"><label for="scfg" class="grid bg" style="--bp:-400% -300%;"></label>
 			<div>
 				<label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><br><button
 				onclick="Tone.Transport.bpm.value-=6;main.bpm-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow</button><label><input
