@@ -40,7 +40,7 @@
 			textarea{display:block;resize:none;width:calc(100% - 8px);height:64px;font-size:14px;line-height:16px;padding:4px;border:0;border-radius:0;background:#2228;color:#fff;}
 			input[type=radio]+label{background-color:#5c7383;transition:.2s;padding:0 8px;box-shadow:0 0 8px #0004 inset;font-size:1.2em;}
 			input[type=radio]:checked+label{background-color:#48f;}
-			#bgmode>div{height:112px;background:url(img/fog.png);background-position:center;background-size:100%}#bgmode>div>label{height:100%;display:none;position:relative;}
+			#bgmenu>div{height:112px;background:url(img/fog.png);background-position:center;background-size:100%}#bgmenu>div>*{height:100%;display:none;position:relative;}
 			#bgmode1:checked~div>:nth-child(1),#bgmode2:checked~div>:nth-child(2){display:block;}
 
 			.links>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;}
@@ -62,10 +62,10 @@
 			<label for="example"></label><div><div></div></div>
 			<div>
 				<p style="font-size:1.5em;">background</p>
-				<form id="bgmode">
-					<input type="radio" name="bgmode" value="0" id="bgmode0"><label for="bgmode0">default</label>
-					<input type="radio" name="bgmode" value="1" id="bgmode1"><label for="bgmode1">image</label>
-					<input type="radio" name="bgmode" value="2" id="bgmode2"><label for="bgmode2">custom</label>
+				<div id="bgmenu">
+					<input type="radio" name="bgmode" id="bgmode0"><label for="bgmode0">default</label>
+					<input type="radio" name="bgmode" id="bgmode1"><label for="bgmode1">image</label>
+					<input type="radio" name="bgmode" id="bgmode2"><label for="bgmode2">custom</label>
 					<div>
 						<div>
 							<label>choose image<br><input type="file" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg').onsuccess=()=>bgset();"></label><br>
@@ -73,9 +73,9 @@
 						</div>
 						<label><a href="https://developer.mozilla.org/docs/Web/CSS/gradient">background-image</a>:<br><textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;bgset();"></textarea></label>
 					</div>
-				</form>
+				</div>
 				<p>
-					[sky_menu] build:2103161 <br>
+					[sky_menu] build:2103162 <br>
 					<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense <br>
 					<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>{if(x)location.reload(true);})">force update</button>
 				</p>
@@ -83,8 +83,11 @@
 		</div>
 
 		<script>
-			bgmode.bgmode[Number(localStorage.sky_bgmode)||0].checked=true;
-			bgmode.onchange=()=>{localStorage.sky_bgmode=bgmode.bgmode.value;bgset();}
+			document.getElementsByName('bgmode').forEach((x,i)=>{
+				if(i==localStorage.sky_bgmode)x.checked=true;
+				x.onclick=()=>{localStorage.sky_bgmode=i;bgset();}
+			});
+
 			if(!localStorage.sky_bgcode)localStorage.sky_bgcode='linear-gradient(0deg,#fff,#000)';bgcode.value=localStorage.sky_bgcode;
 
 			document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
