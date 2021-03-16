@@ -439,7 +439,8 @@ urlfx={
 	},
 	l:(str=location.hash.slice(1))=>{
 		if(!str)return;
-		let dat=JSON.parse(decodeURIComponent(str));
+		let dat;
+		try{dat=JSON.parse(decodeURIComponent(str));}catch(e){return;}
 		if(!dat.scores)return;
 		dat.scores=dat.scores.replace(/\*/g,'],[').replace(/~/g,',').replace(/!/g,'[').replace(/_/g,']');
 		dat.scores=JSON.parse(dat.scores.replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3').replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3'));
