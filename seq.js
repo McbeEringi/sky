@@ -372,7 +372,7 @@ dbfx={
 	exp:i=>{
 		dbfx.get(i,e=>{
 			alert('',1);
-			albox.insertAdjacentHTML('beforeend',`${texts.exp(e.target.result.name)}<input value="${urlfx.e(e.target.result)}"><button
+			albox.insertAdjacentHTML('beforeend',`${texts.exp(e.target.result.name)}<input class="style" value="${urlfx.e(e.target.result)}"><button
 			onclick="navigator.clipboard.writeText(this.previousElementSibling.value).then(()=>alcb.checked=false);" class="grid bg" style="--bp:0 -300%;">copy</button><button
 			onclick="window.open('https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_sequencer&url='+encodeURIComponent(this.previousElementSibling.previousElementSibling.value));alcb.checked=false;" class="grid bg" style="--bp:-700% -300%;">tweet</button>`);
 		});
