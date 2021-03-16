@@ -4,17 +4,17 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url;
 const texts=Object.assign({
+	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103162\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
-	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',
-	nodat:'no datas found',err:x=>`coudnt ${['load','duplicate','delete','save'][x]} datas.`,
+	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
+	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
 	exp:x=>`Ready to export "${x}"`,imp:'import from URL',
-	delq:x=>`Are you sure you want to delete "${x}"?`,
-	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103161\nMIT License\n'
+	delq:x=>`Are you sure you want to delete "${x}"?`
 },{
 	ja:{
 		notice:'⚠️\nこのページはβテスト中です。\n不具合や未実装の機能があることがあります。',
-		title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',
-		nodat:'データがありません',err:x=>`データの${['読み込み','複製','削除','保存'][x]}に失敗しました`,
+		title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',
+		nodat:'データがありません',err:x=>`データの${['読み込み','削除','保存'][x]}に失敗しました`,
 		exp:x=>`「${x}」を書き出す`,imp:'URLから読みこむ',
 		delq:x=>`「${x}」を削除してよろしいですか？`
 	}
@@ -147,6 +147,7 @@ rawedit=()=>{
 },
 domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('shake');};
 
+//albox.onclick=e=>{if(e.target!=e.currentTarget&&['BUTTON','LABEL'].includes(e.target.tagName))console.log('click')};
 ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
 curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;};
 document.querySelectorAll('#kb p').forEach((e,i)=>{
@@ -356,17 +357,17 @@ load=()=>{
 },
 dbfx={
 	tmp:[],
-	get:function(i,sfx,efx){
+	get:function(i,fx,fx_){
 		console.log(this.tmp[i]);
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').get(this.tmp[i]);
-		req.onsuccess=sfx;req.onerror=efx||(e=>albox.textContent=`⚠️\n${texts.err(0)}\n\n${e.target.error}`);
+		req.onsuccess=fx;req.onerror=fx_||(e=>albox.textContent=`⚠️\n${texts.err(0)}\n\n${e.target.error}`);
 	},
 	open:i=>dbfx.get(i,e=>{main=e.target.result;init();alcb.checked=false;}),
 	dupe:i=>dbfx.get(i,e=>{
-		let dup=e.target.result;dup.name+=' copy';
+		let dup=e.target.result;dup.name+=texts.copy;
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(dup);
 		req.onsuccess=load;
-		req.onerror=e=>albox.textContent=`⚠️\n${texts.err(1)}\n\n${e.target.error}`;
+		req.onerror=e=>albox.textContent=`⚠️\n${texts.err(2)}\n\n${e.target.error}`;
 	}),
 	exp:i=>{
 		dbfx.get(i,e=>{
@@ -387,21 +388,22 @@ dbfx={
 		albox.insertAdjacentHTML('beforeend',`${texts.delq(this.tmp[i])}<br><br><button
 		onclick="dbfx.del(${i});" class="style dialogb" style="background:#f448;">${texts.del}</button><button
 		onclick="load();" class="style dialogb">${texts.cancel}</button>`);
+		albox.lastElementChild.focus();
 	},
 	del:function(i){
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').delete(this.tmp[i]);
 		req.onsuccess=load;
-		req.onerror=e=>albox.textContent=`⚠️\n${texts.err(2)}\n\n${e.target.error}`;
+		req.onerror=e=>albox.textContent=`⚠️\n${texts.err(1)}\n\n${e.target.error}`;
 	},
 	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>llog('delall done'),
 	save:()=>{
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
 		req.onerror=()=>{
 			req=idb.result.transaction('seq','readwrite').objectStore('seq').put(main);
-			req.onerror=e=>alert(`⚠️\n${texts.err(3)}\n\n${e.target.error}`);
+			req.onerror=e=>alert(`⚠️\n${texts.err(2)}\n\n${e.target.error}`);
 			req.onsuccess=()=>alert(`✅\n${texts.osave}`);
 		};
-		req.onsuccess=()=>{alert(`✅\n${texts.save}`)};
+		req.onsuccess=()=>alert(`✅\n${texts.save}`);
 	},
 	renameW:function(i){
 		albox.textContent='';
@@ -410,10 +412,12 @@ dbfx={
 		albox.querySelector('input').focus();
 	},
 	rename:(i,x)=>{
+		if(dbfx.tmp[i]==x){load();return;}
 		dbfx.get(i,e=>{
 			let dat=e.target.result;dat.name=x;
 			let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(dat);
-			req.onerror=e=>{console.log(e);load();};req.onsuccess=()=>dbfx.del(i);
+			req.onerror=e=>alert(`⚠️\n${texts.err(2)}\n\n${e.target.error}`);
+			req.onsuccess=()=>dbfx.del(i);
 		});
 	}
 },
@@ -440,13 +444,15 @@ urlfx={
 	l:(str=location.hash.slice(1))=>{
 		if(!str)return;
 		let dat;
-		try{dat=JSON.parse(decodeURIComponent(str));}catch(e){return;}
-		if(!dat.scores)return;
-		dat.scores=dat.scores.replace(/\*/g,'],[').replace(/~/g,',').replace(/!/g,'[').replace(/_/g,']');
-		dat.scores=JSON.parse(dat.scores.replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3').replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3'));
-		dat.scores=urlfx.dmap(dat.scores,x=>x.split('.').map(y=>{if(y)return parseInt(y,36)-15;}).join(','));
-		console.log('load url',dat);
-		return dat;
+		try{
+			dat=JSON.parse(decodeURIComponent(str));
+			if(!dat.scores)return;
+			dat.scores=dat.scores.replace(/\*/g,'],[').replace(/~/g,',').replace(/!/g,'[').replace(/_/g,']');
+			dat.scores=JSON.parse(dat.scores.replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3').replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3'));
+			dat.scores=urlfx.dmap(dat.scores,x=>x.split('.').map(y=>{if(y)return parseInt(y,36)-15;}).join(','));
+			console.log('load url',dat);
+			return dat;
+		}catch(e){console.log(e);return;}
 	}
 },
 impsample=fx=>fetch('sample.json').then(x=>x.json()).then(x=>
