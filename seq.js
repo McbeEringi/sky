@@ -90,7 +90,7 @@ ttoggle=()=>{
 	Tone.start();
 	let state=Tone.Transport.state!='started';
 	distrs.checked=state;
-	if(state)ezsave();
+	if(state&&!from_url)ezsave();
 	Tone.Transport[state?'start':'pause']();
 },
 tstop=()=>{Tone.Transport.stop();distrs.checked=false;curpos=0;curset();scrset();kbset();},
@@ -418,7 +418,7 @@ dbfx={
 	}
 },
 init=()=>{
-	Tone.Transport.pause();
+	Tone.Transport.pause();from_url=false;
 	if(!main)main={name:'',sc:0,bpm:120,ts:4,arp:0,scores:new Array(8).fill('')};
 	if(main.arp==undefined)main.arp=0;
 	disp.textContent='Loading sheet…';
