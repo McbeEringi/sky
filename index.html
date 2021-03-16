@@ -41,7 +41,7 @@
 			input[type=radio]+label{background-color:#5c7383;transition:.2s;padding:0 8px;box-shadow:0 0 8px #0004 inset;font-size:1.2em;}
 			input[type=radio]:checked+label{background-color:#48f;}
 			#bgmode>div{height:112px;background:url(img/fog.png);background-position:center;background-size:100%}#bgmode>div>label{height:100%;display:none;position:relative;}
-			#bgmode1:checked~div>label:nth-child(1),#bgmode2:checked~div>label:nth-child(2){display:block;}
+			#bgmode1:checked~div>:nth-child(1),#bgmode2:checked~div>:nth-child(2){display:block;}
 
 			.links>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;}
 			@media(max-width:504px){.links{text-align:center;}}
@@ -67,7 +67,10 @@
 					<input type="radio" name="bgmode" value="1" id="bgmode1"><label for="bgmode1">image</label>
 					<input type="radio" name="bgmode" value="2" id="bgmode2"><label for="bgmode2">custom</label>
 					<div>
-						<label>choose image<br><input type="file" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg');bgset();"></label>
+						<div>
+							<label>choose image<br><input type="file" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg');bgset();"></label><br>
+							<button onclick="idb.result.transaction('stuff','readwrite').objectStore('stuff').delete('bgimg');bgset();">reset to default</button>
+						</div>
 						<label><a href="https://developer.mozilla.org/docs/Web/CSS/gradient">background-image</a>:<br><textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;bgset();"></textarea></label>
 					</div>
 				</form>

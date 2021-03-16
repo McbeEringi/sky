@@ -6,16 +6,16 @@ let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,no
 const texts=Object.assign({
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',
-	nodat:'no datas found',loadf:'coudnt load datas.',dupef:'coudnt duplicate datas.',delf:'coudnt delete datas.',savef:'coudnt save datas.',
+	nodat:'no datas found',err:x=>`coudnt ${['load','duplicate','delete','save'][x]} datas.`,
 	exp:x=>`Ready to export "${x}"`,imp:'import from URL',
 	delq:x=>`Are you sure you want to delete "${x}"?`,
-	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103160\nMIT License\n'
+	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103161\nMIT License\n'
 },{
 	ja:{
 		notice:'⚠️\nこのページはβテスト中です。\n不具合や未実装の機能があることがあります。',
 		title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',
-		nodat:'データがありません',loadf:'データの読み込みに失敗しました',dupef:'データの複製に失敗しました',delf:'データの削除に失敗しました',savef:'データの保存に失敗しました',
-		exp:x=>`「${x}」を書き出し`,imp:'URLから読みこむ',
+		nodat:'データがありません',err:x=>`データの${['読み込み','複製','削除','保存'][x]}に失敗しました`,
+		exp:x=>`「${x}」を書き出す`,imp:'URLから読みこむ',
 		delq:x=>`「${x}」を削除してよろしいですか？`
 	}
 }[window.navigator.language.slice(0,2)]),
@@ -326,9 +326,9 @@ d2d=(x=disp)=>{
 save=()=>{
 	if(!main.name){
 		alert('',1,1);
-		albox.insertAdjacentHTML('beforeend',`${texts.title}<p contenteditable></p><button
-		onclick="{let tmp=this.previousElementSibling.textContent||('untitled '+new Date().toLocaleString());name_.textContent=main.name=tmp;document.title='sky_seq '+tmp;dbfx.save();}" class="grid bg" style="--bp:-600% -200%;">save</button>`);
-		albox.querySelector('p').focus();
+		albox.insertAdjacentHTML('beforeend',`${texts.title}<input class="style" onchange="this.nextElementSibling.click();"><button
+		onclick="{let tmp=this.previousElementSibling.value||('untitled '+new Date().toLocaleString());name_.textContent=main.name=tmp;document.title='sky_seq '+tmp;dbfx.save();}" class="grid bg" style="--bp:-600% -200%;">save</button>`);
+		albox.querySelector('input').focus();
 	}else dbfx.save();
 },
 load=()=>{
@@ -350,7 +350,7 @@ load=()=>{
 		}));
 	};
 	req.onerror=e=>{
-		albox.textContent=`⚠️\n${texts.loadf}\n\n${e.target.error}`;
+		albox.textContent=`⚠️\n${texts.err(0)}\n\n${e.target.error}`;
 		albox.insertAdjacentHTML('beforeend',tpl);
 	};
 },
@@ -359,28 +359,28 @@ dbfx={
 	get:function(i,sfx,efx){
 		console.log(this.tmp[i]);
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').get(this.tmp[i]);
-		req.onsuccess=sfx;req.onerror=efx||(e=>albox.textContent=`⚠️\n${texts.loadf}\n\n${e.target.error}`);
+		req.onsuccess=sfx;req.onerror=efx||(e=>albox.textContent=`⚠️\n${texts.err(0)}\n\n${e.target.error}`);
 	},
 	open:i=>dbfx.get(i,e=>{main=e.target.result;init();alcb.checked=false;}),
 	dupe:i=>dbfx.get(i,e=>{
 		let dup=e.target.result;dup.name+=' copy';
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(dup);
 		req.onsuccess=load;
-		req.onerror=e=>albox.textContent=`⚠️\n${texts.dupef}\n\n${e.target.error}`;
+		req.onerror=e=>albox.textContent=`⚠️\n${texts.err(1)}\n\n${e.target.error}`;
 	}),
 	exp:i=>{
 		dbfx.get(i,e=>{
 			alert('',1);
-			albox.insertAdjacentHTML('beforeend',`${texts.exp(e.target.result.name)}<p contenteditable>${urlfx.e(e.target.result)}</p><button
-			onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>alcb.checked=false);" class="grid bg" style="--bp:0 -300%;">copy</button><button
-			onclick="window.open('https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_sequencer&url='+encodeURIComponent(this.previousElementSibling.previousElementSibling.textContent));alcb.checked=false;" class="grid bg" style="--bp:-700% -300%;">tweet</button>`);
+			albox.insertAdjacentHTML('beforeend',`${texts.exp(e.target.result.name)}<input value="${urlfx.e(e.target.result)}"><button
+			onclick="navigator.clipboard.writeText(this.previousElementSibling.value).then(()=>alcb.checked=false);" class="grid bg" style="--bp:0 -300%;">copy</button><button
+			onclick="window.open('https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_sequencer&url='+encodeURIComponent(this.previousElementSibling.previousElementSibling.value));alcb.checked=false;" class="grid bg" style="--bp:-700% -300%;">tweet</button>`);
 		});
 	},
 	imp:()=>{
 		alert('',1);
-		albox.insertAdjacentHTML('beforeend',`${texts.imp}<p contenteditable></p><button
-		onclick="{let tmp=urlfx.l(this.previousElementSibling.textContent.split('#',2)[1]);if(tmp){main=tmp;alcb.checked=false;init();idb.result.transaction('seq','readwrite').objectStore('seq').add(tmp);}}" class="grid bg" style="--bp:-600% -100%;">import</button>`);
-		requestIdleCallback(()=>navigator.clipboard.readText().then(x=>albox.querySelector('p').textContent=x));
+		albox.insertAdjacentHTML('beforeend',`${texts.imp}<input class="style" onchange="this.nextElementSibling.click();"><button
+		onclick="{let tmp=urlfx.l(this.previousElementSibling.value.split('#',2)[1]);if(tmp){main=tmp;alcb.checked=false;init();idb.result.transaction('seq','readwrite').objectStore('seq').add(tmp);}else domshake(this);}" class="grid bg" style="--bp:-600% -100%;">import</button>`);
+		requestIdleCallback(()=>navigator.clipboard.readText().then(x=>albox.querySelector('input').value=x).catch(console.log));
 	},
 	delW:function(i){
 		alert('',1);
@@ -391,23 +391,23 @@ dbfx={
 	del:function(i){
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').delete(this.tmp[i]);
 		req.onsuccess=load;
-		req.onerror=e=>albox.textContent=`⚠️\n${texts.delf}\n\n${e.target.error}`;
+		req.onerror=e=>albox.textContent=`⚠️\n${texts.err(2)}\n\n${e.target.error}`;
 	},
 	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>llog('delall done'),
 	save:()=>{
 		let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
 		req.onerror=()=>{
 			req=idb.result.transaction('seq','readwrite').objectStore('seq').put(main);
-			req.onerror=e=>alert(`⚠️\n${texts.savef}\n\n${e.target.error}`);
+			req.onerror=e=>alert(`⚠️\n${texts.err(3)}\n\n${e.target.error}`);
 			req.onsuccess=()=>alert(`✅\n${texts.osave}`);
 		};
 		req.onsuccess=()=>{alert(`✅\n${texts.save}`)};
 	},
 	renameW:function(i){
 		albox.textContent='';
-		albox.insertAdjacentHTML('beforeend',`${texts.title}<p contenteditable>${this.tmp[i]}</p><button
-		onclick="dbfx.rename(${i},this.previousElementSibling.textContent);" class="grid bg" style="--bp:-200% -300%;">rename</button>`);
-		albox.querySelector('p').focus();
+		albox.insertAdjacentHTML('beforeend',`${texts.title}<input class="style" value="${this.tmp[i]}" onchange="this.nextElementSibling.click();"><button
+		onclick="dbfx.rename(${i},this.previousElementSibling.value);" class="grid bg" style="--bp:-200% -300%;">rename</button>`);
+		albox.querySelector('input').focus();
 	},
 	rename:(i,x)=>{
 		dbfx.get(i,e=>{
