@@ -68,14 +68,14 @@
 					<input type="radio" name="bgmode" value="2" id="bgmode2"><label for="bgmode2">custom</label>
 					<div>
 						<div>
-							<label>choose image<br><input type="file" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg');bgset();"></label><br>
-							<button onclick="idb.result.transaction('stuff','readwrite').objectStore('stuff').delete('bgimg');bgset();">reset to default</button>
+							<label>choose image<br><input type="file" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg').onsuccess=()=>bgset();"></label><br>
+							<button onclick="idb.result.transaction('stuff','readwrite').objectStore('stuff').delete('bgimg').onsuccess=()=>bgset();">reset to default</button>
 						</div>
 						<label><a href="https://developer.mozilla.org/docs/Web/CSS/gradient">background-image</a>:<br><textarea id="bgcode" oninput="localStorage.sky_bgcode=this.value;bgset();"></textarea></label>
 					</div>
 				</form>
 				<p>
-					[sky_menu] build:2103160 <br>
+					[sky_menu] build:2103161 <br>
 					<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense <br>
 					<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>{if(x)location.reload(true);})">force update</button>
 				</p>
