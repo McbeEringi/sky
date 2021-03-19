@@ -14,7 +14,6 @@ document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="http
 #bg{position:fixed;top:0;left:0;z-index:-16;width:100vw;height:100vh;transition:background 1s;pointer-events:none;background-size:cover;background-position:center;user-select:none;-webkit-user-select:none;}
 #bg>img{opacity:.2;width:100vmin;height:auto;float:right;transform:translateX(25%);background:none;}
 a:link,a:visited{color:#aef;}a:hover{color:#8af;}a:active{color:#48f;}
-.flex{display:flex;justify-content:space-evenly;flex-wrap:wrap;align-items:flex-start;}
 #hisbackb{display:none;position:fixed;left:2px;bottom:2px;width:48px;height:48px;border-radius:12px;background:#2228 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='filter:drop-shadow(0 0 4px %23f00);'%3E%3Cpath d='M32,8L16,24L32,40' stroke='%23fea' stroke-width='2px' fill='%230000'/%3E%3C/svg%3E");}
 </style>`);
 var urlq={};location.search.substr(1).split('&').map(x=>x.split('=')).map(x=>urlq[x[0]]=x[1]);console.log(urlq);
