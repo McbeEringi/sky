@@ -9,13 +9,16 @@ PWA, offline support
 	- custom key
 
 - sky_sequencer (in development)  
-	coming soon…
-	- can use "N"tuplet "N"metre
-	- custom key
+	now on beta
+	- drag 'n' drop interface
+	- custom key,tempo,tuplet and meter
+	- url share feature
+
 - sky_info
 	- tells treasure candle location with photo
 	- forecast
 	- office spirits
+
 - some stuffs
 
 under MIT License  
