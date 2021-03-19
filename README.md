@@ -1,6 +1,6 @@
 # sky
 "Sky: Children of the Light" web tools  
-PWA, offline support  
+PWA, Offline support enable  
 [page link](https://mcbeeringi.github.io/sky)  
 
 ![img](img/sky_192.png)  
@@ -15,9 +15,8 @@ PWA, offline support
 	- url share feature
 
 - sky_info
-	- tells treasure candle location with photo
-	- forecast
-	- office spirits
+	- treasure candle forecast with some images
+	- office spirits forecast
 
 - some stuffs
 
