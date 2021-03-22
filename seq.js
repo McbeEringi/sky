@@ -484,7 +484,7 @@ if(!localStorage.seq_undoMax){
 	});
 }
 synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/musicbox/').toDestination();
-try{recorder=new Tone.Recorder();synth.connect(recorder);llog('recinit');}catch(e){recbtn.diabled=true;}
+try{recorder=new Tone.Recorder();synth.connect(recorder);llog('recinit');}catch(e){console.log(e);recbtn.disabled=true;}
 log.textContent=texts.info;//Tone.Transport.loop=true;
 from_url=Boolean(main=urlfx.l());
 if(!from_url&&localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
