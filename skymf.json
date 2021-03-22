@@ -23,17 +23,17 @@
 		{
 			"name":"sky_instrments",
 			"url":"instr.html?pwa=1",
-			"icons":[{ "src":"/img/ico/instr.jpg","sizes":"192x192"}]
+			"icons":[{ "src":"img/ico/instr.jpg","sizes":"192x192"}]
 		},
 		{
 			"name":"sky_info",
 			"url":"info.html?pwa=1",
-			"icons":[{ "src":"/img/ico/info.jpg","sizes":"192x192"}]
+			"icons":[{ "src":"img/ico/info.jpg","sizes":"192x192"}]
 		},
 		{
 			"name":"sky_sequencer",
-			"url":"/seq.html?pwa=1",
-			"icons":[{ "src":"/img/ico/seq.jpg","sizes":"192x192"}]
+			"url":"seq.html?pwa=1",
+			"icons":[{ "src":"img/ico/seq.jpg","sizes":"192x192"}]
 		}
   ]
 }
