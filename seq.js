@@ -4,7 +4,7 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url,recorder;
 const texts=Object.assign({
-	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103221\nMIT License\n',
+	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103222\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
@@ -228,12 +228,13 @@ dispScr.onscroll=e=>{
 };
 undobtn.onclick=()=>urdo(-1);redobtn.onclick=()=>urdo(1);
 recbtn.onclick=e=>{
-	const rcstop=async()=>{
+	if(e.target.classList.toggle('ghl_'))recorder.start();
+	else(async()=>{
+		Tone.Transport.pause();styperf.textContent='';
 		let recording=await recorder.stop(),e=document.createElement('a');
-		e.download=`${main.name||'recording'}.${/\/mp/.test(recorder.mimeType)?'mp4':'webm'}`;e.href=URL.createObjectURL(recording);
+		e.download=`${main.name||'recording'}.${/\/mp/.test(recorder.mimeType)?'m4a':'webm'}`;e.href=URL.createObjectURL(recording);
 		e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,3000,e.href);
-	};
-	if(e.target.classList.toggle('ghl_'))recorder.start();else rcstop();
+	})();
 }
 
 
