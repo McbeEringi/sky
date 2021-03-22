@@ -2,9 +2,9 @@
 alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';albox.style.maxWidth=mw?'100%':'';alcb.checked=true;}
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
-let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url;
+let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url,recorder;
 const texts=Object.assign({
-	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103210\nMIT License\n',
+	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103220\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
@@ -465,7 +465,13 @@ dljson=(x=main)=>{
 	let e=document.createElement('a');
 	e.download=`${x.name||'JSON'}.json`;
 	e.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
-	e.click();
+	e.click();setTimeout(URL.revokeObjectURL,3000,e.href);
+},
+rcinit=()=>{try{recorder=new Tone.Recorder();synth.connect(recorder);}catch(e){alert(e);}},
+rcstop=async ()=>{
+	let recording=await recorder.stop(),e=document.createElement('a');
+	e.download=`${main.name||'recording'}.m4a`;e.href=URL.createObjectURL(recording);
+	e.click();setTimeout(URL.revokeObjectURL,3000,e.href);
 };
 
 alert(texts.notice);
