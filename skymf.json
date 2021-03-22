@@ -21,7 +21,7 @@
 	"orientation":"any",
 	"shortcuts": [
 		{
-			"name":"sky_instrments",
+			"name":"sky_instruments",
 			"url":"instr.html?pwa=1",
 			"icons":[{ "src":"img/ico/instr.jpg","sizes":"192x192"}]
 		},
