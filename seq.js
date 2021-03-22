@@ -467,11 +467,11 @@ dljson=(x=main)=>{
 	e.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
 	e.click();setTimeout(URL.revokeObjectURL,3000,e.href);
 },
-rcinit=()=>{try{recorder=new Tone.Recorder();synth.connect(recorder);}catch(e){alert(e);}},
+rcinit=()=>{try{recorder=new Tone.Recorder();synth.connect(recorder);llog('rcinit');}catch(e){llog(e);}},
 rcstop=async ()=>{
 	let recording=await recorder.stop(),e=document.createElement('a');
 	e.download=`${main.name||'recording'}.m4a`;e.href=URL.createObjectURL(recording);
-	e.click();setTimeout(URL.revokeObjectURL,3000,e.href);
+	e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,3000,e.href);
 };
 
 alert(texts.notice);
