@@ -230,7 +230,7 @@ undobtn.onclick=()=>urdo(-1);redobtn.onclick=()=>urdo(1);
 recbtn.onclick=e=>{
 	const rcstop=async()=>{
 		let recording=await recorder.stop(),e=document.createElement('a');
-		e.download=`${main.name||'recording'}.webm`;e.href=URL.createObjectURL(recording);
+		e.download=`${main.name||'recording'}.${/\/mp/.test(recorder.mimeType)?'mp4':'webm'}`;e.href=URL.createObjectURL(recording);
 		e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,3000,e.href);
 	};
 	if(e.target.classList.toggle('ghl_'))recorder.start();else rcstop();
