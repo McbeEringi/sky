@@ -54,8 +54,7 @@
 
 		.uiPanel{max-width:312px;}
 		.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#4448;color:#0000;text-shadow:none;border:none;border-radius:25%;box-shadow:0 0 8px #4448;text-align:center;vertical-align:middle;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
-		.grid:not(input){cursor:pointer;}
-		.grid:active{background-color:#8888;}
+		.grid:not(input){cursor:pointer;}.grid:active{background-color:#8888;}.grid:disabled{filter:grayscale(1)opacity(.5);}
 		.bg{background-image:url(img/seq.webp);background-size:800% auto;background-position:var(--bp);transition:.1s;}.showtxt{color:#caf0f6;text-shadow:0 0 4px #688;font-size:18px;line-height:1.1em;font-family:"M PLUS Rounded 1c",sans-serif;}
 
 		.kbPanel{overflow:hidden;max-width:360px;position:relative;width:100%;background:#0004;border-radius:8px;touch-action:none;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}.kbPanel:before{content:"";display:block;padding-top:60%;}
@@ -99,8 +98,8 @@
 
 		body>input[type="checkbox"]{display:none;}
 		#uiflip:checked~* .float_r{float:left;clear:left;}#uiflip:checked~* .float_l{float:right;clear:right;}/*#uiflip:checked~.dispPanel .ui{left:16px;right:unset;direction:rtl;text-align:left;}*/
-		label.grid{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
-		#kblock:checked~* label[for="kblock"],#kbfixed:checked~* label[for="kbfixed"],#clipcb:checked~* label[for="clipcb"]{box-shadow:0 0 2px 4px #fea inset;}
+		.ghl{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
+		#kblock:checked~* label[for="kblock"],#kbfixed:checked~* label[for="kbfixed"],#clipcb:checked~* label[for="clipcb"],.ghl_{box-shadow:0 0 2px 4px #fea inset;}
 		#kbfixed:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;z-index:1;}#kbfixed:checked~.dispPanel{}
 		#clipcb:checked~* #clip{display:block;}#clipcb:checked~* .kbPanel{display:none;}
 		#dbgcb:not(:checked)~.debug{display:none;}
@@ -150,7 +149,7 @@
 				id="tpl"><div class="noteW note" data-note=""></div><div
 				class="noteW sortW"><div class="sort"><div class="noteW note" data-note=""></div><div class="noteW note" data-note=""></div></div></div><div
 				id="trash"></div></div><button onclick="" class="grid bg" style="--bp:-500% -300%; opacity:0;pointer-events:none;">mark
-				</button><label for="clipcb" class="grid bg" style="--bp:-500% -100%;">clipbobard
+				</button><label for="clipcb" class="grid bg ghl" style="--bp:-500% -100%;">clipbobard
 			</label><button onclick="save();" class="grid bg" style="--bp:-600% -200%;">save
 			</button>
 		</div>
@@ -164,10 +163,12 @@
 		<div id="clip" class="float_l"><div class="noteW note" data-note=""></div></div>
 		<div class="uiPanel float_r">
 			         <button onclick="Tone.Transport.pause();styperf.textContent='';load();" class="grid bg" style="--bp:-500% -200%;">load
-			</button><label for="kblock" class="grid bg" style="--bp:-100% -200%;">lock keyboard
-			</label><label for="kbfixed" class="grid bg" style="--bp:-200% -200%;">practice
+			</button><button id="recbtn" class="grid bg  ghl" style="--bp:0 -200%;">record
+			</button><label for="kblock" class="grid bg ghl" style="--bp:-100% -200%;">lock keyboard
+			</label><label for="kbfixed" class="grid bg ghl" style="--bp:-200% -200%;">practice
 			</label><button id="ibtn" class="grid bg" style="--bp:-300% 0;">info
 			</button>
+
 		</div>
 	</div>
 
@@ -177,9 +178,6 @@
 		<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>alert(x));">cache del</button>
 		<button onclick="synth=new Tone.Sampler(stdli(1,7,{'a0':'a0.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/piano/').toDestination()">piano</button>
 		<button onclick="dljson();">dljson</button>
-		<button onclick="rcinit();">rcinit</button>
-		<button onclick="recorder.start();llog('rcstart');">rcstart</button>
-		<button onclick="rcstop();">rcstop</button>
 	</div>
 	<!--
 	caches.keys().then(x=>caches.open(x[0])).then(x=>x.delete('/sky/seq.html')).then(x=>log.textContent+=`\ncache del: ${x}`)

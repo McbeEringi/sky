@@ -4,7 +4,7 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url,recorder;
 const texts=Object.assign({
-	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103220\nMIT License\n',
+	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103221\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
@@ -148,7 +148,7 @@ rawedit=()=>{
 domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('shake');};
 
 //albox.onclick=e=>{if(e.target!=e.currentTarget&&['BUTTON','LABEL'].includes(e.target.tagName))console.log('click')};
-ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid bg" style="--bp:0 -200%;">flip ui</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
+ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid showtxt">flip UI</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
 curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;};
 document.querySelectorAll('#kb p').forEach((e,i)=>{
 	const keyfx=ev=>{
@@ -227,6 +227,14 @@ dispScr.onscroll=e=>{
 	tmp();screxet=setTimeout(tmp,100);
 };
 undobtn.onclick=()=>urdo(-1);redobtn.onclick=()=>urdo(1);
+recbtn.onclick=e=>{
+	const rcstop=async()=>{
+		let recording=await recorder.stop(),e=document.createElement('a');
+		e.download=`${main.name||'recording'}.webm`;e.href=URL.createObjectURL(recording);
+		e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,3000,e.href);
+	};
+	if(e.target.classList.toggle('ghl_'))recorder.start();else rcstop();
+}
 
 
 const sopt={
@@ -466,12 +474,6 @@ dljson=(x=main)=>{
 	e.download=`${x.name||'JSON'}.json`;
 	e.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
 	e.click();setTimeout(URL.revokeObjectURL,3000,e.href);
-},
-rcinit=()=>{try{recorder=new Tone.Recorder();synth.connect(recorder);llog('rcinit');}catch(e){llog(e);}},
-rcstop=async ()=>{
-	let recording=await recorder.stop(),e=document.createElement('a');
-	e.download=`${main.name||'recording'}.m4a`;e.href=URL.createObjectURL(recording);
-	e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,3000,e.href);
 };
 
 alert(texts.notice);
@@ -482,6 +484,7 @@ if(!localStorage.seq_undoMax){
 	});
 }
 synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/musicbox/').toDestination();
+try{recorder=new Tone.Recorder();synth.connect(recorder);llog('recinit');}catch(e){recbtn.diabled=true;}
 log.textContent=texts.info;//Tone.Transport.loop=true;
 from_url=Boolean(main=urlfx.l());
 if(!from_url&&localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
