@@ -10,7 +10,7 @@ idb.onerror=e=>{console.log('idb open error: '+idb.errorCode);localStorage.sky_b
 
 document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c&display=swap" media="print" onload="this.media='all'">
 <style>
-:root,.style{background:#222;font-family:"M PLUS Rounded 1c",sans-serif;color:#fff;text-shadow:0 0 4px #222;word-wrap:break-word;}*{-webkit-tap-highlight-color:#000;}
+:root,.style{background:#222;font-family:"M PLUS Rounded 1c",sans-serif;color:#fff;text-shadow:0 0 4px #222;word-wrap:break-word;}*{-webkit-tap-highlight-color:#0000;}
 #bg{position:fixed;top:0;left:0;z-index:-16;width:100vw;height:100vh;transition:background 1s;pointer-events:none;background-size:cover;background-position:center;user-select:none;-webkit-user-select:none;}
 #bg>img{opacity:.2;width:100vmin;height:auto;float:right;transform:translateX(25%);background:none;}
 a:link,a:visited{color:#aef;}a:hover{color:#8af;}a:active{color:#48f;}
