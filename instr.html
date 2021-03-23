@@ -40,7 +40,9 @@
 				background:linear-gradient(45deg, #0000 6px,#0008 6px),linear-gradient(135deg,#0000 6px,#0008 6px),linear-gradient(225deg,#0000 6px,#0008 6px),linear-gradient(315deg,#0000 6px,#0008 6px);
 				background-position:bottom left,top left,top right,bottom right;background-size:50% 50%;background-repeat:no-repeat;
 			}
-			input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;height:16.8px;width:16.8px;background:#aef;box-shadow:0 0 8px #aef,0 0 4px #0008 inset;transform:rotateZ(45deg);}
+			input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;height:16.8px;width:16.8px;background:#aef;box-shadow:0 0 8px #aef,0 0 4px #0008 inset;transform:rotateZ(45deg);border-radius:0;}/*input[type=range]::-moz-range-thumb*/
+			.revW{position:relative;}.revW::before{content:"";position:absolute;width:48px;height:48px;top:50%;left:50%;transform:translate(-50%,-50%);background:url(img/tex.webp);background-size:800%;background-position:-700% -0%;opacity:.7;pointer-events:none;}
+			.nowebp .revW::before{background:url(img/tex.png);}
 			#alcb{display:none;}
 			#alcb+label{display:block;width:100%;height:100%;background:#0008;opacity:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);pointer-events:none;transition:.2s;}
 			#alcb:checked+label{opacity:1;pointer-events:auto;}
@@ -82,8 +84,7 @@
 			.menu .grid{touch-action:none;}.menu .grid.button:active::before{transform:scale(.8);}.menu .grid.button:not(:active)::before{transition:.2s;}
 
 			#scd,#scd_{transition:.2s}
-			#scd_{position:absolute;top:0;left:0;width:100%;height:100%;background:url(img/tex.webp);background-size:560px auto;background-position:-490px 0;}
-			.nowebp #scd_{background:url(img/tex.png);}
+			#scd_{position:absolute;top:0;left:0;width:100%;height:100%;filter:drop-shadow(0 0 2px #aef);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 6l1 1l-1 1l-1 -1l1 -1%0A' fill='%23caf0f6'/%3E%3C/svg%3E");}
 		</style>
 		<div class="bg_">
 			<!--<video muted autoplay loop playsinline src="img/hotsprv.mp4" type="video/mp4" id="bgv"></video>-->
@@ -105,23 +106,23 @@
 		<input type="checkbox" id="menucb" onchange="sfx.player(this.checked?'op':'cl').start();"><label for="menucb" style="pointer-events:none;"></label>
 		<div class="menu">
 			<form id="menu" onchange="set();sfx.player('cs').start();">
-				        <label><input type="radio" name="instr" value="0"  checked ><div style="--bp:-0%   -100% ;"></div>
-				</label><label><input type="radio" name="instr" value="1"          ><div style="--bp:-100% -100% ;"></div>
-				</label><label><input type="radio" name="instr" value="2"          ><div style="--bp:-200% -100% ;"></div>
-				</label><label><input type="radio" name="instr" value="3"          ><div style="--bp:-300% -100% ;"></div>
-				</label><label><input type="radio" name="instr" value="4"          ><div style="--bp:-400% -100% ;"></div>
-				</label><label><input type="radio" name="instr" value="5"          ><div style="--bp:-500% -100% ;"></div>
-				</label><label><input type="radio" name="instr" value="6"          ><div style="--bp:-600% -100% ;"></div>
-				</label><label><input type="radio" name="instr" value="7"  disabled><div style="--bp:-700% -100% ;"></div>
-				</label><label><input type="radio" name="instr" value="8"          ><div style="--bp:-0%   -200%;"></div>
-				</label><label><input type="radio" name="instr" value="9"          ><div style="--bp:-100% -200%;"></div>
-				</label><label><input type="radio" name="instr" value="10"         ><div style="--bp:-200% -200%;"></div>
-				</label><label><input type="radio" name="instr" value="11"         ><div style="--bp:-300% -200%;"></div>
-				</label><label><input type="radio" name="instr" value="12"         ><div style="--bp:-400% -200%;"></div>
-				</label><label><input type="radio" name="instr" value="13"         ><div style="--bp:-500% -200%;"></div>
-				</label><label><input type="radio" name="instr" value="14"         ><div style="--bp:-600% -200%;"></div>
-				</label><label><input type="radio" name="instr" value="15"         ><div style="--bp:-700% -200%;"></div>
-				</label><label><input type="radio" name="instr" value="16"         ><div style="--bp:-0%   -300%;"></div>
+				        <label><input type="radio" name="instr" value="0"  checked ><div style="--bp:-0%   -200%;"></div>
+				</label><label><input type="radio" name="instr" value="1"          ><div style="--bp:-100% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="2"          ><div style="--bp:-200% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="3"          ><div style="--bp:-300% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="4"          ><div style="--bp:-400% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="5"          ><div style="--bp:-500% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="6"          ><div style="--bp:-600% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="7"  disabled><div style="--bp:-700% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="8"          ><div style="--bp:-0%   -300%;"></div>
+				</label><label><input type="radio" name="instr" value="9"          ><div style="--bp:-100% -300%;"></div>
+				</label><label><input type="radio" name="instr" value="10"         ><div style="--bp:-200% -300%;"></div>
+				</label><label><input type="radio" name="instr" value="11"         ><div style="--bp:-300% -300%;"></div>
+				</label><label><input type="radio" name="instr" value="12"         ><div style="--bp:-400% -300%;"></div>
+				</label><label><input type="radio" name="instr" value="13"         ><div style="--bp:-500% -300%;"></div>
+				</label><label><input type="radio" name="instr" value="14"         ><div style="--bp:-600% -300%;"></div>
+				</label><label><input type="radio" name="instr" value="15"         ><div style="--bp:-700% -300%;"></div>
+				</label><label><input type="radio" name="instr" value="16"         ><div style="--bp:-0%   -400%;"></div>
 				</label>
 			</form>
 			<hr>
@@ -131,10 +132,12 @@
 				</div><div ontouchstart="" class="grid button" style="--bp:-500% -0%;" onclick="sc++;scale(1);"></div>
 			</div>
 			<hr>
-			<input type="range" id="slrvw" value="0" min="0" max="1" step="0.02" onchange="reverb.wet.value=this.value;save();">
-			<input type="range" id="slrvd" value="0" min="0" max="6" step="0.1"  onchange="reverb.decay=Math.pow(2,this.value);save();">
+			<div class="revW">
+				<input type="range" id="slrvw" value="0" min="0" max="1" step="0.01" onchange="reverb.wet.value=this.value;save();">
+				<input type="range" id="slrvd" value="0" min="0" max="6" step="0.06" onchange="reverb.decay=Math.pow(2,this.value);save();">
+			</div>
 			<hr>
-			<div class="grid button" style="--bp:-0% -0%;" onclick="bgs[bgs.state=='stopped'?'start':'stop']();">
+			<div id="bgsbtn" class="grid button" style="--bp:-0% -100%;">
 			</div><div class="grid button" style="--bp:-300% -0%;" onclick="alert(info);"></div>
 		</div>
 		<label for="menucb"><div id="mico"></div></label>
@@ -142,7 +145,7 @@
 
 		<script>
 			'use strict';
-			let synth,synth_,kbmode=0,sc=0;
+			let synth,synth_,kbmode=0,sc=0,bgs=[[],{l:3,c:4}];
 			alert=x=>{albox.textContent=x;alcb.checked=true;}
 			const reverb=new Tone.Reverb({wet:0,decay:0}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{
@@ -152,7 +155,7 @@
 				}
 				return s;
 			},
-			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2102260\nMIT License',
+			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2103230\nMIT License',
 			instr_li=[//[baseurl, octave, map, (map2)]
 				['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
 				['audio/instr/harp/',-1,stdli(3)],
@@ -223,7 +226,7 @@
 				}
 				save();
 				//icon
-				let pos=[menu.instr.value%8,Math.floor(menu.instr.value*.125+1)];console.log('ico',pos);
+				let pos=[menu.instr.value%8,Math.floor(menu.instr.value*.125+2)];console.log('ico',pos);
 				mico.style.backgroundPosition=pos.map(x=>(x*-100)+'%').join(' ');
 			},
 			trigger=id=>{
@@ -274,9 +277,17 @@
 			})
 			document.addEventListener('keydown',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchstart'));});
 			document.addEventListener('keyup',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchend'));});
+			bgsbtn.onclick=()=>{
+				console.log(bgs);
+				try{bgs[0][bgs[1].c].stop();}catch(e){}
+				if(bgs[1].l<bgs[1].c)bgs[1].c=0;else bgs[1].c++;
+				alert('ambient sound\n\n\t>>'+['hotspring','home','forest','vault','🔇'][bgs[1].c])
+				if(bgs[1].c<=bgs[1].l&&!bgs[0][bgs[1].c])
+					bgs[0][bgs[1].c]=new Tone.Player({url:`audio/env${bgs[1].c}.mp3`,volume:-8,autostart:true,loop:true,fadeIn:5,fadeOut:2}).toDestination();
+				else try{bgs[0][bgs[1].c].start();}catch(e){console.log('bgs muted');}
+			};
 
-			const bgs=new Tone.Player({url:'audio/hotspra.mp3',volume:-10,autostart:true,loop:true,fadeIn:5,fadeOut:2}).toDestination(),
-			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination();
+			const sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination();
 
 			/*document.addEventListener('visibilitychange',()=>{
 				if(document.visibilityState=='visible'){bgv.play();console.log('become visible');location.reload(false);}

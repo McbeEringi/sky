@@ -1,8 +1,8 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache210316_2',STATIC_DATA=[
+const cacheName='cache210323_1',STATIC_DATA=[
 	'style.js',
-	'img/sky.svg',
+	'img/sky_.svg',
 	'img/sky.png',
 	'img/sky_192.png',
 
@@ -22,7 +22,7 @@ const cacheName='cache210316_2',STATIC_DATA=[
 	'https://cdn.jsdelivr.net/npm/tone/build/Tone.js',
 	'img/tex.webp',
 	//'img/hotsprv.mp4',
-	'audio/hotspra.mp3','audio/open.mp3','audio/close.mp3','audio/choose.mp3',
+	'audio/open.mp3','audio/close.mp3','audio/choose.mp3',
 	'audio/instr/musicbox/a3.mp3',
 	'audio/instr/musicbox/a4.mp3',
 	'audio/instr/musicbox/a5.mp3',
