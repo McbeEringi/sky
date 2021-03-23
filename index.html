@@ -75,7 +75,8 @@
 					</div>
 				</div>
 				<p>
-					[sky_menu] build:2103162 <br>
+					[sky_menu] build:2103230 <br>
+					<span id="cachedisp"></span><br>
 					<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense <br>
 					<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>{if(x)location.reload(true);})">force update</button>
 				</p>
@@ -83,6 +84,7 @@
 		</div>
 
 		<script>
+			caches.keys().then(x=>cachedisp.textContent=x[0]);
 			document.getElementsByName('bgmode').forEach((x,i)=>{
 				if(i==localStorage.sky_bgmode)x.checked=true;
 				x.onclick=()=>{localStorage.sky_bgmode=i;bgset();}
