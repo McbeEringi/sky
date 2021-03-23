@@ -46,7 +46,7 @@
 			#alcb{display:none;}
 			#alcb+label{display:block;width:100%;height:100%;background:#0008;opacity:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);pointer-events:none;transition:.2s;}
 			#alcb:checked+label{opacity:1;pointer-events:auto;}
-			#albox{width:calc(90% - 40px);max-width:256px;min-height:128px;border-radius:16px;padding:20px;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
+			#albox{width:calc(90% - 40px);max-width:256px;min-height:128px;border-radius:16px;padding:20px;margin:0;box-sizing:border-box;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
 
 
 			@keyframes bob{0%{transform:scale(.95);}100%{transform:scale(.9);}}
@@ -79,7 +79,7 @@
 			.menu input[type=radio]+div::before,.menu .grid::before{position:absolute;content:"";display:block;width:70px;height:70px;background:url(img/tex.webp);background-size:560px auto;background-position:var(--bp);}
 			.nowepb .menu input[type=radio]+div::before,.nowebbp .menu .grid::before{background:url(img/tex.png);}
 			.menu input[type=radio]:disabled+div{opacity:.5;}
-			.menu input[type=radio]:checked+div{box-shadow:0 0 0 2px #fea inset,0 0 8px #fea4;}
+			.menu input[type=radio]:checked+div,.menu .grid.recording{box-shadow:0 0 0 2px #fea inset,0 0 8px #fea4;}
 			.menu input[type=radio]:checked+div::before{animation:flip .4s ease-in-out;}
 			.menu .grid{touch-action:none;}.menu .grid.button:active::before{transform:scale(.8);}.menu .grid.button:not(:active)::before{transition:.2s;}
 
@@ -137,7 +137,8 @@
 				<input type="range" id="slrvd" value="0" min="0" max="6" step="0.06" onchange="reverb.decay=Math.pow(2,this.value);save();">
 			</div>
 			<hr>
-			<div id="bgsbtn" class="grid button" style="--bp:-0% -100%;">
+			<div id="envbtn" class="grid button" style="--bp:-0% -100%;">
+			</div><div id="recbtn" class="grid button" style="--bp:-100% -100%;">
 			</div><div class="grid button" style="--bp:-300% -0%;" onclick="alert(info);"></div>
 		</div>
 		<label for="menucb"><div id="mico"></div></label>
@@ -145,8 +146,8 @@
 
 		<script>
 			'use strict';
-			let synth,synth_,kbmode=0,sc=0,bgs=[[],{l:3,c:4}];
-			alert=x=>{albox.textContent=x;alcb.checked=true;}
+			let synth,synth_,kbmode=0,sc=0,env=[[],{l:3,c:0}],recorder;
+			alert=x=>{albox.textContent=x;alcb.checked=true;};
 			const reverb=new Tone.Reverb({wet:0,decay:0}).toDestination(),
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{
@@ -156,7 +157,7 @@
 				}
 				return s;
 			},
-			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2103230\nMIT License',
+			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2103231\nMIT License',
 			instr_li=[//[baseurl, octave, map, (map2)]
 				['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
 				['audio/instr/harp/',-1,stdli(3)],
@@ -191,13 +192,14 @@
 				KeyR:'0_0',KeyT:'0_1',KeyY:'0_2',KeyU:'0_3',
 				KeyF:'1_0',KeyG:'1_1',KeyH:'1_2',KeyJ:'1_3'
 			}],
-			save=()=>{localStorage.instr_sc=sc;localStorage.instr_instr=menu.instr.value;localStorage.instr_reverb=`${slrvw.value},${slrvd.value}`;console.log('saved');},
+			save=()=>{localStorage.instr_sc=sc;localStorage.instr_instr=menu.instr.value;localStorage.instr_reverb=`${slrvw.value},${slrvd.value}`;localStorage.instr_env=env[1].c;console.log('saved');},
 			load=()=>{
-				let c=[localStorage.instr_sc,localStorage.instr_instr,localStorage.instr_reverb];
+				let c=[localStorage.instr_sc,localStorage.instr_instr,localStorage.instr_reverb,localStorage.instr_env];
 				if(c){
 					if(c[0])sc=parseInt(c[0]);
 					if(c[1])try{menu.instr[parseInt(c[1])].checked=true;}catch(e){console.log(e);}
 					if(c[2])try{[slrvw.value,slrvd.value]=c[2].split(',');[reverb.wet.value,reverb.decay]=[slrvw.value,Math.pow(2,slrvd.value)];}catch(e){console.log(e);}
+					if(c[3])try{env[1].c=Number(c[3]);}catch(e){console.log(e);}
 					console.log('loaded');
 				}
 			},
@@ -220,7 +222,7 @@
 						synth_=synth;
 						break;
 					case '6':case '7':
-						synth_=new Tone.Sampler(instr_li[menu.instr.value][3],()=>{},instr_li[menu.instr.value][0]).toDestination();
+						synth_=new Tone.Sampler(instr_li[menu.instr.value][3],()=>{},instr_li[menu.instr.value][0]).connect(reverb);
 						break;
 					case '14':synth_=synth;break;
 					default:kbmode=0;synth_=null;pkb.style.display='none';kb.style.display='';
@@ -232,8 +234,7 @@
 			},
 			trigger=id=>{
 				switch(kbmode){
-					case 0:
-						//C4~C6
+					case 0://C4~C6
 						synth.triggerAttackRelease(440*Math.pow(2,(parseInt(id.slice(1))+(scd.style.opacity=='1'?sc:0))/12+instr_li[menu.instr.value][1]));
 						break;
 					case 1:
@@ -248,57 +249,65 @@
 				scd_.style.transform=`rotate(${sc*30}deg)`;
 				if(x){
 					save();
-					synth.triggerAttackRelease(440*Math.pow(2,(3+sc)/12+instr_li[menu.instr.value][1]),'1m');
+					synth.triggerAttackRelease(440*Math.pow(2,(3+sc)/12+instr_li[menu.instr.value][1]),'1m','+.05');
 					if(kbmode==0){
-						synth.triggerAttackRelease(440*Math.pow(2,(7 +sc)/12+instr_li[menu.instr.value][1]),'1m','+.05');
-						synth.triggerAttackRelease(440*Math.pow(2,(10+sc)/12+instr_li[menu.instr.value][1]),'1m','+.1');
+						synth.triggerAttackRelease(440*Math.pow(2,(7 +sc)/12+instr_li[menu.instr.value][1]),'1m','+.1');
+						synth.triggerAttackRelease(440*Math.pow(2,(10+sc)/12+instr_li[menu.instr.value][1]),'1m','+.15');
+					}
+				}
+			},
+			envplay=()=>{
+				env[0].forEach(y=>{if(y)y.stop();});
+				if(env[1].c<=env[1].l){
+					if(env[0][env[1].c])env[0][env[1].c].start();
+					else{
+						env[0][env[1].c]=new Tone.Player({url:`audio/env${env[1].c}.mp3`,volume:-8,autostart:true,loop:true,fadeIn:5,fadeOut:2}).toDestination();
+						if(recorder)env[0][env[1].c].connect(recorder);
 					}
 				}
 			};
 
-
-			load();set();scale(0);
-
+			try{recorder=new Tone.Recorder();reverb.connect(recorder);}catch(e){console.log(e);recbtn.style.filter='grayscale(1)opacity(.5)';recbtn.style.pointerEvents='none';}
+			load();set();scale();envplay();
 			document.querySelectorAll('.kb>div>div').forEach(key=>{
 				key.appendChild(document.createElement('div'));
 				//sound & anm
-				function up(e){this.classList.remove('pushed');e.preventDefault();}
-				key.addEventListener('touchstart',function(e){
-					e.preventDefault();trigger(this.id);
-					this.classList.remove('pushed');void this.offsetWidth;this.classList.add('pushed','anm');
-				},{passive:false});
-				key.addEventListener('mousedown',function(e){
-					e.preventDefault();trigger(this.id);
-					this.classList.remove('pushed');void this.offsetWidth;this.classList.add('pushed','anm');
-					setTimeout(()=>this.classList.remove('pushed'),150);
-				},{passive:false});
-				key.addEventListener('touchend',up,{passive:false});
-				key.addEventListener('touchcancel',up,{passive:false});
-				key.addEventListener('animationend',function(){this.classList.remove('anm');});
+				const down=e=>{
+					e.preventDefault();trigger(key.id);
+					key.classList.remove('pushed');void key.offsetWidth;key.classList.add('pushed','anm');
+				},up=e=>{e.preventDefault();key.classList.remove('pushed');};
+				['touchstart','mousedown'].forEach(x=>key.addEventListener(x,down,{passive:false}));
+				['touchend','touchcancel','mouseup','mouseleave'].forEach(x=>key.addEventListener(x,up,{passive:false}));
+				key.addEventListener('animationend',()=>{key.classList.remove('anm');});
 			})
 			document.addEventListener('keydown',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchstart'));});
 			document.addEventListener('keyup',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchend'));});
-			bgsbtn.onclick=()=>{
-				console.log(bgs);
-				try{bgs[0][bgs[1].c].stop();}catch(e){}
-				if(bgs[1].l<bgs[1].c)bgs[1].c=0;else bgs[1].c++;
-				alert('ambient sound\n\n\t>>'+['hotspring','home','forest','vault','🔇'][bgs[1].c])
-				if(bgs[1].c<=bgs[1].l&&!bgs[0][bgs[1].c])
-					bgs[0][bgs[1].c]=new Tone.Player({url:`audio/env${bgs[1].c}.mp3`,volume:-8,autostart:true,loop:true,fadeIn:5,fadeOut:2}).toDestination();
-				else try{bgs[0][bgs[1].c].start();}catch(e){console.log('bgs muted');}
+			envbtn.onclick=()=>{
+				console.log(env);
+				if(env[1].l<env[1].c)env[1].c=0;else env[1].c++;
+				alert('ambient sound\n\n\t>>'+['hotspring','home','forest','vault','🔇'][env[1].c]);
+				envplay();save();
+			};
+			recbtn.onclick=e=>{
+				if(e.target.classList.toggle('recording'))recorder.start();
+				else(async()=>{
+					let recording=await recorder.stop(),e=document.createElement('a');
+					e.download=`sky_instr ${new Date().toLocaleString()}.${/\/mp/.test(recorder.mimeType)?'m4a':'webm'}`;e.href=URL.createObjectURL(recording);
+					e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,3000,e.href);
+				})();
 			};
 
-			/*document.addEventListener('visibilitychange',()=>{
-				if(document.visibilityState=='visible'){bgv.play();console.log('become visible');location.reload(false);}
-				if(document.visibilityState=='hidden')console.log('become hidden');
-			});
 			const fsc=()=>{
 				let doc=window.document,docEl=doc.documentElement;
 				let init=docEl.requestFullscreen||docEl.mozRequestFullScreen||docEl.webkitRequestFullScreen||docEl.msRequestFullscreen;
 				let exit=doc.exitFullscreen||doc.mozCancelFullScreen||doc.webkitExitFullscreen||doc.msExitFullscreen;
 				if(doc.fullscreenElement||doc.mozFullScreenElement||doc.webkitFullscreenElement||doc.msFullscreenElement)exit.call(doc);
 				else init.call(docEl);
-			};*/
+			};
+			/*document.addEventListener('visibilitychange',()=>{
+				if(document.visibilityState=='visible'){bgv.play();console.log('become visible');location.reload(false);}
+				if(document.visibilityState=='hidden')console.log('become hidden');
+			});*/
 		</script>
 	</body>
 </html>

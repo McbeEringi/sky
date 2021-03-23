@@ -235,7 +235,7 @@ recbtn.onclick=e=>{
 		e.download=`${main.name||'recording'}.${/\/mp/.test(recorder.mimeType)?'m4a':'webm'}`;e.href=URL.createObjectURL(recording);
 		e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,3000,e.href);
 	})();
-}
+};
 
 
 const sopt={
