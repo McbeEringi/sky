@@ -12,7 +12,7 @@
 			<stop offset="10%" stop-color="#fb40"/><stop offset="40%" stop-color="#fb48"/><stop offset="70%" stop-color="#fb40"/>
 		</linearGradient>
 		<filter id="f1"><feGaussianBlur in="SourceGraphic" stdDeviation="1.4"/></filter>
-		<filter id="f2"><feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#fea"/></filter>
+		<filter id="f2" y="-20%" height="140%"><feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#fea"/></filter>
 	</defs>
 	<path d="M0,24a24,24,0,0,1,24,-24h80a24,24,0,0,1,24,24v80a24,24,0,0,1,-24,24h-80a24,24,0,0,1,-24,-24" fill="#214"/>
 	<!--<path d="M0,0h128v128h-128" fill="#214"/>-->
