@@ -23,7 +23,7 @@
 		<link rel="manifest" href="skymf.json">
 		<meta name="theme-color" content="#fea"/>
 		<script>
-			if('serviceWorker'in navigator&&location.protocol.includes('http'))window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('[ServiceWorker] Registered',reg);});});
+			if('serviceWorker'in navigator&&location.protocol.includes('http'))window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});});
 		</script>
 	</head>
 	<body>
@@ -257,7 +257,7 @@
 					}
 				}
 			},
-			envplay=()=>{
+			envset=()=>{
 				env[0].forEach(y=>{if(y)y.stop();});
 				if(env[1].c<=env[1].l){
 					if(env[0][env[1].c])env[0][env[1].c].start();
@@ -269,7 +269,7 @@
 			};
 
 			try{recorder=new Tone.Recorder();reverb.connect(recorder);}catch(e){console.log(e);recbtn.style.filter='grayscale(1)opacity(.5)';recbtn.style.pointerEvents='none';}
-			load();set();scale();envplay();
+			load();set();scale();envset();
 			document.querySelectorAll('.kb>div>div').forEach(key=>{
 				key.appendChild(document.createElement('div'));
 				//sound & anm
@@ -284,10 +284,9 @@
 			document.addEventListener('keydown',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchstart'));});
 			document.addEventListener('keyup',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchend'));});
 			envbtn.onclick=()=>{
-				console.log(env);
 				if(env[1].l<env[1].c)env[1].c=0;else env[1].c++;
 				alert('ambient sound\n\n\t>>'+['hotspring','home','forest','vault','🔇'][env[1].c]);
-				envplay();save();
+				envset();save();
 			};
 			recbtn.onclick=e=>{
 				if(e.target.classList.toggle('recording'))recorder.start();
