@@ -2,9 +2,9 @@
 alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';albox.style.maxWidth=mw?'100%':'';alcb.checked=true;}
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
-let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url,recorder;
+let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url,recorder,instrsc;
 const texts=Object.assign({
-	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103222\nMIT License\n',
+	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103240\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
@@ -30,12 +30,22 @@ seq=new Tone.Sequence((time,note)=>{
 		llog(`${note.map(x=>n2c[(Number(x)+main.sc+48)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`);
 	}
 },[],'4n').start(0),
-stdli=(a,b,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]=`a${i}.mp3`;}return s;},
+stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]=`a${i}.mp3`;}return s;},
 instr_li=[
-	['musicbox',0,stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'})],
-	['piano',0,stdli(1,7,{'a0':'a0.mp3'})]
+	['musicbox',1,stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'})],
+	['harp',-1,stdli(3)],
+	['contrabass',-2,stdli(2)],
+	['horn',-1,stdli(3)],
+	['piano',0,stdli(1,7,{'a0':'a0.mp3'})],
+	['flute',0,stdli(4)],
+	['quena',0,stdli(4)],
+	['guitar',-1,stdli(3)],
+	['ukulele',-1,stdli(3)],
+	['piano',1,stdli(1,7,{'a0':'a0.mp3'})],
+	['glock',1,stdli(5)],
+	['pipa',-1,stdli(3)]
 ],
-toHz=x=>880*Math.pow(2,(Number(x)+main.sc)/12),//C5~C7
+toHz=x=>440*Math.pow(2,(Number(x)+main.sc)/12+instrsc),//C4~C6
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
 n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6','3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
 n2c=['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'],
@@ -93,8 +103,12 @@ ccset=()=>{
 syset=(x=0)=>{
 	let state=Tone.Transport.state=='started';
 	if(state){Tone.Transport.pause();distrs.checked=false;}
-	synth=new Tone.Sampler(instr_li[x][2],()=>{if(state){Tone.Transport.start();distrs.checked=true;}},`https://mcbeeringi.github.io/sky/audio/instr/${instr_li[x][0]}/`).toDestination();
-	if(recorder)synth.connect(recorder);
+	requestIdleCallback(()=>{
+		synth=new Tone.Sampler(instr_li[x][2],()=>{if(state){Tone.Transport.start();distrs.checked=true;}},`https://mcbeeringi.github.io/sky/audio/instr/${instr_li[x][0]}/`).toDestination();
+		if(recorder)synth.connect(recorder);
+		instrsc=instr_li[x][1];
+	});
+	return instr_li[x];
 },
 ttoggle=()=>{
 	Tone.start();
@@ -143,14 +157,14 @@ rawedit=()=>{
 				main.scores=tmp;requestIdleCallback(()=>seq.events=main.scores);urset();
 				llog('raw good');
 				requestIdleCallback(a2d);curpset();
-				synth.triggerAttackRelease(440*Math.pow(2,(3 +main.sc)/12),'1m');
-				synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m','+.05',.9);
-				synth.triggerAttackRelease(440*Math.pow(2,(10+main.sc)/12),'1m','+.1',.8);
+				synth.triggerAttackRelease(toHz(3),'1m');
+				synth.triggerAttackRelease(toHz(7),'1m','+.05',.9);
+				synth.triggerAttackRelease(toHz(10),'1m','+.1',.8);
 			}else{
 				llog('raw bad');
-				/*synth.triggerAttackRelease(440*Math.pow(2,(8 +main.sc)/12),'1m');
-				synth.triggerAttackRelease(440*Math.pow(2,(7 +main.sc)/12),'1m','+.05',.9);
-				synth.triggerAttackRelease(440*Math.pow(2,(1+main.sc)/12),'1m','+.1',.8);*/
+				/*synth.triggerAttackRelease(toHz(8),'1m');
+				synth.triggerAttackRelease(toHz(7),'1m','+.05',.9);
+				synth.triggerAttackRelease(toHz(1),'1m','+.1',.8);*/
 			}
 		},1000);
 	};

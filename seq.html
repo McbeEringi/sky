@@ -176,8 +176,8 @@
 		<button onclick="impsample()">sample</button>
 		<button onclick="dbfx.delAll();">del all sheets</button>
 		<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>llog(x));">cache del</button>
-		<button onclick="syset(1);">piano</button>
-		<button onclick="dljson();">dljson</button>
+		<button onclick="dljson();">dljson</button><br>
+		instr: <input type="range" min="0" max="11" step="1" value="0" onpointerup="llog(syset(this.value)[0]);">
 	</div>
 	<!--
 	caches.keys().then(x=>caches.open(x[0])).then(x=>x.delete('/sky/seq.html')).then(x=>log.textContent+=`\ncache del: ${x}`)
