@@ -31,6 +31,10 @@ seq=new Tone.Sequence((time,note)=>{
 	}
 },[],'4n').start(0),
 stdli=(a,b,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]=`a${i}.mp3`;}return s;},
+instr_li=[
+	['musicbox',0,stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'})],
+	['piano',0,stdli(1,7,{'a0':'a0.mp3'})]
+],
 toHz=x=>880*Math.pow(2,(Number(x)+main.sc)/12),//C5~C7
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
 n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6','3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
@@ -85,6 +89,12 @@ ccset=()=>{
 	});
 	calced.length=calced.e.length;
 	console.timeEnd('ccset');
+},
+syset=(x=0)=>{
+	let state=Tone.Transport.state=='started';
+	if(state){Tone.Transport.pause();distrs.checked=false;}
+	synth=new Tone.Sampler(instr_li[x][2],()=>{if(state){Tone.Transport.start();distrs.checked=true;}},`https://mcbeeringi.github.io/sky/audio/instr/${instr_li[x][0]}/`).toDestination();
+	if(recorder)synth.connect(recorder);
 },
 ttoggle=()=>{
 	Tone.start();
@@ -438,7 +448,7 @@ init=()=>{
 	urstack=[[],JSON.stringify(main.scores),[]];
 	requestIdleCallback(()=>seq.events=main.scores);sc_.value=main.sc;arp_.value=main.arp;
 	bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();//Tone.Transport.swing=1;
-	name_.textContent=main.name;document.title='sky_seq '+main.name;
+	name_.textContent=main.name;document.title='sky_seq '+main.name;syset();
 	requestIdleCallback(a2d);
 	requestIdleCallback(tstop);
 },
@@ -484,11 +494,10 @@ if(!localStorage.seq_undoMax){
 		fetch('sample.json').then(x=>x.json()).then(x=>x.forEach((y,i)=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>{if(x.length==i+1)load();}));
 	});
 }
-synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/musicbox/').toDestination();
-try{recorder=new Tone.Recorder();synth.connect(recorder);llog('recinit');}catch(e){console.log(e);recbtn.disabled=true;}
 log.textContent=texts.info;//Tone.Transport.loop=true;
 from_url=Boolean(main=urlfx.l());
 if(!from_url&&localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
+try{recorder=new Tone.Recorder();}catch(e){console.log(e);recbtn.disabled=true;}
 init();document.body.focus();
 if(!from_url){
 	setInterval(ezsave,60000);

@@ -175,8 +175,8 @@
 	<div class="debug">
 		<button onclick="impsample()">sample</button>
 		<button onclick="dbfx.delAll();">del all sheets</button>
-		<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>alert(x));">cache del</button>
-		<button onclick="synth=new Tone.Sampler(stdli(1,7,{'a0':'a0.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/piano/').toDestination()">piano</button>
+		<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>llog(x));">cache del</button>
+		<button onclick="syset(1);">piano</button>
 		<button onclick="dljson();">dljson</button>
 	</div>
 	<!--
