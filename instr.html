@@ -64,7 +64,7 @@
 
 
 			#menucb{display:none;}
-			#menucb+label{position:absolute;top:0;right:0;width:100%;height:100%;display:none;}#menucb:checked+label{display:block;}
+			#menucb+label{position:absolute;top:0;right:0;width:100%;height:100%;display:none;pointer-events:none;}#menucb:checked+label{display:block;}
 			#menucb+*+*+label{position:absolute;top:2px;right:2px;width:48px;height:48px;transition:.2s;touch-action:none;}
 			#menucb:checked+*+*+label{transform:rotateY(180deg);}
 			#menucb+*+*+label::before,#mico{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:url(img/tex.webp);background-size:800%;transition:.4s;}
@@ -73,6 +73,7 @@
 			#menucb:checked+*+*+label::before{opacity:1;}#menucb:checked+*+*+label>#mico{opacity:0;}
 			.menu{position:fixed;top:0;right:-266px;width:252px;height:calc(100% - 48px);padding:48px 7px 0;background:#4448;opacity:0;box-shadow:0 0 8px #4448;transition:.2s;overflow-y:scroll;}
 			#menucb:checked+*+div{right:0;opacity:1;}
+			@media(max-width:512px){#menucb+*+*+label{top:unset;bottom:2px;}#menucb+label{pointer-events:unset;}.menu{padding:0 7px 48px;}}
 
 			.menu input[type=radio]{display:none;}.menu label,.menu .grid{display:inline-block;vertical-align:top;position:relative;}
 			.menu input[type=radio]+div,.menu .grid{width:70px;height:70px;margin:7px;background:#2228;border-radius:16px;box-shadow:0 0 8px #2228;}
@@ -103,7 +104,7 @@
 			<div><div id="0_0"></div><div id="0_1"></div><div id="0_2"></div><div id="0_3"></div></div>
 			<div><div id="1_0"></div><div id="1_1"></div><div id="1_2"></div><div id="1_3"></div></div>
 		</div>
-		<input type="checkbox" id="menucb" onchange="sfx.player(this.checked?'op':'cl').start();"><label for="menucb" style="pointer-events:none;"></label>
+		<input type="checkbox" id="menucb" onchange="sfx.player(this.checked?'op':'cl').start();"><label for="menucb"></label>
 		<div class="menu">
 			<form id="menu" onchange="set();sfx.player('cs').start();">
 				        <label><input type="radio" name="instr" value="0"  checked ><div style="--bp:-0%   -200%;"></div>
@@ -157,7 +158,7 @@
 				}
 				return s;
 			},
-			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2103231\nMIT License',
+			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2103240\nMIT License',
 			instr_li=[//[baseurl, octave, map, (map2)]
 				['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
 				['audio/instr/harp/',-1,stdli(3)],
