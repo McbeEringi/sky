@@ -11,7 +11,7 @@ PWA, Offline support
 - sky_sequencer (in development)  
 	now on beta
 	- drag&drop interface
-	- custom key,tempo,tuplet and meter
+	- custom key,tempo,tuplet,meter and auto arpeggio
 	- url share and inpage recording feature
 
 - sky_info
