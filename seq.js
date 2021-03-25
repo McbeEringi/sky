@@ -104,7 +104,7 @@ syset=(x=0)=>{
 	let state=Tone.Transport.state=='started';
 	if(state)tpause();
 	requestIdleCallback(()=>{
-		synth=new Tone.Sampler(instr_li[x][2],()=>{if(state){Tone.Transport.start();distrs.checked=true;}},`https://mcbeeringi.github.io/sky/audio/instr/${instr_li[x][0]}/`).toDestination();
+		synth=new Tone.Sampler(instr_li[x][2],()=>{if(state)tstart();},`https://mcbeeringi.github.io/sky/audio/instr/${instr_li[x][0]}/`).toDestination();
 		if(recorder)synth.connect(recorder);
 		instrsc=instr_li[x][1];
 	});
