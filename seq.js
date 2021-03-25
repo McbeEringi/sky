@@ -4,7 +4,7 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url,recorder,instrsc;
 const texts=Object.assign({
-	info:'⚠️beta test⚠️\n\nPowerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2103240\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103250\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
@@ -108,6 +108,7 @@ syset=(x=0)=>{
 		if(recorder)synth.connect(recorder);
 		instrsc=instr_li[x][1];
 	});
+	instrbtn.setAttribute('style',`--bp:-${x%8}00% -${Math.floor(x*.125+4)}00%;`);
 	return instr_li[x];
 },
 ttoggle=()=>{
@@ -259,6 +260,25 @@ recbtn.onclick=e=>{
 		e.download=`${main.name||'recording'}.${/\/mp/.test(recorder.mimeType)?'m4a':'webm'}`;e.href=URL.createObjectURL(recording);
 		e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,3000,e.href);
 	})();
+};
+instrbtn.onclick=()=>{
+	alert('',1);
+	albox.insertAdjacentHTML('beforeend',
+`<form><label class="grid bg" style="--bp:-0%   -400%;"><input type="radio" name="instr" value="0" >
+</label><label class="grid bg" style="--bp:-100% -400%;"><input type="radio" name="instr" value="1" >
+</label><label class="grid bg" style="--bp:-200% -400%;"><input type="radio" name="instr" value="2" >
+</label><label class="grid bg" style="--bp:-300% -400%;"><input type="radio" name="instr" value="3" >
+</label><label class="grid bg" style="--bp:-400% -400%;"><input type="radio" name="instr" value="4" >
+</label><label class="grid bg" style="--bp:-500% -400%;"><input type="radio" name="instr" value="5" >
+</label><label class="grid bg" style="--bp:-600% -400%;"><input type="radio" name="instr" value="6" >
+</label><label class="grid bg" style="--bp:-700% -400%;"><input type="radio" name="instr" value="7" >
+</label><label class="grid bg" style="--bp:-0%   -500%;"><input type="radio" name="instr" value="8" >
+</label><label class="grid bg" style="--bp:-100% -500%;"><input type="radio" name="instr" value="9" >
+</label><label class="grid bg" style="--bp:-200% -500%;"><input type="radio" name="instr" value="10">
+</label><label class="grid bg" style="--bp:-300% -500%;"><input type="radio" name="instr" value="11">
+</label></form>`);
+	let e=albox.querySelector('form');//e.instr.value=main.instr;
+	e.onchange=()=>syset(main.instr=Number(e.instr.value));
 };
 
 
@@ -456,13 +476,13 @@ dbfx={
 },
 init=()=>{
 	Tone.Transport.pause();from_url=false;
-	if(!main)main={name:'',sc:0,bpm:120,ts:4,arp:0,scores:new Array(8).fill('')};
-	if(main.arp==undefined)main.arp=0;
+	if(!main)main={name:'',sc:0,bpm:120,ts:4,arp:0,instr:0,scores:new Array(8).fill('')};
+	if(main.arp==undefined)main.arp=0;if(main.instr==undefined)main.instr=0;
 	disp.textContent='Loading sheet…';
 	urstack=[[],JSON.stringify(main.scores),[]];
 	requestIdleCallback(()=>seq.events=main.scores);sc_.value=main.sc;arp_.value=main.arp;
 	bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();//Tone.Transport.swing=1;
-	name_.textContent=main.name;document.title='sky_seq '+main.name;syset();
+	name_.textContent=main.name;document.title='sky_seq '+main.name;syset(main.instr);
 	requestIdleCallback(a2d);
 	requestIdleCallback(tstop);
 },

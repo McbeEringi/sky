@@ -96,7 +96,7 @@
 		@keyframes fadeout{0%,50%{opacity:1;}100%{opacity:0;}}
 		@keyframes shake{0%{transform:translate(1px,1px) rotate(0deg);}10%{transform:translate(-1px,-2px) rotate(-1deg);}20%{transform:translate(-3px,0px) rotate(1deg);}30%{transform:translate(3px,2px) rotate(0deg);}40%{transform:translate(1px,-1px) rotate(1deg);}50%{transform:translate(-1px,2px) rotate(-1deg);}60%{transform:translate(-3px,1px) rotate(0deg);}70%{transform:translate(3px,1px) rotate(-1deg);}80%{transform:translate(-1px,-1px) rotate(1deg);}90%{transform:translate(1px,2px) rotate(0deg);}100% { transform: translate(1px,-2px) rotate(-1deg);}}
 
-		body>input[type="checkbox"]{display:none;}
+		body>input[type="checkbox"],input[type=radio]{display:none;}
 		#uiflip:checked~* .float_r{float:left;clear:left;}#uiflip:checked~* .float_l{float:right;clear:right;}/*#uiflip:checked~.dispPanel .ui{left:16px;right:unset;direction:rtl;text-align:left;}*/
 		.ghl{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
 		#kblock:checked~* label[for="kblock"],#kbfixed:checked~* label[for="kbfixed"],#clipcb:checked~* label[for="clipcb"],.ghl_{box-shadow:0 0 2px 4px #fea inset;}
@@ -124,7 +124,8 @@
 		<div class="ui">
 			<button id="curct" class="grid bg" style="--bp:-300% -100%;">scroll to cursor</button><input type="checkbox" id="scfg"><label for="scfg" class="grid bg" style="--bp:-400% -300%;"></label>
 			<div>
-				<label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><br><button
+				<button id="instrbtn" class="grid bg" style="--bp:-00% -400%;"></button><label
+				><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><br><button
 				onclick="Tone.Transport.bpm.value-=6;main.bpm-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow</button><label><input
 				id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button
 				onclick="Tone.Transport.bpm.value+=6;main.bpm+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast</button><br><button
@@ -177,7 +178,6 @@
 		<button onclick="dbfx.delAll();">del all sheets</button>
 		<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>llog(x));">cache del</button>
 		<button onclick="dljson();">dljson</button><br>
-		instr: <input type="range" min="0" max="11" step="1" value="0" onpointerup="llog(syset(this.value)[0]);">
 	</div>
 	<!--
 	caches.keys().then(x=>caches.open(x[0])).then(x=>x.delete('/sky/seq.html')).then(x=>log.textContent+=`\ncache del: ${x}`)
