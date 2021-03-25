@@ -113,7 +113,7 @@ syset=(x=0)=>{
 },
 tplay=()=>{distrs.checked=true;Tone.Transport.start();playbtn.classList.add('ghl_');},
 tpause=()=>{Tone.Transport.pause();playbtn.classList.remove('ghl_');distrs.checked=false;},
-tstop=()=>{Tone.Transport.stop();distrs.checked=false;curpos=0;curset();scrset();kbset();},
+tstop=()=>{Tone.Transport.stop();playbtn.classList.remove('ghl_');distrs.checked=false;curpos=0;curset();scrset();kbset();},
 tstep=x=>{
 	Tone.start();
 	tpause();
