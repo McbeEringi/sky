@@ -264,7 +264,7 @@ recbtn.onclick=e=>{
 instrbtn.onclick=()=>{
 	alert('',1);
 	albox.insertAdjacentHTML('beforeend',
-`<form><label class="grid bg" style="--bp:-0%   -400%;"><input type="radio" name="instr" value="0" >
+`<form ><label class="grid bg" style="--bp:-0%   -400%;"><input type="radio" name="instr" value="0" >
 </label><label class="grid bg" style="--bp:-100% -400%;"><input type="radio" name="instr" value="1" >
 </label><label class="grid bg" style="--bp:-200% -400%;"><input type="radio" name="instr" value="2" >
 </label><label class="grid bg" style="--bp:-300% -400%;"><input type="radio" name="instr" value="3" >
