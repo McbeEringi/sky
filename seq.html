@@ -124,8 +124,8 @@
 		<div class="ui">
 			<button id="curct" class="grid bg" style="--bp:-300% -100%;">scroll to cursor</button><input type="checkbox" id="scfg"><label for="scfg" class="grid bg" style="--bp:-400% -300%;"></label>
 			<div>
-				<button id="instrbtn" class="grid bg" style="--bp:-00% -400%;"></button><label
-				><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><br><button
+				<label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><button
+				id="instrbtn" class="grid bg" style="--bp:-00% -400%;"></button><br><button
 				onclick="Tone.Transport.bpm.value-=6;main.bpm-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow</button><label><input
 				id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button
 				onclick="Tone.Transport.bpm.value+=6;main.bpm+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast</button><br><button
