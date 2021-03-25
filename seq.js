@@ -4,7 +4,7 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url,recorder,instrsc;
 const texts=Object.assign({
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103250\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103251\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
@@ -102,7 +102,7 @@ ccset=()=>{
 },
 syset=(x=0)=>{
 	let state=Tone.Transport.state=='started';
-	if(state){Tone.Transport.pause();distrs.checked=false;}
+	if(state)tpause();
 	requestIdleCallback(()=>{
 		synth=new Tone.Sampler(instr_li[x][2],()=>{if(state){Tone.Transport.start();distrs.checked=true;}},`https://mcbeeringi.github.io/sky/audio/instr/${instr_li[x][0]}/`).toDestination();
 		if(recorder)synth.connect(recorder);
@@ -111,17 +111,12 @@ syset=(x=0)=>{
 	instrbtn.setAttribute('style',`--bp:-${x%8}00% -${Math.floor(x*.125+4)}00%;`);
 	return instr_li[x];
 },
-ttoggle=()=>{
-	Tone.start();
-	let state=Tone.Transport.state!='started';
-	distrs.checked=state;
-	if(state&&!from_url)ezsave();
-	Tone.Transport[state?'start':'pause']();
-},
+tplay=()=>{distrs.checked=true;Tone.Transport.start();playbtn.classList.add('ghl_');},
+tpause=()=>{Tone.Transport.pause();playbtn.classList.remove('ghl_');distrs.checked=false;},
 tstop=()=>{Tone.Transport.stop();distrs.checked=false;curpos=0;curset();scrset();kbset();},
 tstep=x=>{
 	Tone.start();
-	Tone.Transport.pause();distrs.checked=false;
+	tpause();
 	curpos+=x;
 	if(curpos<0)curpos=calced.length+curpos%calced.length;else if(curpos>=calced.length)curpos=curpos%calced.length;
 	Tone.Transport.position=p2pos(calced.p[curpos]);
@@ -137,7 +132,7 @@ urdo=x=>{
 	}
 },
 rawedit=()=>{
-	Tone.Transport.pause();distrs.checked=false;
+	tpause();
 	alert('',1,1);
 	let str=JSON.stringify(main.scores/*,null,'	'*/).replace(/,/g,', ');
 	let txta=document.createElement('textarea');
@@ -175,6 +170,12 @@ domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('s
 //albox.onclick=e=>{if(e.target!=e.currentTarget&&['BUTTON','LABEL'].includes(e.target.tagName))console.log('click')};
 ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid showtxt">flip UI</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
 curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;};
+playbtn.onclick=()=>{
+	Tone.start();
+	let state=Tone.Transport.state!='started';
+	if(state&&!from_url)ezsave();
+	if(state)tplay();else tpause();
+};
 document.querySelectorAll('#kb p').forEach((e,i)=>{
 	const keyfx=ev=>{
 		ev.preventDefault();Tone.start();
