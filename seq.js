@@ -4,7 +4,7 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url,recorder,instrsc;
 const texts=Object.assign({
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103260\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103261\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
@@ -73,7 +73,6 @@ curpset=p=>{
 kbset=(x=calced.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores).split(','))=>{
 	let tmp=x.map(y=>n2i[y]);
 	document.querySelectorAll('#kb p').forEach((e,i)=>e.classList[tmp.includes(String(i))?'add':'remove']('press'));
-	//pinbtn.classList[calced.e[curpos].classList.contains('pin')?'add':'remove']('ghl_');
 	return x;
 },
 scrset=()=>{
@@ -282,9 +281,6 @@ instrbtn.onclick=()=>{
 	let e=albox.querySelector('form');//e.instr.value=main.instr;
 	e.onchange=()=>syset(main.instr=Number(e.instr.value));
 };
-pinbtn.onclick=()=>{
-	pinbtn.classList[calced.e[curpos].classList.toggle('pin')?'add':'remove']('ghl_');
-}
 
 
 const sopt={
