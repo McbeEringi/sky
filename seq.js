@@ -62,8 +62,8 @@ curset=()=>{
 	let tmp=calced.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX;
 	let dbpds=dispBar.clientWidth/dispScr.scrollWidth;
 	dispCur.style.left=tmp+'px';
-	dispBar.children[1].style.width=(16*dbpds)+'px';
-	dispBar.children[1].style.left=(tmp*dbpds)+'px';
+	dispBar.children[1].style.width=`${Math.max(1,16*dbpds)}px`;
+	dispBar.children[1].style.left=`${16*dbpds<1?(tmp+8)*dbpds-.5:tmp*dbpds}px`;
 },
 curpset=p=>{
 	if(typeof p=='number'&&isFinite(p)){curpos=calced.p.indexOf(p);}
@@ -250,8 +250,8 @@ onresize=dispScr.onscroll=e=>{
 	const tmp=()=>{
 		screxet=null;
 		let dbpds=dispBar.clientWidth/dispScr.scrollWidth;
-		dispBar.children[0].style.width=(dispBar.clientWidth*dbpds)+'px';
-		dispBar.children[0].style.left=(dispScr.scrollLeft*dbpds)+'px';
+		dispBar.children[0].style.width=`${dispBar.clientWidth*dbpds}px`;
+		dispBar.children[0].style.left=`${dispScr.scrollLeft*dbpds}px`;
 		if(userscr[1])curct.style.display='';
 	};
 	tmp();screxet=setTimeout(tmp,100);
