@@ -4,7 +4,7 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url,recorder,instrsc;
 const texts=Object.assign({
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103251\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103260\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
@@ -73,6 +73,7 @@ curpset=p=>{
 kbset=(x=calced.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores).split(','))=>{
 	let tmp=x.map(y=>n2i[y]);
 	document.querySelectorAll('#kb p').forEach((e,i)=>e.classList[tmp.includes(String(i))?'add':'remove']('press'));
+	//pinbtn.classList[calced.e[curpos].classList.contains('pin')?'add':'remove']('ghl_');
 	return x;
 },
 scrset=()=>{
@@ -104,7 +105,7 @@ syset=(x=0)=>{
 	let state=Tone.Transport.state=='started';
 	if(state)tpause();
 	requestIdleCallback(()=>{
-		synth=new Tone.Sampler(instr_li[x][2],()=>{if(state)tstart();},`https://mcbeeringi.github.io/sky/audio/instr/${instr_li[x][0]}/`).toDestination();
+		synth=new Tone.Sampler(instr_li[x][2],()=>{if(state)tplay();},`https://mcbeeringi.github.io/sky/audio/instr/${instr_li[x][0]}/`).toDestination();
 		if(recorder)synth.connect(recorder);
 		instrsc=instr_li[x][1];
 	});
@@ -206,7 +207,7 @@ document.addEventListener('keydown',e=>{
 	if(!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)&&!alcb.checked){
 		llog(e.code);
 		switch(e.code){
-			case'Space':e.preventDefault();ttoggle();break;
+			case'Space':e.preventDefault();playbtn.onclick();break;
 			case'ArrowUp':e.preventDefault();if(e.shiftKey)bpm_.parentNode.nextElementSibling.click();else sc_.value=++main.sc;break;
 			case'ArrowDown':e.preventDefault();if(e.shiftKey)bpm_.parentNode.previousElementSibling.click();else sc_.value=--main.sc;break;
 			case'ArrowLeft':e.preventDefault();if(e.shiftKey)tstep(-10);else tstep(-1);break;
@@ -281,6 +282,9 @@ instrbtn.onclick=()=>{
 	let e=albox.querySelector('form');//e.instr.value=main.instr;
 	e.onchange=()=>syset(main.instr=Number(e.instr.value));
 };
+pinbtn.onclick=()=>{
+	pinbtn.classList[calced.e[curpos].classList.toggle('pin')?'add':'remove']('ghl_');
+}
 
 
 const sopt={
@@ -477,7 +481,7 @@ dbfx={
 },
 init=()=>{
 	Tone.Transport.pause();from_url=false;
-	if(!main)main={name:'',sc:0,bpm:120,ts:4,arp:0,instr:0,scores:new Array(8).fill('')};
+	if(!main)main={name:'',sc:0,bpm:120,ts:4,arp:0,instr:0,scores:new Array(8).fill(''),pin:[]};
 	if(main.arp==undefined)main.arp=0;if(main.instr==undefined)main.instr=0;
 	disp.textContent='Loading sheet…';
 	urstack=[[],JSON.stringify(main.scores),[]];

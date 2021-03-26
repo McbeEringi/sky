@@ -44,10 +44,11 @@
 		#dispScr>*{position:absolute;line-height:16px;font-size:12px;}#dispScr::-webkit-scrollbar{display:none;}
 		#dispScr{width:100%;height:240px;overflow:scroll;position:relative;scrollbar-width:none;}#disp{height:100%;min-width:100%;padding:0 66.6vw 0 16px;box-sizing:border-box;white-space:nowrap;}
 		#dispCur{width:16px;height:100%;background:#bff8;left:17px;transition:.1s;border-radius:4px;z-index:1;pointer-events:none;}
-		#dispBar{height:6px;position:relative;overflow:hidden;}#dispBar>div{width:0;height:100%;position:absolute;background:#aef;transition:.1s;}#dispBar>div:first-child{background:#0004;transition:.2s;}
+		#dispBar{height:6px;position:relative;overflow:hidden;}#dispBar div{width:100%;height:100%;}#dispBar p{width:0;height:100%;position:absolute;margin:0;background:#f88;transition:.1s;}#dispBar>p{background:#aef;}#dispBar>p:first-child{background:#0004;transition:.2s;}
 		.noteW,.sort{min-width:16px;height:100%;min-height:16px;}
 		.noteW{display:inline-block;white-space:nowrap;vertical-align:bottom;position:relative;margin-left:1px;border-radius:4px;text-align:center;background:#0004;color:#fff8;}
 		.noteW p{width:14px;height:14px;margin:1px;background:#fea;position:absolute;left:0;border-radius:33%;box-shadow:0 0 4px #888;pointer-events:none;z-index:2;}
+		.noteW.pin{box-shadow:0 0 2px 4px #f66 inset;}
 		.sortW{overflow:hidden;}.sort{;margin:0 8px;padding:0 8px;box-sizing:border-box;background:#fff4;box-shadow:0 0 8px #fff8;}
 		.dispPanel>.ui{position:absolute;top:0;right:4px;text-align:right;z-index:4;pointer-events:none;}.dispPanel>.ui .grid{width:40px;height:40px;margin:1px;pointer-events:auto;}
 		#scfg{display:none;}#scfg+*+div{opacity:0;transition:.2s;}#scfg+*+div *{pointer-events:none;}#scfg:checked+*+div{opacity:1;}#scfg:checked+*+div *{pointer-events:auto;}
@@ -120,7 +121,7 @@
 	<div class="dispPanel">
 		<span id="name_"></span>
 		<div id="dispScr"><div id="dispCur"></div><div id="disp">Please enable JavaScript to use this app.</div></div>
-		<div id="dispBar"><div></div><div></div></div>
+		<div id="dispBar"><p></p><p></p><div></div></div>
 		<div class="ui">
 			<button id="curct" class="grid bg" style="--bp:-300% -100%;">scroll to cursor</button><input type="checkbox" id="scfg"><label for="scfg" class="grid bg" style="--bp:-400% -300%;"></label>
 			<div>
@@ -149,7 +150,7 @@
 			</button><div
 				id="tpl"><div class="noteW note" data-note=""></div><div
 				class="noteW sortW"><div class="sort"><div class="noteW note" data-note=""></div><div class="noteW note" data-note=""></div></div></div><div
-				id="trash"></div></div><button onclick="" class="grid bg" style="--bp:-500% -300%; opacity:0;pointer-events:none;">mark
+				id="trash"></div></div><button id="pinbtn" class="grid bg ghl" style="--bp:-500% -300%;">pin
 				</button><label for="clipcb" class="grid bg ghl" style="--bp:-500% -100%;">clipbobard
 			</label><button onclick="save();" class="grid bg" style="--bp:-600% -200%;">save
 			</button>
