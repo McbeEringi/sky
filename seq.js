@@ -4,7 +4,7 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url,recorder,instrsc;
 const texts=Object.assign({
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103262\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103270\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
@@ -77,14 +77,19 @@ kbset=(x=calced.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores).split(','
 },
 scrset=()=>{
 	let dcbl=dispCur.getBoundingClientRect().left+window.scrollX;
-	if(16<dcbl&&dcbl<dispScr.clientWidth-64&&userscr[1]){userscr[1]=false;curct.style.display='none';}
-	if(!userscr[1]){
-		userscr[0]=true;//dispCur.scrollIntoView();
-		if(curpos==0)dispScr.scrollLeft=0;
-		else if(curpos==calced.length-1)dispScr.scrollLeft=dispScr.scrollWidth;
-		else if(dcbl>dispScr.clientWidth-64)dispScr.scrollLeft+=dcbl-16;
-		else if(dcbl<16)dispScr.scrollLeft-=dispScr.clientWidth-dcbl-64;
-		else userscr[0]=false;
+	if(window.innerWidth>520){
+		if(16<dcbl&&dcbl<dispScr.clientWidth-64&&userscr[1]){userscr[1]=false;curct.style.display='none';}
+		if(!userscr[1]){
+			userscr[0]=true;//dispCur.scrollIntoView();
+			if(curpos==0)dispScr.scrollLeft=0;
+			else if(curpos==calced.length-1)dispScr.scrollLeft=dispScr.scrollWidth;
+			else if(dcbl>dispScr.clientWidth-64)dispScr.scrollLeft+=dcbl-16;
+			else if(dcbl<16)dispScr.scrollLeft-=dispScr.clientWidth-dcbl-64;
+			else userscr[0]=false;
+		}
+	}else{
+		if(dispScr.clientWidth*.5-32<dcbl&&dcbl<dispScr.clientWidth*.5+16&&userscr[1]){userscr[1]=false;curct.style.display='none';}
+		if(!userscr[1]){userscr[0]=true;dispScr.scrollLeft+=dcbl+8-dispScr.clientWidth*.5;}
 	}
 },
 urset=()=>{urstack[2]=[];urstack[0].push(urstack[1]);urstack[1]=JSON.stringify(main.scores);while(urstack[0].length>Number(localStorage.seq_undoMax))urstack[0].shift();llog('urstacked')},
@@ -168,7 +173,7 @@ domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('s
 
 //albox.onclick=e=>{if(e.target!=e.currentTarget&&['BUTTON','LABEL'].includes(e.target.tagName))console.log('click')};
 ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid showtxt">flip UI</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
-curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;};
+curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft+=dispCur.getBoundingClientRect().left+window.scrollX+8-dispScr.clientWidth*.5;};
 playbtn.onclick=()=>{
 	Tone.start();
 	let state=Tone.Transport.state!='started';
@@ -239,7 +244,7 @@ dispScr.onwheel=e=>{
 	e.preventDefault();
 	dispScr.scrollLeft+=e.deltaX+e.deltaY;
 };
-dispScr.onscroll=e=>{
+onresize=dispScr.onscroll=e=>{
 	if(userscr[0])userscr[0]=false;else userscr[1]=true;
 	if(screxet)return;
 	const tmp=()=>{
