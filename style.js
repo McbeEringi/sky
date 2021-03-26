@@ -26,13 +26,14 @@ const bgcol=[
 	"#fff1cf,#ced980",//morn
 	"#cce5f0,#ced980",//day
 	"#f08300,#f8b862",//dusk
-	"#192f60,#274a78"//night
+	"#192f60,#274a78",//night
+	"#fbfaf6,#ced980"//cloud
 ];
 const bgset=(x,b)=>{
 	switch(b||localStorage.sky_bgmode){
 		case'1':e_img.setAttribute('style','display:none;');idb.result.transaction('stuff','readwrite').objectStore('stuff').get('bgimg').onsuccess=e=>bg.style.backgroundImage=`url(${e.target.result?URL.createObjectURL(e.target.result):'https://mcbeeringi.github.io/sky/img/cave.jpg'})`;break;
 		case'2':e_img.setAttribute('style','display:none;');bg.style.backgroundImage=localStorage.sky_bgcode;break;
-		default:e_img.setAttribute('style','');bg.style.backgroundImage=`linear-gradient(${bgcol[x!=undefined?x:([3,0,1,1,2,3][Math.floor(Math.max(new Date().getHours()-1,0)*.25)])]})`;
+		default:e_img.setAttribute('style','');bg.style.backgroundImage=`linear-gradient(${bgcol[x!=undefined?x:([3,3,3,3,3,0,0,0,0,1,1,1,1,1,1,1,4,2,2,2,2,3,3,3][new Date().getHours()])]})`;
 	}
 };
 {
