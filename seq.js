@@ -117,7 +117,7 @@ syset=(x=0)=>{
 },
 tplay=()=>{distrs.checked=true;Tone.Transport.start();playbtn.classList.add('ghl_');},
 tpause=()=>{Tone.Transport.pause();playbtn.classList.remove('ghl_');distrs.checked=false;},
-tstop=()=>{Tone.Transport.stop();playbtn.classList.remove('ghl_');distrs.checked=false;curpos=0;curset();scrset();kbset();},
+tstop=()=>{Tone.Transport.stop();playbtn.classList.remove('ghl_');distrs.checked=false;curpos=0;curset();userscr[0]=true;dispScr.scrollLeft=0;userscr[1]=false;curct.style.display='none';kbset();},
 tstep=x=>{
 	Tone.start();
 	tpause();
@@ -260,7 +260,7 @@ undobtn.onclick=()=>urdo(-1);redobtn.onclick=()=>urdo(1);
 recbtn.onclick=e=>{
 	if(e.target.classList.toggle('ghl_'))recorder.start();
 	else(async()=>{
-		Tone.Transport.pause();styperf.textContent='';
+		tpause();
 		let recording=await recorder.stop(),e=document.createElement('a');
 		e.download=`${main.name||'recording'}.${/\/mp/.test(recorder.mimeType)?'m4a':'webm'}`;e.href=URL.createObjectURL(recording);
 		e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,10000,e.href);
@@ -391,6 +391,7 @@ save=()=>{
 	}else dbfx.save();
 },
 load=()=>{
+	tpause();
 	alert('',1,1);
 	let req=idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),
 		tpl=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-100% -100%;">new</button><button onclick="dbfx.imp();"class="grid bg" style="--bp:-600% -100%;">import</button><br>`;
@@ -480,7 +481,7 @@ dbfx={
 	}
 },
 init=()=>{
-	Tone.Transport.pause();from_url=false;
+	tpause();from_url=false;
 	if(!main)main={name:'',sc:0,bpm:120,ts:4,arp:0,instr:0,scores:new Array(8).fill(''),pin:[]};
 	if(main.arp==undefined)main.arp=0;if(main.instr==undefined)main.instr=0;
 	disp.textContent='Loading sheet…';
