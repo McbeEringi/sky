@@ -4,7 +4,7 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url,recorder,instrsc;
 const texts=Object.assign({
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103261\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103262\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
@@ -79,12 +79,11 @@ scrset=()=>{
 	let dcbl=dispCur.getBoundingClientRect().left+window.scrollX;
 	if(16<dcbl&&dcbl<dispScr.clientWidth-64&&userscr[1]){userscr[1]=false;curct.style.display='none';}
 	if(!userscr[1]){
-		//userscr[0]=true;dispCur.scrollIntoView();
-		userscr[0]=true;
+		userscr[0]=true;//dispCur.scrollIntoView();
 		if(curpos==0)dispScr.scrollLeft=0;
 		else if(curpos==calced.length-1)dispScr.scrollLeft=dispScr.scrollWidth;
-		else if(dcbl>=dispScr.clientWidth-64)dispScr.scrollLeft+=dcbl-16;
-		else if(dcbl<=16)dispScr.scrollLeft-=dispScr.clientWidth-dcbl-64;
+		else if(dcbl>dispScr.clientWidth-64)dispScr.scrollLeft+=dcbl-16;
+		else if(dcbl<16)dispScr.scrollLeft-=dispScr.clientWidth-dcbl-64;
 		else userscr[0]=false;
 	}
 },
@@ -168,7 +167,7 @@ rawedit=()=>{
 domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('shake');};
 
 //albox.onclick=e=>{if(e.target!=e.currentTarget&&['BUTTON','LABEL'].includes(e.target.tagName))console.log('click')};
-ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid showtxt">flip UI</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
+ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid showtxt">flip UI</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -100%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
 curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft=dispCur.getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX-dispScr.clientWidth*.5;};
 playbtn.onclick=()=>{
 	Tone.start();
@@ -382,14 +381,14 @@ save=()=>{
 	if(!main.name){
 		alert('',1,1);
 		albox.insertAdjacentHTML('beforeend',`${texts.title}<input class="style" onchange="this.nextElementSibling.click();"><button
-		onclick="{let tmp=this.previousElementSibling.value||('untitled '+new Date().toLocaleString());name_.textContent=main.name=tmp;document.title='sky_seq '+tmp;dbfx.save();}" class="grid bg" style="--bp:-600% -200%;">save</button>`);
+		onclick="{let tmp=this.previousElementSibling.value||('untitled '+new Date().toLocaleString());name_.textContent=main.name=tmp;document.title='sky_seq '+tmp;dbfx.save();}" class="grid bg" style="--bp:-500% -100%;">save</button>`);
 		albox.querySelector('input').focus();
 	}else dbfx.save();
 },
 load=()=>{
 	alert('',1,1);
 	let req=idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),
-		tpl=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-700% -100%;">new</button><button onclick="dbfx.imp();"class="grid bg" style="--bp:-600% -100%;">import</button><br>`;
+		tpl=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-100% -100%;">new</button><button onclick="dbfx.imp();"class="grid bg" style="--bp:-600% -100%;">import</button><br>`;
 	req.onsuccess=e=>{
 		let tmp=e.target.result;//sort
 		albox.insertAdjacentHTML('beforeend',tpl);
@@ -397,10 +396,10 @@ load=()=>{
 		if(!tmp.length)albox.insertAdjacentHTML('beforeend',`${texts.nodat}<br><button onclick="this.textContent='Loading…';this.disabled=true;impsample(load);">download sample</button>`);
 		tmp.forEach((x,i)=>requestIdleCallback(()=>{
 			albox.insertAdjacentHTML('beforeend',`<div><span onclick="dbfx.open(${i});">${x}</span><br><button
-				onclick="dbfx.renameW(${i});" class="grid bg" style="--bp:-200% -300%;">rename</button><button
-				onclick="dbfx.dupe(${i});" class="grid bg" style="--bp:0 -300%;">dupe</button><button
-				onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-400% -100%;">export</button><button
-				onclick="dbfx.delW(${i});" class="grid bg" style="--bp:-700% -200%;">delete</button></div>`
+				onclick="dbfx.renameW(${i});" class="grid bg" style="--bp:-200% -100%;">rename</button><button
+				onclick="dbfx.dupe(${i});" class="grid bg" style="--bp:-300% -100%;">dupe</button><button
+				onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-600% -100%;">export</button><button
+				onclick="dbfx.delW(${i});" class="grid bg" style="--bp:-400% -100%;">delete</button></div>`
 			);
 		}));
 	};
@@ -427,7 +426,7 @@ dbfx={
 		dbfx.get(i,e=>{
 			alert('',1);
 			albox.insertAdjacentHTML('beforeend',`${texts.exp(e.target.result.name)}<input class="style" value="${urlfx.e(e.target.result)}"><button
-			onclick="navigator.clipboard.writeText(this.previousElementSibling.value).then(()=>alcb.checked=false);" class="grid bg" style="--bp:0 -300%;">copy</button><button
+			onclick="navigator.clipboard.writeText(this.previousElementSibling.value).then(()=>alcb.checked=false);" class="grid bg" style="--bp:-300% -100%;">copy</button><button
 			onclick="window.open('https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_sequencer&url='+encodeURIComponent(this.previousElementSibling.previousElementSibling.value));alcb.checked=false;" class="grid bg" style="--bp:-700% -300%;">tweet</button>`);
 		});
 	},
@@ -462,7 +461,7 @@ dbfx={
 	renameW:function(i){
 		albox.textContent='';
 		albox.insertAdjacentHTML('beforeend',`${texts.title}<input class="style" value="${this.tmp[i]}" onchange="this.nextElementSibling.click();"><button
-		onclick="dbfx.rename(${i},this.previousElementSibling.value);" class="grid bg" style="--bp:-200% -300%;">rename</button>`);
+		onclick="dbfx.rename(${i},this.previousElementSibling.value);" class="grid bg" style="--bp:-200% -100%;">rename</button>`);
 		albox.querySelector('input').focus();
 	},
 	rename:(i,x)=>{

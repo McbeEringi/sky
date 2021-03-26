@@ -123,36 +123,36 @@
 		<div id="dispScr"><div id="dispCur"></div><div id="disp">Please enable JavaScript to use this app.</div></div>
 		<div id="dispBar"><p></p><p></p><div></div></div>
 		<div class="ui">
-			<button id="curct" class="grid bg" style="--bp:-300% -100%;">scroll to cursor</button><input type="checkbox" id="scfg"><label for="scfg" class="grid bg" style="--bp:-400% -300%;"></label>
+			<button id="curct" class="grid bg" style="--bp:-200% -200%;">scroll to cursor</button><input type="checkbox" id="scfg"><label for="scfg" class="grid bg" style="--bp:-300% -200%;"></label>
 			<div>
-				<label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:-100% -300%;"></input></label><button
-				id="instrbtn" class="grid bg" style="--bp:-00% -400%;"></button><br><button
-				onclick="Tone.Transport.bpm.value-=6;main.bpm-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-500% 0;">slow</button><label><input
-				id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-700% 0;"></input></label><button
-				onclick="Tone.Transport.bpm.value+=6;main.bpm+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">fast</button><br><button
-				onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-500% 0;">down</button><label><input
-				id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-600% 0;"></input></label><button
-				onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-400% 0;">up</button><br><button
-				onclick="arp_.value=--main.arp;" class="grid bg" style="--bp:-500% 0;">dec</button><label><input
+				<label><input id="ts_" class="grid bg showtxt" onchange="tsset();" style="--bp:0 -300%;"></input></label><button
+				id="instrbtn" class="grid bg" style="--bp:0 -400%;"></button><br><button
+				onclick="Tone.Transport.bpm.value-=6;main.bpm-=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-400% 0;">slow</button><label><input
+				id="bpm_" class="grid bg showtxt" onchange="bpmset();" style="--bp:-200% -300%;"></input></label><button
+				onclick="Tone.Transport.bpm.value+=6;main.bpm+=6;bpm_.value=main.bpm;" class="grid bg" style="--bp:-300% 0;">fast</button><br><button
+				onclick="sc_.value=--main.sc;" class="grid bg" style="--bp:-400% 0;">down</button><label><input
+				id="sc_" class="grid bg showtxt" onchange="scset();" style="--bp:-100% -300%;"></input></label><button
+				onclick="sc_.value=++main.sc;" class="grid bg" style="--bp:-300% 0;">up</button><br><button
+				onclick="arp_.value=--main.arp;" class="grid bg" style="--bp:-400% 0;">dec</button><label><input
 				id="arp_" class="grid bg showtxt" onchange="arpset();" style="--bp:-300% -300%;"></input></label><button
-				onclick="arp_.value=++main.arp;" class="grid bg" style="--bp:-400% 0;">inc</button>
+				onclick="arp_.value=++main.arp;" class="grid bg" style="--bp:-300% 0;">inc</button>
 			</div>
 		</div>
 	</div>
 	<div class="clear_fix">
 		<div class="uiPanel float_r">
-			         <button id="undobtn" class="grid bg" style="--bp:-300% -200%;transform:scaleX(-1);">undo
-			</button><button id="redobtn" class="grid bg" style="--bp:-300% -200%;">redo
-			</button><button onclick="tstep(-1);" class="grid bg" style="--bp:-200% -100%;transform:scaleX(-1);">back
-			</button><button id="playbtn"class="grid bg ghl" style="--bp:0 -100%;">start/pause
-			</button><button onclick="tstop();" class="grid bg" style="--bp:-100% -100%;">stop
-			</button><button onclick="tstep(1);" class="grid bg" style="--bp:-200% -100%;">forward
+			         <button id="undobtn" class="grid bg" style="--bp:-100% -200%;transform:scaleX(-1);">undo
+			</button><button id="redobtn" class="grid bg" style="--bp:-100% -200%;">redo
+			</button><button onclick="tstep(-1);" class="grid bg" style="--bp:-700% 0;transform:scaleX(-1);">back
+			</button><button id="playbtn"class="grid bg ghl" style="--bp:-500% 0;">start/pause
+			</button><button onclick="tstop();" class="grid bg" style="--bp:-600% 0;">stop
+			</button><button onclick="tstep(1);" class="grid bg" style="--bp:-700% 0;">forward
 			</button><div
 				id="tpl"><div class="noteW note" data-note=""></div><div
 				class="noteW sortW"><div class="sort"><div class="noteW note" data-note=""></div><div class="noteW note" data-note=""></div></div></div><div
 				id="trash"></div></div><button onclick="domshake(this);" class="grid bg" style="--bp:-500% -300%;">btn
-				</button><label for="clipcb" class="grid bg ghl" style="--bp:-500% -100%;">clipbobard
-			</label><button onclick="save();" class="grid bg" style="--bp:-600% -200%;">save
+				</button><label for="clipcb" class="grid bg ghl" style="--bp:0 -200%;">clipbobard
+			</label><button onclick="save();" class="grid bg" style="--bp:-500% -100%;">save
 			</button>
 		</div>
 		<div class="kbPanel float_l">
@@ -164,11 +164,11 @@
 		</div>
 		<div id="clip" class="float_l"><div class="noteW note" data-note=""></div></div>
 		<div class="uiPanel float_r">
-			         <button onclick="load();" class="grid bg" style="--bp:-500% -200%;">load
-			</button><button id="recbtn" class="grid bg  ghl" style="--bp:0 -200%;">record
-			</button><label for="kblock" class="grid bg ghl" style="--bp:-100% -200%;">lock keyboard
-			</label><label for="kbfixed" class="grid bg ghl" style="--bp:-200% -200%;">practice
-			</label><button id="ibtn" class="grid bg" style="--bp:-300% 0;">info
+			         <button onclick="load();" class="grid bg" style="--bp:0 -100%;">load
+			</button><button id="recbtn" class="grid bg  ghl" style="--bp:-500% -200%;">record
+			</button><label for="kblock" class="grid bg ghl" style="--bp:-600% -200%;">lock keyboard
+			</label><label for="kbfixed" class="grid bg ghl" style="--bp:-700% -200%;">practice
+			</label><button id="ibtn" class="grid bg" style="--bp:-600% -300%;">info
 			</button>
 
 		</div>
