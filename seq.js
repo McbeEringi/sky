@@ -259,7 +259,7 @@ recbtn.onclick=e=>{
 		Tone.Transport.pause();styperf.textContent='';
 		let recording=await recorder.stop(),e=document.createElement('a');
 		e.download=`${main.name||'recording'}.${/\/mp/.test(recorder.mimeType)?'m4a':'webm'}`;e.href=URL.createObjectURL(recording);
-		e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,3000,e.href);
+		e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,10000,e.href);
 	})();
 };
 instrbtn.onclick=()=>{
@@ -519,7 +519,7 @@ dljson=(x=main)=>{
 	let e=document.createElement('a');
 	e.download=`${x.name||'JSON'}.json`;
 	e.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
-	e.click();setTimeout(URL.revokeObjectURL,3000,e.href);
+	e.click();setTimeout(URL.revokeObjectURL,10000,e.href);
 };
 
 alert(texts.notice);
