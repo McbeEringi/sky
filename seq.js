@@ -88,7 +88,7 @@ scrset=()=>{
 			else userscr[0]=false;
 		}
 	}else{
-		if(dispScr.clientWidth*.5-32<dcbl&&dcbl<dispScr.clientWidth*.5+16&&userscr[1]){userscr[1]=false;curct.style.display='none';}
+		if(dispScr.clientWidth*.5-24<dcbl&&dcbl<dispScr.clientWidth*.5+8&&userscr[1]){userscr[1]=false;curct.style.display='none';}
 		if(!userscr[1]){userscr[0]=true;dispScr.scrollLeft+=dcbl+8-dispScr.clientWidth*.5;}
 	}
 },
@@ -173,7 +173,7 @@ domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('s
 
 //albox.onclick=e=>{if(e.target!=e.currentTarget&&['BUTTON','LABEL'].includes(e.target.tagName))console.log('click')};
 ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid showtxt">flip UI</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
-curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft+=dispCur.getBoundingClientRect().left+window.scrollX+8-dispScr.clientWidth*.5;};
+curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft+=dispCur.getBoundingClientRect().left+window.scrollX-16;};
 playbtn.onclick=()=>{
 	Tone.start();
 	let state=Tone.Transport.state!='started';
@@ -404,7 +404,7 @@ load=()=>{
 			albox.insertAdjacentHTML('beforeend',`<div><span onclick="dbfx.open(${i});">${x}</span><br><button
 				onclick="dbfx.renameW(${i});" class="grid bg" style="--bp:-200% -100%;">rename</button><button
 				onclick="dbfx.dupe(${i});" class="grid bg" style="--bp:-300% -100%;">dupe</button><button
-				onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-600% -100%;">export</button><button
+				onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-700% -100%;">export</button><button
 				onclick="dbfx.delW(${i});" class="grid bg" style="--bp:-400% -100%;">delete</button></div>`
 			);
 		}));
