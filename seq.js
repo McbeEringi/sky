@@ -2,7 +2,7 @@
 alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';albox.style.maxWidth=mw?'100%':'';alcb.checked=true;}
 //window.onbeforeunload=e=>{e.preventDefault();return'';};
 
-let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url,recorder,instrsc;
+let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,from_url,recorder,instrsc;
 const texts=Object.assign({
 	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103310\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
@@ -271,7 +271,7 @@ load=()=>{
 sopt={
 	group:{
 		name:"group_",
-		pull:(to,from)=>to.el.id=='clip'?'clone':true,
+		pull:(to,from)=>to.el.id=='pallet'?'clone':true,
 		put:true,
 	},
 	onStart:()=>dispCur.style.opacity='0',onEnd:()=>dispCur.style.opacity='1',
@@ -541,7 +541,7 @@ new Sortable(tpl,{
 		if(e.pullMode=='clone'&&e.item.children.length)Array.from(e.item.children,e=>new Sortable(e,sopt));
 	},
 });
-new Sortable(clip,{
+new Sortable(pallet,{
 	group:{
 		name:'group_',
 		pull:(to,from)=>to.el.id=='trash'?true:'clone',

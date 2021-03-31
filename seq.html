@@ -84,8 +84,8 @@
 
 		.sortable-chosen{background:#feac;}
 		.sortable-ghost{animation:.5s infinite alternate wink;}.sortable-drag{}
-		#clip{display:inline-block;vertical-align:top;position:relative;display:none;padding:6px 0;width:100%;height:240px;max-width:640px;white-space:nowrap;overflow-x:scroll;position:relative;background:#fff4;border-radius:8px;}
-		#clip>.noteW{margin:0 8px;}
+		#pallet{display:inline-block;vertical-align:top;position:relative;display:none;padding:6px 0;width:100%;height:240px;max-width:480px;white-space:nowrap;overflow-x:scroll;position:relative;background:#fff4;border-radius:8px;}
+		#pallet>.noteW{margin:0 4px;}
 		#tpl{position:absolute;top:0;right:0;z-index:1;opacity:.8;}
 		#tpl:hover:not(:active)::after{position:absolute;content:"drag me!";left:50%;top:50%;transform:translate(-50%,-50%);background:#0008;text-align:center;padding:0 8px;border-radius:4px;pointer-events:none;animation:3s fadeout;opacity:0;}
 		#tpl>*{margin:2px;width:48px;height:48px;border-radius:25%;overflow:hidden;display:inline-block;vertical-align:top;}
@@ -102,7 +102,7 @@
 		.ghl{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
 		#kblock:checked~* label[for="kblock"],#kbfixed:checked~* label[for="kbfixed"],#palletcb:checked~* label[for="palletcb"],.ghl_{box-shadow:0 0 2px 4px #fea inset;}
 		#kbfixed:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;z-index:1;}#kbfixed:checked~.dispPanel{}
-		#palletcb:checked~* #clip{display:block;}#palletcb:checked~* .kbPanel{display:none;}
+		#palletcb:checked~* #pallet{display:block;}#palletcb:checked~* .kbPanel{display:none;}
 		#dbgcb:not(:checked)~.debug{display:none;}
 		#distrs:checked~* #dispCur,#distrs:checked~* #kb p::before,#distrs:checked~* #kb p::after{transition: none !important;}
 	</style>
@@ -158,12 +158,12 @@
 				<div><p id="kbb20"></p><p id="kbb21"></p><p id="kbb22"></p><p id="kbb23"></p><p id="kbb24" class="c"></p></div>
 			</div>
 		</div>
-		<div id="clip" class="float_l">
-			<div id="tpl"><div class="noteW note" data-note=""></div><div
+		<div id="pallet" class="float_l"><div
+			id="tpl"><div
+				class="noteW note" data-note=""></div><div
 				class="noteW sortW"><div class="sort"><div class="noteW note" data-note=""></div><div class="noteW note" data-note=""></div></div></div><div
-				id="trash"></div></div>
-			<div class="noteW note" data-note=""></div>
-		</div>
+				id="trash"></div></div><div
+			class="noteW note" data-note=""></div></div>
 		<div class="uiPanel float_r">
 			         <button onclick="load();" class="grid bg" style="--bp:0 -100%;">load
 			</button><button id="recbtn" class="grid bg ghl" style="--bp:-500% -200%;">record
