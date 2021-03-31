@@ -4,7 +4,7 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,noteclip,from_url,recorder,instrsc;
 const texts=Object.assign({
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103270\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103310\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
@@ -169,125 +169,106 @@ rawedit=()=>{
 		},1000);
 	};
 },
-domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('shake');};
-
-//albox.onclick=e=>{if(e.target!=e.currentTarget&&['BUTTON','LABEL'].includes(e.target.tagName))console.log('click')};
-ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid showtxt">flip UI</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
-curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft+=dispCur.getBoundingClientRect().left+window.scrollX-16;};
-playbtn.onclick=()=>{
-	Tone.start();
-	let state=Tone.Transport.state!='started';
-	if(state&&!from_url)ezsave();
-	if(state)tplay();else tpause();
-};
-document.querySelectorAll('#kb p').forEach((e,i)=>{
-	const keyfx=ev=>{
-		ev.preventDefault();Tone.start();
-		if(kblock.checked)synth.triggerAttackRelease(toHz(i2n[i]));
-		else{
-			clearTimeout(seqsett);
-			let arr=calced.ind[curpos].split('-').reduce((a,c)=>a[c],main.scores).split(',');
-			if(e.classList.contains('press')==false){
-				synth.triggerAttackRelease(toHz(i2n[i]));
-				requestIdleCallback(()=>{let note=document.createElement('p');note.style.bottom=i*16+'px';calced.e[curpos].appendChild(note);});
-				arr=[...arr,i2n[i]].filter(x=>x);
-			}else{
-				requestIdleCallback(()=>calced.e[curpos].querySelectorAll(`p[style*="${i*16}"]`).forEach(e=>calced.e[curpos].removeChild(e)));
-				arr=arr.filter(x=>x!=i2n[i]);
-			}
-			arr=arr.join(',');calced.e[curpos].dataset.note=arr;
-			arr=`main.scores[${calced.ind[curpos].replace(/-/g,'][')}]='${arr}';`;llog(arr);
-			Function(arr)();
-			seqsett=setTimeout(()=>{requestIdleCallback(()=>seq.events=main.scores);urset();},500);
-			e.classList.toggle('press');
-		}
-	};
-	e.addEventListener('touchstart',keyfx,{passive:false});
-	e.addEventListener('mousedown',keyfx,{passive:false});
-});
-document.addEventListener('keydown',e=>{
-	if(alcb.checked&&albox.style.pointerEvents){alcb.checked=false;return;}
-	if(!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)&&!alcb.checked){
-		llog(e.code);
-		switch(e.code){
-			case'Space':e.preventDefault();playbtn.onclick();break;
-			case'ArrowUp':e.preventDefault();if(e.shiftKey)bpm_.parentNode.nextElementSibling.click();else sc_.value=++main.sc;break;
-			case'ArrowDown':e.preventDefault();if(e.shiftKey)bpm_.parentNode.previousElementSibling.click();else sc_.value=--main.sc;break;
-			case'ArrowLeft':e.preventDefault();if(e.shiftKey)tstep(-10);else tstep(-1);break;
-			case'ArrowRight':e.preventDefault();if(e.shiftKey)tstep(10);else tstep(1);break;
-			case'KeyE':if(e.metaKey||e.ctrlKey){console.log(urlfx.e());}break;
-			case'KeyO':if(e.metaKey||e.ctrlKey){if(!e.shiftKey){e.preventDefault();load();}}break;
-			case'KeyS':if(e.metaKey||e.ctrlKey){if(!e.shiftKey){e.preventDefault();save();}}break;
-			case'KeyZ':if(e.metaKey||e.ctrlKey){e.preventDefault();urdo(e.shiftKey?1:-1);}break;
-			default:
-				const keymap={
-					KeyR:'kbb00',KeyT:'kbb01',KeyY:'kbb02',KeyU:'kbb03',KeyI:'kbb04',
-					KeyF:'kbb10',KeyG:'kbb11',KeyH:'kbb12',KeyJ:'kbb13',KeyK:'kbb14',
-					KeyC:'kbb20',KeyV:'kbb21',KeyB:'kbb22',KeyN:'kbb23',KeyM:'kbb24'
-				}
-				if(keymap[e.code]&&!e.altKey&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey){
-					window[keymap[e.code]].dispatchEvent(new Event('mousedown'));
-				}
-		}
+domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('shake');},
+dbfx={
+	tmp:[],
+	get:function(i,fx,fx_){
+		console.log(this.tmp[i]);
+		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').get(this.tmp[i]),{
+			onsuccess:fx,
+			onerror:fx_||(e=>albox.textContent=`⚠️\n${texts.err(0)}\n\n${e.target.error}`)
+		});
+	},
+	open:i=>dbfx.get(i,e=>{main=e.target.result;init();alcb.checked=false;}),
+	dupe:i=>dbfx.get(i,e=>{
+		let dat=e.target.result;dat.name+=texts.copy;
+		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(dat),{
+			onsuccess:load,
+			onerror:e=>albox.textContent=`⚠️\n${texts.err(2)}\n\n${e.target.error}`
+		});
+	}),
+	exp:i=>{
+		dbfx.get(i,e=>{
+			alert('',1);
+			albox.insertAdjacentHTML('beforeend',`${texts.exp(e.target.result.name)}<input class="style" value="${urlfx.e(e.target.result)}"><button
+			onclick="navigator.clipboard.writeText(this.previousElementSibling.value).then(()=>alcb.checked=false);" class="grid bg" style="--bp:-300% -100%;">copy</button><button
+			onclick="window.open('https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_sequencer&url='+encodeURIComponent(this.previousElementSibling.previousElementSibling.value));alcb.checked=false;" class="grid bg" style="--bp:-700% -300%;">tweet</button>`);
+		});
+	},
+	imp:()=>{
+		alert('',1);
+		albox.insertAdjacentHTML('beforeend',`${texts.imp}<input class="style" onchange="this.nextElementSibling.click();"><button
+		onclick="{let tmp=urlfx.l(this.previousElementSibling.value.split('#',2)[1]);if(tmp){main=tmp;alcb.checked=false;init();idb.result.transaction('seq','readwrite').objectStore('seq').add(tmp);}else domshake(this);}" class="grid bg" style="--bp:-600% -100%;">import</button>`);
+		requestIdleCallback(()=>navigator.clipboard.readText().then(x=>albox.querySelector('input').value=x).catch(console.log));
+	},
+	delW:function(i){
+		alert('',1);
+		albox.insertAdjacentHTML('beforeend',`${texts.delq(this.tmp[i])}<br><br><button
+		onclick="dbfx.del(${i});" class="style dialogb" style="background:#f448;">${texts.del}</button><button
+		onclick="load();" class="style dialogb">${texts.cancel}</button>`);
+		albox.lastElementChild.focus();
+	},
+	del:function(i){Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').delete(this.tmp[i]),{onsuccess:load,onerror:e=>albox.textContent=`⚠️\n${texts.err(1)}\n\n${e.target.error}`});},
+	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>llog('delall done'),
+	save:()=>Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(main),{
+		onsuccess:()=>alert(`✅\n${texts.save}`),
+		onerror:()=>Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').put(main),{
+			onsuccess:()=>alert(`✅\n${texts.osave}`),
+			onerror:e=>alert(`⚠️\n${texts.err(2)}\n\n${e.target.error}`)
+		})
+	}),
+	renameW:function(i){
+		albox.textContent='';
+		albox.insertAdjacentHTML('beforeend',`${texts.title}<input class="style" value="${this.tmp[i]}" onchange="this.nextElementSibling.click();"><button
+		onclick="dbfx.rename(${i},this.previousElementSibling.value);" class="grid bg" style="--bp:-200% -100%;">rename</button>`);
+		albox.querySelector('input').focus();
+	},
+	rename:(i,x)=>{
+		if(dbfx.tmp[i]==x){load();return;}
+		dbfx.get(i,e=>{
+			let dat=e.target.result;dat.name=x;
+			Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(dat),{
+				onsuccess:()=>dbfx.del(i),
+				onerror:e=>alert(`⚠️\n${texts.err(2)}\n\n${e.target.error}`)
+			});
+		});
 	}
-});
-disp.onclick=e=>{
-	if(e.target.classList.contains('note')){
-		Tone.start();llog(e.target.dataset.p);
-		e.target.style.background='#fea8';setTimeout(()=>e.target.style.background='',100);
-		Tone.Transport.position=p2pos(e.target.dataset.p);
-		curpset(Number(e.target.dataset.p));
-		let note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
-	}
-};
-dispScr.onwheel=e=>{
-	e.preventDefault();
-	dispScr.scrollLeft+=e.deltaX+e.deltaY;
-};
-onresize=dispScr.onscroll=e=>{
-	if(userscr[0])userscr[0]=false;else userscr[1]=true;
-	if(screxet)return;
-	const tmp=()=>{
-		screxet=null;
-		let dbpds=dispBar.clientWidth/dispScr.scrollWidth;
-		dispBar.children[0].style.width=`${dispBar.clientWidth*dbpds}px`;
-		dispBar.children[0].style.left=`${dispScr.scrollLeft*dbpds}px`;
-		if(userscr[1])curct.style.display='';
-	};
-	tmp();screxet=setTimeout(tmp,100);
-};
-undobtn.onclick=()=>urdo(-1);redobtn.onclick=()=>urdo(1);
-recbtn.onclick=e=>{
-	if(e.target.classList.toggle('ghl_'))recorder.start();
-	else(async()=>{
-		tpause();
-		let recording=await recorder.stop(),e=document.createElement('a');
-		e.download=`${main.name||'recording'}.${/\/mp/.test(recorder.mimeType)?'m4a':'webm'}`;e.href=URL.createObjectURL(recording);
-		e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,10000,e.href);
-	})();
-};
-instrbtn.onclick=()=>{
-	alert('',1);
-	albox.insertAdjacentHTML('beforeend',
-`<form ><label class="grid bg" style="--bp:-0%   -400%;"><input type="radio" name="instr" value="0" >
-</label><label class="grid bg" style="--bp:-100% -400%;"><input type="radio" name="instr" value="1" >
-</label><label class="grid bg" style="--bp:-200% -400%;"><input type="radio" name="instr" value="2" >
-</label><label class="grid bg" style="--bp:-300% -400%;"><input type="radio" name="instr" value="3" >
-</label><label class="grid bg" style="--bp:-400% -400%;"><input type="radio" name="instr" value="4" >
-</label><label class="grid bg" style="--bp:-500% -400%;"><input type="radio" name="instr" value="5" >
-</label><label class="grid bg" style="--bp:-600% -400%;"><input type="radio" name="instr" value="6" >
-</label><label class="grid bg" style="--bp:-700% -400%;"><input type="radio" name="instr" value="7" >
-</label><label class="grid bg" style="--bp:-0%   -500%;"><input type="radio" name="instr" value="8" >
-</label><label class="grid bg" style="--bp:-100% -500%;"><input type="radio" name="instr" value="9" >
-</label><label class="grid bg" style="--bp:-200% -500%;"><input type="radio" name="instr" value="10">
-</label><label class="grid bg" style="--bp:-300% -500%;"><input type="radio" name="instr" value="11">
-</label></form>`);
-	let e=albox.querySelector('form');//e.instr.value=main.instr;
-	e.onchange=()=>syset(main.instr=Number(e.instr.value));
-};
-
-
-const sopt={
+},
+save=()=>{
+	if(!main.name){
+		alert('',1,1);
+		albox.insertAdjacentHTML('beforeend',`${texts.title}<input class="style" onchange="this.nextElementSibling.click();"><button
+		onclick="{let tmp=this.previousElementSibling.value||('untitled '+new Date().toLocaleString());name_.textContent=main.name=tmp;document.title='sky_seq '+tmp;dbfx.save();}" class="grid bg" style="--bp:-500% -100%;">save</button>`);
+		albox.querySelector('input').focus();
+	}else dbfx.save();
+},
+load=()=>{
+	tpause();
+	alert('',1,1);
+	let tpl=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-100% -100%;">new</button><button onclick="dbfx.imp();"class="grid bg" style="--bp:-600% -100%;">import</button><br>`;
+	Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),{
+		onsuccess:e=>{
+			let tmp=e.target.result;
+			//ins sort
+			albox.insertAdjacentHTML('beforeend',tpl);
+			console.log(tmp);dbfx.tmp=tmp;
+			if(!tmp.length)albox.insertAdjacentHTML('beforeend',`${texts.nodat}<br><button onclick="this.textContent='Loading…';this.disabled=true;impsample(load);">download sample</button>`);
+			tmp.forEach((x,i)=>requestIdleCallback(()=>{
+				albox.insertAdjacentHTML('beforeend',`<div><span onclick="dbfx.open(${i});">${x}</span><br><button
+					onclick="dbfx.renameW(${i});" class="grid bg" style="--bp:-200% -100%;">rename</button><button
+					onclick="dbfx.dupe(${i});" class="grid bg" style="--bp:-300% -100%;">dupe</button><button
+					onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-700% -100%;">export</button><button
+					onclick="dbfx.delW(${i});" class="grid bg" style="--bp:-400% -100%;">delete</button></div>`
+				);
+			}));
+		},
+		onerror:e=>{
+			albox.textContent=`⚠️\n${texts.err(0)}\n\n${e.target.error}`;
+			albox.insertAdjacentHTML('beforeend',tpl);
+		}
+	});
+},
+sopt={
 	group:{
 		name:"group_",
 		pull:(to,from)=>to.el.id=='clip'?'clone':true,
@@ -382,104 +363,6 @@ d2d=(x=disp)=>{
 	}else core(x.parentNode);
 	console.timeEnd('d2d');
 },
-save=()=>{
-	if(!main.name){
-		alert('',1,1);
-		albox.insertAdjacentHTML('beforeend',`${texts.title}<input class="style" onchange="this.nextElementSibling.click();"><button
-		onclick="{let tmp=this.previousElementSibling.value||('untitled '+new Date().toLocaleString());name_.textContent=main.name=tmp;document.title='sky_seq '+tmp;dbfx.save();}" class="grid bg" style="--bp:-500% -100%;">save</button>`);
-		albox.querySelector('input').focus();
-	}else dbfx.save();
-},
-load=()=>{
-	tpause();
-	alert('',1,1);
-	let req=idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),
-		tpl=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-100% -100%;">new</button><button onclick="dbfx.imp();"class="grid bg" style="--bp:-600% -100%;">import</button><br>`;
-	req.onsuccess=e=>{
-		let tmp=e.target.result;//sort
-		albox.insertAdjacentHTML('beforeend',tpl);
-		console.log(tmp);dbfx.tmp=tmp;
-		if(!tmp.length)albox.insertAdjacentHTML('beforeend',`${texts.nodat}<br><button onclick="this.textContent='Loading…';this.disabled=true;impsample(load);">download sample</button>`);
-		tmp.forEach((x,i)=>requestIdleCallback(()=>{
-			albox.insertAdjacentHTML('beforeend',`<div><span onclick="dbfx.open(${i});">${x}</span><br><button
-				onclick="dbfx.renameW(${i});" class="grid bg" style="--bp:-200% -100%;">rename</button><button
-				onclick="dbfx.dupe(${i});" class="grid bg" style="--bp:-300% -100%;">dupe</button><button
-				onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-700% -100%;">export</button><button
-				onclick="dbfx.delW(${i});" class="grid bg" style="--bp:-400% -100%;">delete</button></div>`
-			);
-		}));
-	};
-	req.onerror=e=>{
-		albox.textContent=`⚠️\n${texts.err(0)}\n\n${e.target.error}`;
-		albox.insertAdjacentHTML('beforeend',tpl);
-	};
-},
-dbfx={
-	tmp:[],
-	get:function(i,fx,fx_){
-		console.log(this.tmp[i]);
-		let req=idb.result.transaction('seq','readwrite').objectStore('seq').get(this.tmp[i]);
-		req.onsuccess=fx;req.onerror=fx_||(e=>albox.textContent=`⚠️\n${texts.err(0)}\n\n${e.target.error}`);
-	},
-	open:i=>dbfx.get(i,e=>{main=e.target.result;init();alcb.checked=false;}),
-	dupe:i=>dbfx.get(i,e=>{
-		let dup=e.target.result;dup.name+=texts.copy;
-		let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(dup);
-		req.onsuccess=load;
-		req.onerror=e=>albox.textContent=`⚠️\n${texts.err(2)}\n\n${e.target.error}`;
-	}),
-	exp:i=>{
-		dbfx.get(i,e=>{
-			alert('',1);
-			albox.insertAdjacentHTML('beforeend',`${texts.exp(e.target.result.name)}<input class="style" value="${urlfx.e(e.target.result)}"><button
-			onclick="navigator.clipboard.writeText(this.previousElementSibling.value).then(()=>alcb.checked=false);" class="grid bg" style="--bp:-300% -100%;">copy</button><button
-			onclick="window.open('https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_sequencer&url='+encodeURIComponent(this.previousElementSibling.previousElementSibling.value));alcb.checked=false;" class="grid bg" style="--bp:-700% -300%;">tweet</button>`);
-		});
-	},
-	imp:()=>{
-		alert('',1);
-		albox.insertAdjacentHTML('beforeend',`${texts.imp}<input class="style" onchange="this.nextElementSibling.click();"><button
-		onclick="{let tmp=urlfx.l(this.previousElementSibling.value.split('#',2)[1]);if(tmp){main=tmp;alcb.checked=false;init();idb.result.transaction('seq','readwrite').objectStore('seq').add(tmp);}else domshake(this);}" class="grid bg" style="--bp:-600% -100%;">import</button>`);
-		requestIdleCallback(()=>navigator.clipboard.readText().then(x=>albox.querySelector('input').value=x).catch(console.log));
-	},
-	delW:function(i){
-		alert('',1);
-		albox.insertAdjacentHTML('beforeend',`${texts.delq(this.tmp[i])}<br><br><button
-		onclick="dbfx.del(${i});" class="style dialogb" style="background:#f448;">${texts.del}</button><button
-		onclick="load();" class="style dialogb">${texts.cancel}</button>`);
-		albox.lastElementChild.focus();
-	},
-	del:function(i){
-		let req=idb.result.transaction('seq','readwrite').objectStore('seq').delete(this.tmp[i]);
-		req.onsuccess=load;
-		req.onerror=e=>albox.textContent=`⚠️\n${texts.err(1)}\n\n${e.target.error}`;
-	},
-	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>llog('delall done'),
-	save:()=>{
-		let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
-		req.onerror=()=>{
-			req=idb.result.transaction('seq','readwrite').objectStore('seq').put(main);
-			req.onerror=e=>alert(`⚠️\n${texts.err(2)}\n\n${e.target.error}`);
-			req.onsuccess=()=>alert(`✅\n${texts.osave}`);
-		};
-		req.onsuccess=()=>alert(`✅\n${texts.save}`);
-	},
-	renameW:function(i){
-		albox.textContent='';
-		albox.insertAdjacentHTML('beforeend',`${texts.title}<input class="style" value="${this.tmp[i]}" onchange="this.nextElementSibling.click();"><button
-		onclick="dbfx.rename(${i},this.previousElementSibling.value);" class="grid bg" style="--bp:-200% -100%;">rename</button>`);
-		albox.querySelector('input').focus();
-	},
-	rename:(i,x)=>{
-		if(dbfx.tmp[i]==x){load();return;}
-		dbfx.get(i,e=>{
-			let dat=e.target.result;dat.name=x;
-			let req=idb.result.transaction('seq','readwrite').objectStore('seq').add(dat);
-			req.onerror=e=>alert(`⚠️\n${texts.err(2)}\n\n${e.target.error}`);
-			req.onsuccess=()=>dbfx.del(i);
-		});
-	}
-},
 init=()=>{
 	tpause();from_url=false;
 	if(!main)main={name:'',sc:0,bpm:120,ts:4,arp:0,instr:0,scores:new Array(8).fill(''),pin:[]};
@@ -513,19 +396,120 @@ urlfx={
 			return dat;
 		}catch(e){console.log(e);return;}
 	}
-},
-impsample=fx=>fetch('sample.json').then(x=>x.json()).then(x=>
-	Promise.allSettled(x.map(y=>new Promise((t,c)=>{
-		let tmp=idb.result.transaction('seq','readwrite').objectStore('seq').add(y);
-		tmp.onsuccess=()=>{llog(y.name);t(y.name);};tmp.onerror=()=>c();
-	}))).then(fx||(()=>{}))
-),
-dljson=(x=main)=>{
-	let e=document.createElement('a');
-	e.download=`${x.name||'JSON'}.json`;
-	e.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
-	e.click();setTimeout(URL.revokeObjectURL,10000,e.href);
 };
+
+//albox.onclick=e=>{if(e.target!=e.currentTarget&&['BUTTON','LABEL'].includes(e.target.tagName))console.log('click')};
+ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid showtxt">flip UI</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
+curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft+=dispCur.getBoundingClientRect().left+window.scrollX-16;};
+playbtn.onclick=()=>{
+	Tone.start();
+	let state=Tone.Transport.state!='started';
+	if(state&&!from_url)ezsave();
+	if(state)tplay();else tpause();
+};
+document.querySelectorAll('#kb p').forEach((e,i)=>{
+	const keyfx=ev=>{
+		ev.preventDefault();Tone.start();
+		if(kblock.checked)synth.triggerAttackRelease(toHz(i2n[i]));
+		else{
+			clearTimeout(seqsett);
+			let arr=calced.ind[curpos].split('-').reduce((a,c)=>a[c],main.scores).split(',');
+			if(e.classList.contains('press')==false){
+				synth.triggerAttackRelease(toHz(i2n[i]));
+				requestIdleCallback(()=>{let note=document.createElement('p');note.style.bottom=i*16+'px';calced.e[curpos].appendChild(note);});
+				arr=[...arr,i2n[i]].filter(x=>x);
+			}else{
+				requestIdleCallback(()=>calced.e[curpos].querySelectorAll(`p[style*="${i*16}"]`).forEach(e=>calced.e[curpos].removeChild(e)));
+				arr=arr.filter(x=>x!=i2n[i]);
+			}
+			arr=arr.join(',');calced.e[curpos].dataset.note=arr;
+			arr=`main.scores[${calced.ind[curpos].replace(/-/g,'][')}]='${arr}';`;llog(arr);
+			Function(arr)();
+			seqsett=setTimeout(()=>{requestIdleCallback(()=>seq.events=main.scores);urset();},500);
+			e.classList.toggle('press');
+		}
+	};
+	e.addEventListener('touchstart',keyfx,{passive:false});
+	e.addEventListener('mousedown',keyfx,{passive:false});
+});
+document.addEventListener('keydown',e=>{
+	if(alcb.checked&&albox.style.pointerEvents){alcb.checked=false;return;}
+	if(!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)&&!alcb.checked){
+		llog(e.code);
+		switch(e.code){
+			case'Space':e.preventDefault();playbtn.onclick();break;
+			case'ArrowUp':e.preventDefault();if(e.shiftKey)bpm_.parentNode.nextElementSibling.click();else sc_.value=++main.sc;break;
+			case'ArrowDown':e.preventDefault();if(e.shiftKey)bpm_.parentNode.previousElementSibling.click();else sc_.value=--main.sc;break;
+			case'ArrowLeft':e.preventDefault();if(e.shiftKey)tstep(-10);else tstep(-1);break;
+			case'ArrowRight':e.preventDefault();if(e.shiftKey)tstep(10);else tstep(1);break;
+			case'KeyE':if(e.metaKey||e.ctrlKey){console.log(urlfx.e());}break;
+			case'KeyO':if(e.metaKey||e.ctrlKey){if(!e.shiftKey){e.preventDefault();load();}}break;
+			case'KeyS':if(e.metaKey||e.ctrlKey){if(!e.shiftKey){e.preventDefault();save();}}break;
+			case'KeyZ':if(e.metaKey||e.ctrlKey){e.preventDefault();urdo(e.shiftKey?1:-1);}break;
+			default:
+				const keymap={
+					KeyR:'kbb00',KeyT:'kbb01',KeyY:'kbb02',KeyU:'kbb03',KeyI:'kbb04',
+					KeyF:'kbb10',KeyG:'kbb11',KeyH:'kbb12',KeyJ:'kbb13',KeyK:'kbb14',
+					KeyC:'kbb20',KeyV:'kbb21',KeyB:'kbb22',KeyN:'kbb23',KeyM:'kbb24'
+				}
+				if(keymap[e.code]&&!e.altKey&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey){
+					window[keymap[e.code]].dispatchEvent(new Event('mousedown'));
+				}
+		}
+	}
+});
+disp.onclick=e=>{
+	if(e.target.classList.contains('note')){
+		Tone.start();llog(e.target.dataset.p);
+		e.target.style.background='#fea8';setTimeout(()=>e.target.style.background='',100);
+		Tone.Transport.position=p2pos(e.target.dataset.p);
+		curpset(Number(e.target.dataset.p));
+		let note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
+	}
+};
+undobtn.onclick=()=>urdo(-1);redobtn.onclick=()=>urdo(1);
+dispScr.onwheel=e=>{e.preventDefault();dispScr.scrollLeft+=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;};
+onresize=dispScr.onscroll=e=>{
+	if(userscr[0])userscr[0]=false;else userscr[1]=true;
+	if(screxet)return;
+	const tmp=()=>{
+		screxet=null;
+		let dbpds=dispBar.clientWidth/dispScr.scrollWidth;
+		dispBar.children[0].style.width=`${dispBar.clientWidth*dbpds}px`;
+		dispBar.children[0].style.left=`${dispScr.scrollLeft*dbpds}px`;
+		if(userscr[1])curct.style.display='';
+	};
+	tmp();screxet=setTimeout(tmp,100);
+};
+recbtn.onclick=e=>{
+	if(e.target.classList.toggle('ghl_'))recorder.start();
+	else(async()=>{
+		tpause();
+		let recording=await recorder.stop(),e=document.createElement('a');
+		e.download=`${main.name||'recording'}.${/\/mp/.test(recorder.mimeType)?'m4a':'webm'}`;e.href=URL.createObjectURL(recording);
+		e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,10000,e.href);
+	})();
+};
+instrbtn.onclick=()=>{
+	alert('',1);
+	albox.insertAdjacentHTML('beforeend',
+`<form ><label class="grid bg" style="--bp:-0%   -400%;"><input type="radio" name="instr" value="0" >
+</label><label class="grid bg" style="--bp:-100% -400%;"><input type="radio" name="instr" value="1" >
+</label><label class="grid bg" style="--bp:-200% -400%;"><input type="radio" name="instr" value="2" >
+</label><label class="grid bg" style="--bp:-300% -400%;"><input type="radio" name="instr" value="3" >
+</label><label class="grid bg" style="--bp:-400% -400%;"><input type="radio" name="instr" value="4" >
+</label><label class="grid bg" style="--bp:-500% -400%;"><input type="radio" name="instr" value="5" >
+</label><label class="grid bg" style="--bp:-600% -400%;"><input type="radio" name="instr" value="6" >
+</label><label class="grid bg" style="--bp:-700% -400%;"><input type="radio" name="instr" value="7" >
+</label><label class="grid bg" style="--bp:-0%   -500%;"><input type="radio" name="instr" value="8" >
+</label><label class="grid bg" style="--bp:-100% -500%;"><input type="radio" name="instr" value="9" >
+</label><label class="grid bg" style="--bp:-200% -500%;"><input type="radio" name="instr" value="10">
+</label><label class="grid bg" style="--bp:-300% -500%;"><input type="radio" name="instr" value="11">
+</label></form>`);
+	let e=albox.querySelector('form');//e.instr.value=main.instr;
+	e.onchange=()=>syset(main.instr=Number(e.instr.value));
+};
+
 
 alert(texts.notice);
 if(!localStorage.seq_undoMax){
@@ -543,7 +527,6 @@ if(!from_url){
 	setInterval(ezsave,60000);
 	document.onvisibilitychange=()=>{if(document.visibilityState=='hidden')ezsave();};
 }else idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
-
 new Sortable(tpl,{
 	group:{
 		name:'group_',
@@ -567,6 +550,21 @@ new Sortable(clip,{
 	onStart:()=>dispCur.style.opacity='0',onEnd:()=>dispCur.style.opacity='1',
 	onClone:e=>e.clone.querySelectorAll('.sort').forEach(x=>new Sortable(x,sopt)),
 	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
+	draggable:'.noteW'
 });
 new Sortable(trash,{group:'group_',onAdd:e=>e.item.parentNode.removeChild(e.item)});
 new Sortable(disp,sopt);
+
+
+const impsample=fx=>fetch('sample.json').then(x=>x.json()).then(x=>
+	Promise.allSettled(x.map(y=>new Promise((t,c)=>{
+		let tmp=idb.result.transaction('seq','readwrite').objectStore('seq').add(y);
+		tmp.onsuccess=()=>{llog(y.name);t(y.name);};tmp.onerror=()=>c();
+	}))).then(fx||(()=>{}))
+),
+dljson=(x=main)=>{
+	let e=document.createElement('a');
+	e.download=`${x.name||'JSON'}.json`;
+	e.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
+	e.click();setTimeout(URL.revokeObjectURL,10000,e.href);
+};
