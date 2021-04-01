@@ -84,7 +84,7 @@
 
 		.sortable-chosen{background:#feac;}
 		.sortable-ghost{animation:.5s infinite alternate wink;}.sortable-drag{}
-		#palette{display:inline-block;vertical-align:top;position:relative;display:none;padding:6px 0;width:100%;height:240px;max-width:480px;white-space:nowrap;overflow-x:scroll;position:relative;background:#fff4;border-radius:8px;}
+		#palette{position:relative;display:none;padding:6px 0;width:100%;height:240px;max-width:480px;white-space:nowrap;overflow-x:scroll;position:relative;background:#fff4;border-radius:8px;}
 		#palette>.noteW{margin:0 4px;}
 		#tpl{position:absolute;top:0;right:0;z-index:1;opacity:.8;}
 		#tpl:hover:not(:active)::after{position:absolute;content:"drag me!";left:50%;top:50%;transform:translate(-50%,-50%);background:#0008;text-align:center;padding:0 8px;border-radius:4px;pointer-events:none;animation:3s fadeout;opacity:0;}
@@ -99,8 +99,8 @@
 
 		body>input[type="checkbox"],input[type=radio]{display:none;}
 		#uiflip:checked~* .float_r{float:left;clear:left;}#uiflip:checked~* .float_l{float:right;clear:right;}/*#uiflip:checked~.dispPanel .ui{left:16px;right:unset;direction:rtl;text-align:left;}*/
-		.ghl{box-shadow:0 0 0 0 #fea inset;transition:.1s;}
-		#kblock:checked~* label[for="kblock"],#kbfixed:checked~* label[for="kbfixed"],#palettecb:checked~* label[for="palettecb"],.ghl_{box-shadow:0 0 2px 4px #fea inset;}
+		.ghl{box-shadow:0 0 0 0 #0000 inset;transition:.2s;}
+		#kblock:checked~* label[for="kblock"],#kbfixed:checked~* label[for="kbfixed"],#palettecb:checked~* label[for="palettecb"],.ghl_{box-shadow:0 0 2px 3px #fea inset,0 0 2px 5px #f006 inset;}
 		#kbfixed:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;z-index:1;}#kbfixed:checked~.dispPanel{}
 		#palettecb:checked~* #palette{display:block;}#palettecb:checked~* .kbPanel{display:none;}
 		#dbgcb:not(:checked)~.debug{display:none;}
