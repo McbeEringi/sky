@@ -97,12 +97,12 @@
 		@keyframes fadeout{0%,50%{opacity:1;}100%{opacity:0;}}
 		@keyframes shake{0%{transform:translate(1px,1px) rotate(0deg);}10%{transform:translate(-1px,-2px) rotate(-1deg);}20%{transform:translate(-3px,0px) rotate(1deg);}30%{transform:translate(3px,2px) rotate(0deg);}40%{transform:translate(1px,-1px) rotate(1deg);}50%{transform:translate(-1px,2px) rotate(-1deg);}60%{transform:translate(-3px,1px) rotate(0deg);}70%{transform:translate(3px,1px) rotate(-1deg);}80%{transform:translate(-1px,-1px) rotate(1deg);}90%{transform:translate(1px,2px) rotate(0deg);}100% { transform: translate(1px,-2px) rotate(-1deg);}}
 
-		body>input[type="checkbox"],input[type=radio]{display:none;}
+		body>input[type=checkbox],input[type=radio]{display:none;}
 		#uiflip:checked~* .float_r{float:left;clear:left;}#uiflip:checked~* .float_l{float:right;clear:right;}/*#uiflip:checked~.dispPanel .ui{left:16px;right:unset;direction:rtl;text-align:left;}*/
 		.ghl{box-shadow:0 0 0 0 #0000 inset;transition:.2s;}
-		#kblock:checked~* label[for="kblock"],#kbfixed:checked~* label[for="kbfixed"],#palettecb:checked~* label[for="palettecb"],.ghl_{box-shadow:0 0 2px 3px #fea inset,0 0 2px 5px #f006 inset;}
+		#kblock:checked~* label[for=kblock],#kbfixed:checked~* label[for=kbfixed],#palettecb:checked~* label[for=palettecb],.ghl_{box-shadow:0 0 2px 3.5px #fea inset,0 0 2px 5.5px #f006 inset;}
 		#kbfixed:checked~* .kbPanel{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:420px;z-index:1;}#kbfixed:checked~.dispPanel{}
-		#palettecb:checked~* #palette{display:block;}#palettecb:checked~* .kbPanel{display:none;}
+		#palettecb:checked~* #palette{display:block;}#palettecb:checked~* .kbPanel,#palettecb:checked~* label[for=kblock],#palettecb:checked~* label[for=kbfixed]{display:none;}
 		#dbgcb:not(:checked)~.debug{display:none;}
 		#distrs:checked~* #dispCur,#distrs:checked~* #kb p::before,#distrs:checked~* #kb p::after{transition: none !important;}
 	</style>
@@ -147,8 +147,12 @@
 			</button><button id="playbtn"class="grid bg ghl" style="--bp:-500% 0;">start/pause
 			</button><button onclick="tstop();" class="grid bg" style="--bp:-600% 0;">stop
 			</button><button onclick="tstep(1);" class="grid bg" style="--bp:-700% 0;">forward
-			</button><label for="palettecb" class="grid bg ghl" style="--bp:0 -200%;">edit
-			</label><button onclick="save();" class="grid bg" style="--bp:-500% -100%;">save
+			</button><button id="recbtn" class="grid bg ghl" style="--bp:-500% -200%;">record
+			</button><label for="palettecb" class="grid bg ghl" style="--bp:0 -200%;">palette
+			</label><button onclick="domshake(this);" class="grid" style="--bp:0 0;">btn
+			</button><button onclick="domshake(this);" class="grid" style="--bp:0 0;">btn
+			</button><button onclick="load();" class="grid bg" style="--bp:0 -100%;">load
+			</button><button onclick="save();" class="grid bg" style="--bp:-500% -100%;">save
 			</button>
 		</div>
 		<div class="kbPanel float_l">
@@ -165,9 +169,7 @@
 				id="trash"></div></div><div
 			class="noteW note" data-note=""></div></div>
 		<div class="uiPanel float_r">
-			         <button onclick="load();" class="grid bg" style="--bp:0 -100%;">load
-			</button><button id="recbtn" class="grid bg ghl" style="--bp:-500% -200%;">record
-			</button><label for="kblock" class="grid bg ghl" style="--bp:-600% -200%;">lock keyboard
+			         <label for="kblock" class="grid bg ghl" style="--bp:-600% -200%;">lock keyboard
 			</label><label for="kbfixed" class="grid bg ghl" style="--bp:-700% -200%;">practice
 			</label><button id="ibtn" class="grid bg" style="--bp:-600% -300%;">info
 			</button>
