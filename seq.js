@@ -4,7 +4,7 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,from_url,recorder,instrsc;
 const texts=Object.assign({
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2103310\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2104060\nMIT License\n',
 	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
@@ -363,8 +363,8 @@ d2d=(x=disp)=>{
 	}else core(x.parentNode);
 	console.timeEnd('d2d');
 },
-init=()=>{
-	tpause();from_url=false;
+init=(dummy=(from_url=false))=>{
+	tpause();
 	if(!main)main={name:'',sc:0,bpm:120,ts:4,arp:0,instr:0,scores:new Array(8).fill(''),pin:[]};
 	if(main.arp==undefined)main.arp=0;if(main.instr==undefined)main.instr=0;
 	disp.textContent='Loading sheet…';
@@ -375,7 +375,7 @@ init=()=>{
 	requestIdleCallback(a2d);
 	requestIdleCallback(tstop);
 },
-ezsave=()=>{localStorage.seq_ezsave=JSON.stringify(main);console.log('ezsave');},
+ezsave=()=>{if(!from_url){localStorage.seq_ezsave=JSON.stringify(main);console.log('ezsave');}},
 urlfx={
 	dmap:(x,fx)=>x.map(y=>{if(Array.isArray(y))return urlfx.dmap(y,fx);else return fx(y);}),
 	e:(dat=Object.assign({},main))=>{
@@ -518,15 +518,13 @@ if(!localStorage.seq_undoMax){
 		fetch('sample.json').then(x=>x.json()).then(x=>x.forEach((y,i)=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>{if(x.length==i+1)load();}));
 	});
 }
-log.textContent=texts.info;//Tone.Transport.loop=true;
-from_url=Boolean(main=urlfx.l());
+log.textContent=texts.info;
+if(from_url=Boolean(main=urlfx.l()))idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
 if(!from_url&&localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
 try{recorder=new Tone.Recorder();}catch(e){console.log(e);recbtn.disabled=true;}
-init();document.body.focus();
-if(!from_url){
-	setInterval(ezsave,60000);
-	document.onvisibilitychange=()=>{if(document.visibilityState=='hidden')ezsave();};
-}else idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
+setInterval(ezsave,60000);
+document.onvisibilitychange=()=>{if(document.visibilityState=='hidden')ezsave();};
+init(1);document.body.focus();
 new Sortable(tpl,{
 	group:{
 		name:'group_',
