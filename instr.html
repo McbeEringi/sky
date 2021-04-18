@@ -152,14 +152,8 @@
 			alert=x=>{albox.textContent=x;alcb.checked=true;};
 			const reverb=new Tone.Reverb({wet:0,decay:0}).toDestination(),
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'https://mcbeeringi.github.io/sky/audio/'}).toDestination(),
-			stdli=(a,b=a+1,s={})=>{
-				for(let i=a;i<=b;i++){
-					s['d#'+i]=`ds${i}.mp3`;
-					s['a' +i]=`a${i}.mp3`;
-				}
-				return s;
-			},
-			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2103261\nMIT License',
+			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
+			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104190\nMIT License',
 			instr_li=[//[baseurl, octave, map, (map2)]
 				['musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
 				['harp/',-1,stdli(3)],
@@ -169,7 +163,7 @@
 					['piano/',0,stdli(4)],
 					['',1,{'d#5':'musicbox/ds5.mp3',a5:'musicbox/a5.mp3'},{'d#5':'glock/ds5.mp3',a5:'glock/a5.mp3'}],
 					['bell2/',1,{c4:'c4.mp3',d4:'d4.mp3',g4:'g4.mp3',a4:'a4.mp3'},{c4:'c4_.mp3',d4:'d4_.mp3',g4:'g4_.mp3',a4:'a4_.mp3'}],
-					['flute/',0,stdli(4)],
+				['flute/',0,stdli(4,6)],
 				['quena/',0,stdli(4)],
 				['guitar/',-1,stdli(3)],
 				['ukulele/',-1,stdli(3)],
