@@ -134,8 +134,8 @@
 			</div>
 			<hr>
 			<div class="revW">
-				<input type="range" id="slrvw" value="0" min="0" max="1" step="0.01" onchange="reverb.wet.value=this.value;save();">
-				<input type="range" id="slrvd" value="0" min="0" max="6" step="0.06" onchange="reverb.decay=Math.pow(2,this.value);save();">
+				<input type="range" id="slrvw" value="0" min="0" max="1" step="0.01">
+				<input type="range" id="slrvd" value="0" min="0" max="6" step="0.06">
 			</div>
 			<hr>
 			<div id="cfgbtn" class="grid button" style="--bp:-200% -100%;">
@@ -148,12 +148,12 @@
 		<script src="https://cdn.jsdelivr.net/npm/tone/build/Tone.js"></script>
 		<script>
 			'use strict';
-			let synth,synth_,kbmode=0,sc=0,env=[[],{l:3,c:0}],recorder;
+			let synth,synth_,kbmode=0,sc=0,env={dat:[],c:0},recorder;
 			alert=x=>{albox.textContent=x;alcb.checked=true;};
 			const reverb=new Tone.Reverb({wet:0,decay:0}).toDestination(),
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'https://mcbeeringi.github.io/sky/audio/'}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
-			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104192\nMIT License',
+			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104193\nMIT License',
 			instr_li=[//[baseurl, octave, map, (map2)]
 				['musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
 				['harp/',-1,stdli(3)],
@@ -188,14 +188,15 @@
 				KeyR:'0_0',KeyT:'0_1',KeyY:'0_2',KeyU:'0_3',
 				KeyF:'1_0',KeyG:'1_1',KeyH:'1_2',KeyJ:'1_3'
 			}],
-			save=()=>{localStorage.instr_sc=sc;localStorage.instr_instr=menu.instr.value;localStorage.instr_reverb=`${slrvw.value},${slrvd.value}`;localStorage.instr_env=env[1].c;console.log('saved');},
+			save=()=>{localStorage.instr_stat=JSON.stringify({sc,instr:menu.instr.value,reverb:[slrvw.value,slrvd.value],env:env.c});console.log('saved');},
 			load=()=>{
-				let c=[localStorage.instr_sc,localStorage.instr_instr,localStorage.instr_reverb,localStorage.instr_env];
+				let c=localStorage.instr_stat
 				if(c){
-					if(c[0])sc=parseInt(c[0]);
-					if(c[1])try{menu.instr[parseInt(c[1])].checked=true;}catch(e){console.log(e);}
-					if(c[2])try{[slrvw.value,slrvd.value]=c[2].split(',');[reverb.wet.value,reverb.decay]=[slrvw.value,Math.pow(2,slrvd.value)];}catch(e){console.log(e);}
-					if(c[3])try{env[1].c=Number(c[3]);}catch(e){console.log(e);}
+					c=JSON.parse(c);
+					sc=c.sc;
+					menu.instr[c.instr].checked=true;
+					[slrvw.value,slrvd.value]=c.reverb;[slrvw,slrvd].forEach(x=>x.onchange());
+					env.c=c.env;
 					console.log('loaded');
 				}
 			},
@@ -253,16 +254,18 @@
 				}
 			},
 			envset=()=>{
-				env[0].forEach(y=>{if(y)y.stop();});
-				if(env[1].c<=env[1].l){
-					if(env[0][env[1].c])env[0][env[1].c].start();
+				env.dat.forEach(y=>{if(y)y.stop();});
+				if(-1<env.c){
+					if(env.dat[env.c])env.dat[env.c].start();
 					else{
-						env[0][env[1].c]=new Tone.Player({url:`https://mcbeeringi.github.io/sky/audio/env${env[1].c}.mp3`,volume:-8,autostart:true,loop:true,fadeIn:5,fadeOut:2}).toDestination();
-						if(recorder)env[0][env[1].c].connect(recorder);
+						env.dat[env.c]=new Tone.Player({url:`https://mcbeeringi.github.io/sky/audio/env${env.c}.mp3`,volume:-8,autostart:true,loop:true,fadeIn:5,fadeOut:2}).toDestination();
+						if(recorder)env.dat[env.c].connect(recorder);
 					}
 				}
 			};
 
+			slrvw.onchange=()=>{reverb.wet.value=slrvw.value;save();}
+			slrvd.onchange=()=>{reverb.decay=Math.pow(2,slrvd.value);save();}
 			try{recorder=new Tone.Recorder();reverb.connect(recorder);}catch(e){console.log(e);recbtn.style.filter='grayscale(1)opacity(.5)';recbtn.style.pointerEvents='none';}
 			load();set();scale();envset();
 			document.querySelectorAll('.kb>div>div').forEach(key=>{
@@ -288,12 +291,18 @@
 			};
 			cfgbtn.onclick=()=>{
 				alert('');
-				albox.insertAdjacentHTML('beforeend',`<div id="envbtn" class="grid button" style="--bp:-0% -100%;"></div>`);
-				envbtn.onclick=()=>{
-					if(env[1].l<env[1].c)env[1].c=0;else env[1].c++;
-					alert('ambient sound\n\n\t>>'+['hotspring','home','forest','vault','🔇'][env[1].c]);
-					envset();save();
-				};
+				albox.insertAdjacentHTML('beforeend',`
+<label>ambient sound: <select id="envsel">
+	<option value="-1">none</option>
+	<option value="0">hotspring</option>
+	<option value="1">home</option>
+	<option value="2">forest</option>
+	<option value="3">vault</option>
+</select>
+</label>
+				`);
+				envsel.value=env.c;
+				envsel.onchange=()=>{env.c=Number(envsel.value);envset();save();};
 			};
 
 			const fsc=()=>{
