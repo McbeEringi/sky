@@ -38,7 +38,7 @@ instr_li=[
 	['horn',-1,stdli(3)],
 	['piano',0,stdli(1,7,{'a0':'a0.mp3'})],
 	['flute',0,stdli(4,6)],
-	['quena',0,stdli(4)],
+	['quena',0,stdli(4,6)],
 	['guitar',-1,stdli(3)],
 	['ukulele',-1,stdli(3)],
 	['piano',1,stdli(1,7,{'a0':'a0.mp3'})],
