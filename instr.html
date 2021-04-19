@@ -140,7 +140,7 @@
 			<hr>
 			<div id="cfgbtn" class="grid button" style="--bp:-0% -100%;">
 			</div><div id="recbtn" class="grid button" style="--bp:-100% -100%;">
-			</div><div class="grid button" style="--bp:-300% -0%;" onclick="alert(info);"></div>
+			</div><div class="grid button" style="--bp:-300% -0%;" onclick="alert(texts.info);"></div>
 		</div>
 		<label for="menucb"><div id="mico"></div></label>
 
@@ -153,7 +153,14 @@
 			const reverb=new Tone.Reverb({wet:0,decay:0}).toDestination(),
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'https://mcbeeringi.github.io/sky/audio/'}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
-			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104193\nMIT License',
+			texts=Object.assign({
+				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104200\nMIT License',
+				amb:'amibent sound',none:'none',ambli:['hotspring','home','forest','vault']
+			},{
+				ja:{
+					amb:'環境音',none:'なし',ambli:['温泉','ホーム','雨林','書庫']
+				}
+			}[window.navigator.language.slice(0,2)]),
 			instr_li=[//[baseurl, octave, map, (map2)]
 				['musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
 				['harp/',-1,stdli(3)],
@@ -292,12 +299,12 @@
 			cfgbtn.onclick=()=>{
 				alert('');
 				albox.insertAdjacentHTML('beforeend',`
-<label>ambient sound: <select id="envsel">
-	<option value="-1">none</option>
-	<option value="0">hotspring</option>
-	<option value="1">home</option>
-	<option value="2">forest</option>
-	<option value="3">vault</option>
+<label>${texts.amb}: <select id="envsel">
+	<option value="-1">${texts.none}</option>
+	<option value="0">${texts.ambli[0]}</option>
+	<option value="1">${texts.ambli[1]}</option>
+	<option value="2">${texts.ambli[2]}</option>
+	<option value="3">${texts.ambli[3]}</option>
 </select>
 </label>
 				`);
