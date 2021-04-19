@@ -40,7 +40,7 @@ instr_li=[
 	['flute',0,stdli(4,6)],
 	['quena',0,stdli(4,6)],
 	['guitar',-1,stdli(3)],
-	['ukulele',-1,stdli(3)],
+	['ukulele',-1,stdli(3,5)],
 	['piano',1,stdli(1,7,{'a0':'a0.mp3'})],
 	['glock',1,stdli(5)],
 	['pipa',-1,stdli(3)]
