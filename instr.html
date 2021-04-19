@@ -41,10 +41,10 @@
 				background-position:bottom left,top left,top right,bottom right;background-size:50% 50%;background-repeat:no-repeat;
 			}
 			input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;height:16.8px;width:16.8px;background:#aef;box-shadow:0 0 8px #aef,0 0 4px #0008 inset;transform:rotateZ(45deg);border-radius:0;}/*input[type=range]::-moz-range-thumb*/
-			#alcb{display:none;}
-			#alcb+label{display:block;width:100%;height:100%;background:#0008;opacity:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);pointer-events:none;transition:.2s;}
-			#alcb:checked+label{opacity:1;pointer-events:auto;}
-			#albox{width:calc(90% - 40px);max-width:256px;min-height:128px;border-radius:16px;padding:20px;margin:0;box-sizing:border-box;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
+			#alcb{display:none;}#alcb+label,#albox{opacity:0;pointer-events:none;transition:opacity .2s;}
+			#alcb+label{display:block;width:100%;height:100%;background:#0008;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+			#albox{width:calc(100% - 80px);max-width:256px;min-height:128px;max-height:calc(100% - 64px);border-radius:16px;margin:0;padding:20px;box-sizing:border-box;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);overflow-x:hidden;overflow-y:scroll;text-align:center;}
+			#alcb:checked~*{opacity:1;pointer-events:auto;}
 
 
 			@keyframes bob{0%{transform:scale(.95);}100%{transform:scale(.9);}}
@@ -73,14 +73,14 @@
 			#menucb:checked+*+div{right:0;opacity:1;}
 			@media(max-width:512px){#menucb+*+*+label{top:unset;bottom:2px;}#menucb+label{pointer-events:unset;}.menu{padding:0 7px 48px;}}
 
-			.menu input[type=radio]{display:none;}.menu label,.menu .grid{display:inline-block;vertical-align:top;position:relative;}
-			.menu input[type=radio]+div,.menu .grid{width:70px;height:70px;margin:7px;background:#2228;border-radius:16px;box-shadow:0 0 8px #2228;}
-			.menu input[type=radio]+div::before,.menu .grid::before{position:absolute;content:"";display:block;width:70px;height:70px;background-image:url(img/tex.webp);background-size:800%;background-position:var(--bp);}
-			.nowebp .menu input[type=radio]+div::before,.nowebp .menu .grid::before{background-image:url(img/tex.png);}
+			.menu input[type=radio]{display:none;}.menu label,.grid{display:inline-block;vertical-align:top;position:relative;}
+			.menu input[type=radio]+div,.grid{width:70px;height:70px;margin:7px;background:#2228;border-radius:16px;box-shadow:0 0 8px #2228;}
+			.menu input[type=radio]+div::before,.grid::before{position:absolute;content:"";display:block;width:70px;height:70px;background-image:url(img/tex.webp);background-size:800%;background-position:var(--bp);}
+			.nowebp .menu input[type=radio]+div::before,.nowebp .grid::before{background-image:url(img/tex.png);}
 			.menu input[type=radio]:disabled+div{opacity:.5;}
-			.menu input[type=radio]:checked+div,.menu .grid.recording{box-shadow:0 0 0 2px #fea inset,0 0 8px #fea4;}
+			.menu input[type=radio]:checked+div,.grid.recording{box-shadow:0 0 0 2px #fea inset,0 0 8px #fea4;}
 			.menu input[type=radio]:checked+div::before{animation:flip .4s ease-in-out;}
-			.menu .grid{touch-action:none;}.menu .grid.button:active::before{transform:scale(.8);}.menu .grid.button:not(:active)::before{transition:.2s;}
+			.grid{touch-action:none;}.grid.button:active::before{transform:scale(.8);}.grid.button:not(:active)::before{transition:.2s;}
 			.revW{position:relative;}.revW::before{content:"";position:absolute;width:48px;height:48px;top:50%;left:50%;transform:translate(-50%,-50%);background:-700% -0%/800% url(img/tex.webp);opacity:.7;pointer-events:none;}
 			.nowebp .revW::before{background-image:url(img/tex.png);}
 
@@ -93,7 +93,7 @@
 		</div>
 		<div class="fg_">
 			<pre id="jswarn">Please enable JavaScript to use this app.</pre><script>jswarn.style.display='none';</script>
-			<input type="checkbox" id="alcb"><label for="alcb"><pre id="albox" class="style"></pre></label>
+			<input type="checkbox" id="alcb"><label for="alcb"></label><pre id="albox" class="style"></pre>
 		</div>
 		<div id="kb" class="kb">
 			<div><div id="_-9" class="c"></div><div id="_-7"></div><div id="_-5"></div><div id="_-4"></div><div id="_-2"></div></div>
@@ -138,7 +138,7 @@
 				<input type="range" id="slrvd" value="0" min="0" max="6" step="0.06" onchange="reverb.decay=Math.pow(2,this.value);save();">
 			</div>
 			<hr>
-			<div id="envbtn" class="grid button" style="--bp:-0% -100%;">
+			<div id="cfgbtn" class="grid button" style="--bp:-200% -100%;">
 			</div><div id="recbtn" class="grid button" style="--bp:-100% -100%;">
 			</div><div class="grid button" style="--bp:-300% -0%;" onclick="alert(info);"></div>
 		</div>
@@ -153,7 +153,7 @@
 			const reverb=new Tone.Reverb({wet:0,decay:0}).toDestination(),
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'https://mcbeeringi.github.io/sky/audio/'}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
-			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104191\nMIT License',
+			info='Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104192\nMIT License',
 			instr_li=[//[baseurl, octave, map, (map2)]
 				['musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
 				['harp/',-1,stdli(3)],
@@ -278,11 +278,6 @@
 			})
 			document.addEventListener('keydown',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchstart'));});
 			document.addEventListener('keyup',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchend'));});
-			envbtn.onclick=()=>{
-				if(env[1].l<env[1].c)env[1].c=0;else env[1].c++;
-				alert('ambient sound\n\n\t>>'+['hotspring','home','forest','vault','🔇'][env[1].c]);
-				envset();save();
-			};
 			recbtn.onclick=e=>{
 				if(e.target.classList.toggle('recording'))recorder.start();
 				else(async()=>{
@@ -290,6 +285,15 @@
 					e.download=`sky_instr ${new Date().toLocaleString()}.${/\/mp/.test(recorder.mimeType)?'m4a':'webm'}`;e.href=URL.createObjectURL(recording);
 					e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,3000,e.href);
 				})();
+			};
+			cfgbtn.onclick=()=>{
+				alert('');
+				albox.insertAdjacentHTML('beforeend',`<div id="envbtn" class="grid button" style="--bp:-0% -100%;"></div>`);
+				envbtn.onclick=()=>{
+					if(env[1].l<env[1].c)env[1].c=0;else env[1].c++;
+					alert('ambient sound\n\n\t>>'+['hotspring','home','forest','vault','🔇'][env[1].c]);
+					envset();save();
+				};
 			};
 
 			const fsc=()=>{
