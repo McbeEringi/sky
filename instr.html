@@ -67,7 +67,7 @@
 			#menucb:checked+*+*+label{transform:rotateY(180deg);}
 			#menucb+*+*+label::before,#mico{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:0 0/800% url(img/tex.webp);transition:.4s;}
 			.nowebp #menucb+*+*+label::before,.nowebp #mico{background-image:url(img/tex.png);}
-			#menucb+*+*+label::before{opacity:0;background-position:-400% 0;}#mico{background-position:0 -100%;}
+			#menucb+*+*+label::before{opacity:0;background-position:-400% 0;}#mico{background-position:0 -200%;}
 			#menucb:checked+*+*+label::before{opacity:1;}#menucb:checked+*+*+label>#mico{opacity:0;}
 			.menu{position:fixed;top:0;right:-266px;width:252px;height:calc(100% - 48px);padding:48px 7px 0;background:#4448;opacity:0;box-shadow:0 0 8px #4448;transition:.2s;overflow-y:scroll;}
 			#menucb:checked+*+div{right:0;opacity:1;}
@@ -155,7 +155,7 @@
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			texts=Object.assign({
 				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104200\nMIT License',
-				amb:'amibent sound',none:'none',ambli:['hotspring','home','forest','vault']
+				amb:'ambient',none:'none',ambli:['hotspring','home','forest','vault']
 			},{
 				ja:{
 					amb:'環境音',none:'なし',ambli:['温泉','ホーム','雨林','書庫']
@@ -260,16 +260,16 @@
 					}
 				}
 			},
-			envset=()=>{
+			envset=()=>new Promise((res,rej)=>{
 				env.dat.forEach(y=>{if(y)y.stop();});
 				if(-1<env.c){
-					if(env.dat[env.c])env.dat[env.c].start();
+					if(env.dat[env.c]){env.dat[env.c].start();res();}
 					else{
-						env.dat[env.c]=new Tone.Player({url:`https://mcbeeringi.github.io/sky/audio/env${env.c}.mp3`,volume:-8,autostart:true,loop:true,fadeIn:5,fadeOut:2}).toDestination();
+						env.dat[env.c]=new Tone.Player({url:`https://mcbeeringi.github.io/sky/audio/env${env.c}.mp3`,volume:-8,autostart:true,loop:true,fadeIn:5,fadeOut:2,onload:res,onerror:rej}).toDestination();
 						if(recorder)env.dat[env.c].connect(recorder);
 					}
-				}
-			};
+				}else res();
+			});
 
 			slrvw.onchange=()=>{reverb.wet.value=slrvw.value;save();}
 			slrvd.onchange=()=>{reverb.decay=Math.pow(2,slrvd.value);save();}
@@ -305,11 +305,11 @@
 	<option value="1">${texts.ambli[1]}</option>
 	<option value="2">${texts.ambli[2]}</option>
 	<option value="3">${texts.ambli[3]}</option>
-</select>
+</select><span id="envstat">⏳</span>
 </label>
 				`);
-				envsel.value=env.c;
-				envsel.onchange=()=>{env.c=Number(envsel.value);envset();save();};
+				envsel.value=env.c;envstat.style.opacity=0;
+				envsel.onchange=()=>{env.c=Number(envsel.value);envstat.style.opacity=1;envset().then(()=>{envstat.style.opacity=0;});save();};
 			};
 
 			const fsc=()=>{
