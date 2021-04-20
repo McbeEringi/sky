@@ -519,7 +519,7 @@ if(!localStorage.seq_undoMax){
 	});
 }
 log.textContent=texts.info;
-if(from_url=Boolean(main=urlfx.l()))idb.result.transaction('seq','readwrite').objectStore('seq').add(main);
+from_url=Boolean(main=urlfx.l())
 if(!from_url&&localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
 try{recorder=new Tone.Recorder();}catch(e){console.log(e);recbtn.disabled=true;}
 setInterval(ezsave,60000);
