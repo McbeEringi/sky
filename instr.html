@@ -43,9 +43,9 @@
 			input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;height:16.8px;width:16.8px;background:#aef;box-shadow:0 0 8px #aef,0 0 4px #0008 inset;transform:rotateZ(45deg);border-radius:0;}/*input[type=range]::-moz-range-thumb*/
 			#alcb{display:none;}#alcb+label,#albox{opacity:0;pointer-events:none;transition:opacity .2s;}
 			#alcb+label{display:block;width:100%;height:100%;background:#0008;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
-			#albox{width:calc(100% - 80px);max-width:256px;min-height:128px;max-height:calc(100% - 64px);border-radius:16px;margin:0;padding:20px;box-sizing:border-box;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);overflow-x:hidden;overflow-y:scroll;text-align:center;}
+			#albox{width:calc(100% - 80px);max-width:360px;min-height:128px;max-height:calc(100% - 64px);border-radius:16px;margin:0;padding:20px;box-sizing:border-box;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);overflow-x:hidden;overflow-y:scroll;text-align:center;}
 			#alcb:checked~*{opacity:1;pointer-events:auto;}
-			#albox input{box-sizing:border-box;color:#aef;background:#0004;padding:8px;border-radius:4px;border:none;display:block;width:100%;text-align:center;font-size:medium;}
+			#albox input{box-sizing:border-box;color:#aef;background:#0004;padding:8px;border-radius:4px;border:none;display:inline-block;width:100%;text-align:center;font-size:medium;margin:0;}
 
 
 			@keyframes bob{0%{transform:scale(.95);}100%{transform:scale(.9);}}
@@ -81,14 +81,14 @@
 			.menu input[type=radio]:disabled+div{opacity:.5;}
 			.menu input[type=radio]:checked+div,.grid.active{box-shadow:0 0 0 2px #fea inset,0 0 8px #fea4;}
 			.menu input[type=radio]:checked+div::before{animation:flip .4s ease-in-out;}
-			.grid{touch-action:none;}.grid.button:active{transform:scale(.8);}.grid.button:not(:active){transition:.2s;}
+			.grid{touch-action:none;}.grid.button:active::before{transform:scale(.8);}.grid.button:not(:active)::before{transition:.2s;}
 			.revW{position:relative;}.revW::before{content:"";position:absolute;width:48px;height:48px;top:50%;left:50%;transform:translate(-50%,-50%);background:-700% -0%/800% url(img/tex.webp);opacity:.7;pointer-events:none;}
 			.nowebp .revW::before{background-image:url(img/tex.png);}
 
 			#scd,#scd_{transition:.2s}
 			#scd_{position:absolute;top:0;left:0;width:100%;height:100%;filter:drop-shadow(0 0 2px #aef);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 6l1 1l-1 1l-1 -1l1 -1%0A' fill='%23caf0f6'/%3E%3C/svg%3E");}
 
-			.cisel{width:100%;border-radius:8px;background-color:#0008;padding:4px;box-sizing:border-box;margin:4px 0;display:flex;justify-content:space-between;align-items:center;}
+			.cisel{width:100%;border-radius:4px;background-color:#0004;padding:2px;box-sizing:border-box;margin:4px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
 			.cisel .name{min-height:32px;white-space:pre-wrap;word-break:break-word;font-size:large;flex-grow:1;}
 			.cisel .grid{width:32px;height:32px;flex-shrink:0;--bp:0 -100%;margin:0;background-color:#0000;}
 			.nowebp .cisel .grid{background-image:url(img/tex.png);}
@@ -160,7 +160,7 @@
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			texts=Object.assign({
-				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104210\nMIT License',
+				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104211\nMIT License',
 				amb:'ambient sound',none:'none',ambli:['hotspring','home','forest','vault']
 			},{
 				ja:{
@@ -287,7 +287,7 @@
 						if(tmp){
 							cinstr=tmp.name;
 							tmp.dat.forEach(x=>s[x[0]]=URL.createObjectURL(x[1]));
-							instr_li[0]=['',tmp.oct,s];
+							instr_li[0]=['',tmp.oct||0,s];
 						}else instr_li[0]=mbox;
 					},
 					onerror:console.log
@@ -297,9 +297,28 @@
 			cicfg=x=>{
 				alert('');
 				albox.insertAdjacentHTML('beforeend',
-`<input class="style" placeholder="name"><div style="display:flex;">
-<input style="margin-right:2px;"><input type="file" style="margin-left:2px;">
-</div>`);
+`<style>
+	#albox .row{display:flex;}#albox .row input[placeholder]{width:4em;flex-shrink:0;}#albox .row input[type]{font-size:small;margin:0 2px;}
+	#albox .row div{--bp:-400% 0;width:36px;height:36px;margin:0;flex-shrink:0;border-radius:4px;}
+</style><input class="style" placeholder="name" style="max-width:10em;" value="${x||''}"><hr><div id="cie"></div>`);
+				const row=(n,f)=>{
+					cie.insertAdjacentHTML('beforeend',`<div class="row"><input placeholder="note" class="style" value="${n||''}"><input type="file" class="style"><div class="grid button" onclick="cie.removeChild(this.parentNode);"></div></div>`);
+					if(f)cie.querySelector('#cie>.row:last-of-type>input[type="file"]').value=f;
+				},
+				post=()=>{
+					// TODO: save process
+					cfgbtn.onclick();
+				};
+				row();
+				albox.insertAdjacentHTML('beforeend',`<div class="cisel" style="display:block;"><div class="grid" style="--bp:-500% 0;width:32px;height:32px;margin:0;"></div></div><hr><div class="grid button" style="--bp:-200% -100%;width:48px;height:48px;"></div>`);
+				albox.querySelector('#albox>.cisel').onclick=()=>row();albox.querySelector('#albox>.button:last-of-type').onclick=post;
+				if(x)
+					Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').get(x),{
+						onsuccess:e=>{
+							let tmp=e.target.result;
+						},
+						onerror:console.log
+					});
 			};
 
 			slrvw.onchange=()=>{reverb.wet.value=slrvw.value;save();}
@@ -340,7 +359,7 @@
 </label>`);
 				envsel.value=env.c;
 				envsel.onchange=()=>{env.c=Number(envsel.value);envstat.style.opacity=.5;envset().then(()=>envstat.style.opacity='');save();};
-				if(location.hash=='#beta')
+				if(location.hash=='#beta'||!location.protocol.includes('http'))
 				Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').getAllKeys(),{
 					onsuccess:e=>{
 						albox.insertAdjacentHTML('beforeend','<hr>custom instrments');
@@ -360,11 +379,7 @@
 							if(x)wrap.appendChild(edit);
 							albox.appendChild(wrap);
 						});
-						let plus=document.createElement('div');
-						plus.classList.add('grid','button');
-						plus.setAttribute('style','--bp:-500% 0;width:36px;height:36px;margin:0;');
-						plus.onclick=()=>cicfg();
-						albox.appendChild(plus);
+						albox.insertAdjacentHTML('beforeend',`<div class="cisel" onclick="cicfg();" style="display:block;"><div class="grid" style="--bp:-500% 0;width:32px;height:32px;margin:0;"></div></div>`)
 					},
 					onerror:console.log
 				});
