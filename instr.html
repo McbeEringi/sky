@@ -45,6 +45,7 @@
 			#alcb+label{display:block;width:100%;height:100%;background:#0008;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 			#albox{width:calc(100% - 80px);max-width:256px;min-height:128px;max-height:calc(100% - 64px);border-radius:16px;margin:0;padding:20px;box-sizing:border-box;white-space:pre-wrap;background:#4448;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);overflow-x:hidden;overflow-y:scroll;text-align:center;}
 			#alcb:checked~*{opacity:1;pointer-events:auto;}
+			#albox input{box-sizing:border-box;color:#aef;background:#0004;padding:8px;border-radius:4px;border:none;display:block;width:100%;text-align:center;font-size:medium;}
 
 
 			@keyframes bob{0%{transform:scale(.95);}100%{transform:scale(.9);}}
@@ -156,7 +157,7 @@
 			let synth,synth_,kbmode=0,sc=0,env={dat:[],c:0},recorder,cinstr='';
 			alert=x=>{albox.textContent=x;alcb.checked=true;};
 			const reverb=new Tone.Reverb({wet:0,decay:0}).toDestination(),
-			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'https://mcbeeringi.github.io/sky/audio/'}).toDestination(),
+			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			texts=Object.assign({
 				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104210\nMIT License',
@@ -272,7 +273,7 @@
 				if(-1<env.c){
 					if(env.dat[env.c]){env.dat[env.c].start();res();}
 					else{
-						env.dat[env.c]=new Tone.Player({url:`https://mcbeeringi.github.io/sky/audio/env${env.c}.mp3`,volume:-8,autostart:true,loop:true,fadeIn:5,fadeOut:2,onload:res,onerror:rej}).toDestination();
+						env.dat[env.c]=new Tone.Player({url:`audio/env${env.c}.mp3`,volume:-8,autostart:true,loop:true,fadeIn:5,fadeOut:2,onload:res,onerror:rej}).toDestination();
 						if(recorder)env.dat[env.c].connect(recorder);
 					}
 				}else res();
@@ -294,7 +295,11 @@
 				if(menu.instr.value==0)setSynth();
 			},
 			cicfg=x=>{
-				alert(x);
+				alert('');
+				albox.insertAdjacentHTML('beforeend',
+`<input class="style" placeholder="name"><div style="display:flex;">
+<input style="margin-right:2px;"><input type="file" style="margin-left:2px;">
+</div>`);
 			};
 
 			slrvw.onchange=()=>{reverb.wet.value=slrvw.value;save();}
@@ -358,6 +363,7 @@
 						let plus=document.createElement('div');
 						plus.classList.add('grid','button');
 						plus.setAttribute('style','--bp:-500% 0;width:36px;height:36px;margin:0;');
+						plus.onclick=()=>cicfg();
 						albox.appendChild(plus);
 					},
 					onerror:console.log
