@@ -320,7 +320,7 @@
 </label>`);
 				envsel.value=env.c;
 				envsel.onchange=()=>{env.c=Number(envsel.value);envstat.style.opacity=.5;envset().then(()=>envstat.style.opacity='');save();};
-				/*Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').getAllKeys(),{
+				if(location.hash=='#beta')Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').getAllKeys(),{
 					onsuccess:e=>{
 						albox.insertAdjacentHTML('beforeend','<hr>custom instrments');
 						let tmp=e.target.result;
@@ -347,7 +347,7 @@
 						albox.appendChild(plus);
 					},
 					onerror:console.log
-				});*/
+				});
 			};
 
 			const fsc=()=>{
