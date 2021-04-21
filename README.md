@@ -3,12 +3,13 @@
 PWA, Offline support  
 [page link](https://mcbeeringi.github.io/sky)  
 
-<img src="img/sky.svg" width="256px"/><br>
+![img](img/teaser.png)  
 - sky_instrments
 	- various instrments
 	- custom
 		- key
 		- reverb effect
+		- instrments (coming soon)
 	- ambient sounds
 	- inpage recording
 
