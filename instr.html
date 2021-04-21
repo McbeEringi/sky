@@ -166,25 +166,25 @@
 					amb:'環境音',none:'なし',ambli:['温泉','ホーム','雨林','書庫']
 				}
 			}[window.navigator.language.slice(0,2)]),
-			mbox=['musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
+			mbox=['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
 			instr_li=[//[baseurl, octave, map, (map2)]
 				mbox,
-				['harp/',-1,stdli(3)],
-				['percussion/',-1,{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],
-				['contrabass/',-2,stdli(2)],
-				['horn/',-1,stdli(3)],
-					['piano/',0,stdli(4)],
-					['',1,{'d#5':'musicbox/ds5.mp3',a5:'musicbox/a5.mp3'},{'d#5':'glock/ds5.mp3',a5:'glock/a5.mp3'}],
-					['bell2/',1,{c4:'c4.mp3',d4:'d4.mp3',g4:'g4.mp3',a4:'a4.mp3'},{c4:'c4_.mp3',d4:'d4_.mp3',g4:'g4_.mp3',a4:'a4_.mp3'}],
-				['flute/',0,stdli(4,6)],//210419
-				['quena/',0,stdli(4,6)],//210419
-				['guitar/',-1,stdli(3)],
-				['ukulele/',-1,stdli(3,5)],//210419
-					['piano/',1,stdli(5)],
-					['glock/',1,stdli(5)],
-				['handpan/',-1,stdli(3)],
-				['dundun/',-1,{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],
-					['pipa/',-1,stdli(3)]
+				['audio/instr/harp/',-1,stdli(3)],
+				['audio/instr/percussion/',-1,{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],
+				['audio/instr/contrabass/',-2,stdli(2)],
+				['audio/instr/horn/',-1,stdli(3)],
+					['audio/piano/',0,stdli(4)],
+					['',1,{'d#5':'audio/instr/musicbox/ds5.mp3',a5:'audio/instr/musicbox/a5.mp3'},{'d#5':'audio/instr/glock/ds5.mp3',a5:'audio/instr/glock/a5.mp3'}],
+					['audio/instr/bell2/',1,{c4:'c4.mp3',d4:'d4.mp3',g4:'g4.mp3',a4:'a4.mp3'},{c4:'c4_.mp3',d4:'d4_.mp3',g4:'g4_.mp3',a4:'a4_.mp3'}],
+				['audio/instr/flute/',0,stdli(4,6)],//210419
+				['audio/instr/quena/',0,stdli(4,6)],//210419
+				['audio/instr/guitar/',-1,stdli(3)],
+				['audio/instr/ukulele/',-1,stdli(3,5)],//210419
+					['audio/instr/piano/',1,stdli(5)],
+					['audio/instr/glock/',1,stdli(5)],
+				['audio/instr/handpan/',-1,stdli(3)],
+				['audio/instr/dundun/',-1,{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],
+					['audio/instr/pipa/',-1,stdli(3)]
 			],
 			pmap={
 				2:[[0,1,2,3],[12,13,14,15]],
@@ -218,7 +218,7 @@
 				synth=new Tone.Sampler(instr_li[menu.instr.value][2],()=>{
 					 kb.style.opacity='1'; kb.style.pointerEvents='auto';
 					pkb.style.opacity='1';pkb.style.pointerEvents='auto';
-				},'https://mcbeeringi.github.io/sky/audio/instr/'+instr_li[menu.instr.value][0]).connect(reverb);
+				},instr_li[menu.instr.value][0]).connect(reverb);
 			},
 			set=()=>{
 				kb.style.opacity='.2';kb.style.pointerEvents='none';pkb.style.opacity='.2';pkb.style.pointerEvents='none';
@@ -233,7 +233,7 @@
 						synth_=synth;
 						break;
 					case '6':case '7':
-						synth_=new Tone.Sampler(instr_li[menu.instr.value][3],()=>{},'https://mcbeeringi.github.io/sky/audio/instr/'+instr_li[menu.instr.value][0]).connect(reverb);
+						synth_=new Tone.Sampler(instr_li[menu.instr.value][3],()=>{},instr_li[menu.instr.value][0]).connect(reverb);
 						break;
 					case '14':synth_=synth;break;
 					default:kbmode=0;synth_=null;pkb.style.display='none';kb.style.display='';
@@ -277,15 +277,30 @@
 					}
 				}else res();
 			}),
-			cinstrset=()=>{
-				//idb.result.transaction('seq','readwrite').objectStore('seq').get(cinstr);
-				instr_li[0]=mbox;
+			ciset=()=>{
+				if(!instr_li[0][0])instr_li[0][2].keys().forEach(x=>URL.revokeObjectURL(instr_li[0][2][x]));
+				Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').get(cinstr),{
+					onsuccess:e=>{
+						let tmp=e.target.result,s={};//{name:'',oct:0,dat[['key':File]]}
+						console.log(tmp);
+						if(tmp){
+							cinstr=tmp.name;
+							tmp.dat.forEach(x=>s[x[0]]=URL.createObjectURL(x[1]));
+							instr_li[0]=['',tmp.oct,s];
+						}else instr_li[0]=mbox;
+					},
+					onerror:console.log
+				});
+				if(menu.instr.value==0)setSynth();
+			},
+			cicfg=x=>{
+				alert(x);
 			};
 
 			slrvw.onchange=()=>{reverb.wet.value=slrvw.value;save();}
 			slrvd.onchange=()=>{reverb.decay=Math.pow(2,slrvd.value);save();}
 			try{recorder=new Tone.Recorder();reverb.connect(recorder);}catch(e){console.log(e);recbtn.style.filter='grayscale(1)opacity(.5)';recbtn.style.pointerEvents='none';}
-			load();set();scale();envset();window.addEventListener('idbready',cinstrset,{once:true});
+			load();set();scale();envset();window.addEventListener('idbready',ciset,{once:true});
 			document.querySelectorAll('.kb>div>div').forEach(key=>{
 				key.appendChild(document.createElement('div'));
 				//sound & anm
@@ -320,12 +335,11 @@
 </label>`);
 				envsel.value=env.c;
 				envsel.onchange=()=>{env.c=Number(envsel.value);envstat.style.opacity=.5;envset().then(()=>envstat.style.opacity='');save();};
-				if(location.hash=='#beta')Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').getAllKeys(),{
+				if(location.hash=='#beta')
+				Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').getAllKeys(),{
 					onsuccess:e=>{
 						albox.insertAdjacentHTML('beforeend','<hr>custom instrments');
-						let tmp=e.target.result;
-						console.log(tmp);
-						tmp.push('');
+						let tmp=e.target.result;tmp.push('');
 						tmp.forEach((x,i)=>{
 							let wrap=document.createElement('div'),
 								name=document.createElement('div'),
@@ -333,10 +347,10 @@
 							wrap.classList.add('cisel');
 							name.classList.add('name');
 							edit.classList.add('grid','button');
-							name.onclick=()=>{
-
-							};
+							name.onclick=()=>{cinstr=x;ciset();cfgbtn.onclick();};
+							edit.onclick=()=>cicfg(x);
 							name.textContent=x||'default';
+							if(cinstr==x)wrap.style.backgroundColor='#fea8';
 							wrap.appendChild(name);
 							if(x)wrap.appendChild(edit);
 							albox.appendChild(wrap);
