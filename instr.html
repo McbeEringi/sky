@@ -90,10 +90,10 @@
 
 			.cisel{width:100%;border-radius:4px;background-color:#0004;padding:2px;box-sizing:border-box;margin:4px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
 			.cisel .name{min-height:32px;white-space:pre-wrap;word-break:break-word;font-size:large;flex-grow:1;}
-			.cisel .grid{width:32px;height:32px;flex-shrink:0;--bp:0 -100%;margin:0;background-color:none;box-shadow:none;}
+			.cisel .grid{width:32px;height:32px;flex-shrink:0;--bp:0 -100%;margin:0;background-color:unset;box-shadow:none;}
 			.nowebp .cisel .grid{background-image:url(img/tex.png);}
-			#albox .row{display:flex;}#albox .row>*{height:36px;}#albox .row input[placeholder]{width:4em;flex-shrink:0;}#albox .row input[type]{font-size:small;margin:0 2px;}
-			#albox .row .grid{--bp:-400% 0;width:36px;margin:0;flex-shrink:0;border-radius:4px;background-color:none;box-shadow:none;}
+			#albox .row{display:flex;margin:4px 0;}#albox .row>*{height:36px;}#albox .row input[placeholder]{width:4em;flex-shrink:0;}#albox .row input[type]{font-size:small;margin:0 2px;}
+			#albox .row .grid{--bp:-400% 0;width:36px;margin:0;flex-shrink:0;border-radius:4px;background-color:#0004;box-shadow:none;}
 		</style>
 		<div class="bg_">
 			<!--<video muted autoplay loop playsinline src="img/hotsprv.mp4" type="video/mp4" id="bgv"></video>-->
@@ -162,7 +162,7 @@
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			texts=Object.assign({
-				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104212\nMIT License',
+				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104221\nMIT License',
 				amb:'ambient sound',none:'none',ambli:['hotspring','home','forest','vault']
 			},{
 				ja:{
@@ -281,42 +281,50 @@
 				}else res();
 			}),
 			ciset=()=>{
-				if(!instr_li[0][0])instr_li[0][2].keys().forEach(x=>URL.revokeObjectURL(instr_li[0][2][x]));
+				if(!instr_li[0][0])Object.keys(instr_li[0][2]).forEach(x=>setTimeout(()=>URL.revokeObjectURL(instr_li[0][2][x]),0));
 				Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').get(cinstr),{
 					onsuccess:e=>{
 						let tmp=e.target.result,s={};//{name:'',oct:0,dat[['key':File]]}
 						console.log(tmp);
 						if(tmp){
 							cinstr=tmp.name;
-							tmp.dat.forEach(x=>s[x[0]]=URL.createObjectURL(x[1]));
+							tmp.dat.forEach(x=>s[x[0]]=URL.createObjectURL(x[1][0]));
 							instr_li[0]=['',tmp.oct||0,s];
 						}else instr_li[0]=mbox;
+						if(menu.instr.value==0)setSynth();
 					},
 					onerror:console.log
 				});
-				if(menu.instr.value==0)setSynth();
 			},
 			cicfg=x=>{
 				alert('');
 				albox.insertAdjacentHTML('beforeend',`<input class="style" placeholder="name" style="max-width:10em;" value="${x||''}"><hr><div id="cie"></div>`);
-				const row=(n,f)=>{
-					cie.insertAdjacentHTML('beforeend',`<div class="row"><input placeholder="note" class="style" value="${n||''}"><input type="file" class="style"><div class="grid button" onclick="cie.removeChild(this.parentNode);"></div></div>`);
-					if(f)cie.querySelector('#cie>.row:last-of-type>input[type="file"]').value=f;
+				let btn_;alcb.disabled=true;
+				const row=(n,fl)=>{
+					cie.insertAdjacentHTML('beforeend',`<div class="row"><input placeholder="note" class="style" value="${n||''}"><input type="file" class="style" accept="audio/*"><div class="grid button" onclick="cie.removeChild(this.parentNode);"></div></div>`);
+					if(fl)document.querySelector('#cie>.row:last-of-type>input[type="file"]').files=fl;
 				},
 				post=()=>{
-					// TODO: save process
-					cfgbtn.onclick();
+					let s={name:albox.children[0].value,dat:Array.from(cie.children,y=>[y.children[0].value,y.children[1].files]).filter(y=>y[0]&&y[1])},
+						tmp=idb.result.transaction('instr','readwrite').objectStore('instr');
+					console.log(s);
+					if(s.name!=x)tmp.delete(x);
+					Object.assign(tmp.put(s),{
+						onsuccess:()=>{save();ciset();btn_[0].onclick();},
+						onerror:e=>alert(e.target.error)
+					});
 				};
-				row();
-				albox.insertAdjacentHTML('beforeend',`<div class="cisel" style="display:block;"><div class="grid" style="--bp:-500% 0;width:32px;height:32px;margin:0;"></div></div><hr><div class="grid button" style="--bp:-200% -100%;width:48px;height:48px;box-shadow:none;"></div>`);
-				albox.querySelector('#albox>.cisel').onclick=()=>row();albox.querySelector('#albox>.button:last-of-type').onclick=post;
+				albox.insertAdjacentHTML('beforeend',`<div class="cisel" style="display:block;"><div class="grid" style="--bp:-500% 0;width:32px;height:32px;margin:0;"></div></div><hr><div class="grid button" style="--bp:-400% 0;width:48px;height:48px;"></div><div class="grid button" style="--bp:-200% -100%;width:48px;height:48px;"></div>`);
+				document.querySelector('#albox>.cisel').onclick=()=>row();
+				btn_=document.querySelectorAll('#albox>.button');
+				btn_[0].onclick=()=>{alcb.disabled=false;cfgbtn.onclick();};
+				btn_[1].onclick=post;
 				if(x)
 					Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').get(x),{
-						onsuccess:e=>{
-							let tmp=e.target.result;
-						},
-						onerror:console.log
+						onsuccess:e=>e.target.result.dat.forEach(y=>row(...y)),
+						onerror:e=>cie.textContent=e.target.error
 					});
+				else row();
 			};
 
 			slrvw.onchange=()=>{reverb.wet.value=slrvw.value;save();}
@@ -369,7 +377,7 @@
 							wrap.classList.add('cisel');
 							name.classList.add('name');
 							edit.classList.add('grid','button');
-							name.onclick=()=>{cinstr=x;ciset();cfgbtn.onclick();};
+							name.onclick=()=>{cinstr=x;save();ciset();cfgbtn.onclick();};
 							edit.onclick=()=>cicfg(x);
 							name.textContent=x||'default';
 							if(cinstr==x)wrap.style.backgroundColor='#fea8';
