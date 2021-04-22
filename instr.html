@@ -90,7 +90,7 @@
 
 			.cisel{width:100%;border-radius:4px;background-color:#0004;padding:2px;box-sizing:border-box;margin:4px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
 			.cisel .name{min-height:32px;white-space:pre-wrap;word-break:break-word;font-size:large;flex-grow:1;}
-			.cisel .grid{width:32px;height:32px;flex-shrink:0;--bp:0 -100%;margin:0;background-color:unset;box-shadow:none;}
+			.cisel .grid{width:32px;height:32px;flex-shrink:0;margin:0;background-color:unset;box-shadow:none;}
 			.nowebp .cisel .grid{background-image:url(img/tex.png);}
 			#albox .row{display:flex;margin:4px 0;}#albox .row>*{height:36px;}#albox .row input[placeholder]{width:4em;flex-shrink:0;}#albox .row input[type]{font-size:small;margin:0 2px;}
 			#albox .row .grid{--bp:-400% 0;width:36px;margin:0;flex-shrink:0;border-radius:4px;background-color:#0004;box-shadow:none;}
@@ -305,13 +305,13 @@
 					if(fl)document.querySelector('#cie>.row:last-of-type>input[type="file"]').files=fl;
 				},
 				post=()=>{
-					let s={name:albox.children[0].value,dat:Array.from(cie.children,y=>[y.children[0].value,y.children[1].files]).filter(y=>y[0]&&y[1])},
+					let s={name:albox.children[0].value||new Date().toLocaleString(),dat:Array.from(cie.children,y=>[y.children[0].value,y.children[1].files]).filter(y=>y[0]&&y[1])},
 						tmp=idb.result.transaction('instr','readwrite').objectStore('instr');
 					console.log(s);
-					if(s.name!=x)tmp.delete(x);
+					if(s.name!=x&&x)tmp.delete(x).onerror=console.log;
 					Object.assign(tmp.put(s),{
-						onsuccess:()=>{save();ciset();btn_[0].onclick();},
-						onerror:e=>alert(e.target.error)
+						onsuccess:()=>{ciset();btn_[0].onclick();},
+						onerror:e=>{alcb.disabled=false;albox.textContent=`⚠️\n\n${e.target.error}`}
 					});
 				};
 				albox.insertAdjacentHTML('beforeend',`<div class="cisel" style="display:block;"><div class="grid" style="--bp:-500% 0;width:32px;height:32px;margin:0;"></div></div><hr><div class="grid button" style="--bp:-400% 0;width:48px;height:48px;"></div><div class="grid button" style="--bp:-200% -100%;width:48px;height:48px;"></div>`);
@@ -373,16 +373,16 @@
 						tmp.forEach((x,i)=>{
 							let wrap=document.createElement('div'),
 								name=document.createElement('div'),
-								edit=document.createElement('div');
+								ebtn=document.createElement('div'),
+								dbtn=document.createElement('div');
 							wrap.classList.add('cisel');
-							name.classList.add('name');
-							edit.classList.add('grid','button');
-							name.onclick=()=>{cinstr=x;save();ciset();cfgbtn.onclick();};
-							edit.onclick=()=>cicfg(x);
-							name.textContent=x||'default';
+							name.classList.add('name');name.textContent=x||'default';name.onclick=()=>{cinstr=x;save();ciset();cfgbtn.onclick();};
+							ebtn.classList.add('grid','button');ebtn.setAttribute('style','--bp:0 -100%;');ebtn.onclick=()=>cicfg(x);
+							dbtn.classList.add('grid','button');dbtn.setAttribute('style','--bp:-400% 0;');
+							dbtn.onclick=()=>Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').delete(x),{onsuccess:cfgbtn.onclick,onerror:e=>albox.textContent=e.target.error});
 							if(cinstr==x)wrap.style.backgroundColor='#fea8';
 							wrap.appendChild(name);
-							if(x)wrap.appendChild(edit);
+							if(x){wrap.appendChild(ebtn);wrap.appendChild(dbtn);}
 							albox.appendChild(wrap);
 						});
 						albox.insertAdjacentHTML('beforeend',`<div class="cisel" onclick="cicfg();" style="display:block;"><div class="grid" style="--bp:-500% 0;width:32px;height:32px;margin:0;"></div></div>`)
