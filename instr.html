@@ -7,7 +7,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<title>sky_instruments</title>
-		<meta name="Description" content="Sky's instrments simulator. PWA(offline) compatible.">
+		<meta name="Description" content="Sky's instruments simulator. PWA(offline) compatible.">
 		<link rel="shortcut icon" type="image/jpeg" href="img/ico/instr.jpg">
 		<meta property="og:type" content="website">
 		<meta property="og:title" content="sky_instruments">
@@ -162,11 +162,11 @@
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			texts=Object.assign({
-				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104223\nMIT License',
-				amb:'ambient sound',none:'none',ambli:['hotspring','home','forest','vault']
+				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104224\nMIT License',
+				amb:'ambient sound',none:'none',ambli:['hotspring','home','forest','vault'],default:'default',ci:'custom instruments',note:'note',name:'name'
 			},{
 				ja:{
-					amb:'環境音',none:'なし',ambli:['温泉','ホーム','雨林','書庫']
+					amb:'環境音',none:'なし',ambli:['温泉','ホーム','雨林','書庫'],default:'デフォルト',ci:'楽器のカスタム',note:'音名',name:'楽器名'
 				}
 			}[window.navigator.language.slice(0,2)]),
 			mbox=['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
@@ -298,10 +298,10 @@
 			},
 			cicfg=x=>{
 				alert('');
-				albox.insertAdjacentHTML('beforeend',`<input class="style" placeholder="name" style="max-width:10em;" value="${x||''}"><hr><div id="cie"></div>`);
+				albox.insertAdjacentHTML('beforeend',`<input class="style" placeholder="${texts.name}" autocomplete="text" style="max-width:10em;" value="${x||''}"><hr><div id="cie"></div>`);
 				let btn_;alcb.disabled=true;
 				const row=(n,fl)=>{
-					cie.insertAdjacentHTML('beforeend',`<div class="row"><input placeholder="note" class="style" value="${n||''}"><input type="file" class="style"><div class="grid button" onclick="cie.removeChild(this.parentNode);"></div></div>`);
+					cie.insertAdjacentHTML('beforeend',`<div class="row"><input placeholder="${texts.note}" class="style" value="${n||''}"><input type="file" class="style"><div class="grid button" onclick="cie.removeChild(this.parentNode);"></div></div>`);
 					if(fl)document.querySelector('#cie>.row:last-of-type>input[type="file"]').files=fl;
 				},
 				post=()=>{
@@ -324,7 +324,7 @@
 						onsuccess:e=>e.target.result.dat.forEach(y=>row(...y)),
 						onerror:e=>cie.textContent=e.target.error
 					});
-				else row();
+				else row('A#4');
 			};
 
 			slrvw.onchange=()=>{reverb.wet.value=slrvw.value;save();}
@@ -341,9 +341,9 @@
 				['touchstart','mousedown'].forEach(x=>key.addEventListener(x,down,{passive:false}));
 				['touchend','touchcancel','mouseup','mouseleave'].forEach(x=>key.addEventListener(x,up,{passive:false}));
 				key.addEventListener('animationend',()=>{key.classList.remove('anm');});
-			})
-			document.addEventListener('keydown',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchstart'));});
-			document.addEventListener('keyup',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1')window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchend'));});
+			});
+			document.addEventListener('keydown',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName))window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchstart'));});
+			document.addEventListener('keyup',e=>{if(keymap[kbmode][e.code]&&kb.style.opacity=='1'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName))window[keymap[kbmode][e.code]].dispatchEvent(new Event('touchend'));});
 			recbtn.onclick=e=>{
 				if(e.target.classList.toggle('active'))recorder.start();
 				else(async()=>{
@@ -365,10 +365,9 @@
 </label>`);
 				envsel.value=env.c;
 				envsel.onchange=()=>{env.c=Number(envsel.value);envstat.style.opacity=.5;envset().then(()=>envstat.style.opacity='');save();};
-				if(location.hash=='#beta'||!location.protocol.includes('http'))
 				Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').getAllKeys(),{
 					onsuccess:e=>{
-						albox.insertAdjacentHTML('beforeend','<hr>custom instrments');
+						albox.insertAdjacentHTML('beforeend',`<hr>${texts.ci}`);
 						let tmp=e.target.result;tmp.push('');
 						tmp.forEach((x,i)=>{
 							let wrap=document.createElement('div'),
@@ -376,7 +375,7 @@
 								ebtn=document.createElement('div'),
 								dbtn=document.createElement('div');
 							wrap.classList.add('cisel');
-							name.classList.add('name');name.textContent=x||'default';name.onclick=()=>{cinstr=x;save();ciset();cfgbtn.onclick();};
+							name.classList.add('name');name.textContent=x||texts.default;name.onclick=()=>{cinstr=x;save();ciset();cfgbtn.onclick();};
 							ebtn.classList.add('grid','button');ebtn.setAttribute('style','--bp:0 -100%;');ebtn.onclick=()=>cicfg(x);
 							dbtn.classList.add('grid','button');dbtn.setAttribute('style','--bp:-400% 0;');
 							dbtn.onclick=()=>Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').delete(x),{onsuccess:cfgbtn.onclick,onerror:e=>albox.textContent=e.target.error});
@@ -398,6 +397,7 @@
 				if(doc.fullscreenElement||doc.mozFullScreenElement||doc.webkitFullscreenElement||doc.msFullscreenElement)exit.call(doc);
 				else init.call(docEl);
 			};
+			//if(location.hash=='#beta'||!location.protocol.includes('http'))
 			/*document.addEventListener('visibilitychange',()=>{
 				if(document.visibilityState=='visible'){bgv.play();console.log('become visible');location.reload(false);}
 				if(document.visibilityState=='hidden')console.log('become hidden');
