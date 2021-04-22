@@ -323,7 +323,7 @@
 					onsuccess:e=>{
 						let tmp=e.target.result,s={};//{name:'',oct:0,dat[['key':File]]}
 						console.log('ciset',tmp);
-						if(tmp.dat.length){
+						if(tmp&&tmp.dat.length){
 							tmp.dat.forEach(x=>s[x[0]]=URL.createObjectURL(x[1][0]));
 							instr_li[0]=['',tmp.oct||0,s];
 						}else instr_li[0]=mbox;
