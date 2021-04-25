@@ -160,7 +160,7 @@
 			'use strict';
 			let synth,synth_,kbmode=0,sc=0,env={dat:[],c:0},recorder,cinstr='';
 			alert=x=>{albox.textContent=x;alcb.checked=true;};
-			const reverb=new Tone.Reverb({wet:0,decay:0}).toDestination(),
+			const reverb=new Tone.Reverb({wet:0,decay:.001}).toDestination(),
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			texts=Object.assign({
@@ -346,7 +346,7 @@
 						tmp=idb.result.transaction('instr','readwrite').objectStore('instr'),b=cinstr==x;
 					if(s.name!=x&&x)Object.assign(tmp.delete(x),{onsuccess:()=>{if(b)cinstr=s.name;},onerror:console.log});
 					Object.assign(tmp.put(s),{
-						onsuccess:()=>{if(b)ciset();btn_[0].onclick();},
+						onsuccess:()=>{if(!x)cinstr=s.name;if(!x||b)ciset();btn_[0].onclick();},
 						onerror:e=>{alcb.disabled=false;albox.textContent=`⚠️\n\n${e.target.error}`}
 					});
 				};
