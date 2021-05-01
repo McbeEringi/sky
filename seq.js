@@ -5,14 +5,14 @@ alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';alb
 let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,from_url,recorder,instrsc;
 const texts=Object.assign({
 	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2104060\nMIT License\n',
-	notice:'⚠️\nThis program is still in β test.\nThere are some bugs or unimplemented functions.',
+	notice:'this project is still in progress but I´ve noticed it´s already laggy.\n So I decided to refactor this page. \nDatas you saved here will´be taken over.',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
 	exp:x=>`Ready to export "${x}"`,imp:'import from URL',
 	delq:x=>`Are you sure you want to delete "${x}"?`
 },{
 	ja:{
-		notice:'⚠️\nこのページはβテスト中です。\n不具合や未実装の機能があることがあります。',
+		notice:'お知らせ\n\n製作途中ですが既に重くなってしまっているので別の場所で新しく作り直しています。\n更新まで暫く間が空きます。ここで保存したデータはそのまま引き継がれる予定です。',
 		title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',
 		nodat:'データがありません',err:x=>`データの${['読み込み','削除','保存'][x]}に失敗しました`,
 		exp:x=>`「${x}」を書き出す`,imp:'URLから読みこむ',
@@ -511,7 +511,7 @@ instrbtn.onclick=()=>{
 };
 
 
-alert(texts.notice);
+alert(texts.notice,0,1);
 if(!localStorage.seq_undoMax){
 	localStorage.seq_undoMax=24;
 	requestIdleCallback(()=>{
