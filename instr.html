@@ -164,7 +164,7 @@
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			texts=Object.assign({
-				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2104250\nMIT License',
+				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2105030\nMIT License',
 				amb:'ambient sound',none:'none',ambli:['hotspring','home','forest','vault'],default:'default',ci:'custom instruments',note:'note',name:'name',selectf:'select file'
 			},{
 				ja:{
@@ -174,7 +174,7 @@
 			mbox=['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
 			instr_li=[//[baseurl, octave, map, (map2)]
 				mbox,
-				['audio/instr/harp/',-1,stdli(3)],
+				['audio/instr/harp/',-1,stdli(3,5)],//210503
 				['audio/instr/percussion/',-1,{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],
 				['audio/instr/contrabass/',-2,stdli(2)],
 				['audio/instr/horn/',-1,stdli(3)],
@@ -183,7 +183,7 @@
 					['audio/instr/bell2/',1,{c4:'c4.mp3',d4:'d4.mp3',g4:'g4.mp3',a4:'a4.mp3'},{c4:'c4_.mp3',d4:'d4_.mp3',g4:'g4_.mp3',a4:'a4_.mp3'}],
 				['audio/instr/flute/',0,stdli(4,6)],//210419
 				['audio/instr/quena/',0,stdli(4,6)],//210419
-				['audio/instr/guitar/',-1,stdli(3)],
+				['audio/instr/guitar/',-1,stdli(3,5)],//210503
 				['audio/instr/ukulele/',-1,stdli(3,5)],//210419
 					['audio/instr/piano/',1,stdli(5)],
 					['audio/instr/glock/',1,stdli(5)],
