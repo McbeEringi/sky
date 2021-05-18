@@ -12,7 +12,7 @@ const texts=Object.assign({
 	delq:x=>`Are you sure you want to delete "${x}"?`
 },{
 	ja:{
-		notice:'お知らせ\n\n製作途中ですが既に重くなってしまっているので別の場所で新しく作り直しています。\n更新まで暫く間が空きます。ここで保存したデータはそのまま引き継がれる予定です。',
+		notice:'お知らせ\n\n製作途中ですが既に重くなってしまっているので別の場所で新しく作り直しています。\n更新まで暫く間が空きます。ここで保存したデータはそのまま引き継がれる予定です。\n進捗は情報表示のリンクから確認できます',
 		title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',
 		nodat:'データがありません',err:x=>`データの${['読み込み','削除','保存'][x]}に失敗しました`,
 		exp:x=>`「${x}」を書き出す`,imp:'URLから読みこむ',
@@ -399,7 +399,7 @@ urlfx={
 };
 
 //albox.onclick=e=>{if(e.target!=e.currentTarget&&['BUTTON','LABEL'].includes(e.target.tagName))console.log('click')};
-ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid showtxt">flip UI</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label>`;};
+ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid showtxt">flip UI</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label><a href="https://mcbeeringi.github.io/amuse/seq.html" class="grid showtxt">new page</a>`;};
 curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft+=dispCur.getBoundingClientRect().left+window.scrollX-16;};
 playbtn.onclick=()=>{
 	Tone.start();
