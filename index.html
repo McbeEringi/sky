@@ -20,7 +20,7 @@
 		<meta name="apple-mobile-web-app-title" content="sky instr">
 		<link rel="apple-touch-icon" href="img/sky.png">
 		<!--sw-->
-		dv v k rel="manifest" href="skymf.json">
+		<link rel="manifest" href="skymf.json">
 		<meta name="theme-color" content="#fea"/>
 		<script>
 			if('serviceWorker'in navigator&&location.protocol.includes('http')&&location.hostname!='localhost')window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});});
@@ -32,7 +32,7 @@
 		<style>
 			:root{
 				--bar_col:#888;--button_col:#aaa;--bg_col:#6668;
-				c--o_img:url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='20' cx='20' cy='20' fill='%23444'/%3E%3Ccircle r='2' cx='10' cy='12.5' fill='%23fff'/%3E%3Cpolygon points='15,14 15,11 30,11 30,14' fill='%23fff'%3E%3C/polygon%3E%3Ccircle r='2' cx='10' cy='20' fill='%23fff'/%3E%3Cpolygon points='15,21.5 15,18.5 30,18.5 30,21.5' fill='%23fff'%3E%3C/polygon%3E%3Ccircle r='2' cx='10' cy='27.5' fill='%23fff'/%3E%3Cpolygon points='15,29 15,26 30,26 30,29' fill='%23fff'%3E%3C/polygon%3E%3C/svg%3E%0A");
+				--o_img:url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='20' cx='20' cy='20' fill='%23444'/%3E%3Ccircle r='2' cx='10' cy='12.5' fill='%23fff'/%3E%3Cpolygon points='15,14 15,11 30,11 30,14' fill='%23fff'%3E%3C/polygon%3E%3Ccircle r='2' cx='10' cy='20' fill='%23fff'/%3E%3Cpolygon points='15,21.5 15,18.5 30,18.5 30,21.5' fill='%23fff'%3E%3C/polygon%3E%3Ccircle r='2' cx='10' cy='27.5' fill='%23fff'/%3E%3Cpolygon points='15,29 15,26 30,26 30,29' fill='%23fff'%3E%3C/polygon%3E%3C/svg%3E%0A");
 				--c_img:url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='20' cx='20' cy='20' fill='%23444'/%3E%3Cpolygon points='9,11 11,9 20,18 29,9 31,11 22,20 31,29 29,31 20,22 11,31 9,29 18,20' fill='%23fff'%3E%3C/polygon%3E%3C/svg%3E%0A");
 				--pos:fixed;--menu_w:240px;--menu_h:360px;--transition:.5s;
 			}
