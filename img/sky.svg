@@ -17,8 +17,8 @@
 		<filter id="f1"><feGaussianBlur in="SourceGraphic" stdDeviation="1.4"/></filter>
 		<filter id="f2" y="-20%" height="140%"><feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#fea"/></filter>
 	</defs>
-	<!--<path d="M0,0h160v160h-160" fill="url(#bg)"/>-->
-	<path d="M0,30a30,30,0,0,1,30,-30h100a30,30,0,0,1,30,30v100a30,30,0,0,1,-30,30h-100a30,30,0,0,1,-30,-30" fill="url(#bg)"/>
+	<path d="M0,0h160v160h-160" fill="url(#bg)"/>
+	<!--<path d="M0,30a30,30,0,0,1,30,-30h100a30,30,0,0,1,30,30v100a30,30,0,0,1,-30,30h-100a30,30,0,0,1,-30,-30" fill="url(#bg)"/>-->
 	<!--<path d="M80,160a80,80,0,1,1,0.001,0" fill="url(#bg)"/>-->
 	<g filter="url(#f2)">
 		<path d="M80,64m28,-16a32,32,-30,1,1,-56,0" style="stroke:url(#g1);fill:#0000;stroke-width:4px"/>
