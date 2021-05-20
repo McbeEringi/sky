@@ -2,14 +2,11 @@
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
 const cacheName='cache210520_0',STATIC_DATA=[
 	'style.js',
-	'img/sky.svg',
-	'img/sky_.svg',
-	'img/sky.png',
-	'img/sky_192.png',
+	'img/sky.svg','img/sky_.svg','img/sky.png','img/sky_192.png',
 
 	//index
 	'index.html?pwa=0',
-	'img/ico/instr.svg','img/ico/info.jpg','img/ico/seq.svg',
+	'img/ico/sky.svg','img/ico/instr.svg','img/ico/info.jpg','img/ico/seq.svg',
 	'https://mcbeeringi.github.io/src/menu.css','img/fog.png',
 	//info
 	'info.html?pwa=1',

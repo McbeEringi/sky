@@ -21,9 +21,9 @@
 	<!--<path d="M0,30a30,30,0,0,1,30,-30h100a30,30,0,0,1,30,30v100a30,30,0,0,1,-30,30h-100a30,30,0,0,1,-30,-30" fill="url(#bg)"/>-->
 	<!--<path d="M80,160a80,80,0,1,1,0.001,0" fill="url(#bg)"/>-->
 	<g filter="url(#f2)">
-		<path d="M80,64m28,-16a32,32,-30,1,1,-56,0" style="stroke:url(#g1);fill:#0000;stroke-width:4px"/>
-		<path d="M80,64m55,-24a56,56,-8,1,1,-110,0l20,9a38,38,-24,1,0,70,0l20,-9" fill="url(#g2)"/>
-		<path d="M80,64m64,-16a64,64,0,0,1,-128,0" style="stroke:url(#g3);fill:#0000;stroke-width:2px"/>
-		<path d="M112,80q-32,0,-32,-36q0,36,-32,36q32,0,32,36q0,-36,32,-36" style="fill:#ffe;filter:url(#f1)"/>
+		<path d="M80,64m28,-16a32,32,-30,1,1,-56,0" style="stroke:url(#g1);fill:#0000;stroke-width:4;"/>
+		<path d="M80,64m55,-24a56,56,-8,1,1,-110,0l20,9a38,38,-24,1,0,70,0l20,-9z" fill="url(#g2)"/>
+		<path d="M80,64m64,-16a64,64,0,0,1,-128,0" style="stroke:url(#g3);fill:#0000;stroke-width:2;"/>
+		<path d="M112,80q-32,0,-32,-36q0,36,-32,36q32,0,32,36q0,-36,32,-36z" style="fill:#ffe;filter:url(#f1);"/>
 	</g>
 </svg>

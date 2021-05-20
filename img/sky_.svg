@@ -1,5 +1,5 @@
 <svg width="512px" height="512px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg">
-	<desc>sky wing icon</desc>
+	<desc>sky wing</desc>
 	<defs>
 		<linearGradient id="g1" x1="0" y1="1" x2="0" y2="0">
 			<stop offset="0%" stop-color="#fb45"/><stop offset="80%" stop-color="#fb4a"/>
@@ -15,10 +15,10 @@
 		<filter id="f2" y="-20%" height="140%"><feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#fea"/></filter>
 	</defs>
 	<g filter="url(#f2)">
-		<path d="M64,48m28,-16a32,32,-30,1,1,-56,0" style="stroke:url(#g1);fill:#0000;stroke-width:4px"/>
-		<path d="M64,48m55,-24a56,56,-8,1,1,-110,0l20,9a38,38,-24,1,0,70,0l20,-9" fill="url(#g2)"/>
-		<path d="M64,48m64,-16a64,64,0,0,1,-128,0" style="stroke:url(#g3);fill:#0000;stroke-width:2px"/>
-		<path d="M96,64q-32,0,-32,-36q0,36,-32,36q32,0,32,36q0,-36,32,-36" style="fill:#ffe;filter:url(#f1)"/>
+		<path d="M64,48m28,-16a32,32,-30,1,1,-56,0" style="stroke:url(#g1);fill:#0000;stroke-width:4;"/>
+		<path d="M64,48m55,-24a56,56,-8,1,1,-110,0l20,9a38,38,-24,1,0,70,0l20,-9z" fill="url(#g2)"/>
+		<path d="M64,48m64,-16a64,64,0,0,1,-128,0" style="stroke:url(#g3);fill:#0000;stroke-width:2;"/>
+		<path d="M96,64q-32,0,-32,-36q0,36,-32,36q32,0,32,36q0,-36,32,-36z" style="fill:#ffe;filter:url(#f1);"/>
 	</g>
 </svg>
 <!--background:#214;filter:drop-shadow(0 0 16px #fea)-->
