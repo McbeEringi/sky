@@ -59,6 +59,7 @@ self.addEventListener('activate',(e)=>{
 });
 
 self.addEventListener('fetch',(e)=>{
+	if(noCache.find(x=>e.request.url.includes(x))){console.log('skysw Cache canceled: '+e.request.url);return;}
 	const cacheNew=()=>fetch(e.request.url).then(r=>caches.open(cacheName).then(cache=>{
 		console.log('skysw Cache: '+e.request.url);
 		cache.put(e.request.url,r.clone());
@@ -91,7 +92,7 @@ self.addEventListener('fetch',(e)=>{
 	e.respondWith(
 		caches.match(e.request.url).then((r)=>{
 			if(r)console.log('skysw Fetch: '+e.request.url);
-			return r || cacheNew();//(~noCache.findIndex(x=>e.request.url.includes(x))?fetch(e.request.url):cacheNew());
+			return r || cacheNew();
 		})
 	);
 });
