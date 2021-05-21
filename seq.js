@@ -399,7 +399,7 @@ urlfx={
 };
 
 //albox.onclick=e=>{if(e.target!=e.currentTarget&&['BUTTON','LABEL'].includes(e.target.tagName))console.log('click')};
-ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid showtxt">flip UI</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label><a href="https://mcbeeringi.github.io/amuse/seq.html" class="grid showtxt">new page</a>`;};
+ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid showtxt">flip UI</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label><a href="seq_.html" class="grid showtxt">new page</a>`;};
 curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft+=dispCur.getBoundingClientRect().left+window.scrollX-16;};
 playbtn.onclick=()=>{
 	Tone.start();
