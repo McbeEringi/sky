@@ -34,6 +34,9 @@ const cacheName='cache210520_0',STATIC_DATA=[
 	'seq.js','img/seq.webp',
 	'https://cdn.jsdelivr.net/npm/sortablejs/Sortable.min.js',
 	'https://mcbeeringi.github.io/src/requestIdleCallback.min.js'
+],
+noCache=[
+	'seq_'
 ];
 
 self.addEventListener('install',(e)=>{
@@ -88,7 +91,7 @@ self.addEventListener('fetch',(e)=>{
 	e.respondWith(
 		caches.match(e.request.url).then((r)=>{
 			if(r)console.log('skysw Fetch: '+e.request.url);
-			return r || cacheNew();
+			return r || (~noCache.findIndex(x=>e.request.url.includes(x))?fetch(e.request.url):cacheNew());
 		})
 	);
 });
