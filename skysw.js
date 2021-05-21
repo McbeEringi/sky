@@ -19,7 +19,7 @@ const cacheName='cache210520_0',STATIC_DATA=[
 	'instr.html?pwa=1',
 	'https://cdn.jsdelivr.net/npm/tone/build/Tone.js',
 	'img/tex.webp',
-	//'img/hotsprv.mp4',
+	//'img/photo/hotsprv.mp4',
 	'audio/open.mp3','audio/close.mp3','audio/choose.mp3',
 	'audio/instr/musicbox/a3.mp3',
 	'audio/instr/musicbox/a4.mp3',
