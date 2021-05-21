@@ -36,6 +36,7 @@ const cacheName='cache210520_0',STATIC_DATA=[
 	'https://mcbeeringi.github.io/src/requestIdleCallback.min.js'
 ],
 noCache=[
+	'analytics',
 	'seq_'
 ];
 
