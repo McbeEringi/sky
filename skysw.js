@@ -91,7 +91,7 @@ self.addEventListener('fetch',(e)=>{
 	e.respondWith(
 		caches.match(e.request.url).then((r)=>{
 			if(r)console.log('skysw Fetch: '+e.request.url);
-			return r || (~noCache.findIndex(x=>e.request.url.includes(x))?fetch(e.request.url):cacheNew());
+			return r || cacheNew();//(~noCache.findIndex(x=>e.request.url.includes(x))?fetch(e.request.url):cacheNew());
 		})
 	);
 });
