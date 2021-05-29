@@ -61,7 +61,7 @@
 			.btns{position:absolute;top:2px;right:2px;touch-action:none;}
 			.btns>*{display:inline-block;vertical-align:middle;position:relative;width:48px;height:48px;transition:.4s linear,background-position 0s;}
 			#menucbl::before,#mico{position:absolute;top:0;left:0;width:100%;height:100%;background:0 0/800% url(img/instr.svg);transition:.4s linear,background-position 0s;}
-			#menucbl::before{content:"";opacity:0;background-position:-400% 0;}
+			#menucbl::before{content:"";opacity:0;background-position:-400% 0;}#mico{background-position:-0% -100%;}
 			.menu{position:fixed;top:0;right:-266px;width:252px;height:calc(100% - 48px);padding:48px 7px 0;background:#4448;opacity:0;box-shadow:0 0 8px #4448;transition:.2s;overflow-y:scroll;}
 			#menucb:checked~* #menucbl{transform:rotateY(360deg);}
 			#menucb:checked~* #menucbl::before{opacity:1;}#menucb:checked~* #mico{opacity:0;}
@@ -90,7 +90,7 @@
 			#albox .row input[placeholder]{width:4em;flex-shrink:0;}#albox .row input[type="file"]{opacity:0;width:100%;height:100%;cursor:copy;}#albox .row input[type="file"]+span{position:absolute;top:4px;left:4px;pointer-events:none;}
 			#albox .row .grid{--bp:-400% 0;width:36px;flex-shrink:0;}
 
-			.menu input[type=radio]+div::before,#mico{background-image:url(img/tex.webp);}.nowebp .menu input[type=radio]+div::before,.nowebp #mico{background-image:url(img/tex.png);}
+			.menu input[type=radio]+div::before,#mico,.grid.tex::before{background-image:url(img/tex.webp);}.nowebp .menu input[type=radio]+div::before,.nowebp #mico,.nowebp .grid.tex::before{background-image:url(img/tex.png);}
 		</style>
 		<div class="bg_">
 			<!--<video muted autoplay loop playsinline src="img/photo/hotsprv.mp4" type="video/mp4" id="bgv"></video>-->
@@ -114,23 +114,24 @@
 		<label for="menucb" class="full"></label>
 		<div class="menu">
 			<form id="menu" onchange="set();sfx.player('cs').start();">
-				        <label><input type="radio" name="instr" value="0"  checked ><div style="--bp:-0%   0;"></div>
-				</label><label><input type="radio" name="instr" value="1"          ><div style="--bp:-100% 0;"></div>
-				</label><label><input type="radio" name="instr" value="2"          ><div style="--bp:-200% 0;"></div>
-				</label><label><input type="radio" name="instr" value="3"          ><div style="--bp:-300% 0;"></div>
-				</label><label><input type="radio" name="instr" value="4"          ><div style="--bp:-400% 0;"></div>
-				</label><label><input type="radio" name="instr" value="5"          ><div style="--bp:-500% 0;"></div>
-				</label><label><input type="radio" name="instr" value="6"          ><div style="--bp:-600% 0;"></div>
-				</label><label><input type="radio" name="instr" value="7"  disabled><div style="--bp:-700% 0;"></div>
-				</label><label><input type="radio" name="instr" value="8"          ><div style="--bp:-0%   -100%;"></div>
-				</label><label><input type="radio" name="instr" value="9"          ><div style="--bp:-100% -100%;"></div>
-				</label><label><input type="radio" name="instr" value="10"         ><div style="--bp:-200% -100%;"></div>
-				</label><label><input type="radio" name="instr" value="11"         ><div style="--bp:-300% -100%;"></div>
-				</label><label><input type="radio" name="instr" value="12"         ><div style="--bp:-400% -100%;"></div>
-				</label><label><input type="radio" name="instr" value="13"         ><div style="--bp:-500% -100%;"></div>
-				</label><label><input type="radio" name="instr" value="14"         ><div style="--bp:-600% -100%;"></div>
-				</label><label><input type="radio" name="instr" value="15"         ><div style="--bp:-700% -100%;"></div>
-				</label><label><input type="radio" name="instr" value="16"         ><div style="--bp:-0%   -200%;"></div>
+				        <label><input type="radio" name="instr" value="0"  checked ><div style="--bp:-0%   -100%;"></div>
+				</label><label><input type="radio" name="instr" value="1"          ><div style="--bp:-100% -100%;"></div>
+				</label><label><input type="radio" name="instr" value="2"          ><div style="--bp:-200% -100%;"></div>
+				</label><label><input type="radio" name="instr" value="3"          ><div style="--bp:-300% -100%;"></div>
+				</label><label><input type="radio" name="instr" value="4"          ><div style="--bp:-400% -100%;"></div>
+				</label><label><input type="radio" name="instr" value="5"          ><div style="--bp:-500% -100%;"></div>
+				</label><label><input type="radio" name="instr" value="6"          ><div style="--bp:-600% -100%;"></div>
+				</label><label><input type="radio" name="instr" value="7"  disabled><div style="--bp:-700% -100%;"></div>
+				</label><label><input type="radio" name="instr" value="8"          ><div style="--bp:-0%   -200%;"></div>
+				</label><label><input type="radio" name="instr" value="9"          ><div style="--bp:-100% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="10"         ><div style="--bp:-200% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="11"         ><div style="--bp:-300% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="12"         ><div style="--bp:-400% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="13"         ><div style="--bp:-500% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="14"         ><div style="--bp:-600% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="15"         ><div style="--bp:-700% -200%;"></div>
+				</label><label><input type="radio" name="instr" value="16"         ><div style="--bp:-0%   -300%;"></div>
+				</label><label><input type="radio" name="instr" value="17"         ><div style="--bp:-100% -300%;"></div>
 				</label>
 			</form>
 			<hr>
@@ -145,9 +146,9 @@
 				<input type="range" id="slrvd" value="0" min="0" max="6" step="0.06">
 			</div>
 			<hr>
-			<div id="cfgbtn" class="grid button" style="--bp:-0% -100%;">
-			</div><div id="recbtn" class="grid button" style="--bp:-100% -100%;">
-			</div><div class="grid button" style="--bp:-200% -100%;" onclick="alert(texts.info);"></div>
+			<div id="cfgbtn" class="grid button tex" style="--bp:-100% -0%;">
+			</div><div id="recbtn" class="grid button" style="--bp:-0% -100%;">
+			</div><div class="grid button tex" style="--bp:-0% -0%;" onclick="alert(texts.info);"></div>
 		</div>
 		<div class="btns">
 			<label for="kbsize" class="btn"></label><label for="menucb" id="menucbl"><div id="mico"></div></label>
@@ -163,7 +164,7 @@
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			texts=Object.assign({
-				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2105270\nMIT License',
+				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2105290\nMIT License',
 				amb:'ambient sound',none:'none',ambli:['hotspring','home','forest','vault'],default:'default',ci:'custom instruments',note:'note',name:'name',selectf:'select file'
 			},{
 				ja:{
@@ -178,17 +179,18 @@
 				['audio/instr/contrabass/',-2,stdli(2)],
 				['audio/instr/horn/',-1,stdli(3)],
 					['audio/instr/piano/',0,stdli(4)],
-					['',1,{'d#5':'audio/instr/musicbox/ds5.mp3',a5:'audio/instr/musicbox/a5.mp3'},{'d#5':'audio/instr/glock/ds5.mp3',a5:'audio/instr/glock/a5.mp3'}],
+					['',0,{'d#5':'audio/instr/musicbox/ds6.mp3',a5:'audio/instr/musicbox/a6.mp3'},{'d#5':'audio/instr/glock/ds5.mp3',a5:'audio/instr/glock/a5.mp3'}],
 					['audio/instr/bell2/',1,{c4:'c4.mp3',d4:'d4.mp3',g4:'g4.mp3',a4:'a4.mp3'},{c4:'c4_.mp3',d4:'d4_.mp3',g4:'g4_.mp3',a4:'a4_.mp3'}],
 				['audio/instr/flute/',0,stdli(4,6)],//210419
 				['audio/instr/quena/',0,stdli(4,6)],//210419
 				['audio/instr/guitar/',-1,stdli(3,5)],//210503
 				['audio/instr/ukulele/',-1,stdli(3,5)],//210419
 					['audio/instr/piano/',1,stdli(5)],
-					['audio/instr/glock/',1,stdli(5)],
+				['audio/instr/glock/',0,stdli(4,6)],//210529
 				['audio/instr/handpan/',-1,stdli(3)],
 				['audio/instr/dundun/',-1,{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],
-					['audio/instr/pipa/',-1,stdli(3)]
+				['audio/instr/pipa/',-1,stdli(3,5)],//210529
+				['audio/instr/bugle/',0,stdli(4,6)]//210529
 			],
 			pmap={
 				2:[[0,1,2,3],[12,13,14,15]],
@@ -244,7 +246,7 @@
 				}
 				save();
 				//icon
-				let pos=[menu.instr.value%8,Math.floor(menu.instr.value*.125+0)];console.log('ico',pos);
+				let pos=[menu.instr.value%8,Math.floor(menu.instr.value*.125+1)];console.log('ico',pos);
 				mico.style.backgroundPosition=pos.map(x=>(x*-100)+'%').join(' ');
 			},
 			trigger=id=>{

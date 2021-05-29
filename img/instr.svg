@@ -20,9 +20,5 @@
 		<path d="M896,0m18,25a46,46,0,0,1,0,78m32,-78a46,46,0,0,1,0,78m32,-78a46,46,0,0,1,0,78m32,-78"/>
 		<path d="M896,0m46,25a46,46,0,0,0,0,78m32,-78a46,46,0,0,0,0,78m32,-78a46,46,0,0,0,0,78m32,-78" stroke-dasharray="8.6"/>
 	</g>
-	<g><!--tmp-->
-		<text x="16" y="192" style="font-size:36px;">setting</text>
-		<text x="144" y="192" style="font-size:36px;">record</text>
-		<text x="272" y="192" style="font-size:36px;">info</text>
-	</g>
+	<path d="M0,128m64,26a38,38,0,1,0,.001,0z"/><path d="M0,128m64,45a19,19,0,1,0,.001,0z" style="fill:#fea"/>
 </svg>
