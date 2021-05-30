@@ -7,7 +7,7 @@ idb.onupgradeneeded=e=>{
 	try{idb.result.createObjectStore('instr',{keyPath:'name'});}catch(e){}
 }
 idb.onsuccess=e=>{console.log('idb open success');window.dispatchEvent(new Event('idbready'));if(!['0',undefined].includes(localStorage.sky_bgmode))bgset();};
-idb.onerror=e=>{console.log('idb open error: '+e.target.errorCode);localStorage.sky_bgmode='0';bgset();};
+idb.onerror=e=>{console.log('idb open error',e);localStorage.sky_bgmode='0';bgset();};
 
 document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c&display=swap" media="print" onload="this.media='all'">
 <style>
@@ -29,8 +29,8 @@ const bgcol=[
 	"#f08300,#f8b862",//dusk
 	"#192f60,#274a78",//night
 	"#fbfaf6,#ced980"//cloud
-];
-const bgset=(x,b)=>{
+],
+bgset=(x,b)=>{
 	switch(b||localStorage.sky_bgmode){
 		case'1':e_img.setAttribute('style','display:none;');idb.result.transaction('stuff','readwrite').objectStore('stuff').get('bgimg').onsuccess=e=>bg.style.backgroundImage=`url(${e.target.result?URL.createObjectURL(e.target.result):'https://mcbeeringi.github.io/sky/img/photo/rain.jpg'})`;break;
 		case'2':e_img.setAttribute('style','display:none;');bg.style.backgroundImage=localStorage.sky_bgcode;break;
