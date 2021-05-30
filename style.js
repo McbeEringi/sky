@@ -7,7 +7,7 @@ idb.onupgradeneeded=e=>{
 	try{idb.result.createObjectStore('instr',{keyPath:'name'});}catch(e){}
 }
 idb.onsuccess=e=>{console.log('idb open success');window.dispatchEvent(new Event('idbready'));if(!['0',undefined].includes(localStorage.sky_bgmode))bgset();};
-idb.onerror=e=>{console.log('idb open error',e);localStorage.sky_bgmode='0';bgset();};
+idb.onerror=e=>{console.log('idb open error',e);bgset(undefined,0);};
 
 document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c&display=swap" media="print" onload="this.media='all'">
 <style>
@@ -34,7 +34,7 @@ bgset=(x,b)=>{
 	switch(b||localStorage.sky_bgmode){
 		case'1':e_img.setAttribute('style','display:none;');idb.result.transaction('stuff','readwrite').objectStore('stuff').get('bgimg').onsuccess=e=>bg.style.backgroundImage=`url(${e.target.result?URL.createObjectURL(e.target.result):'https://mcbeeringi.github.io/sky/img/photo/rain.jpg'})`;break;
 		case'2':e_img.setAttribute('style','display:none;');bg.style.backgroundImage=localStorage.sky_bgcode;break;
-		default:e_img.setAttribute('style','');bg.style.backgroundImage=`linear-gradient(${bgcol[x!=undefined?x:([3,3,3,3,3,0,0,0,0,1,1,1,1,1,1,1,4,2,2,2,2,3,3,3][new Date().getHours()])]})`;
+		default:e_img.setAttribute('style','');bg.style.backgroundImage=`linear-gradient(${bgcol[x]||bgcol[[3,3,3,3,3,0,0,0,0,1,1,1,1,1,1,1,4,2,2,2,2,3,3,3][new Date().getHours()]]})`;
 	}
 };
 {
