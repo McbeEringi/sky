@@ -7,7 +7,7 @@ idb.onupgradeneeded=e=>{
 	try{idb.result.createObjectStore('instr',{keyPath:'name'});}catch(e){}
 }
 idb.onsuccess=e=>{console.log('idb open success');window.dispatchEvent(new Event('idbready'));if(!['0',undefined].includes(localStorage.sky_bgmode))bgset();};
-idb.onerror=e=>{console.log('idb open error: '+idb.errorCode);localStorage.sky_bgmode='0';bgset();};
+idb.onerror=e=>{console.log('idb open error: '+e.target.errorCode);localStorage.sky_bgmode='0';bgset();};
 
 document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c&display=swap" media="print" onload="this.media='all'">
 <style>
