@@ -91,7 +91,7 @@
 			});
 			if(!localStorage.sky_bgcode)localStorage.sky_bgcode='linear-gradient(0deg,#fff,#000)';bgcode.value=localStorage.sky_bgcode;
 			document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
-			document.addEventListener('styexe',()=>{
+			window.addEventListener('styexe',()=>{
 				if(urlq.pwa){
 					document.querySelectorAll('a').forEach(e=>e.href=e.href+'?pwa=1');
 					document.querySelectorAll('.nopwa').forEach(e=>e.style.display='none');
