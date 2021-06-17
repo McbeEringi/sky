@@ -13,7 +13,7 @@ stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]
 synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/musicbox/').toDestination(),
 sytar=(n,t)=>{n=n.split(',');if(n[0])synth.triggerAttackRelease(n.map(n2Hz),'1m',t,1);},
 seq=new Tone.Sequence((time,note)=>{
-	//Tone.Draw.schedule(() => {
+	//Tone.Draw.schedule(()=>{
 		curset();
 		curpos=(curpos+1)%calced.note.length;
 	//},time);
@@ -94,8 +94,10 @@ draw=()=>{
 curset=()=>{scr.scrollLeft=calced.note[curpos].pos+cfg.w2;},
 curpset=()=>{Tone.Transport.position=p2pos(calced.note[curpos].p);curset();},
 tstep=x=>{
+	Tone.start();
 	curpos=((curpos+x)%calced.note.length+calced.note.length)%calced.note.length;
 	curpset();
+	if(tstat())sytar(ind2n(calced.note[curpos].ind));
 },
 init=()=>{
 	calc();
@@ -108,6 +110,15 @@ init=()=>{
 
 scr.addEventListener('scroll',draw,{passive:true})//()=>{if(!tims.scr)tims.scr=setTimeout(()=>{draw();tims.scr=0;},20);}
 emode.onchange=draw;
+scr.onclick=e=>{
+	Tone.start();
+	let cp=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5,
+	ind=calced.note.findIndex(x=>x.pos<=cp&&cp<x.pos+cfg.w);
+	if(!~ind)return;
+	curpos=ind;
+	curpset();
+	if(tstat())sytar(ind2n(calced.note[curpos].ind));
+};
 playbtn.onclick=e=>{
 	Tone.start();
 	let stat=tstat();
