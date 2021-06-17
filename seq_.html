@@ -18,12 +18,20 @@
 			#c{width:100%;height:240px;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 			#scr{width:100%;height:100%;position:absolute;top:0;overflow-x:scroll;scrollbar-width:thin;scrollbar-color:#0008 #0000;}#scr::webkit-scrollbar{background-color:#0000;height:8px;}#scr::webkit-scrollbar-thumb{background-color:#0008;border-radius:8px;}
 			#scrw{height:100%;padding:0 50vw;}
+
+			.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#0006;font-size:0;border-radius:25%;box-shadow:0 0 8px #0008;text-align:center;vertical-align:middle;border:none;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
+			.grid:not(input){cursor:pointer;}.grid:active{background-color:#8888;}.grid:disabled{filter:grayscale(1)opacity(.7);}.bg{transition:.1s;background-size:800%;}.showtxt{color:#caf0f6;font-size:18px;}
+
+			#kb>p::after,.bg{background-image:url(img/seq.svg);background-size:800%;background-position:var(--bp);}
+
 		</style>
 		<input type="checkbox" id="emode">
 		<div class="disp">
 			<canvas id="c">JavaScript seems disabled</canvas>
 			<div id="scr"><div id="scrw"></div></div>
 		</div>
-		<label for="emode">editMode</label>
+		<label for="emode">editMode</label><br>
+				<button id="playbtn" class="grid bg" style="--bp:-300% 0;">play/pause
+		</button>
 	</body>
 </html>

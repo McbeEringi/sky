@@ -1,5 +1,5 @@
 'use strict';
-let main,calced,tims={};
+let main,calced,tims={},curpos=0;
 const ctx=c.getContext('2d'),res=window.devicePixelRatio||1,cfg={pad:12,w:16},
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
 n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6','3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
@@ -7,17 +7,15 @@ pos2p=(pos_=Tone.Transport.position)=>{let tmp=pos_.split(':').map(x=>Number(x))
 p2pos=p_=>`${Math.floor(p_/Tone.Transport.timeSignature)}:${Math.floor(p_)%Tone.Transport.timeSignature}:${(p_*4)%4}`,
 n2Hz=x=>440*Math.pow(2,(Number(x)+main.sc)/12)*2,//C4~C6
 ind2n=x=>x.reduce((a,y)=>a[y],main.scores),
+tstat=()=>Tone.Transport.state!='started',
 seqset=()=>{clearTimeout(tims.main2seq);tims.main2seq=setTimeout(()=>requestIdleCallback(()=>{seq.events=main.scores;console.log('seqset')}),300);},
 stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]=`a${i}.mp3`;}return s;},
 synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/musicbox/').toDestination(),
-sytar=(n,t)=>{
-	n=n.split(',');
-	if(n[0]){
-		synth.triggerAttackRelease(n.map(n2Hz),'1m',t,1);
-	}
-},
+sytar=(n,t)=>{n=n.split(',');if(n[0])synth.triggerAttackRelease(n.map(n2Hz),'1m',t,1);},
 seq=new Tone.Sequence((time,note)=>{
 	//Tone.Draw.schedule(() => {
+		curset();
+		curpos=(curpos+1)%calced.note.length;
 	//},time);
 	sytar(note,time);
 },[],'4n').start(0),
@@ -93,15 +91,26 @@ draw=()=>{
 	}
 	if(ins&&emode.checked)frr(ctx,'#feac',ins[0],0,3,240);
 },
+curset=()=>{
+	scr.scrollLeft=calced.note[curpos].pos+cfg.w2;
+},
 init=()=>{
 	calc();
 	draw();
 	seqset();
+	curset();
 	Tone.Transport.bpm.value=main.bpm;
 	//Tone.Transport.start();
 };
+
 scr.addEventListener('scroll',draw,{passive:true})//()=>{if(!tims.scr)tims.scr=setTimeout(()=>{draw();tims.scr=0;},20);}
 emode.onchange=draw;
+playbtn.onclick=e=>{
+	Tone.start();
+	let stat=tstat();
+	Tone.Transport[stat?'start':'pause']();
+};
+
 {
 	(window.onresize=()=>{
 		c.width=res*c.parentNode.clientWidth;
