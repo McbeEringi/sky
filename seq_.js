@@ -46,7 +46,7 @@ calc=()=>{
 				pos+=cfg.w;
 			}
 			pos+=1;
-			p+=l;
+			p+=odl;
 		});
 	};
 	core(main.scores);
@@ -91,12 +91,11 @@ draw=()=>{
 	}
 	if(ins&&emode.checked)frr(ctx,'#feac',ins[0],0,3,240);
 },
-curset=()=>{
-	scr.scrollLeft=calced.note[curpos].pos+cfg.w2;
-},
+curset=()=>{scr.scrollLeft=calced.note[curpos].pos+cfg.w2;},
+curpset=()=>{Tone.Transport.position=p2pos(calced.note[curpos].p);curset();},
 tstep=x=>{
 	curpos=((curpos+x)%calced.note.length+calced.note.length)%calced.note.length;
-	curset();
+	curpset();
 },
 init=()=>{
 	calc();
