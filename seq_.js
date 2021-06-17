@@ -94,11 +94,15 @@ draw=()=>{
 curset=()=>{
 	scr.scrollLeft=calced.note[curpos].pos+cfg.w2;
 },
+tstep=x=>{
+	curpos=((curpos+x)%calced.note.length+calced.note.length)%calced.note.length;
+	curset();
+},
 init=()=>{
 	calc();
 	draw();
 	seqset();
-	curset();
+	stopbtn.onclick();
 	Tone.Transport.bpm.value=main.bpm;
 	//Tone.Transport.start();
 };
@@ -110,6 +114,11 @@ playbtn.onclick=e=>{
 	let stat=tstat();
 	Tone.Transport[stat?'start':'pause']();
 };
+stopbtn.onclick=e=>{
+	Tone.Transport.stop();
+	curpos=0;
+	curset();
+}
 
 {
 	(window.onresize=()=>{
