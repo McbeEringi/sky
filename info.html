@@ -62,9 +62,9 @@
 			<label><input type="checkbox">書庫(2)▶︎<div><div>["1F手前","1F奥","2F奥","6F手前"]<br><img src="img/candle/40.webp" width="4" height="3"></div><div>["1F右","2F扉左","4F祠","6F奥"]<br><img src="img/candle/41.webp" width="4" height="3"></div></div></label>
 		</div>
 		大キャンドル参考元: <a href="https://twitter.com/sky_tea11">ティー</a>様 <br><!--/status/1356572540437635073-->
-		オフィス参考元: <a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area_(The_Office)#The_Spirits_of_the_Office">Sky Wiki</a> <br>
+		オフィス参考元: <a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area#The_Spirits_of_the_Office">Sky Wiki</a> <br>
 		<br>
-		[sky_info] build:2105020 <br>
+		[sky_info] build:2106170 <br>
 		<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
 
 		<script>
@@ -129,8 +129,9 @@
 				window[`_${i}o`].childNodes[(t.getDate()-1)%7].style.background='#6ca8';
 			},
 			main=()=>{
-				let local=new Date(),server=new Date(local.getTime()-3600000*16);//summertime ? 16 : 17
-				time.textContent=`current time: ${local.toLocaleString()}\n  server time: ${server.toLocaleString()}`;
+				let local=new Date(),server=new Date(local.getTime()-3600000*17),dst=server.getMonth()*40+server.getDate();//summertime(3/14~11/7) ? 16 : 17
+				if(dst=>94&&dst<=407){server=new Date(local.getTime()-3600000*16);dst='(Daylight Saving Time)';}else summer='';
+				time.textContent=`current time: ${local.toLocaleString()}\n  server time: ${server.toLocaleString()} ${dst}`;
 				if(hbuf!=server.getHours()){
 					hbuf=server.getHours();
 					console.log('exe');
