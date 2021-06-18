@@ -110,13 +110,13 @@ init=()=>{
 
 scr.addEventListener('scroll',()=>{
 	if(tims.igscr){tims.igscr=false;return;}
-	draw();
+	requestAnimationFrame(draw);
 	if(!tims.scr)tims.scr=setTimeout(()=>{
 		tims.scr=0;
 		if(tstat()){
 			let ind=cp2cp();
 			if(!~ind)return;
-			curpos=ind;pset();
+			curpos=ind;pset();requestAnimationFrame(draw);
 		}
 	},100);
 },{passive:true})
