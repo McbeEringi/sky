@@ -8,7 +8,7 @@ p2pos=p_=>`${Math.floor(p_/Tone.Transport.timeSignature)}:${Math.floor(p_)%Tone.
 n2Hz=x=>440*Math.pow(2,(Number(x)+main.sc)/12)*2,//C4~C6
 ind2n=x=>x.reduce((a,y)=>a[y],main.scores),
 tstat=()=>Tone.Transport.state!='started',
-seqset=()=>{clearTimeout(tims.main2seq);tims.main2seq=setTimeout(()=>requestIdleCallback(()=>{seq.events=main.scores;console.log('seqset')}),300);},
+seqset=()=>{clearTimeout(tims.seqset);tims.seqset=setTimeout(()=>requestIdleCallback(()=>{seq.events=main.scores;console.log('seqset')}),300);},
 stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]=`a${i}.mp3`;}return s;},
 synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/musicbox/').toDestination(),
 sytar=(n,t)=>{n=n.split(',');if(n[0])synth.triggerAttackRelease(n.map(n2Hz),'1m',t,1);},
@@ -54,7 +54,7 @@ calc=()=>{
 },
 draw=()=>{
 	if(!calced)return;
-	let w=c.parentNode.clientWidth,pos=w*.5-scr.scrollLeft,ins;
+	let w=c.parentNode.clientWidth,pos=w*.5-scr.scrollLeft,ins,cppos=calced.note[curpos].pos;
 	ctx.clearRect(0,0,w,240);
 	for(let x of calced.box){
 		if(x.pos+x.dx+pos<0)continue;if(w<x.pos+pos)break;
@@ -73,7 +73,7 @@ draw=()=>{
 	for(let x of calced.note){
 		if(x.pos+cfg.w+pos<0)continue;if(w<x.pos+pos)break;
 		let cur=Math.abs(x.pos-scr.scrollLeft+cfg.w2)<=cfg.w2;
-		frr(ctx,cur&&!emode.checked?'#aef8':'#0004',x.pos+pos,0,cfg.w,240,4);
+		frr(ctx,cppos==x.pos&&!emode.checked?'#aef8':'#0004',x.pos+pos,0,cfg.w,240,4);
 		if(cur){
 			cur=x.pos-scr.scrollLeft+cfg.w2>0;
 			ins=[x.pos+pos+(cur?-2:cfg.w-1),cur?x.ind:[...x.ind.slice(0,-1),x.ind.slice(-1)[0]+1]];
@@ -91,44 +91,48 @@ draw=()=>{
 	}
 	if(ins&&emode.checked)frr(ctx,'#feac',ins[0],0,3,240);
 },
-curset=()=>{scr.scrollLeft=calced.note[curpos].pos+cfg.w2;},
-curpset=()=>{Tone.Transport.position=p2pos(calced.note[curpos].p);curset();},
+curset=()=>{tims.igscr=true;scr.scrollLeft=calced.note[curpos].pos+cfg.w2;draw();},
+pset=()=>Tone.Transport.position=p2pos(calced.note[curpos].p),
+cp2cp=(cp=scr.scrollLeft)=>calced.note.findIndex(x=>x.pos<=cp&&cp<x.pos+cfg.w),
+tstart=()=>{Tone.Transport.start();},
+tpause=()=>{Tone.Transport.pause();curset();},
+tstop=e=>{Tone.Transport.stop();curpos=0;curset();},
 tstep=x=>{
 	Tone.start();
 	curpos=((curpos+x)%calced.note.length+calced.note.length)%calced.note.length;
-	curpset();
+	pset();tpause();
 	if(tstat())sytar(ind2n(calced.note[curpos].ind));
 },
 init=()=>{
-	calc();
-	draw();
-	seqset();
-	stopbtn.onclick();
+	calc();seqset();tstop();
 	Tone.Transport.bpm.value=main.bpm;
-	//Tone.Transport.start();
 };
 
-scr.addEventListener('scroll',draw,{passive:true})//()=>{if(!tims.scr)tims.scr=setTimeout(()=>{draw();tims.scr=0;},20);}
+scr.addEventListener('scroll',()=>{
+	if(tims.igscr){tims.igscr=false;return;}
+	draw();
+	if(!tims.scr)tims.scr=setTimeout(()=>{
+		tims.scr=0;
+		if(tstat()){
+			let ind=cp2cp();
+			if(!~ind)return;
+			curpos=ind;pset();
+		}
+	},100);
+},{passive:true})
 emode.onchange=draw;
 scr.onclick=e=>{
 	Tone.start();
-	let cp=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5,
-	ind=calced.note.findIndex(x=>x.pos<=cp&&cp<x.pos+cfg.w);
+	let ind=cp2cp(e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5);
 	if(!~ind)return;
-	curpos=ind;
-	curpset();
+	curpos=ind;pset();curset();
 	if(tstat())sytar(ind2n(calced.note[curpos].ind));
 };
 playbtn.onclick=e=>{
 	Tone.start();
-	let stat=tstat();
-	Tone.Transport[stat?'start':'pause']();
+	if(tstat())tstart();else tpause();
 };
-stopbtn.onclick=e=>{
-	Tone.Transport.stop();
-	curpos=0;
-	curset();
-}
+stopbtn.onclick=tstop;
 
 {
 	(window.onresize=()=>{
