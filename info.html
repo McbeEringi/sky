@@ -34,7 +34,6 @@
 			br+img{max-width:512px;background:#8888;}
 			input[type=checkbox]{display:none;}input[type=checkbox]+div{background:#8888;}input[type=checkbox]:not(:checked)+div{display:none;}label{display:block;margin:8px 0;}input[type=checkbox]+div>div{display:inline-block;}.clear_fix::after{content:"";clear:both;display:block;}
 			.ib>*{display:inline-block;max-width:512px;min-width:256px;width:100%;vertical-align:top;}
-			.of>p{display:inline-block;width:48px;height:48px;background:#8888;text-align:center;line-height:48px;}
 		</style>
 
 		<pre id="time">Please enable JavaScript to use this app.</pre>
@@ -43,13 +42,11 @@
 			<div>
 				<h2>today</h2>
 				<pre id="_0t"></pre>
-				<div id="_0o" class="of"><p>無念</p><p>社畜</p><p>ピザ</p><p>つぼ</p><p>ネコ</p><p>宇宙</p><p>散歩</p></div>
 				<img id="_0i" width="4" height="3" alt="today"><img id="_0i_" width="4" height="3" style="display:none;">
 			</div>
 			<div>
 				<h2>tomorrow</h2>
 				<pre id="_1t"></pre>
-				<div id="_1o" class="of"><p>無念</p><p>社畜</p><p>ピザ</p><p>つぼ</p><p>ネコ</p><p>宇宙</p><p>散歩</p></div>
 				<img id="_1i" width="4" height="3" alt="tomorrow"><img id="_1i_" width="4" height="3" style="display:none;">
 			</div>
 		</div>
@@ -61,10 +58,10 @@
 			<label><input type="checkbox">捨て地(3)▶︎<div><div>["入口後ろ","祠出口","投石台手前","戦場砦右奥"]<br><img src="img/candle/30.webp" width="4" height="3"></div><div>["入口左奥","祠闇花","投石台中央","難破船後端"]<br><img src="img/candle/31.webp" width="4" height="3"></div><div>["入口右奥","投石台出口","難破船先端","戦場砦上"]<br><img src="img/candle/32.webp" width="4" height="3"></div></div></label>
 			<label><input type="checkbox">書庫(2)▶︎<div><div>["1F手前","1F奥","2F奥","6F手前"]<br><img src="img/candle/40.webp" width="4" height="3"></div><div>["1F右","2F扉左","4F祠","6F奥"]<br><img src="img/candle/41.webp" width="4" height="3"></div></div></label>
 		</div>
+		オフィス: ['無念','社畜','ピザ','つぼ','ネコ','宇宙','散歩'] (<a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area#The_Spirits_of_the_Office">Sky Wiki</a>)<br>
 		大キャンドル参考元: <a href="https://twitter.com/sky_tea11">ティー</a>様 <br><!--/status/1356572540437635073-->
-		オフィス参考元: <a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area#The_Spirits_of_the_Office">Sky Wiki</a> <br>
 		<br>
-		[sky_info] build:2106170 <br>
+		[sky_info] build:2106180 <br>
 		<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
 
 		<script>
@@ -72,7 +69,8 @@
 			let imgf=new Image();imgf.onerror=()=>{imgf='JPG';jpgfall();};imgf.onload=()=>imgf=null;imgf.src='img/candle/00.webp';
 			const jpgfall=()=>{if(typeof imgf=='string')document.querySelectorAll('img[src$="webp"]').forEach(e=>{if(e.src)e.src=e.src.replace('webp',imgf);});};
 
-			const c_dic =[
+			const o_dic=['無念','社畜','ピザ','つぼ','ネコ','宇宙','散歩'],
+			c_dic =[
 				//https://twitter.com/sky_tea11/status/1234038235149426689/photo/1
 				//https://twitter.com/i/events/1176090791342567424
 				['~草原~',['入口左手前','丸石奥','鳥の塔右奥','洞窟入口'],['入口右奥','丸石右','4島中央','神殿内'],['入口左奥','鳥の塔中央','洞窟内','神殿前']],
@@ -125,12 +123,11 @@
 					window[`_${i}t`].textContent=`${c_dic[x[0]][0]}\n${c_dic[x[0]][x[1]+1]}`;
 					window[`_${i}i`].src=`img/candle/${x.join('')}.webp`;
 				}
-				window[`_${i}o`].childNodes.forEach(e=>e.style.background='#2228');
-				window[`_${i}o`].childNodes[(t.getDate()-1)%7].style.background='#6ca8';
+				window[`_${i}t`].textContent+=`\nオフィス精霊: ${o_dic[(t.getDate()-1)%7]}`;
 			},
 			main=()=>{
 				let local=new Date(),server=new Date(local.getTime()-3600000*17),dst=server.getMonth()*40+server.getDate();//summertime(3/14~11/7) ? 16 : 17
-				if(dst=>94&&dst<=407){server=new Date(local.getTime()-3600000*16);dst='(Daylight Saving Time)';}else summer='';
+				if(dst=>94&&dst<=407){server=new Date(local.getTime()-3600000*16);dst='(Daylight Saving Time)';}else dst='';
 				time.textContent=`current time: ${local.toLocaleString()}\n  server time: ${server.toLocaleString()} ${dst}`;
 				if(hbuf!=server.getHours()){
 					hbuf=server.getHours();
