@@ -119,7 +119,12 @@ scr.addEventListener('scroll',()=>{
 			curpos=ind;pset();requestAnimationFrame(draw);
 		}
 	},100);
-},{passive:true})
+},{passive:true});
+[...kb.children].forEach((x,i)=>{
+	const keyfx=()=>x.classList.toggle('a');
+	x.addEventListener('touchstart',keyfx);
+	x.addEventListener('mousedown',keyfx);
+});
 emode.onchange=draw;
 scr.onclick=e=>{
 	Tone.start();
