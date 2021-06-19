@@ -95,7 +95,7 @@ curset=()=>{tims.igscr=true;scr.scrollLeft=calced.note[curpos].pos+cfg.w2;draw()
 pset=()=>Tone.Transport.position=p2pos(calced.note[curpos].p),
 cp2cp=(cp=scr.scrollLeft)=>calced.note.findIndex(x=>x.pos<=cp&&cp<x.pos+cfg.w),
 tstart=()=>{Tone.Transport.start();},
-tpause=()=>{Tone.Transport.pause();setTimeout(curset,0);},
+tpause=()=>{Tone.Transport.pause();requestIdleCallback(curset);},
 tstop=e=>{Tone.Transport.stop();curpos=0;curset();},
 tstep=x=>{
 	Tone.start();
