@@ -121,7 +121,10 @@ scr.addEventListener('scroll',()=>{
 	},100);
 },{passive:true});
 [...kb.children].forEach((x,i)=>{
-	const keyfx=()=>x.classList.toggle('a');
+	const keyfx=e=>{
+		e.preventDefault();
+		x.classList.toggle('a');
+	};
 	x.addEventListener('touchstart',keyfx);
 	x.addEventListener('mousedown',keyfx);
 });
