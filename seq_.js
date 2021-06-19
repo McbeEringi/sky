@@ -151,3 +151,14 @@ stopbtn.onclick=tstop;
 
 	init();
 }
+if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
+	requestIdleCallback(()=>{
+		let img=new Image();
+		img.onload=()=>{
+			let c=document.createElement('canvas'),ctx=c.getContext('2d');
+			c.width=img.naturalWidth;c.height=img.naturalHeight;
+			ctx.drawImage(img,0,0);
+			document.body.insertAdjacentHTML('beforeend',`<style>#kb>div::after,.bg{background-image:url(${c.toDataURL()});}</style>`);
+		};
+		img.src='img/seq.svg';
+	});

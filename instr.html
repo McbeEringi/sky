@@ -164,7 +164,7 @@
 			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			texts=Object.assign({
-				info:'Powerd by Tone.js\nAudio: GarageBand, Tone.js Salamander(cc-by Alexander Holm), record and denoise by @McbeEringi\n\nauthor:@McbeEringi\nbuild:2105290\nMIT License',
+				info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nrecord by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2106190\nMIT License',
 				amb:'ambient sound',none:'none',ambli:['hotspring','home','forest','vault'],default:'default',ci:'custom instruments',note:'note',name:'name',selectf:'select file'
 			},{
 				ja:{
@@ -307,7 +307,7 @@
 								dbtn=document.createElement('div');
 							wrap.classList.add('cisel');
 							name.classList.add('name');name.textContent=x||texts.default;name.onclick=()=>{cinstr=x;save();ciset();cfg();};
-							ebtn.classList.add('grid','button');ebtn.setAttribute('style','--bp:0 -100%;');ebtn.onclick=()=>cicfg(x);
+							ebtn.classList.add('grid','button','tex');ebtn.setAttribute('style','--bp:-100% 0;');ebtn.onclick=()=>cicfg(x);
 							dbtn.classList.add('grid','button');dbtn.setAttribute('style','--bp:-400% 0;');
 							dbtn.onclick=()=>{if(cinstr==x){cinstr='';save();ciset();}Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').delete(x),{onsuccess:cfg,onerror:e=>albox.textContent=e.target.error})};
 							if(cinstr==x)wrap.style.backgroundColor='#fea8';
@@ -403,6 +403,17 @@
 				if(document.visibilityState=='visible'){bgv.play();console.log('become visible');location.reload(false);}
 				if(document.visibilityState=='hidden')console.log('become hidden');
 			});*/
+			if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
+				{
+					let img=new Image();
+					img.onload=()=>{
+						let c=document.createElement('canvas'),ctx=c.getContext('2d');
+						c.width=img.naturalWidth;c.height=img.naturalHeight;
+						ctx.drawImage(img,0,0);
+						document.body.insertAdjacentHTML('beforeend',`<style>.kb>div>div>div::before,#menucbl::before,label[for=kbsize],.grid::before,.revW::before{background-image:url(${c.toDataURL()});}</style>`);
+					};
+					img.src='img/instr.svg';
+				}
 		</script>
 	</body>
 </html>
