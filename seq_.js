@@ -123,6 +123,7 @@ init=()=>{
 	redobtn.disabled=undobtn.disabled=true;
 };
 
+scr.addEventListener('wheel',e=>{e.preventDefault();scr.scrollLeft+=(Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY)*(e.shiftKey?.1:1);});
 scr.addEventListener('scroll',()=>{
 	if(tims.igscr){tims.igscr=false;return;}
 	console.log('')
@@ -194,6 +195,7 @@ redobtn.onclick=()=> urdo( 1);
 		ctx.scale(res,res);
 		draw();
 	})();
+	localStorage.seq_urMax=128;
 	cfg.pad2=cfg.pad/2;
 	cfg.w2=cfg.w/2;
 
