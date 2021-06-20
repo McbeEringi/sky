@@ -90,7 +90,7 @@ draw=()=>{
 				frr(ctx,col,x.pos+1+pos,225-Number(n2i[String(n)])*16,cfg.w-2,14,4);//240-16+1
 			});
 	}
-	if(ins&&emode.checked)frr(ctx,'#feac',ins[0],0,3,240);
+	if(emode.checked){if(ins)frr(ctx,'#feac',ins[0],0,3,240);return ins[1];}
 },
 curset=()=>{tims.igscr=true;scr.scrollLeft=calced.note[curpos].pos+cfg.w2;draw();},
 pset=()=>Tone.Transport.position=p2pos(calced.note[curpos].p),
