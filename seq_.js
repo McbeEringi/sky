@@ -15,6 +15,7 @@ sytar=(n,t)=>{n=n.split(',');if(n[0])synth.triggerAttackRelease(n.map(n2Hz),'1m'
 seq=new Tone.Sequence((time,note)=>{
 	//Tone.Draw.schedule(()=>{
 		curset();
+		kbset(note);
 		curpos=(curpos+1)%calced.note.length;
 	//},time);
 	sytar(note,time);
@@ -94,13 +95,17 @@ draw=()=>{
 curset=()=>{tims.igscr=true;scr.scrollLeft=calced.note[curpos].pos+cfg.w2;draw();},
 pset=()=>Tone.Transport.position=p2pos(calced.note[curpos].p),
 cp2cp=(cp=scr.scrollLeft)=>calced.note.findIndex(x=>x.pos<=cp&&cp<x.pos+cfg.w),
+kbset=(x=calced.note[curpos].ind.reduce((a,x)=>a[x],main.scores))=>{
+	let tmp=x.split(',');
+	[...kb.children].forEach((y,i)=>y.classList[tmp.includes(i2n[i])?'add':'remove']('a'));
+},
 tstart=()=>{Tone.Transport.start();},
-tpause=()=>{Tone.Transport.pause();requestIdleCallback(curset);},
-tstop=e=>{Tone.Transport.stop();curpos=0;curset();},
+tpause=()=>{Tone.Transport.pause();requestIdleCallback(()=>{curset();kbset();});},
+tstop=e=>{Tone.Transport.stop();curpos=0;requestIdleCallback(()=>{curset();kbset();});},
 tstep=x=>{
 	Tone.start();
 	curpos=((curpos+x)%calced.note.length+calced.note.length)%calced.note.length;
-	pset();tpause();
+	pset();tpause();kbset();
 	if(tstat())sytar(ind2n(calced.note[curpos].ind));
 },
 init=()=>{
@@ -110,15 +115,18 @@ init=()=>{
 
 scr.addEventListener('scroll',()=>{
 	if(tims.igscr){tims.igscr=false;return;}
+	console.log('')
 	requestAnimationFrame(draw);
-	if(!tims.scr)tims.scr=setTimeout(()=>{
-		tims.scr=0;
+	//if(!tims.scr)tims.scr=setTimeout(()=>{tims.scr=0;},100);
+	/*
+	clearTimeout(tims.scr);
+	tims.scr=setTimeout(()=>{
 		if(tstat()){
-			let ind=cp2cp();
-			if(!~ind)return;
-			curpos=ind;pset();requestAnimationFrame(draw);
+			let ind=cp2cp();if(!~ind)return;
+			curpos=ind;pset();draw();kbset();
 		}
 	},100);
+	*/
 },{passive:true});
 [...kb.children].forEach((x,i)=>{
 	const keyfx=e=>{
@@ -128,12 +136,30 @@ scr.addEventListener('scroll',()=>{
 	x.addEventListener('touchstart',keyfx);
 	x.addEventListener('mousedown',keyfx);
 });
+document.onkeydown=e=>{
+	if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;
+	if(e.ctrlKey||e.metaKey)
+		switch(e.code){
+			case'KeyZ':e.preventDefault();//urdo(e.shiftKey?1:-1);
+		}
+	else
+		switch(e.code){
+			case'Space':e.preventDefault();playbtn.onclick();break;
+			case'ArrowLeft':e.preventDefault();Tone.start();tstep(e.shiftKey?-8:-1);break;
+			case'ArrowRight':e.preventDefault();Tone.start();tstep(e.shiftKey?8:1);break;
+			case'Tab':e.preventDefault();emode.click();
+			default:
+				const keymap=Array.from('QWERTASDFGZXCVB',x=>`Key${x}`);
+				if(keymap.includes(e.code))
+					kb.children[keymap.indexOf(e.code)].dispatchEvent(new Event('mousedown'));
+		}
+};
 emode.onchange=draw;
 scr.onclick=e=>{
 	Tone.start();
 	let ind=cp2cp(e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5);
 	if(!~ind)return;
-	curpos=ind;pset();curset();
+	curpos=ind;pset();draw();kbset();
 	if(tstat())sytar(ind2n(calced.note[curpos].ind));
 };
 playbtn.onclick=e=>{

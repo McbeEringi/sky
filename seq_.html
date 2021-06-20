@@ -14,7 +14,7 @@
 		<style>
 			:root{user-select:none;-webkit-user-select:none;}[contenteditable],.usa{user-select:auto;-webkit-user-select:auto;}
 			html,body{height:100%;margin:0;position:relative;}body>input{display:none;}
-			.disp{position:relative;}.disp>*{vertical-align:bottom;}.disp::after{content:"";pointer-events:none;position:absolute;top:0;left:50%;transform:translateX(-50%);width:1.5px;height:100%;background-color:#aef8;box-shadow:0 0 4px #0004;}
+			.disp{position:relative;}.disp>*{vertical-align:bottom;}#emode:checked~.disp::after{content:"";pointer-events:none;position:absolute;top:0;left:50%;transform:translateX(-50%);width:1.5px;height:100%;background-color:#fea8;}
 			#c{width:100%;height:240px;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 			#scr{width:100%;height:100%;position:absolute;top:0;overflow-x:scroll;scrollbar-width:thin;scrollbar-color:#0008 #0000;}#scr::webkit-scrollbar{background-color:#0000;height:8px;}#scr::webkit-scrollbar-thumb{background-color:#0008;border-radius:8px;}
 			#scrw{height:100%;padding:0 50vw;}
@@ -22,8 +22,8 @@
 			.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#0006;font-size:0;border-radius:25%;box-shadow:0 0 8px #0008;text-align:center;vertical-align:middle;border:none;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
 			.grid:not(input){cursor:pointer;}.grid:active{background-color:#8888;}.grid:disabled{filter:grayscale(1)opacity(.7);}.bg{transition:.1s;background-size:800%;}.showtxt{color:#caf0f6;font-size:18px;}
 
-			#kb{width:100%;max-width:400px;margin:0 auto;border-radius:8px;background-color:#0004;font-size:0;}
-			#kb>div{display:inline-block;position:relative;width:20%;--bp:-100% 0;overflow:hidden;}#kb>div *{pointer-events:none;transform:translateZ(0);}
+			#kb{width:100%;max-width:400px;margin:0 auto;border-radius:8px;background-color:#0004;font-size:0;touch-action:none;}
+			#kb>div{display:inline-block;position:relative;width:20%;--bp:-100% 0;overflow:hidden;}
 			#kb>div:nth-of-type(5n-3),#kb>div:nth-of-type(5n-1){--bp:-200% 0;}#kb>div:nth-of-type(7n+1){--bp:0 0;}
 			#kb>div::before{content:"";display:block;padding-top:100%;}
 			#kb>div::after {content:"";display:block;position:absolute;top:8%;left:8%;width:84%;height:84%;}#kb>div.a::after{transform:scale(.8)rotateY(360deg);transition:unset;transition:.4s linear;}
@@ -45,7 +45,7 @@
 		</button><button id="stopbtn" class="grid bg" style="--bp:-400% 0;">stop
 		</button><button onclick="tstep(-1)" class="grid bg" style="--bp:-500% 0;transform:scaleX(-1);">prev
 		</button><button onclick="tstep( 1)" class="grid bg" style="--bp:-500% 0;">next
-		</button><label  for="emode" class="grid showtxt">mode
+		</button><label  for="emode" class="grid showtxt">emode
 		</label >
 		<div id="kb"><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div></div>
 	</body>
