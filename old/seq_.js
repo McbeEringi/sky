@@ -225,6 +225,6 @@ requestIdleCallback(()=>//fetch('img/seq.svg').then(x=>x.text()).then(x=>
 			ctx.drawImage(img,0,0);
 			document.body.insertAdjacentHTML('beforeend',`<style>#kb>p::after,.bg{background-image:url(${c.toDataURL()});}</style>`);
 		};
-		img.src='img/seq.svg';//`data:image/svg+xml;base64,${btoa(unescape(encodeURI(x)))}`;
+		img.src='../img/seq.svg';//`data:image/svg+xml;base64,${btoa(unescape(encodeURI(x)))}`;
 	}//)
 );

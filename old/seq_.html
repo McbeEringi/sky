@@ -5,13 +5,13 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<title>sky_seq</title>
 		<link rel="preload" href="https://cdn.jsdelivr.net/npm/tone/build/Tone.js" as="script">
-		<link rel="preload" href="seq0.js" as="script">
+		<link rel="preload" href="seq_.js" as="script">
 	</head>
 	<body>
-		<script src="style.js" async></script>
+		<script src="../style.js" async></script>
 		<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js" defer></script>
 		<script src="https://cdn.jsdelivr.net/npm/tone/build/Tone.js" defer></script>
-		<script src="seq0.js" defer></script>
+		<script src="seq_.js" defer></script>
 		<style>
 			:root{user-select:none;-webkit-user-select:none;}[contenteditable],.usa{user-select:auto;-webkit-user-select:auto;}
 			html,body{height:100%;margin:0;position:relative;}body>input{display:none;}
@@ -32,7 +32,7 @@
 			.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#0006;font-size:0;border-radius:25%;box-shadow:0 0 8px #0008;text-align:center;vertical-align:middle;border:none;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
 			.grid:not(input){cursor:pointer;}.grid:active{background-color:#8888;}.grid:disabled{filter:grayscale(1)opacity(.7);}.bg{transition:.1s;}.showtxt{color:#caf0f6;font-size:18px;}
 
-			#kb>p::after,.bg{background-image:url(img/seq.svg);background-size:800%;background-position:var(--bp);}
+			#kb>p::after,.bg{background-image:url(../img/seq.svg);background-size:800%;background-position:var(--bp);}
 			#dtrs:checked~* #kb>p::before,#dtrs:checked~* #kb>p::after,#dtrs:checked~* #dispCur{transition:unset;}
 		</style>
 		<input type="checkbox" id="dtrs">

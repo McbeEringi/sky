@@ -1,5 +1,5 @@
 'use strict';
-let main,calced,tims={},curpos=0;
+let main,calced,tims={},curpos=0,urstack;
 const ctx=c.getContext('2d'),res=window.devicePixelRatio||1,cfg={pad:12,w:16},
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
 n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6','3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
@@ -67,7 +67,7 @@ draw=()=>{
 				ins=[x.pos+pos+(cur?-2:cfg.pad-1),cur?[...x.ind,0]:x.ind];
 			}else if(x.pos+x.dx-cfg.pad<=scr.scrollLeft){
 				cur=x.pos-scr.scrollLeft+x.dx-cfg.pad2>0;
-				ins=[x.pos+x.dx+pos+(cur?-cfg.pad-2:-1),cur?[...x.ind.slice(0,-1),x.ind.slice(-1)[0]+1]:[...x.ind,x.ind.reduce((a,y)=>a[y],main.scores).length]];
+				ins=[x.pos+x.dx+pos+(cur?-cfg.pad-2:-1),cur?[...x.ind.slice(0,-1),x.ind.slice(-1)[0]+1]:[...x.ind,ind2n(x.ind).length]];
 			}
 		}
 	}
@@ -79,7 +79,7 @@ draw=()=>{
 			cur=x.pos-scr.scrollLeft+cfg.w2>0;
 			ins=[x.pos+pos+(cur?-2:cfg.w-1),cur?x.ind:[...x.ind.slice(0,-1),x.ind.slice(-1)[0]+1]];
 		}
-		let note=x.ind.reduce((a,y)=>a[y],main.scores);
+		let note=ind2n(x.ind);
 		if(note)
 			note.split(',').forEach(n=>{
 				let col='#fea';
@@ -99,6 +99,14 @@ kbset=(x=calced.note[curpos].ind.reduce((a,x)=>a[x],main.scores))=>{
 	let tmp=x.split(',');
 	[...kb.children].forEach((y,i)=>y.classList[tmp.includes(i2n[i])?'add':'remove']('a'));
 },
+urset=x=>{urstack[2]=[];urstack[0].push(urstack[1]);urstack[1]=x;while(urstack[0].length>Number(localStorage.seq_urMax))urstack[0].shift();console.log(x);undobtn.disabled=false;redobtn.disabled=true;},
+urdo=x=>{
+	let tmp=false;
+	while(x<0){if(urstack[0].length){urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();x++;tmp=true;console.log('undo');Function(urstack[1][0]+urstack[1][2])();}else{break;}}
+	while(0<x){if(urstack[2].length){urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();x--;tmp=true;console.log('redo');Function(urstack[1][0]+urstack[1][1])();}else{break;}}
+	undobtn.disabled=!urstack[0].length;redobtn.disabled=!urstack[2].length;
+	if(tmp){calc();draw();seqset();kbset();}
+},
 tstart=()=>{Tone.Transport.start();},
 tpause=()=>{Tone.Transport.pause();requestIdleCallback(()=>{curset();kbset();});},
 tstop=e=>{Tone.Transport.stop();curpos=0;requestIdleCallback(()=>{curset();kbset();});},
@@ -111,6 +119,8 @@ tstep=x=>{
 init=()=>{
 	calc();seqset();tstop();
 	Tone.Transport.bpm.value=main.bpm;
+	urstack=[[],['main.scores=',null,JSON.stringify(main.scores)],[]];
+	redobtn.disabled=undobtn.disabled=true;
 };
 
 scr.addEventListener('scroll',()=>{
@@ -118,20 +128,25 @@ scr.addEventListener('scroll',()=>{
 	console.log('')
 	requestAnimationFrame(draw);
 	//if(!tims.scr)tims.scr=setTimeout(()=>{tims.scr=0;},100);
-	/*
-	clearTimeout(tims.scr);
-	tims.scr=setTimeout(()=>{
-		if(tstat()){
-			let ind=cp2cp();if(!~ind)return;
-			curpos=ind;pset();draw();kbset();
-		}
-	},100);
-	*/
+	//clearTimeout(tims.scr);tims.scr=setTimeout(()=>{if(tstat()){let ind=cp2cp();if(!~ind)return;curpos=ind;pset();draw();kbset();}},100);
 },{passive:true});
 [...kb.children].forEach((x,i)=>{
 	const keyfx=e=>{
 		e.preventDefault();
-		x.classList.toggle('a');
+		if(tstat()){
+			let ind=calced.note[curpos].ind,
+				arr=ind2n(ind).split(',').filter(y=>y);
+			if(x.classList.toggle('a')){
+				Tone.start();
+				synth.triggerAttackRelease(n2Hz(i2n[i]));
+				arr=arr.concat(i2n[i]);
+			}else{
+				arr=arr.filter(y=>y!=i2n[i]);
+			}
+			let cmd=[`main.scores[${ind.join('][')}]=`,`'${arr.join(',')}'`];
+			Function(cmd[0]+cmd[1])();urset(cmd.concat(`'${ind2n(ind)}'`));
+			seqset();calc();draw();
+		}else synth.triggerAttackRelease(n2Hz(i2n[i]));
 	};
 	x.addEventListener('touchstart',keyfx);
 	x.addEventListener('mousedown',keyfx);
@@ -167,6 +182,10 @@ playbtn.onclick=e=>{
 	if(tstat())tstart();else tpause();
 };
 stopbtn.onclick=tstop;
+prevbtn.onclick=()=>tstep(-1);
+nextbtn.onclick=()=>tstep( 1);
+undobtn.onclick=()=> urdo(-1);
+redobtn.onclick=()=> urdo( 1);
 
 {
 	(window.onresize=()=>{
