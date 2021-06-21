@@ -74,7 +74,7 @@ draw=()=>{
 	for(let x of calced.note){
 		if(x.pos+cfg.w+pos<0)continue;if(w<x.pos+pos)break;
 		let cur=Math.abs(x.pos-scr.scrollLeft+cfg.w2)<=cfg.w2;
-		frr(ctx,cppos==x.pos&&!emode.checked?'#aef8':'#0004',x.pos+pos,0,cfg.w,240,4);
+		frr(ctx,cppos==x.pos?'#aef8':'#0004',x.pos+pos,0,cfg.w,240,4);
 		if(cur){
 			cur=x.pos-scr.scrollLeft+cfg.w2>0;
 			ins=[x.pos+pos+(cur?-2:cfg.w-1),cur?x.ind:[...x.ind.slice(0,-1),x.ind.slice(-1)[0]+1]];
@@ -94,7 +94,6 @@ draw=()=>{
 },
 curset=()=>{tims.igscr=true;scr.scrollLeft=calced.note[curpos].pos+cfg.w2;draw();},
 pset=()=>Tone.Transport.position=p2pos(calced.note[curpos].p),
-cp2cp=(cp=scr.scrollLeft)=>calced.note.findIndex(x=>x.pos<=cp&&cp<x.pos+cfg.w),
 kbset=(x=calced.note[curpos].ind.reduce((a,x)=>a[x],main.scores))=>{
 	let tmp=x.split(',');
 	[...kb.children].forEach((y,i)=>y.classList[tmp.includes(i2n[i])?'add':'remove']('a'));
@@ -124,13 +123,7 @@ init=()=>{
 };
 
 scr.addEventListener('wheel',e=>{e.preventDefault();scr.scrollLeft+=(Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY)*(e.shiftKey?.1:1);});
-scr.addEventListener('scroll',()=>{
-	if(tims.igscr){tims.igscr=false;return;}
-	console.log('')
-	requestAnimationFrame(draw);
-	//if(!tims.scr)tims.scr=setTimeout(()=>{tims.scr=0;},100);
-	//clearTimeout(tims.scr);tims.scr=setTimeout(()=>{if(tstat()){let ind=cp2cp();if(!~ind)return;curpos=ind;pset();draw();kbset();}},100);
-},{passive:true});
+scr.addEventListener('scroll',()=>{if(tims.igscr){tims.igscr=false;return;}requestAnimationFrame(draw);},{passive:true});
 [...kb.children].forEach((x,i)=>{
 	const keyfx=e=>{
 		e.preventDefault();
@@ -175,11 +168,16 @@ document.onkeydown=e=>{
 };
 emode.onchange=draw;
 scr.onclick=e=>{
-	Tone.start();
-	let ind=cp2cp(e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5);
-	if(!~ind)return;
-	curpos=ind;pset();draw();kbset();
-	if(tstat())sytar(ind2n(calced.note[curpos].ind));
+	if(emode.checked){
+		scr.scrollLeft=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5;
+	}else{
+		Tone.start();
+		let cp=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5,
+		ind=calced.note.findIndex(x=>x.pos<=cp&&cp<x.pos+cfg.w);
+		if(!~ind)return;
+		curpos=ind;pset();draw();kbset();
+		if(tstat())sytar(ind2n(calced.note[curpos].ind));
+	}
 };
 playbtn.onclick=e=>{
 	Tone.start();
