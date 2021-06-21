@@ -16,6 +16,7 @@
 			html,body{height:100%;margin:0;position:relative;}body>input{display:none;}
 
 			.disp{position:relative;}.disp>*{vertical-align:bottom;}#emode:checked~.disp::after{content:"";pointer-events:none;position:absolute;top:0;left:50%;transform:translateX(-50%);width:1.5px;height:100%;background-color:#fea8;}
+			.disp::before{content:"CBAGFEDCBAGFEDC";position:absolute;top:0;left:0;line-height:16px;width:12px;font-size:12px;opacity:.5;}
 			#c{width:100%;height:240px;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 			#scr{width:100%;height:100%;position:absolute;top:0;overflow-x:scroll;scrollbar-width:thin;scrollbar-color:#0008 #0000;}#scr::webkit-scrollbar{background-color:#0000;height:8px;}#scr::webkit-scrollbar-thumb{background-color:#0008;border-radius:8px;}
 			#scrw{height:100%;padding:0 50vw;}
@@ -37,7 +38,7 @@
 
 			#emode:checked~#kb,#emode:checked~#kb+div,#emode:not(:checked)~#palette{display:none;}
 
-			#palette{max-width:640px;background-color:#0004;margin:0 auto;}
+			#palette{max-width:320px;background-color:#0004;margin:0 auto;}
 
 			#kb>div::after,.bg{background-image:url(img/seq.svg);background-size:800%;background-position:var(--bp);}
 		</style>
@@ -53,12 +54,17 @@
 			</button><button id="nextbtn" class="grid bg" style="--bp:-500% 0;">next
 			</button><button id="undobtn" class="grid bg" style="--bp:-600% 0;">undo
 			</button><button id="redobtn" class="grid bg" style="--bp:-600% 0;transform:scaleX(-1);">redo
-			</button><label  for="emode"  class="grid showtxt">emode
+			</button><label  for="emode"  class="grid showtxt">mode
 			</label >
 		</div>
 		<div id="kb"><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div></div>
 		<div style="height:calc(100vh - calc(min(400px,100vw) * .6));"></div>
 		<div id="palette">
+			         <button id="slbtn" class="grid bg" style="--bp:-300% -100%;">select
+			</button><button id="cxbtn" class="grid bg" style="--bp:-000% -100%;">cut
+			</button><button id="ccbtn" class="grid bg" style="--bp:-100% -100%;">copy
+			</button><button id="cvbtn" class="grid bg" style="--bp:-200% -100%;">paste
+			</button><br>
 			palette <br>
 			palette <br>
 			palette <br>

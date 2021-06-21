@@ -156,7 +156,10 @@ document.onkeydown=e=>{
 	if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;
 	if(e.ctrlKey||e.metaKey)
 		switch(e.code){
-			case'KeyZ':e.preventDefault();//urdo(e.shiftKey?1:-1);
+			case'KeyZ':e.preventDefault();urdo(e.shiftKey?1:-1);
+			case'KeyX':e.preventDefault();
+			case'KeyC':e.preventDefault();
+			case'KeyV':e.preventDefault();
 		}
 	else
 		switch(e.code){
@@ -166,7 +169,7 @@ document.onkeydown=e=>{
 			case'Tab':e.preventDefault();emode.click();
 			default:
 				const keymap=Array.from('QWERTASDFGZXCVB',x=>`Key${x}`);
-				if(keymap.includes(e.code))
+				if(keymap.includes(e.code)&&!emode.checked)
 					kb.children[keymap.indexOf(e.code)].dispatchEvent(new Event('mousedown'));
 		}
 };
