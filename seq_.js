@@ -54,7 +54,7 @@ calc=()=>{
 	scrw.style.width=(calced.length=pos-1)+'px';
 },
 draw=()=>{
-	if(!calced)return;
+	if(!calced||document.documentElement.scrollTop>240)return;
 	let w=c.parentNode.clientWidth,pos=w*.5-scr.scrollLeft,ins,cppos=calced.note[curpos].pos;
 	ctx.clearRect(0,0,w,240);
 	for(let x of calced.box){

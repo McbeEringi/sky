@@ -35,8 +35,11 @@
 			#kb>div>p::before{box-shadow:0 0 8px  #0006,0 0 0   0   #000c inset;opacity:1;}#kb>div.a>p::before{opacity:0;}
 			#kb>div>p::after {box-shadow:0 0 16px #aef6,0 0 2px 4px #aefc inset;opacity:0;}#kb>div.a>p::after {opacity:1;}
 
-			#kb>div::after,.bg{background-image:url(img/seq.svg);background-size:800%;background-position:var(--bp);}
+			#emode:checked~#kb,#emode:checked~#kb+div,#emode:not(:checked)~#palette{display:none;}
 
+			#palette{max-width:640px;background-color:#0004;margin:0 auto;}
+
+			#kb>div::after,.bg{background-image:url(img/seq.svg);background-size:800%;background-position:var(--bp);}
 		</style>
 		<input type="checkbox" id="emode">
 		<div class="disp">
@@ -55,5 +58,12 @@
 		</div>
 		<div id="kb"><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div></div>
 		<div style="height:calc(100vh - calc(min(400px,100vw) * .6));"></div>
+		<div id="palette">
+			palette <br>
+			palette <br>
+			palette <br>
+			palette <br>
+			palette <br>
+		</div>
 	</body>
 </html>
