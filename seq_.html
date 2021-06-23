@@ -20,8 +20,9 @@
 			#c{width:100%;height:240px;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 			#scr{width:100%;height:100%;position:absolute;top:0;overflow-x:scroll;scrollbar-width:thin;scrollbar-color:#0008 #0000;}#scr::webkit-scrollbar{background-color:#0000;height:8px;}#scr::webkit-scrollbar-thumb{background-color:#0008;border-radius:8px;}
 			#scrw{height:100%;padding:0 50vw;}
-			.cfg{position:absolute;top:0;right:0;transform-origin:top right;transform:scale(.8);}.cfg *{position:absolute;right:0;}
-			#cfgcb,#cfgcb+*+*{display:none;}#cfgcb:checked+*+*{display:block;}
+			.cfg{position:absolute;top:0;right:0;transform-origin:top right;transform:scale(.9);}.cfg *{position:absolute;right:0;}
+			#cfgcb{display:none;}#cfgcb+*+*{width:156px;opacity:0;pointer-events:none;transition:.2s;}#cfgcb+*+* .grid{transform:scale(.8);}
+			#cfgcb:checked+*+*{opacity:1;pointer-events:auto;}#cfgcb:checked+*+* .grid{transform:scale(1);}
 
 			.ui{max-width:312px;margin:8px 0;}
 			.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#0006;font-size:0;border-radius:25%;box-shadow:0 0 8px #0008;text-align:center;vertical-align:middle;border:none;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
@@ -38,10 +39,9 @@
 			#kb>div>p::before{box-shadow:0 0 8px  #0006,0 0 0   0   #000c inset;opacity:1;}#kb>div.a>p::before{opacity:0;}
 			#kb>div>p::after {box-shadow:0 0 16px #aef6,0 0 2px 4px #aefc inset;opacity:0;}#kb>div.a>p::after {opacity:1;}
 
-			#emode:checked~#kb,#emode:checked~#kb+div,#emode:not(:checked)~#palette{display:none;}
-
 			#palette{max-width:320px;background-color:#0004;margin:0 auto;}
 
+			#emode:checked~#kb,#emode:checked~#kb+div,#emode:not(:checked)~#palette{display:none;}#emode:checked~* label[for=emode]{transform:rotateZ(90deg);}
 			#kb>div::after,.bg{background-image:url(img/seq.svg);background-size:800%;background-position:var(--bp);}
 		</style>
 		<input type="checkbox" id="emode">
@@ -50,9 +50,13 @@
 			<div id="scr"><div id="scrw"></div></div>
 			<div class="cfg">
 				<input type="checkbox" id="cfgcb">
-				<label for="cfgcb" class="grid bg" style="--bp:-700% -000%;"></label>
+				<label for="cfgcb" class="grid bg" style="--bp:-700% 0;"></label>
 				<div>
-					cfgcfgcfg
+					         <button id="" class="grid bg" style="--bp:-700% -100%;">
+					</button><input class="grid bg showtxt style" style="--bp:-200% -200%;"><button id="" class="grid bg" style="--bp:-600% -100%;">
+					</button><button id="" class="grid bg" style="--bp:-700% -100%;">
+					</button><input class="grid bg showtxt style" style="--bp:-100% -200%;"><button id="" class="grid bg" style="--bp:-600% -100%;">
+					</button>
 				</div>
 			</div>
 		</div>
@@ -63,14 +67,14 @@
 			</button><button id="nextbtn" class="grid bg" style="--bp:-500% 0;">next
 			</button><button id="undobtn" class="grid bg" style="--bp:-600% 0;">undo
 			</button><button id="redobtn" class="grid bg" style="--bp:-600% 0;transform:scaleX(-1);">redo
-			</button><label  for="emode"  class="grid showtxt">mode
+			</button><label  for="emode"  class="grid bg" style="--bp:0 -200%;">mode
 			</label >
 		</div>
 		<div id="kb"><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div></div>
 		<div style="height:calc(100vh - calc(min(400px,100vw) * .6));position:relative;"><button class="grid bg" style="--bp:-300% 0;position:absolute;bottom:0;" onclick="playbtn.onclick();">play/pause</button></div>
 		<div id="palette">
 			         <button id="slbtn" class="grid bg" style="--bp:-300% -100%;">select
-			</button><button id="cxbtn" class="grid bg" style="--bp:-000% -100%;">cut
+			</button><button id="cxbtn" class="grid bg" style="--bp:0 -100%;">cut
 			</button><button id="ccbtn" class="grid bg" style="--bp:-100% -100%;">copy
 			</button><button id="cvbtn" class="grid bg" style="--bp:-200% -100%;">paste
 			</button><br>
