@@ -20,6 +20,8 @@
 			#c{width:100%;height:240px;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 			#scr{width:100%;height:100%;position:absolute;top:0;overflow-x:scroll;scrollbar-width:thin;scrollbar-color:#0008 #0000;}#scr::webkit-scrollbar{background-color:#0000;height:8px;}#scr::webkit-scrollbar-thumb{background-color:#0008;border-radius:8px;}
 			#scrw{height:100%;padding:0 50vw;}
+			.cfg{position:absolute;top:0;right:0;transform-origin:top right;transform:scale(.8);}.cfg *{position:absolute;right:0;}
+			#cfgcb,#cfgcb+*+*{display:none;}#cfgcb:checked+*+*{display:block;}
 
 			.ui{max-width:312px;margin:8px 0;}
 			.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#0006;font-size:0;border-radius:25%;box-shadow:0 0 8px #0008;text-align:center;vertical-align:middle;border:none;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
@@ -46,6 +48,13 @@
 		<div class="disp">
 			<canvas id="c">JavaScript seems disabled</canvas>
 			<div id="scr"><div id="scrw"></div></div>
+			<div class="cfg">
+				<input type="checkbox" id="cfgcb">
+				<label for="cfgcb" class="grid bg" style="--bp:-700% -000%;"></label>
+				<div>
+					cfgcfgcfg
+				</div>
+			</div>
 		</div>
 		<div class="ui">
 			         <button id="playbtn" class="grid bg" style="--bp:-300% 0;">play/pause
@@ -58,7 +67,7 @@
 			</label >
 		</div>
 		<div id="kb"><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div></div>
-		<div style="height:calc(100vh - calc(min(400px,100vw) * .6));"></div>
+		<div style="height:calc(100vh - calc(min(400px,100vw) * .6));position:relative;"><button class="grid bg" style="--bp:-300% 0;position:absolute;bottom:0;" onclick="playbtn.onclick();">play/pause</button></div>
 		<div id="palette">
 			         <button id="slbtn" class="grid bg" style="--bp:-300% -100%;">select
 			</button><button id="cxbtn" class="grid bg" style="--bp:-000% -100%;">cut

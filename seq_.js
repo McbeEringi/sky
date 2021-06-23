@@ -139,7 +139,7 @@ scr.addEventListener('scroll',()=>{if(tims.igscr){tims.igscr=false;return;}reque
 			}
 			let cmd=[`main.scores[${ind.join('][')}]=`,`'${arr.join(',')}'`];
 			Function(cmd[0]+cmd[1])();urset(cmd.concat(`'${ind2n(ind)}'`));
-			seqset();calc();draw();
+			seqset();calc();curset();
 		}else synth.triggerAttackRelease(n2Hz(i2n[i]));
 	};
 	x.addEventListener('touchstart',keyfx);
@@ -150,9 +150,9 @@ document.onkeydown=e=>{
 	if(e.ctrlKey||e.metaKey)
 		switch(e.code){
 			case'KeyZ':e.preventDefault();urdo(e.shiftKey?1:-1);
-			case'KeyX':e.preventDefault();
-			case'KeyC':e.preventDefault();
-			case'KeyV':e.preventDefault();
+			case'KeyX':if(emode.checked){e.preventDefault();}
+			case'KeyC':if(emode.checked){e.preventDefault();}
+			case'KeyV':if(emode.checked){e.preventDefault();}
 		}
 	else
 		switch(e.code){
