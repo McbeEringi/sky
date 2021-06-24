@@ -113,7 +113,7 @@ bpmset=()=>{let x=Number(bpm_.value);if(x>0)Tone.Transport.bpm.value=main.bpm=x;
 scset=()=>{let x=Number(sc_.value);if(sc_.value&&Number.isInteger(x))main.sc=x;else sc_.value=main.sc;},
 tstart=()=>{Tone.Transport.start();},
 tpause=()=>{Tone.Transport.pause();requestIdleCallback(()=>{curset();kbset();});},
-tstop=e=>{Tone.Transport.stop();curpos=0;requestIdleCallback(()=>{curset();kbset();});},
+tstop=e=>{Tone.Transport.stop();requestIdleCallback(()=>{curpos=0;curset();kbset();});},
 tstep=x=>{
 	Tone.start();
 	curpos=((curpos+x)%calced.note.length+calced.note.length)%calced.note.length;
