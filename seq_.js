@@ -95,7 +95,7 @@ draw=()=>{
 		frr(ctx,'#feac',ins,0,3,240);
 	}
 },
-curset=()=>{tims.igscr=true;scr.scrollLeft=calced.note[curpos].pos+cfg.w2;draw();},
+curset=()=>{if(!emode.checked){tims.igscr=true;scr.scrollLeft=calced.note[curpos].pos+cfg.w2;}draw();},
 pset=()=>Tone.Transport.position=p2pos(calced.note[curpos].p),
 kbset=(x=calced.note[curpos].ind.reduce((a,x)=>a[x],main.scores))=>{
 	let tmp=x.split(',');
@@ -173,16 +173,13 @@ document.onkeydown=e=>{
 };
 emode.onchange=draw;
 scr.onclick=e=>{
-	if(emode.checked){
-		scr.scrollLeft=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5;
-	}else{
-		Tone.start();
-		let cp=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5,
-		ind=calced.note.findIndex(x=>x.pos<=cp&&cp<x.pos+cfg.w);
-		if(!~ind)return;
-		curpos=ind;pset();draw();kbset();
-		if(tstat())sytar(ind2n(calced.note[curpos].ind));
-	}
+	//if(emode.checked){scr.scrollLeft=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5;else
+	Tone.start();
+	let cp=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5,
+	ind=calced.note.findIndex(x=>x.pos<=cp&&cp<x.pos+cfg.w);
+	if(!~ind)return;
+	curpos=ind;pset();draw();kbset();
+	if(tstat())sytar(ind2n(calced.note[curpos].ind));
 };
 playbtn.onclick=e=>{
 	Tone.start();
