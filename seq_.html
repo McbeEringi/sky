@@ -11,6 +11,7 @@
 		<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js" defer></script>
 		<script src="https://cdn.jsdelivr.net/npm/tone/build/Tone.js" defer></script>
 		<script src="seq_.js" defer></script>
+		<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'img/tex.webp'});</script>
 		<style>
 			:root{user-select:none;-webkit-user-select:none;}[contenteditable],.usa{user-select:auto;-webkit-user-select:auto;}
 			html,body{height:100%;margin:0;position:relative;}body>input{display:none;}
@@ -49,6 +50,7 @@
 
 			#emode:checked~#kb,#emode:checked~#kb+div,#emode:not(:checked)~#palette{display:none;}#emode:checked~* label[for=emode]{transform:rotateZ(90deg);}
 			#kb>div::after,.bg{background-image:url(img/seq.svg);background-size:800%;background-position:var(--bp);}
+			.bg.tex{background-image:url(img/tex.webp);}.nowebp .bg.tex{background-image:url(img/tex.png);}
 		</style>
 		<input type="checkbox" id="emode">
 		<input type="checkbox" id="alcb">
@@ -78,7 +80,7 @@
 			</button><button id="redobtn" class="grid bg" style="--bp:-600% 0;transform:scaleX(-1);">redo
 			</button><button id="" class="grid showtxt" style="--bp:-000% 0;">file
 			</button><button id="" class="grid showtxt" style="--bp:-000% 0;">save
-			</button><button id="" class="grid showtxt" style="--bp:-000% 0;" onclick="alert('');">info
+			</button><button id="info" class="grid bg showtxt" style="--bp:-200% 0;color:#fea;font-size:26px;">𝑖𝚒
 			</button>
 		</div>
 		<div id="kb"><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div></div>

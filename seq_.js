@@ -192,6 +192,7 @@ prevbtn.onclick=()=>tstep(-1);
 nextbtn.onclick=()=>tstep( 1);
 undobtn.onclick=()=> urdo(-1);
 redobtn.onclick=()=> urdo( 1);
+info.onclick=()=>alert('アイコン迷い中\n<a href="https://twitter.com/mcbeeringi/status/1408051817540251658?s=21">twitterで投票</a>');
 
 {
 	(window.onresize=()=>{
