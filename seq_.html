@@ -39,7 +39,7 @@
 			#kb>div>p::before{box-shadow:0 0 8px  #0006,0 0 0   0   #000c inset;opacity:1;}#kb>div.a>p::before{opacity:0;}
 			#kb>div>p::after {box-shadow:0 0 16px #aef6,0 0 2px 4px #aefc inset;opacity:0;}#kb>div.a>p::after {opacity:1;}
 
-			#palette{max-width:320px;background-color:#0004;margin:0 auto;}
+			#palette{box-sizing:border-box;max-width:320px;padding:4px;border-radius:8px;background-color:#0004;margin:0 auto;}
 
 			#emode:checked~#kb,#emode:checked~#kb+div,#emode:not(:checked)~#palette{display:none;}#emode:checked~* label[for=emode]{transform:rotateZ(90deg);}
 			#kb>div::after,.bg{background-image:url(img/seq.svg);background-size:800%;background-position:var(--bp);}
@@ -52,10 +52,10 @@
 				<input type="checkbox" id="cfgcb">
 				<label for="cfgcb" class="grid bg" style="--bp:-700% 0;"></label>
 				<div>
-					         <button id="" class="grid bg" style="--bp:-700% -100%;">
-					</button><input class="grid bg showtxt style" style="--bp:-200% -200%;"><button id="" class="grid bg" style="--bp:-600% -100%;">
-					</button><button id="" class="grid bg" style="--bp:-700% -100%;">
-					</button><input class="grid bg showtxt style" style="--bp:-100% -200%;"><button id="" class="grid bg" style="--bp:-600% -100%;">
+					         <button class="grid bg" style="--bp:-700% -100%;" onclick="bpm_.value=Number(bpm_.value)-6;bpmset();">
+					</button><input class="grid bg showtxt style" style="--bp:-200% -200%;" id="bpm_"><button class="grid bg" style="--bp:-600% -100%;" onclick="bpm_.value=Number(bpm_.value)+6;bpmset();">
+					</button><button class="grid bg" style="--bp:-700% -100%;" onclick="sc_.value--;scset();">
+					</button><input class="grid bg showtxt style" style="--bp:-100% -200%;" id="sc_"><button class="grid bg" style="--bp:-600% -100%;" onclick="sc_.value++;scset();">
 					</button>
 				</div>
 			</div>

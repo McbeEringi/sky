@@ -106,6 +106,8 @@ urdo=x=>{
 	undobtn.disabled=!urstack[0].length;redobtn.disabled=!urstack[2].length;
 	if(tmp){calc();draw();seqset();kbset();}
 },
+bpmset=()=>{let x=Number(bpm_.value);if(x>0)Tone.Transport.bpm.value=main.bpm=x;else bpm_.value=Tone.Transport.bpm.value=main.bpm;},
+scset=()=>{let x=Number(sc_.value);if(sc_.value&&Number.isInteger(x))main.sc=x;else sc_.value=main.sc;},
 tstart=()=>{Tone.Transport.start();},
 tpause=()=>{Tone.Transport.pause();requestIdleCallback(()=>{curset();kbset();});},
 tstop=e=>{Tone.Transport.stop();curpos=0;requestIdleCallback(()=>{curset();kbset();});},
@@ -116,8 +118,7 @@ tstep=x=>{
 	if(tstat())sytar(ind2n(calced.note[curpos].ind));
 },
 init=()=>{
-	calc();seqset();tstop();
-	Tone.Transport.bpm.value=main.bpm;
+	calc();seqset();tstop();bpmset();scset();
 	urstack=[[],['main.scores=',null,JSON.stringify(main.scores)],[]];
 	redobtn.disabled=undobtn.disabled=true;
 };
@@ -183,6 +184,8 @@ playbtn.onclick=e=>{
 	Tone.start();
 	if(tstat())tstart();else tpause();
 };
+bpm_.onchange=bpmset;
+sc_.onchange=scset;
 stopbtn.onclick=tstop;
 prevbtn.onclick=()=>tstep(-1);
 nextbtn.onclick=()=>tstep( 1);
