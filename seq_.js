@@ -91,7 +91,7 @@ draw=()=>{
 				frr(ctx,col,x.pos+1+pos,225-Number(n2i[String(n)])*16,cfg.w-2,14,4);//240-16+1
 			});
 	}
-	if(emode.checked)frr(ctx,'#fea8',w*.5,0,1,240)
+	if(emode.checked)frr(ctx,'#fea8',w*.5,0,1,240);
 	if(ins){
 		frr(ctx,'#feac',ins,0,3,240);
 	}

@@ -4,9 +4,6 @@
 	</style>
 	<defs>
 		<filter id="sh" x="-20%" width="140%" y="-20%" height="140%"><feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#f00"/></filter>
-		<clipPath id="clip0">
-			<path d="M896,256v128h128v-128zm0,78h128v12h-128z"/>
-		</clipPath>
 	</defs>
 	<g><!--keys-->
 		<path d="M0,0m64,9l55,55l-55,55l-55,-55zm39,55a39,39,0,1,0,0,.0001z"/>
