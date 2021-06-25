@@ -16,11 +16,11 @@
 			:root{user-select:none;-webkit-user-select:none;}[contenteditable],.usa{user-select:auto;-webkit-user-select:auto;}
 			html,body{height:100%;margin:0;position:relative;}body>input{display:none;}
 
-			.disp{position:relative;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}.disp>*{vertical-align:bottom;}#emode:checked~.disp::after{content:"";pointer-events:none;position:absolute;top:0;left:50%;transform:translateX(-50%);width:1.5px;height:100%;background-color:#fea8;}
-			.disp::before{content:"CBAGFEDCBAGFEDC";position:absolute;top:0;line-height:16px;width:12px;font-size:12px;color:#0008;text-shadow:0 0 4px #fff8;}
+			.disp{position:relative;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}.disp>*{vertical-align:bottom;}
+			.disp::after{content:"CBAGFEDCBAGFEDC";position:absolute;top:0;left:0;line-height:16px;width:12px;font-size:12px;color:#0008;text-shadow:0 0 4px #fff8;z-index:2;}
 			#name_{position:absolute;bottom:0;right:8px;line-height:32px;font-size:24px;text-shadow:none;color:#0004;}
 			#c{width:100%;height:240px;position:relative;pointer-events:none;z-index:1;}
-			#scr{width:100%;height:100%;position:absolute;top:0;overflow-x:scroll;scrollbar-width:thin;scrollbar-color:#0008 #0000;}#scr::webkit-scrollbar{background-color:#0000;height:8px;}#scr::webkit-scrollbar-thumb{background-color:#0008;border-radius:8px;}
+			#scr{width:100%;height:100%;position:absolute;top:0;overflow-x:scroll;z-index:2;scrollbar-width:thin;scrollbar-color:#0008 #0000;}#scr::webkit-scrollbar{background-color:#0000;height:8px;}#scr::webkit-scrollbar-thumb{background-color:#0008;border-radius:8px;}
 			#scrw{height:100%;padding:0 50vw;}
 			.cfg{position:absolute;top:0;right:0;transform-origin:top right;transform:scale(.9);z-index:2;}.cfg *{position:absolute;right:0;}
 			#cfgcb{display:none;}#cfgcb+*+*{width:156px;opacity:0;pointer-events:none;transition:.2s;}#cfgcb+*+* .grid{transform:scale(.8);}
@@ -30,6 +30,7 @@
 			.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#0006;font-size:0;border-radius:25%;box-shadow:0 0 8px #0008;text-align:center;vertical-align:middle;border:none;outline:none;padding:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
 			.grid:not(input){cursor:pointer;}.grid:active{background-color:#8888;}.grid:disabled{filter:grayscale(1)opacity(.7);}.bg{transition:.1s;background-size:800%;}.showtxt{color:#caf0f6;font-size:18px;}
 
+			.kb{position:relative;height:100vh;}
 			#kb{max-width:400px;margin:0 auto;border-radius:8px;background-color:#0004;font-size:0;touch-action:none;}
 			#kb>div{display:inline-block;position:relative;width:20%;--bp:-100% 0;overflow:hidden;will-change:opacity;}
 			#kb>div:nth-of-type(5n-3),#kb>div:nth-of-type(5n-1){--bp:-200% 0;}#kb>div:nth-of-type(7n+1){--bp:0 0;}
@@ -48,7 +49,7 @@
 			#albox{top:50%;left:50%;max-width:100%;padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#2228;z-index:4;}
 			#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
 
-			#emode:checked~#kb,#emode:checked~#kb+div,#emode:not(:checked)~#palette{display:none;}#emode:checked~* label[for=emode]{transform:rotateZ(90deg);}
+			#emode:checked~.kb,#emode:not(:checked)~#palette{display:none;}#emode:checked~* label[for=emode]{transform:rotateZ(90deg);}
 			#kb>div::after,.bg{background-image:url(img/seq.svg);background-size:800%;background-position:var(--bp);}
 			.bg.tex{background-image:url(img/tex.webp);}.nowebp .bg.tex{background-image:url(img/tex.png);}
 		</style>
@@ -63,9 +64,9 @@
 				<label for="cfgcb" class="grid bg" style="--bp:-700% 0;"></label>
 				<div>
 					         <button class="grid bg" style="--bp:-700% -100%;" onclick="bpm_.value=Number(bpm_.value)-6;bpmset();">
-					</button><input class="grid bg showtxt style" style="--bp:-200% -200%;" id="bpm_"><button class="grid bg" style="--bp:-600% -100%;" onclick="bpm_.value=Number(bpm_.value)+6;bpmset();">
+					</button><input class="grid bg showtxt style" style="--bp:-200% -300%;" id="bpm_"><button class="grid bg" style="--bp:-600% -100%;" onclick="bpm_.value=Number(bpm_.value)+6;bpmset();">
 					</button><button class="grid bg" style="--bp:-700% -100%;" onclick="sc_.value--;scset();">
-					</button><input class="grid bg showtxt style" style="--bp:-100% -200%;" id="sc_"><button class="grid bg" style="--bp:-600% -100%;" onclick="sc_.value++;scset();">
+					</button><input class="grid bg showtxt style" style="--bp:-100% -300%;" id="sc_"><button class="grid bg" style="--bp:-600% -100%;" onclick="sc_.value++;scset();">
 					</button>
 				</div>
 			</div>
@@ -75,16 +76,18 @@
 			</button><button id="stopbtn" class="grid bg" style="--bp:-400% 0;">stop
 			</button><button id="prevbtn" class="grid bg" style="--bp:-500% 0;transform:scaleX(-1);">prev
 			</button><button id="nextbtn" class="grid bg" style="--bp:-500% 0;">next
-			</button><label  for="emode"  class="grid bg" style="--bp:0 -200%;">mode
+			</button><label  for="emode"  class="grid bg" style="--bp:0 -300%;">mode
 			</label ><button id="undobtn" class="grid bg" style="--bp:-600% 0;">undo
 			</button><button id="redobtn" class="grid bg" style="--bp:-600% 0;transform:scaleX(-1);">redo
-			</button><button id="" class="grid showtxt" style="--bp:-000% 0;">file
-			</button><button id="" class="grid showtxt" style="--bp:-000% 0;">save
-			</button><button id="info" class="grid bg showtxt" style="--bp:-200% 0;color:#fea;font-size:26px;">𝑖𝚒
+			</button><button id="filebtn" class="grid bg" style="--bp:0 -200%;">file
+			</button><button id="savebtn" class="grid bg" style="--bp:-500% -200%;">save
+			</button><button id="infobtn" class="grid bg showtxt" style="--bp:-200% 0;color:#fea;font-size:26px;text-shadow:0 0 2px #f00;">𝚒
 			</button>
 		</div>
-		<div id="kb"><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div></div>
-		<div style="height:calc(100vh - calc(min(400px,100vw) * .6));position:relative;"><button class="grid bg" style="--bp:-300% 0;position:absolute;bottom:0;" onclick="playbtn.onclick();">play/pause</button></div>
+		<div class="kb">
+			<div id="kb"><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div></div>
+			<button class="grid bg" style="--bp:-300% 0;position:absolute;bottom:0;" onclick="playbtn.onclick();">play/pause</button>
+		</div>
 		<div id="palette">
 			         <button id="slbtn" class="grid bg" style="--bp:-300% -100%;">select
 			</button><button id="cxbtn" class="grid bg" style="--bp:0 -100%;">cut

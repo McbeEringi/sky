@@ -91,6 +91,7 @@ draw=()=>{
 				frr(ctx,col,x.pos+1+pos,225-Number(n2i[String(n)])*16,cfg.w-2,14,4);//240-16+1
 			});
 	}
+	if(emode.checked)frr(ctx,'#fea8',w*.5,0,1,240)
 	if(ins){
 		frr(ctx,'#feac',ins,0,3,240);
 	}
@@ -192,7 +193,9 @@ prevbtn.onclick=()=>tstep(-1);
 nextbtn.onclick=()=>tstep( 1);
 undobtn.onclick=()=> urdo(-1);
 redobtn.onclick=()=> urdo( 1);
-info.onclick=()=>alert('アイコン迷い中\n<a href="https://twitter.com/mcbeeringi/status/1408051817540251658?s=21">twitterで投票</a>');
+filebtn.onclick=()=>alert(null);
+savebtn.onclick=()=>alert(null);
+infobtn.onclick=()=>alert('info');
 
 {
 	(window.onresize=()=>{
