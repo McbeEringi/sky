@@ -1,7 +1,16 @@
 'use strict';
 let main,calced,tims={},curpos=0,curind,urstack;
 alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
-const ctx=c.getContext('2d'),res=window.devicePixelRatio||1,cfg={pad:12,w:16},
+const texts={
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2106250\nMIT License\n',
+	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
+	...{
+		ja:{
+			title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',
+		}
+	}[window.navigator.language.slice(0,2)]
+},
+ctx=c.getContext('2d'),res=window.devicePixelRatio||1,cfg={pad:12,w:16},
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
 n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6','3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
 pos2p=(pos_=Tone.Transport.position)=>{let tmp=pos_.split(':').map(x=>Number(x));return(tmp[0]*Tone.Transport.timeSignature+tmp[1]+tmp[2]*.25)%main.scores.length;},
@@ -195,7 +204,7 @@ undobtn.onclick=()=> urdo(-1);
 redobtn.onclick=()=> urdo( 1);
 filebtn.onclick=()=>alert(null);
 savebtn.onclick=()=>alert(null);
-infobtn.onclick=()=>alert('info');
+infobtn.onclick=()=>alert(texts.info+'\n<a class="grid bg icotxt" href="manual/seq.html">?</a>');
 
 {
 	(window.onresize=()=>{
@@ -215,6 +224,7 @@ infobtn.onclick=()=>alert('info');
 	};
 
 	init();
+	if(texts.notice)requestIdleCallback(()=>alert(texts.notice));
 }
 if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
 	requestIdleCallback(()=>{
