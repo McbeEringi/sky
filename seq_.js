@@ -75,10 +75,10 @@ draw=()=>{
 			let cur;
 			if(scr.scrollLeft<=x.pos+cfg.pad){
 				cur=x.pos-scr.scrollLeft+cfg.pad2>0;
-				if(emode.checked)ecur=[x.pos+(cur?-2:cfg.pad-1),cur?x.ind:[...x.ind,0]];
+				if(emode.checked)ecur=[x.pos+(cur?-2:cfg.pad-1),true,cur?x.ind:[...x.ind,0]];
 			}else if(x.pos+x.dx-cfg.pad<=scr.scrollLeft){
 				cur=x.pos-scr.scrollLeft+x.dx-cfg.pad2>0;
-				if(emode.checked)ecur=[x.pos+x.dx+(cur?-cfg.pad-2:-1),cur?[...x.ind,ind2n(x.ind).length]:[...x.ind.slice(0,-1),x.ind.slice(-1)[0]+1]];
+				if(emode.checked)ecur=[x.pos+x.dx+(cur?-cfg.pad-2:-1),false,cur?[...x.ind,ind2n(x.ind).length-1]:x.ind];
 			}
 		}
 	}
@@ -88,7 +88,7 @@ draw=()=>{
 		frr(ctx,cppos==x.pos?'#aef8':'#0004',x.pos+pos,0,cfg.w,240,4);
 		if(cur){
 			cur=x.pos-scr.scrollLeft+cfg.w2>0;
-			if(emode.checked)ecur=[x.pos+(cur?-2:cfg.w-1),cur?x.ind:[...x.ind.slice(0,-1),x.ind.slice(-1)[0]+1]];
+			if(emode.checked)ecur=[x.pos+(cur?-2:cfg.w-1),cur,x.ind];
 		}
 		let note=ind2n(x.ind);
 		if(note)
@@ -207,7 +207,8 @@ savebtn.onclick=()=>alert(null);
 infobtn.onclick=()=>alert(texts.info+'\n<a class="grid bg icotxt" href="manual/seq.html">?</a>');
 
 slbtn.onclick=()=>{
-	sel=ecur;
+	sel=ecur;//[pos,ind]
+	draw();
 };
 
 {
@@ -220,6 +221,7 @@ slbtn.onclick=()=>{
 	localStorage.seq_urMax=128;
 	cfg.pad2=cfg.pad/2;
 	cfg.w2=cfg.w/2;
+	setInterval(()=>console.log(ecur),500);
 
 	main=localStorage.seq_ezsave?JSON.parse(localStorage.seq_ezsave):{
 		"sc":-2,"bpm":120,"ts":4,"arp":0,"name":"ウミユリ海底譚",
