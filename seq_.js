@@ -1,5 +1,5 @@
 'use strict';
-let main,calced,tims={},curpos=0,curind,urstack;
+let main,calced,tims={},curpos=0,ecur,sel,urstack;
 alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
 	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2106250\nMIT License\n',
@@ -65,8 +65,9 @@ calc=()=>{
 },
 draw=()=>{
 	if(!calced)return;//window.scrollY>240
-	let w=c.parentNode.clientWidth,pos=w*.5-scr.scrollLeft,ins,cppos=calced.note[curpos].pos;
+	let w=c.parentNode.clientWidth,pos=w*.5-scr.scrollLeft,cppos=calced.note[curpos].pos;
 	ctx.clearRect(0,0,w,240);
+	ecur=null;
 	for(let x of calced.box){
 		if(x.pos+x.dx+pos<0)continue;if(w<x.pos+pos)break;
 		frr(ctx,'#4444',x.pos+pos,0,x.dx,240,4);
@@ -74,10 +75,10 @@ draw=()=>{
 			let cur;
 			if(scr.scrollLeft<=x.pos+cfg.pad){
 				cur=x.pos-scr.scrollLeft+cfg.pad2>0;
-				if(emode.checked)[ins,curind]=[x.pos+pos+(cur?-2:cfg.pad-1),cur?x.ind:[...x.ind,0]];
+				if(emode.checked)ecur=[x.pos+(cur?-2:cfg.pad-1),cur?x.ind:[...x.ind,0]];
 			}else if(x.pos+x.dx-cfg.pad<=scr.scrollLeft){
 				cur=x.pos-scr.scrollLeft+x.dx-cfg.pad2>0;
-				if(emode.checked)[ins,curind]=[x.pos+x.dx+pos+(cur?-cfg.pad-2:-1),cur?[...x.ind,ind2n(x.ind).length]:[...x.ind.slice(0,-1),x.ind.slice(-1)[0]+1]];
+				if(emode.checked)ecur=[x.pos+x.dx+(cur?-cfg.pad-2:-1),cur?[...x.ind,ind2n(x.ind).length]:[...x.ind.slice(0,-1),x.ind.slice(-1)[0]+1]];
 			}
 		}
 	}
@@ -87,7 +88,7 @@ draw=()=>{
 		frr(ctx,cppos==x.pos?'#aef8':'#0004',x.pos+pos,0,cfg.w,240,4);
 		if(cur){
 			cur=x.pos-scr.scrollLeft+cfg.w2>0;
-			if(emode.checked)[ins,curind]=[x.pos+pos+(cur?-2:cfg.w-1),cur?x.ind:[...x.ind.slice(0,-1),x.ind.slice(-1)[0]+1]];
+			if(emode.checked)ecur=[x.pos+(cur?-2:cfg.w-1),cur?x.ind:[...x.ind.slice(0,-1),x.ind.slice(-1)[0]+1]];
 		}
 		let note=ind2n(x.ind);
 		if(note)
@@ -101,9 +102,8 @@ draw=()=>{
 			});
 	}
 	if(emode.checked)frr(ctx,'#fea8',w*.5,0,1,240);
-	if(ins){
-		frr(ctx,'#feac',ins,0,3,240);
-	}
+	if(ecur)frr(ctx,'#feac',ecur[0]+pos,0,3,240);
+	if(sel)frr(ctx,'#fea8',sel[0]+pos,0,3,240);
 },
 curset=()=>{if(!emode.checked){tims.igscr=true;scr.scrollLeft=calced.note[curpos].pos+cfg.w2;}draw();},
 pset=()=>Tone.Transport.position=p2pos(calced.note[curpos].p),
@@ -181,7 +181,7 @@ document.onkeydown=e=>{
 					kb.children[keymap.indexOf(e.code)].dispatchEvent(new Event('mousedown'));
 		}
 };
-emode.onchange=draw;
+emode.onchange=()=>{sel=null;draw();};
 scr.onclick=e=>{
 	//if(emode.checked){scr.scrollLeft=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5;else
 	Tone.start();
@@ -206,6 +206,10 @@ filebtn.onclick=()=>alert(null);
 savebtn.onclick=()=>alert(null);
 infobtn.onclick=()=>alert(texts.info+'\n<a class="grid bg icotxt" href="manual/seq.html">?</a>');
 
+slbtn.onclick=()=>{
+	sel=ecur;
+};
+
 {
 	(window.onresize=()=>{
 		c.width=res*c.parentNode.clientWidth;
@@ -216,7 +220,6 @@ infobtn.onclick=()=>alert(texts.info+'\n<a class="grid bg icotxt" href="manual/s
 	localStorage.seq_urMax=128;
 	cfg.pad2=cfg.pad/2;
 	cfg.w2=cfg.w/2;
-	//setInterval(()=>console.log(curind),500);
 
 	main=localStorage.seq_ezsave?JSON.parse(localStorage.seq_ezsave):{
 		"sc":-2,"bpm":120,"ts":4,"arp":0,"name":"ウミユリ海底譚",
