@@ -61,7 +61,7 @@
 				</div>
 				<div id="kb"></div>
 			</div>
-			<div id="log"><h2>sky_seq manual</h2>要素をクリックして説明を表示</div>
+			<div id="log"><h2>sky_seq manual</h2>ctrl command キーを押しながらカーソルを移動して回転<br>要素をクリックして説明を表示</div>
 		</div>
 		<script>
 			alert=x=>{log.textContent='';log.insertAdjacentHTML('beforeend',x);};
@@ -86,8 +86,10 @@
 			let rx=-15,ry=30;
 			tdv.style.transform=`scale(.7)rotateX(${rx}deg)rotateY(${ry}deg)`;
 			tdvw.addEventListener('pointermove',e=>{
-				rx+=e.movementY*.3;ry-=e.movementX*.3;
-				tdv.style.transform=`scale(.7)rotateX(${rx}deg)rotateY(${ry}deg)`;
+				if(e.metaKey||e.ctrlKey||e.pointerType=='touch'&&e.isPrimary){
+					rx-=e.movementY*.3;ry+=e.movementX*.3;
+					tdv.style.transform=`scale(.7)rotateX(${rx}deg)rotateY(${ry}deg)`;
+				}
 			},{passive:true});
 			window.addEventListener('styexe',()=>{
 				tdv.appendChild(bg);
