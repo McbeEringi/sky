@@ -85,7 +85,7 @@
 
 			let rx=-15,ry=30;
 			tdv.style.transform=`scale(.7)rotateX(${rx}deg)rotateY(${ry}deg)`;
-			tdvw.addEventListener('touchmove',e=>{
+			tdvw.addEventListener('pointermove',e=>{
 				rx+=e.movementY*.3;ry-=e.movementX*.3;
 				tdv.style.transform=`scale(.7)rotateX(${rx}deg)rotateY(${ry}deg)`;
 			},{passive:true});
