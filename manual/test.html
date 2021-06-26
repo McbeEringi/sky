@@ -92,7 +92,7 @@
 				}
 			},{passive:true});
 			const momain=()=>window.addEventListener('deviceorientation',e=>{
-				tdv.style.transform=`scale(.7)rotateX(${-e.gamma-90}deg)rotateY(${-e.alpha*(window.navigator.userAgent.match(/(Apple|Safari|Firefox)/i)?-1:1)*Math.sign(e.gamma)}deg)rotateZ(${-e.beta*Math.sign(-e.gamma)}deg)`;
+				tdv.style.transform=`scale(.7)rotateX(${-e.gamma}deg)rotateY(${-e.beta}deg)rotateZ(${-e.alpha*(window.navigator.userAgent.match(/(Apple|Safari|Firefox)/i)?-1:1)}deg)`;
 			});
 			tdvw.onclick=()=>{
 				tdvw.onclick=null;
