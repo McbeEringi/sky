@@ -103,7 +103,7 @@ draw=()=>{
 	}
 	if(emode.checked)frr(ctx,'#fea8',w*.5,0,1,240);
 	if(ecur)frr(ctx,'#feac',ecur[0]+pos,0,3,240);
-	if(sel)frr(ctx,'#fea8',sel[0]+pos,0,3,240);
+	if(sel)frr(ctx,'#fea8',Math.min(sel[0],ecur[0])+pos,0,Math.abs(sel[0]-ecur[0]),240);
 },
 curset=()=>{if(!emode.checked){tims.igscr=true;scr.scrollLeft=calced.note[curpos].pos+cfg.w2;}draw();},
 pset=()=>Tone.Transport.position=p2pos(calced.note[curpos].p),
@@ -181,7 +181,6 @@ document.onkeydown=e=>{
 					kb.children[keymap.indexOf(e.code)].dispatchEvent(new Event('mousedown'));
 		}
 };
-emode.onchange=()=>{sel=null;draw();};
 scr.onclick=e=>{
 	//if(emode.checked){scr.scrollLeft=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5;else
 	Tone.start();
@@ -206,8 +205,9 @@ filebtn.onclick=()=>alert(null);
 savebtn.onclick=()=>alert(null);
 infobtn.onclick=()=>alert(texts.info+'\n<a class="grid bg icotxt" href="manual/seq.html">?</a>');
 
+emode.onchange=()=>{sel=null;cxbtn.disabled=true;ccbtn.disabled=true;draw();};
 slbtn.onclick=()=>{
-	sel=ecur;//[pos,ind]
+	sel=ecur;//[pos,prev,ind]
 	draw();
 };
 
