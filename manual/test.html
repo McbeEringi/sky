@@ -12,17 +12,24 @@
 	<body>
 		<script src="../style.js" async></script>
 		<style>
-			:root{background-color:#ccc;}
-			html,body{height:100%;margin:0;--z:16px;--n:0;}
-			.tdvw{width:100%;height:100%;border:2px solid;box-sizing:border-box;overflow:hidden;perspective:1024px;}.tdvw *{transform-style:preserve-3d;}
-			#bg{position:absolute;overflow:hidden;opacity:.7;}
-			#tdv{height:100%;}
+			html,body{height:100%;margin:0;--z:32px;--n:0;}
+			.tdvw{width:100%;height:100%;perspective:4096px;background-image:linear-gradient(#415,#214);}.tdvw *{transform-style:preserve-3d;}
+			#bg{position:absolute;overflow:hidden;opacity:.5;width:100%;height:100%;transform:translateZ(-100vmin);}
+			#tdv{height:100%;user-select:none;-webkit-userselect:none;}
 
-			.disp{height:240px;padding-left:max(16px,calc(50% - 150px));white-space:nowrap;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);transform:translateZ(var(--z));}
+			.disp{height:240px;padding-left:max(16px,calc(50% - 150px));white-space:nowrap;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 			.disp::after{content:"CBAGFEDCBAGFEDC";white-space:normal;position:absolute;top:0;left:0;line-height:16px;width:12px;font-size:12px;color:#0008;text-shadow:0 0 4px #fff8;transform:translateZ(var(--z));}
 			.cell,.wrap{display:inline-block;margin-left:1px;height:100%;background-color:#0004;border-radius:4px;transform:translateZ(var(--z));}
 			.cell{width:16px;}.wrap{padding:0 12px;}
 			.cell p{margin:0;width:14px;height:14px;position:absolute;left:1px;bottom:calc(calc(var(--n) * 16px) + 1px);background-color:#fea;border-radius:4px;transform:translateZ(var(--z));}
+
+			.ui{max-width:260px;margin:8px 0;}
+			.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#0006;font-size:0;border-radius:25%;box-shadow:0 0 8px #0008;text-align:center;vertical-align:middle;border:none;outline:none;padding:0;touch-action:manipulation;}
+			.grid:not(input){cursor:pointer;}.grid:active{background-color:#8888;}.grid:disabled{filter:grayscale(1)opacity(.7);}.bg{transition:.1s;background-size:800%;}.showtxt,.icotxt{color:#caf0f6;font-size:18px;}.icotxt{--bp:-200% 0;color:#fea;font-size:26px;text-shadow:0 0 2px #f00;}
+
+			.kb{max-height:240px;width:100%;object-fit:contain;}
+
+			.bg{background-image:url(../img/seq.svg);background-size:800%;background-position:var(--bp);}
 		</style>
 		<div class="tdvw">
 			<div id="tdv">
@@ -35,11 +42,30 @@
 					</div><div class="wrap"><div class="cell"><p style="--n:4;"></p></div><div class="wrap"><div class="cell"><p style="--n:3;"></p></div><div class="cell"><p style="--n:4;"></p></div><div class="cell"><p style="--n:7;"></p></div></div></div>
 				</div>
 				<div class="ui">
-
+						<button id="playbtn" class="grid bg" style="--bp:-300% 0;">play/pause
+					</button><button id="stopbtn" class="grid bg" style="--bp:-400% 0;">stop
+					</button><button id="prevbtn" class="grid bg" style="--bp:-500% 0;transform:scaleX(-1);">prev
+					</button><button id="nextbtn" class="grid bg" style="--bp:-500% 0;">next
+					</button><label  for="emode"  class="grid bg" style="--bp:0 -300%;">mode
+					</label ><button id="undobtn" class="grid bg" style="--bp:-600% 0;">undo
+					</button><button id="redobtn" class="grid bg" style="--bp:-600% 0;transform:scaleX(-1);">redo
+					</button><button id="filebtn" class="grid bg" style="--bp:0 -200%;">file
+					</button><button id="savebtn" class="grid bg" style="--bp:-500% -200%;">save
+					</button><button id="infobtn" class="grid bg icotxt">𝚒
+					</button>
 				</div>
+				<img class="kb" src="img/kb.png" alt="keyboard">
 			</div>
 		</div>
-		aaaa
+		aaaa <br>
+		説明書き <br>
+		説明書き <br>
+		多分あとでなんか書く <br>
+		枠の外にも3Dが <br>
+		飛び出てきてすごいでしょ <br>
+		って言いたい <br>
+		なるべく行数を <br>
+		稼ぎたい
 		<script>
 			window.addEventListener('styexe',()=>{
 				tdv.appendChild(bg);
