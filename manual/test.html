@@ -85,12 +85,21 @@
 
 			let rx=-15,ry=30;
 			tdv.style.transform=`scale(.7)rotateX(${rx}deg)rotateY(${ry}deg)`;
-			tdvw.addEventListener('pointermove',e=>{
-				if(e.metaKey||e.ctrlKey||e.pointerType=='touch'&&e.isPrimary){
+			tdvw.addEventListener('mousemove',e=>{
+				if(e.metaKey||e.ctrlKey){
 					rx-=e.movementY*.3;ry+=e.movementX*.3;
 					tdv.style.transform=`scale(.7)rotateX(${rx}deg)rotateY(${ry}deg)`;
 				}
 			},{passive:true});
+			const momain=()=>window.addEventListener('deviceorientation',e=>{
+				tdv.style.transform=`scale(.7)rotateX(${-e.gamma}deg)rotateY(${-e.beta}deg)rotateZ(${-e.alpha*(window.navigator.userAgent.match(/(Apple|Safari|Firefox)/i)?-1:1)}deg)`;
+			});
+			tdvw.onclick=()=>{
+				tdvw.onclick=null;
+				if(typeof DeviceMotionEvent.requestPermission=='function')
+					DeviceMotionEvent.requestPermission().then(p=>{if(p=='granted')momain();}).catch(e=>alert(e));
+				else momain();
+			};
 			window.addEventListener('styexe',()=>{
 				tdv.appendChild(bg);
 			});
