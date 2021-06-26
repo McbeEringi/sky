@@ -12,29 +12,34 @@
 	<body>
 		<script src="../style.js" async></script>
 		<style>
-			html,body{height:100%;margin:0;--z:32px;--n:0;}
+			html,body{height:100%;margin:0;--z:32px;--n:0;}body>input{display:none;}
 			.tdvw{width:100%;height:100%;perspective:4096px;background-image:linear-gradient(#415,#214);}.tdvw *{transform-style:preserve-3d;}
-			#bg{position:absolute;overflow:hidden;opacity:.5;width:100%;height:100%;transform:translateZ(-100vmin);}
-			#tdv{height:100%;user-select:none;-webkit-userselect:none;}
+			#bg{position:absolute;overflow:hidden;opacity:.5;width:100%;height:100%;pointer-events:none;transform:translateZ(-100vmin);}
+			#tdv{height:100%;user-select:none;-webkit-user-select:none;}
 
 			.disp{height:240px;padding-left:max(16px,calc(50% - 150px));white-space:nowrap;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
-			.disp::after{content:"CBAGFEDCBAGFEDC";white-space:normal;position:absolute;top:0;left:0;line-height:16px;width:12px;font-size:12px;color:#0008;text-shadow:0 0 4px #fff8;transform:translateZ(var(--z));}
+			.disp::before{content:"title";position:absolute;bottom:0;right:8px;line-height:32px;font-size:24px;text-shadow:none;color:#0004;}
+			.disp::after{content:"CBAGFEDCBAGFEDC";white-space:normal;position:absolute;top:0;left:0;line-height:16px;width:12px;font-size:12px;color:#0008;text-shadow:0 0 4px #fff8;}
 			.cell,.wrap{display:inline-block;margin-left:1px;height:100%;background-color:#0004;border-radius:4px;transform:translateZ(var(--z));}
 			.cell{width:16px;}.wrap{padding:0 12px;}
 			.cell p{margin:0;width:14px;height:14px;position:absolute;left:1px;bottom:calc(calc(var(--n) * 16px) + 1px);background-color:#fea;border-radius:4px;transform:translateZ(var(--z));}
+			#cur{position:absolute;transform:translateZ(calc(var(--z) * 1.5));background-color:#aef8;}
 
-			.ui{max-width:260px;margin:8px 0;}
+			.ui{max-width:260px;margin:8px 0;transform:translateZ(var(--z));}
 			.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#0006;font-size:0;border-radius:25%;box-shadow:0 0 8px #0008;text-align:center;vertical-align:middle;border:none;outline:none;padding:0;touch-action:manipulation;}
 			.grid:not(input){cursor:pointer;}.grid:active{background-color:#8888;}.grid:disabled{filter:grayscale(1)opacity(.7);}.bg{transition:.1s;background-size:800%;}.showtxt,.icotxt{color:#caf0f6;font-size:18px;}.icotxt{--bp:-200% 0;color:#fea;font-size:26px;text-shadow:0 0 2px #f00;}
+			#emode:checked~.tdvw label[for=emode]{transform:rotateZ(90deg);}
 
-			.kb{max-height:240px;width:100%;object-fit:contain;}
+			#kb{max-width:400px;width:100%;margin:0 auto;background-color:#0004;border-radius:8px;}#kb::before{content:"";display:block;padding-top:60%;background-size:100%;background-image:url(img/kb.png);transform:translateZ(var(--z));}
+			#emode:checked~.tdvw #kb{display:none;}
 
 			.bg{background-image:url(../img/seq.svg);background-size:800%;background-position:var(--bp);}
 		</style>
+		<input type="checkbox" id="emode">
 		<div class="tdvw">
 			<div id="tdv">
-				<div class="disp">
-						<div class="wrap"><div class="cell"><p style="--n:3;"></p></div><div class="cell"><p style="--n:4;"></p></div>
+				<div class="disp" onclick="alert('disp');event.stopPropagation()">
+						<div class="wrap"><div id="cur" class="cell"></div><div class="cell"><p style="--n:3;"></p></div><div class="cell"><p style="--n:4;"></p></div>
 					</div><div class="wrap"><div class="cell"><p style="--n:7;"></p></div><div class="cell"><p style="--n:3;"></p></div>
 					</div><div class="wrap"><div class="cell"><p style="--n:4;"></p></div><div class="cell"><p style="--n:6;"></p></div>
 					</div><div class="wrap"><div class="cell"><p style="--n:4;"></p></div><div class="cell"><p style="--n:5;"></p></div>
@@ -54,7 +59,7 @@
 					</button><button id="infobtn" class="grid bg icotxt">𝚒
 					</button>
 				</div>
-				<img class="kb" src="img/kb.png" alt="keyboard">
+				<div id="kb"></div>
 			</div>
 		</div>
 		aaaa <br>
@@ -67,13 +72,19 @@
 		なるべく行数を <br>
 		稼ぎたい
 		<script>
+			document.querySelectorAll('.wrap').forEach(x=>x.onclick=e=>{alert('wrap');e.stopPropagation();});
+			document.querySelectorAll('.cell').forEach(x=>x.onclick=e=>{alert('cell');e.stopPropagation();});
+			document.querySelectorAll('.cell>p').forEach(x=>x.onclick=e=>{alert('note');e.stopPropagation();});
+			cur.onclick=e=>{alert('cur');e.stopPropagation();};
+			kb.onclick=()=>alert('kb');
+			emode.onchange=()=>alert('emode');
 			window.addEventListener('styexe',()=>{
 				tdv.appendChild(bg);
 			});
 			let t0=new Date(),t;
 			const main=()=>{
 				t=(new Date()-t0)*.001;
-				tdv.style.transform=`scale(.7)rotateX(-15deg)rotateY(${t*10}deg)`;
+				tdv.style.transform=`scale(.7)rotateX(-15deg)rotateY(${t*10%360}deg)`;
 				requestAnimationFrame(main);
 			};
 			main();
