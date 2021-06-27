@@ -112,8 +112,8 @@
 					tdv.style.transform=`scale(.7)rotateX(${rx}deg)rotateY(${ry}deg)`;
 				}
 			},{passive:true});
-			tdvw.ontouchdown=()=>{
-				tdvw.ontouchdown=null;
+			tdvw.ontouchstart=()=>{
+				tdvw.ontouchstart=null;
 				const mel=()=>window.addEventListener('deviceorientation',e=>tdv.style.transform=`scale(.7)rotateX(${-e.gamma}deg)rotateY(${-e.beta}deg)rotateZ(${-e.alpha*(window.navigator.userAgent.match(/(Apple|Safari|Firefox)/i)?-1:1)}deg)`);
 				if(typeof DeviceMotionEvent.requestPermission=='function')DeviceMotionEvent.requestPermission().then(p=>{if(p=='granted')mel();}).catch(e=>alert(e));else mel();
 			};
