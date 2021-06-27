@@ -16,30 +16,31 @@
 			#tdvw{width:100%;height:100%;perspective:4096px;background-image:linear-gradient(#415,#214);}#tdvw *{transform-style:preserve-3d;}
 			#bg{position:absolute;overflow:hidden;opacity:.5;width:100%;height:100%;pointer-events:none;transform:translateZ(-100vmin);}
 			#tdv{height:100%;user-select:none;-webkit-user-select:none;}#log{position:absolute;top:0;white-space:pre-wrap;background-color:#0004;}
+			.hl{background-color:#fea8 !important;}
 
-			.disp{height:240px;padding-left:max(16px,calc(50% - 150px));white-space:nowrap;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
+			.disp{height:240px;padding-left:max(16px,calc(50% - 150px));white-space:nowrap;position:relative;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}
 			.disp::before{content:"title";position:absolute;bottom:0;right:8px;line-height:32px;font-size:24px;text-shadow:none;color:#0004;}
 			.disp::after{content:"CBAGFEDCBAGFEDC";white-space:normal;position:absolute;top:0;left:0;line-height:16px;width:12px;font-size:12px;color:#0008;text-shadow:0 0 4px #fff8;}
 			.cell,.wrap{display:inline-block;margin-left:1px;height:100%;background-color:#0004;border-radius:4px;transform:translateZ(var(--z));}
 			.cell{width:16px;}.wrap{padding:0 12px;}
 			.cell p{margin:0;width:14px;height:14px;position:absolute;left:1px;bottom:calc(calc(var(--n) * 16px) + 1px);background-color:#fea;border-radius:4px;transform:translateZ(var(--z));}
-			#cur{position:absolute;transform:translateZ(calc(var(--z) * 1.5));background-color:#aef8;}
+			#cur{background-color:#aef8;}
 
 			.ui{max-width:260px;margin:8px 0;transform:translateZ(var(--z));}
 			.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#0006;font-size:0;border-radius:25%;box-shadow:0 0 8px #0008;text-align:center;vertical-align:middle;border:none;outline:none;padding:0;touch-action:manipulation;}
 			.grid:not(input){cursor:pointer;}.grid:active{background-color:#8888;}.grid:disabled{filter:grayscale(1)opacity(.7);}.bg{transition:.1s;background-size:800%;}.showtxt,.icotxt{color:#caf0f6;font-size:18px;}.icotxt{--bp:-200% 0;color:#fea;font-size:26px;text-shadow:0 0 2px #f00;}
-			#emode:checked~.tdvw label[for=emode]{transform:rotateZ(90deg);}
+			#emode:checked~#tdvw label[for=emode]{transform:rotateZ(90deg);}
 
 			#kb{max-width:400px;width:100%;margin:0 auto;background-color:#0004;border-radius:8px;}#kb::before{content:"";display:block;padding-top:60%;background-size:100%;background-image:url(img/kb.png);transform:translateZ(var(--z));}
-			#emode:checked~.tdvw #kb{display:none;}
+			#emode:checked~#tdvw #kb{display:none;}
 
 			.bg{background-image:url(../img/seq.svg);background-size:800%;background-position:var(--bp);}
 		</style>
 		<input type="checkbox" id="emode">
 		<div id="tdvw">
 			<div id="tdv">
-				<div class="disp" onclick="alert(texts.disp);event.stopPropagation();">
-						<div class="wrap"><div id="cur" class="cell"></div><div class="cell"><p style="--n:3;"></p></div><div class="cell"><p style="--n:4;"></p></div>
+				<div class="disp" onclick="hl(this);alert(texts.disp);event.stopPropagation();">
+						<div class="wrap"><div class="cell"><div id="cur" class="cell"><p style="--n:3;"></p></div></div><div class="cell"><p style="--n:4;"></p></div>
 					</div><div class="wrap"><div class="cell"><p style="--n:7;"></p></div><div class="cell"><p style="--n:3;"></p></div>
 					</div><div class="wrap"><div class="cell"><p style="--n:4;"></p></div><div class="cell"><p style="--n:6;"></p></div>
 					</div><div class="wrap"><div class="cell"><p style="--n:4;"></p></div><div class="cell"><p style="--n:5;"></p></div>
@@ -61,27 +62,47 @@
 				</div>
 				<div id="kb"></div>
 			</div>
-			<div id="log"><h2>sky_seq manual</h2>モバイル:画面をクリックして開始<br>パソコン:ctrl command キーを押しながらカーソルを移動して回転<br>要素をクリックして説明を表示</div>
+			<div id="log"><h2>sky_seq manual</h2>モバイル:画面をタッチして開始<br>パソコン:ctrl command キーを押しながらカーソルを移動して回転<br><br>要素をクリックして説明を表示</div>
 		</div>
 		<script>
 			alert=x=>{log.textContent='';log.insertAdjacentHTML('beforeend',x);};
 			const texts={
-				disp:'<h3>表示部</h3>譜面の様々な情報がここに表示される',
+				disp:'<h3>表示部</h3>現在作業中の譜面が表示される',
 				cur:'<h3>再生カーソル</h3>譜面を再生する位置を表示する\n音程編集で編集するセルの指定にも用いる',
 				note:'<h3>ノート</h3>音程の指定に用いる\nセルに打ち込んで使用する',
 				cell:'<h3>セル</h3>ノートを譜面に配置するためのもの\n通常ノートを打ち込んで使用する\n音の長さは四分音符であるがラッパーを用いて変えることができる\nノートを打ち込まないと休符として扱われる',
 				wrap:'<h3>ラッパー</h3>より細かい音符を使いたいときに使う\nセルまたはラッパーを内包して使用する\nラッパーの中にセルを入れるとセルの音の長さがその個数だけ等分される\nセルを内包しないと休符として扱われるが非推奨→セル',
 
+				play:'<h3>再生</h3>譜面を再生/一時停止する\n音程編集モードでの再生時は再生カーソルが画面中央に固定される',
+				stop:'<h3>停止</h3>再生を停止して再生カーソルを先頭に移動する',
+				prev:'<h3>コマ戻し[←キー]</h3>再生カーソルを一つ前のセルに移動する\n音程編集モードのときに使用すると再生カーソルが画面中央に来る',
+				next:'<h3>コマ送り[→キー]</h3>再生カーソルを一つ後のセルに移動する\n音程編集モードのときに使用すると再生カーソルが画面中央に来る',
 				emode:'<h3>編集モード切り替え</h3>編集モードを切り替える (音程編集←→リズム編集)\n切り替えるとアイコンが少し回転する',
+				undo:'<h3>取り消し[Ctrl+Z]</h3>直前の音程編集リズム編集の操作を取り消す\n上限はデフォルトで128回\n(上級: localStorage.ur_Maxから指定)',
+				redo:'<h3>やり直し[Ctrl+Shift+Z]</h3>直前の音程編集リズム編集の操作の取り消しをやり直す\n上限はデフォルトで128回\n(上級: localStorage.ur_Maxから指定)',
+				file:'<h3>開く</h3>保存したデータの一覧を開く',
+				save:'<h3>保存</h3>現在作業中の譜面を保存する\n初回はタイトルの入力が必要',
+				info:'<h3>情報</h3>バージョン等の情報を表示する',
 
-				kb:'<h3>キーボード</h3><h4>[左上から QWERT ASDFG ZXCVB]</h4>現在選択しているセルのノートを編集する\n音程編集モードのときのみ表示される\n再生中は操作するとセルの変更はされず音のみが出る\nページを一番下までスクロールすると練習しやすい'
-			}
-			document.querySelectorAll('.wrap').forEach(x=>x.onclick=e=>{alert(texts.wrap);e.stopPropagation();});
-			document.querySelectorAll('.cell').forEach(x=>x.onclick=e=>{alert(texts.cell);e.stopPropagation();});
-			document.querySelectorAll('.cell>p').forEach(x=>x.onclick=e=>{alert(texts.note);e.stopPropagation();});
-			cur.onclick=e=>{alert(texts.cur);e.stopPropagation();};
-			kb.onclick=()=>alert(texts.kb);
-			emode.onchange=()=>alert(texts.emode);
+				kb:'<h3>キーボード[左上から QWERT ASDFG ZXCVB]</h3>現在選択しているセルのノートを編集する\n音程編集モードのときのみ表示される\n再生中は操作するとセルの変更はされず音のみが出る\nページを一番下までスクロールすると練習しやすい'
+			},
+			hl=x=>{document.querySelectorAll('.hl').forEach(y=>y.classList.remove('hl'));x.classList.add('hl');};
+			document.querySelectorAll('.wrap').forEach(x=>x.onclick=e=>{hl(x);alert(texts.wrap);e.stopPropagation();});
+			document.querySelectorAll('.cell').forEach(x=>x.onclick=e=>{hl(x);alert(texts.cell);e.stopPropagation();});
+			document.querySelectorAll('.cell>p').forEach(x=>x.onclick=e=>{hl(x);alert(texts.note);e.stopPropagation();});
+			cur.onclick=e=>{hl(cur);alert(texts.cur);e.stopPropagation();};
+			kb.onclick=()=>{hl(kb);alert(texts.kb);};
+
+			playbtn.onclick=()=>{hl(playbtn);alert(texts.play);};
+			stopbtn.onclick=()=>{hl(stopbtn);alert(texts.stop);};
+			prevbtn.onclick=()=>{hl(prevbtn);alert(texts.prev);};
+			nextbtn.onclick=()=>{hl(nextbtn);alert(texts.next);};
+			emode .onchange=()=>{hl(document.querySelector('label[for=emode]'));alert(texts.emode);};
+			undobtn.onclick=()=>{hl(undobtn);alert(texts.undo);};
+			redobtn.onclick=()=>{hl(redobtn);alert(texts.redo);};
+			filebtn.onclick=()=>{hl(filebtn);alert(texts.file);};
+			savebtn.onclick=()=>{hl(savebtn);alert(texts.save);};
+			infobtn.onclick=()=>{hl(infobtn);alert(texts.info);};
 
 			let rx=-15,ry=30;
 			tdv.style.transform=`scale(.7)rotateX(${rx}deg)rotateY(${ry}deg)`;
@@ -91,14 +112,10 @@
 					tdv.style.transform=`scale(.7)rotateX(${rx}deg)rotateY(${ry}deg)`;
 				}
 			},{passive:true});
-			const momain=()=>window.addEventListener('deviceorientation',e=>{
-				tdv.style.transform=`scale(.7)rotateX(${-e.gamma}deg)rotateY(${-e.beta}deg)rotateZ(${-e.alpha*(window.navigator.userAgent.match(/(Apple|Safari|Firefox)/i)?-1:1)}deg)`;
-			});
-			tdvw.onclick=()=>{
-				tdvw.onclick=null;
-				if(typeof DeviceMotionEvent.requestPermission=='function')
-					DeviceMotionEvent.requestPermission().then(p=>{if(p=='granted')momain();}).catch(e=>alert(e));
-				else momain();
+			tdvw.ontouchdown=()=>{
+				tdvw.ontouchdown=null;
+				const mel=()=>window.addEventListener('deviceorientation',e=>tdv.style.transform=`scale(.7)rotateX(${-e.gamma}deg)rotateY(${-e.beta}deg)rotateZ(${-e.alpha*(window.navigator.userAgent.match(/(Apple|Safari|Firefox)/i)?-1:1)}deg)`);
+				if(typeof DeviceMotionEvent.requestPermission=='function')DeviceMotionEvent.requestPermission().then(p=>{if(p=='granted')mel();}).catch(e=>alert(e));else mel();
 			};
 			window.addEventListener('styexe',()=>{
 				tdv.appendChild(bg);
