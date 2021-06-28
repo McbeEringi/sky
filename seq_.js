@@ -100,10 +100,23 @@ draw=()=>{
 				}
 				frr(ctx,col,x.pos+1+pos,225-Number(n2i[String(n)])*16,cfg.w-2,14,4);//240-16+1
 			});
+		ctx.fillStyle='#fff';ctx.fillText(x.p,pos+x.pos,16,16);ctx.fillText(x.ind,pos+x.pos,32,16);
 	}
 	if(emode.checked)frr(ctx,'#fea8',w*.5,0,1,240);
 	if(ecur)frr(ctx,'#feac',ecur[0]+pos,0,3,240);
-	if(sel)frr(ctx,'#fea8',Math.min(sel[0],ecur[0])+pos,0,Math.abs(sel[0]-ecur[0]),240);
+	if(sel)frr(ctx,'#fea8',sel.x+pos,0,sel.dx,240);
+},
+selfix=(ind0,ind1)=>{
+	if(ind0[0]>ind1[0])[ind0,ind1]=[ind1,ind0];
+	ind0.shift();ind1.shift();//[stat,ind]
+	let l=Math.min(ind0[1].length,ind1[1].length);
+	for(let i=0;true;i++)
+		if(ind0[1][i]!=ind1[1][i]||i+1==l){
+			ind0=[...ind0[1].slice(0,i),ind0[1][i]+((i+1==ind0[1].length?ind0[0]:true )? 0:1)];
+			ind1=[...ind1[1].slice(0,i),ind1[1][i]+((i+1==ind1[1].length?ind1[0]:false)?-1:0)];
+			break;
+		}
+	return[ind0,ind1];
 },
 curset=()=>{if(!emode.checked){tims.igscr=true;scr.scrollLeft=calced.note[curpos].pos+cfg.w2;}draw();},
 pset=()=>Tone.Transport.position=p2pos(calced.note[curpos].p),
@@ -207,8 +220,19 @@ infobtn.onclick=()=>alert(texts.info+'\n<a class="grid bg icotxt" href="manual/s
 
 emode.onchange=()=>{sel=null;cxbtn.disabled=true;ccbtn.disabled=true;draw();};
 slbtn.onclick=()=>{
-	sel=ecur;//[pos,prev,ind]
-	draw();
+	if(slbtn.classList.toggle('a')){
+		cxbtn.disabled=true;ccbtn.disabled=true;
+		sel={x:ecur[0],dx:3,dat:ecur};//ecur=[pos,prev,ind]
+		draw();
+	}else{
+		if(sel.dat[0]==ecur[0]){console.log('sel canceled');return;}
+		let tmp=selfix(sel.dat,ecur);
+		tmp=tmp.map(x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);});
+		console.log(...tmp);
+		sel={...sel,x:tmp[0].pos,dx:tmp[1].pos+(tmp[1].dx||cfg.w)-tmp[0].pos};
+		//sel=null;
+		draw();
+	}
 };
 
 {
@@ -221,7 +245,7 @@ slbtn.onclick=()=>{
 	localStorage.seq_urMax=128;
 	cfg.pad2=cfg.pad/2;
 	cfg.w2=cfg.w/2;
-	setInterval(()=>console.log(ecur),500);
+	//setInterval(()=>console.log(ecur),500);
 
 	main=localStorage.seq_ezsave?JSON.parse(localStorage.seq_ezsave):{
 		"sc":-2,"bpm":120,"ts":4,"arp":0,"name":"ウミユリ海底譚",
