@@ -1,12 +1,30 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-	<head>
+	<head prefix="og: http://ogp.me/ns#">
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145066191-2"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-145066191-2');</script>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<title>sky_seq</title>
+		<meta name="description" content="sky_sequencer">
+		<link rel="shortcut icon" type="image/svg+xml" href="img/ico/seq.svg">
+		<meta property="og:type" content="website">
+		<meta property="og:title" content="sky_sequencer">
+		<meta property="og:description" content="Skyの楽譜が作れるページです">
+		<meta property="og:url" content="https://mcbeeringi.github.io/sky/seq.html">
+		<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/seq.jpg">
+		<!--iOS-->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="default">
+		<meta name="apple-mobile-web-app-title" content="sky instr">
+		<link rel="apple-touch-icon" href="img/sky.png">
+		<!--sw-->
+		<link rel="manifest" href="skymf.json">
+		<meta name="theme-color" content="#214"/>
+		<script>
+			//if('serviceWorker'in navigator&&location.protocol.includes('http')&&location.hostname!='localhost')window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});});
+		</script>
 		<link rel="preload" href="https://cdn.jsdelivr.net/npm/tone/build/Tone.js" as="script">
 	</head>
 	<body>

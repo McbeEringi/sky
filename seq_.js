@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack;
 alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2106250\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2106290\nMIT License\n',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	...{
 		ja:{

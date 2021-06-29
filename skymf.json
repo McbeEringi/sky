@@ -1,7 +1,7 @@
 {
 	"name":"Sky stuff",
 	"short_name":"Sky stuff",
-	"description":"by McbeEringi",
+	"description":"by @McbeEringi",
 	"icons":[{
 			"src":"img/sky.png",
 			"sizes":"512x512",
@@ -15,7 +15,7 @@
 	"scope":"/sky/",
 	"start_url":"index.html?pwa=0",
 	"display":"fullscreen",
-	"theme_color":"#fea",
+	"theme_color":"#214",
 	"background_color":"#222",
 	"categories":["games","music","utilities"],
 	"orientation":"any",
