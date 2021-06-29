@@ -225,12 +225,11 @@ slbtn.onclick=()=>{
 		sel={x:ecur[0],dx:3,dat:ecur};//ecur=[pos,prev,ind]
 		draw();
 	}else{
-		if(sel.dat[0]==ecur[0]){console.log('sel canceled');return;}
+		if(sel.dat[0]==ecur[0]){console.log('sel canceled');sel=null;return;}
 		let tmp=selfix(sel.dat,ecur);
 		tmp=tmp.map(x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);});
 		console.log(...tmp);
 		sel={...sel,x:tmp[0].pos,dx:tmp[1].pos+(tmp[1].dx||cfg.w)-tmp[0].pos};
-		//sel=null;
 		draw();
 	}
 };
