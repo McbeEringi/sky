@@ -218,21 +218,29 @@ filebtn.onclick=()=>alert(null);
 savebtn.onclick=()=>alert(null);
 infobtn.onclick=()=>alert(texts.info+'\n<a class="grid bg icotxt" href="manual/seq.html">?</a>');
 
-emode.onchange=()=>{sel=null;cxbtn.disabled=true;ccbtn.disabled=true;draw();};
+emode.onchange=()=>{sel=null;cxbtn.disabled=ccbtn.disabled=true;draw();};
 slbtn.onclick=()=>{
 	if(slbtn.classList.toggle('a')){
-		cxbtn.disabled=true;ccbtn.disabled=true;
+		cxbtn.disabled=ccbtn.disabled=true;
+		cvbtn.disabled=icbtn.disabled=iwbtn.disabled=true;
 		sel={x:ecur[0],dx:3,dat:ecur};//ecur=[pos,prev,ind]
 		draw();
 	}else{
-		if(sel.dat[0]==ecur[0]){console.log('sel canceled');sel=null;return;}
+		if(sel.dat[0]==ecur[0]){console.log('sel canceled');sel=null;cvbtn.disabled=icbtn.disabled=iwbtn.disabled=false;return;}
 		let tmp=selfix(sel.dat,ecur);
 		tmp=tmp.map(x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);});
 		console.log(...tmp);
 		sel={...sel,x:tmp[0].pos,dx:tmp[1].pos+(tmp[1].dx||cfg.w)-tmp[0].pos};
+		cxbtn.disabled=ccbtn.disabled=false;
+		cvbtn.disabled=icbtn.disabled=iwbtn.disabled=false;
 		draw();
 	}
 };
+cxbtn.onclick=()=>alert(null);
+ccbtn.onclick=()=>alert(null);
+cvbtn.onclick=()=>alert(null);
+icbtn.onclick=()=>alert(null);
+iwbtn.onclick=()=>alert(null);
 
 {
 	(window.onresize=()=>{
