@@ -104,7 +104,7 @@ draw=()=>{
 	}
 	if(emode.checked)frr(ctx,'#fea8',w*.5,0,1,240);
 	if(ecur)frr(ctx,'#feac',ecur[0]+pos,0,3,240);
-	if(sel)frr(ctx,'#fea8',sel.x+pos,0,sel.dx,240);
+	if(sel)frr(ctx,sel.col,sel.x+pos,0,sel.dx,240);
 },
 selfix=(ind0,ind1)=>{
 	if(ind0[0]>ind1[0])[ind0,ind1]=[ind1,ind0];
@@ -149,29 +149,6 @@ init=()=>{
 	redobtn.disabled=undobtn.disabled=true;
 };
 
-scr.addEventListener('wheel',e=>{e.preventDefault();scr.scrollLeft+=(Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY)*(e.shiftKey?.1:1);});
-scr.addEventListener('scroll',()=>{if(tims.igscr){tims.igscr=false;return;}requestAnimationFrame(draw);},{passive:true});
-[...kb.children].forEach((x,i)=>{
-	const keyfx=e=>{
-		e.preventDefault();
-		if(tstat()){
-			let ind=calced.note[curpos].ind,
-				arr=ind2n(ind).split(',').filter(y=>y);
-			if(x.classList.toggle('a')){
-				Tone.start();
-				synth.triggerAttackRelease(n2Hz(i2n[i]));
-				arr=arr.concat(i2n[i]);
-			}else{
-				arr=arr.filter(y=>y!=i2n[i]);
-			}
-			let cmd=[`main.scores[${ind.join('][')}]=`,`'${arr.join(',')}'`];
-			Function(cmd[0]+cmd[1])();urset(cmd.concat(`'${ind2n(ind)}'`));
-			seqset();calc();curset();
-		}else synth.triggerAttackRelease(n2Hz(i2n[i]));
-	};
-	x.addEventListener('touchstart',keyfx);
-	x.addEventListener('mousedown',keyfx);
-});
 document.onkeydown=e=>{
 	if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;
 	if(alcb.checked){if(['Space','Enter'].includes(e.code)){e.preventDefault();alcb.checked=false;}return;}
@@ -194,6 +171,8 @@ document.onkeydown=e=>{
 					kb.children[keymap.indexOf(e.code)].dispatchEvent(new Event('mousedown'));
 		}
 };
+scr.addEventListener('wheel',e=>{e.preventDefault();scr.scrollLeft+=(Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY)*(e.shiftKey?.1:1);});
+scr.addEventListener('scroll',()=>{if(tims.igscr){tims.igscr=false;return;}requestAnimationFrame(draw);},{passive:true});
 scr.onclick=e=>{
 	//if(emode.checked){scr.scrollLeft=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5;else
 	Tone.start();
@@ -203,12 +182,31 @@ scr.onclick=e=>{
 	curpos=ind;pset();draw();kbset();
 	if(tstat())sytar(ind2n(calced.note[curpos].ind));
 };
-playbtn.onclick=e=>{
-	Tone.start();
-	if(tstat())tstart();else tpause();
-};
 bpm_.onchange=bpmset;
 sc_.onchange=scset;
+[...kb.children].forEach((x,i)=>{
+	const keyfx=e=>{
+		e.preventDefault();
+		if(tstat()){
+			let ind=calced.note[curpos].ind,
+				arr=ind2n(ind).split(',').filter(y=>y);
+			if(x.classList.toggle('a')){
+				Tone.start();
+				synth.triggerAttackRelease(n2Hz(i2n[i]));
+				arr=arr.concat(i2n[i]);
+			}else{
+				arr=arr.filter(y=>y!=i2n[i]);
+			}
+			let cmd=[`main.scores[${ind.join('][')}]=`,`'${arr.join(',')}'`];
+			Function(cmd[0]+cmd[1])();urset(cmd.concat(`'${ind2n(ind)}'`));
+			seqset();calc();curset();
+		}else synth.triggerAttackRelease(n2Hz(i2n[i]));
+	};
+	x.addEventListener('touchstart',keyfx);
+	x.addEventListener('mousedown',keyfx);
+});
+
+playbtn.onclick=e=>{Tone.start();if(tstat())tstart();else tpause();};
 stopbtn.onclick=tstop;
 prevbtn.onclick=()=>tstep(-1);
 nextbtn.onclick=()=>tstep( 1);
@@ -223,14 +221,13 @@ slbtn.onclick=()=>{
 	if(slbtn.classList.toggle('a')){
 		cxbtn.disabled=ccbtn.disabled=true;
 		cvbtn.disabled=icbtn.disabled=iwbtn.disabled=true;
-		sel={x:ecur[0],dx:3,dat:ecur};//ecur=[pos,prev,ind]
+		sel={x:ecur[0],dx:3,col:'#feaa',dat:ecur};//ecur=[pos,prev,ind]
 		draw();
 	}else{
 		if(sel.dat[0]==ecur[0]){sel=null;cvbtn.disabled=icbtn.disabled=iwbtn.disabled=false;return;}
-		let tmp=selfix(sel.dat,ecur);
-		tmp=tmp.map(x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);});
-		console.log(...tmp);
-		sel={...sel,x:tmp[0].pos,dx:tmp[1].pos+(tmp[1].dx||cfg.w)-tmp[0].pos};
+		let dat=selfix(sel.dat,ecur).map(x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);});
+		console.log(...dat);
+		sel={x:dat[0].pos,dx:dat[1].pos+(dat[1].dx||cfg.w)-dat[0].pos,col:'#fea6',dat};
 		cxbtn.disabled=ccbtn.disabled=false;
 		cvbtn.disabled=icbtn.disabled=iwbtn.disabled=false;
 		draw();
