@@ -37,7 +37,8 @@ const cacheName='cache210618_0',STATIC_DATA=[
 ],
 noCache=[
 	'analytics',
-	'seq_'
+	'seq_',
+	'test'
 ];
 
 self.addEventListener('install',(e)=>{

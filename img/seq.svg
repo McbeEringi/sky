@@ -25,11 +25,11 @@
 		<path d="M256,128m38,34h32l16,16v52l-48,0z M256,128m42,26h15v-6h24v6h15v74"/>
 		<path d="M384,128m48,32v52l12,-11l11,25l9,-4l-11,-25h17z"/>
 	</g>
-	<g><!--uiBtn-->
-		<path d="M512,128m33,64l24,28l38,-56" style="stroke-width:9;"/>
-		<path d="M640,128m39,39l50,50m0,-50l-50,50" style="stroke-width:9;"/>
-		<path d="M768,128m21,64h86m-43,-43v86" style="stroke-width:9;"/>
-		<path d="M896,128m21,64h86" style="stroke-width:9;"/>
+	<g><!--uiBtn style="stroke-width:9;"-->
+		<path d="M512,128m33,64l24,28l38,-56"/>
+		<path d="M640,128m39,39l50,50m0,-50l-50,50"/>
+		<path d="M768,128m21,64h86m-43,-43v86"/>
+		<path d="M896,128m21,64h86"/>
 	</g>
 	<g><!--file new del dup-->
 		<path d="M0,256m36,24h36l20,20v60h-56z"/>

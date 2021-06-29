@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack;
 alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2106290\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2106300\nMIT License\n',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	...{
 		ja:{
@@ -124,12 +124,12 @@ kbset=(x=calced.note[curpos].ind.reduce((a,x)=>a[x],main.scores))=>{
 	let tmp=x.split(',');
 	[...kb.children].forEach((y,i)=>y.classList[tmp.includes(i2n[i])?'add':'remove']('a'));
 },
-urset=x=>{urstack[2]=[];urstack[0].push(urstack[1]);urstack[1]=x;while(urstack[0].length>Number(localStorage.seq_urMax))urstack[0].shift();console.log(x);undobtn.disabled=false;redobtn.disabled=true;},
+urset=x=>{Function(x[0]+x[1])();urstack[1]=[];urstack[0].push(x);while(urstack[0].length>Number(localStorage.seq_urMax))urstack[0].shift();console.log(x);undobtn.disabled=false;redobtn.disabled=true;},
 urdo=x=>{
-	let tmp=false;
-	while(x<0){if(urstack[0].length){urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();x++;tmp=true;console.log('undo');Function(urstack[1][0]+urstack[1][2])();}else{break;}}
-	while(0<x){if(urstack[2].length){urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();x--;tmp=true;console.log('redo');Function(urstack[1][0]+urstack[1][1])();}else{break;}}
-	undobtn.disabled=!urstack[0].length;redobtn.disabled=!urstack[2].length;
+	let tmp;
+	while(x<0){if(urstack[0].length){urstack[1].unshift(tmp=urstack[0].pop());tmp=tmp[0]+tmp[2];x++;console.log('undo:	'+tmp);Function(tmp)();}else{break;}}
+	while(0<x){if(urstack[1].length){urstack[0].push(tmp=urstack[1].shift());tmp=tmp[0]+tmp[1];x--;console.log('redo:	'+tmp);Function(tmp)();}else{break;}}
+	undobtn.disabled=!urstack[0].length;redobtn.disabled=!urstack[1].length;
 	if(tmp){calc();draw();seqset();kbset();}
 },
 bpmset=()=>{let x=Number(bpm_.value);if(x>0)Tone.Transport.bpm.value=main.bpm=x;else bpm_.value=Tone.Transport.bpm.value=main.bpm;},
@@ -145,7 +145,7 @@ tstep=x=>{
 },
 init=()=>{
 	calc();seqset();tstop();bpmset();scset();document.title='sky_seq '+(name_.textContent=main.name||'');
-	urstack=[[],['main.scores=',null,JSON.stringify(main.scores)],[]];
+	urstack=[[],[]];
 	redobtn.disabled=undobtn.disabled=true;
 };
 
@@ -154,17 +154,17 @@ document.onkeydown=e=>{
 	if(alcb.checked){if(['Space','Enter'].includes(e.code)){e.preventDefault();alcb.checked=false;}return;}
 	if(e.ctrlKey||e.metaKey)
 		switch(e.code){
-			case'KeyZ':e.preventDefault();urdo(e.shiftKey?1:-1);
-			case'KeyX':if(emode.checked&&!cxbtn.disabled){e.preventDefault();cxbtn.onclick();}
-			case'KeyC':if(emode.checked&&!ccbtn.disabled){e.preventDefault();ccbtn.onclick();}
-			case'KeyV':if(emode.checked&&!cvbtn.disabled){e.preventDefault();cvbtn.onclick();}
+			case'KeyZ':e.preventDefault();urdo(e.shiftKey?1:-1);break;
+			case'KeyX':if(emode.checked&&!cxbtn.disabled){e.preventDefault();cxbtn.onclick();}break;
+			case'KeyC':if(emode.checked&&!ccbtn.disabled){e.preventDefault();ccbtn.onclick();}break;
+			case'KeyV':if(emode.checked&&!cvbtn.disabled){e.preventDefault();cvbtn.onclick();}break;
 		}
 	else
 		switch(e.code){
 			case'Space':e.preventDefault();playbtn.onclick();break;
 			case'ArrowLeft':e.preventDefault();Tone.start();tstep(e.shiftKey?-8:-1);break;
 			case'ArrowRight':e.preventDefault();Tone.start();tstep(e.shiftKey?8:1);break;
-			case'Tab':e.preventDefault();emode.click();
+			case'Tab':e.preventDefault();emode.click();break;
 			default:
 				const keymap=Array.from('QWERTASDFGZXCVB',x=>`Key${x}`);
 				if(keymap.includes(e.code)&&!emode.checked)
@@ -197,8 +197,7 @@ sc_.onchange=scset;
 			}else{
 				arr=arr.filter(y=>y!=i2n[i]);
 			}
-			let cmd=[`main.scores[${ind.join('][')}]=`,`'${arr.join(',')}'`];
-			Function(cmd[0]+cmd[1])();urset(cmd.concat(`'${ind2n(ind)}'`));
+			urset([`main.scores[${ind.join('][')}]=`, `'${arr.join(',')}'`, `'${ind2n(ind)}'`]);
 			seqset();calc();curset();
 		}else synth.triggerAttackRelease(n2Hz(i2n[i]));
 	};
@@ -220,24 +219,44 @@ emode.onchange=()=>{sel=null;cxbtn.disabled=ccbtn.disabled=true;slbtn.classList.
 slbtn.onclick=()=>{
 	if(slbtn.classList.toggle('a')){
 		cxbtn.disabled=ccbtn.disabled=true;
-		cvbtn.disabled=icbtn.disabled=iwbtn.disabled=true;
+		cvbtn.disabled=icbtn.disabled=iwbtn.disabled=rmbtn.disabled=true;
 		sel={x:ecur[0],dx:3,col:'#feaa',dat:ecur};//ecur=[pos,prev,ind]
 		draw();
 	}else{
-		if(sel.dat[0]==ecur[0]){sel=null;cvbtn.disabled=icbtn.disabled=iwbtn.disabled=false;return;}
+		if(sel.dat[0]==ecur[0]){sel=null;cvbtn.disabled=icbtn.disabled=iwbtn.disabled=rmbtn.disabled=false;return;}
 		let dat=selfix(sel.dat,ecur).map(x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);});
-		console.log(...dat);
-		sel={x:dat[0].pos,dx:dat[1].pos+(dat[1].dx||cfg.w)-dat[0].pos,col:'#fea6',dat};
+		sel={x:dat[0].pos,dx:dat[1].pos+(dat[1].dx||cfg.w)-dat[0].pos,col:'#fea6',dat};//dat:[ind,ind]
+		console.log(sel);
 		cxbtn.disabled=ccbtn.disabled=false;
-		cvbtn.disabled=icbtn.disabled=iwbtn.disabled=false;
+		cvbtn.disabled=icbtn.disabled=iwbtn.disabled=rmbtn.disabled=false;
 		draw();
 	}
 };
 cxbtn.onclick=()=>alert(null);
-ccbtn.onclick=()=>alert(null);
+ccbtn.onclick=()=>{
+	let tmp=sel.dat[0].ind.length-1;
+	tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
+	tmp=ind2n(tmp[0]).slice(tmp[1],tmp[2]+1);
+	alert(JSON.stringify(tmp));
+};
 cvbtn.onclick=()=>alert(null);
 icbtn.onclick=()=>alert(null);
 iwbtn.onclick=()=>alert(null);
+rmbtn.onclick=()=>{
+	if(sel){
+		let tmp=sel.dat[0].ind.length-1;
+		tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
+		urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, `${tmp[2]-tmp[1]+1})`, `0,...${JSON.stringify(ind2n(tmp[0]).slice(tmp[1],tmp[2]+1))})`]);
+		sel=null;cxbtn.disabled=ccbtn.disabled=true;
+	}
+	else{
+		let tmp=ecur[2].length-1;
+		tmp=[ecur[2].slice(0,tmp),ecur[2][tmp]-ecur[1]];
+		if(!~tmp[1])return;
+		urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, '1)', `0,${JSON.stringify(ind2n([...tmp[0],tmp[1]]))})`]);
+	}
+	seqset();calc();draw();kbset();
+};
 
 {
 	(window.onresize=()=>{
