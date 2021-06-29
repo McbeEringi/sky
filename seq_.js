@@ -218,7 +218,7 @@ filebtn.onclick=()=>alert(null);
 savebtn.onclick=()=>alert(null);
 infobtn.onclick=()=>alert(texts.info+'\n<a class="grid bg icotxt" href="manual/seq.html">?</a>');
 
-emode.onchange=()=>{sel=null;cxbtn.disabled=ccbtn.disabled=true;draw();};
+emode.onchange=()=>{sel=null;cxbtn.disabled=ccbtn.disabled=true;slbtn.classList.remove('a');draw();};
 slbtn.onclick=()=>{
 	if(slbtn.classList.toggle('a')){
 		cxbtn.disabled=ccbtn.disabled=true;
@@ -226,7 +226,7 @@ slbtn.onclick=()=>{
 		sel={x:ecur[0],dx:3,dat:ecur};//ecur=[pos,prev,ind]
 		draw();
 	}else{
-		if(sel.dat[0]==ecur[0]){console.log('sel canceled');sel=null;cvbtn.disabled=icbtn.disabled=iwbtn.disabled=false;return;}
+		if(sel.dat[0]==ecur[0]){sel=null;cvbtn.disabled=icbtn.disabled=iwbtn.disabled=false;return;}
 		let tmp=selfix(sel.dat,ecur);
 		tmp=tmp.map(x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);});
 		console.log(...tmp);
