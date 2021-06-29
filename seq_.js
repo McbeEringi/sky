@@ -178,9 +178,9 @@ document.onkeydown=e=>{
 	if(e.ctrlKey||e.metaKey)
 		switch(e.code){
 			case'KeyZ':e.preventDefault();urdo(e.shiftKey?1:-1);
-			case'KeyX':if(emode.checked){e.preventDefault();}
-			case'KeyC':if(emode.checked){e.preventDefault();}
-			case'KeyV':if(emode.checked){e.preventDefault();}
+			case'KeyX':if(emode.checked&&!cxbtn.disabled){e.preventDefault();cxbtn.onclick();}
+			case'KeyC':if(emode.checked&&!ccbtn.disabled){e.preventDefault();ccbtn.onclick();}
+			case'KeyV':if(emode.checked&&!cvbtn.disabled){e.preventDefault();cvbtn.onclick();}
 		}
 	else
 		switch(e.code){
