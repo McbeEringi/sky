@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack;
 alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2106301\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2106302\nMIT License\n',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	...{
 		ja:{
@@ -118,6 +118,21 @@ selfix=(ind0,ind1)=>{
 			break;
 		}
 	return[ind0,ind1];
+},
+selins=x=>{
+	if(!x)return;
+	let w=0,m=y=>{if(typeof y=='string')w+=cfg.w+1;else{w+=cfg.pad*2+2;y.forEach(m);}};
+	m(JSON.parse(x));
+	if(sel){
+		let tmp=sel.dat[0].ind.length-1;tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
+		urset(['main.scores'+tmp[0].map(y=>`[${y}]`).join('')+`.splice(${tmp[1]},`, `${tmp[2]-tmp[1]+1},${x})`, `1,...${JSON.stringify(ind2n(tmp[0]).slice(tmp[1],tmp[2]+1))})`]);
+		tims.igscr=true;scr.scrollLeft=sel.x+w;sel=null;cxbtn.disabled=ccbtn.disabled=true;
+	}else{
+		let tmp=ecur[2].length-1;tmp=[ecur[2].slice(0,tmp),ecur[2][tmp]-ecur[1]+1];
+		urset(['main.scores'+tmp[0].map(y=>`[${y}]`).join('')+`.splice(${tmp[1]},`, `0,${x})`, `1)`]);
+		tims.igscr=true;scr.scrollLeft=ecur[0]+w;
+	}
+	seqset();calc();draw();kbset();
 },
 curset=()=>{if(!emode.checked){tims.igscr=true;scr.scrollLeft=calced.note[curpos].pos+cfg.w2;}draw();},
 pset=()=>Tone.Transport.position=p2pos(calced.note[curpos].p),
@@ -241,19 +256,15 @@ ccbtn.onclick=()=>{
 	alert(JSON.stringify(tmp));
 };
 cvbtn.onclick=()=>alert(null);
-icbtn.onclick=()=>alert(null);
-iwbtn.onclick=()=>alert(null);
+icbtn.onclick=()=>selins(`""`);
+iwbtn.onclick=()=>selins(`["",""]`);
 rmbtn.onclick=()=>{
 	if(sel){
-		let tmp=sel.dat[0].ind.length-1;
-		tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
+		let tmp=sel.dat[0].ind.length-1;tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
 		urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, `${tmp[2]-tmp[1]+1})`, `0,...${JSON.stringify(ind2n(tmp[0]).slice(tmp[1],tmp[2]+1))})`]);
-		tims.igscr=true;scr.scrollLeft=sel.x;
-		sel=null;cxbtn.disabled=ccbtn.disabled=true;
-	}
-	else{
-		let tmp=ecur[2].length-1;
-		tmp=[ecur[2].slice(0,tmp),ecur[2][tmp]-ecur[1]];
+		tims.igscr=true;scr.scrollLeft=sel.x;sel=null;cxbtn.disabled=ccbtn.disabled=true;
+	}else{
+		let tmp=ecur[2].length-1;tmp=[ecur[2].slice(0,tmp),ecur[2][tmp]-ecur[1]];
 		if(!~tmp[1])return;
 		tmp[2]=ind2c([...tmp[0],tmp[1]]).pos;
 		urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, '1)', `0,${JSON.stringify(ind2n([...tmp[0],tmp[1]]))})`]);
