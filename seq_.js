@@ -68,7 +68,7 @@ draw=()=>{
 	if(!calced)return;//window.scrollY>240
 	let w=c.parentNode.clientWidth,pos=w*.5-scr.scrollLeft,cppos=calced.note[curpos].pos;
 	ctx.clearRect(0,0,w,240);
-	//ecur=null;
+	ecur=null;
 	for(let x of calced.box){
 		if(x.pos+x.dx+pos<0)continue;if(w<x.pos+pos)break;
 		frr(ctx,'#4444',x.pos+pos,0,x.dx,240,4);
@@ -231,7 +231,7 @@ filebtn.onclick=()=>alert(null);
 savebtn.onclick=()=>alert(null);
 infobtn.onclick=()=>alert(texts.info+'\n<a class="grid bg icotxt" href="manual/seq.html">?</a>');
 
-emode.onchange=()=>{ecur=sel=null;cxbtn.disabled=ccbtn.disabled=true;slbtn.classList.remove('a');draw();};
+emode.onchange=()=>{sel=null;cxbtn.disabled=ccbtn.disabled=true;slbtn.classList.remove('a');draw();};
 slbtn.onclick=()=>{
 	if(slbtn.classList.toggle('a')){
 		cxbtn.disabled=ccbtn.disabled=true;
