@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack;
 alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2106300\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2106301\nMIT License\n',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	...{
 		ja:{
@@ -17,6 +17,7 @@ pos2p=(pos_=Tone.Transport.position)=>{let tmp=pos_.split(':').map(x=>Number(x))
 p2pos=p_=>`${Math.floor(p_/Tone.Transport.timeSignature)}:${Math.floor(p_)%Tone.Transport.timeSignature}:${(p_*4)%4}`,
 n2Hz=x=>440*Math.pow(2,(Number(x)+main.sc)/12)*2,//C4~C6
 ind2n=x=>x.reduce((a,y)=>a[y],main.scores),
+ind2c=x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);},
 tstat=()=>Tone.Transport.state!='started',
 seqset=()=>{clearTimeout(tims.seqset);tims.seqset=setTimeout(()=>requestIdleCallback(()=>{seq.events=main.scores;console.log('seqset')}),300);},
 stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]=`a${i}.mp3`;}return s;},
@@ -224,7 +225,7 @@ slbtn.onclick=()=>{
 		draw();
 	}else{
 		if(sel.dat[0]==ecur[0]){sel=null;cvbtn.disabled=icbtn.disabled=iwbtn.disabled=rmbtn.disabled=false;return;}
-		let dat=selfix(sel.dat,ecur).map(x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);});
+		let dat=selfix(sel.dat,ecur).map(ind2c);
 		sel={x:dat[0].pos,dx:dat[1].pos+(dat[1].dx||cfg.w)-dat[0].pos,col:'#fea6',dat};//dat:[ind,ind]
 		console.log(sel);
 		cxbtn.disabled=ccbtn.disabled=false;
@@ -247,13 +248,16 @@ rmbtn.onclick=()=>{
 		let tmp=sel.dat[0].ind.length-1;
 		tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
 		urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, `${tmp[2]-tmp[1]+1})`, `0,...${JSON.stringify(ind2n(tmp[0]).slice(tmp[1],tmp[2]+1))})`]);
+		tims.igscr=true;scr.scrollLeft=sel.x;
 		sel=null;cxbtn.disabled=ccbtn.disabled=true;
 	}
 	else{
 		let tmp=ecur[2].length-1;
 		tmp=[ecur[2].slice(0,tmp),ecur[2][tmp]-ecur[1]];
 		if(!~tmp[1])return;
+		tmp[2]=ind2c([...tmp[0],tmp[1]]).pos;
 		urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, '1)', `0,${JSON.stringify(ind2n([...tmp[0],tmp[1]]))})`]);
+		tims.igscr=true;scr.scrollLeft=tmp[2];
 	}
 	seqset();calc();draw();kbset();
 };
