@@ -117,7 +117,7 @@
 				const mel=()=>window.addEventListener('deviceorientation',e=>tdv.style.transform=`scale(.7)rotateX(${-e.gamma}deg)rotateY(${-e.beta}deg)rotateZ(${-e.alpha*(window.navigator.userAgent.match(/(Apple|Safari|Firefox)/i)?-1:1)}deg)`);
 				if(typeof DeviceMotionEvent.requestPermission=='function')DeviceMotionEvent.requestPermission().then(p=>{if(p=='granted')mel();}).catch(e=>alert(e));else mel();
 			};
-			window.addEventListener('styexe',()=>{
+			document.addEventListener('styexe',()=>{
 				tdv.appendChild(bg);
 			});
 			if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1){

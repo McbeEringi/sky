@@ -38,8 +38,9 @@ bgset=(x,b)=>{
 	}
 };
 {
+	if(!localStorage.sky_bgcode)localStorage.sky_bgcode='linear-gradient(60deg,#214,#415)';
 	const bgset_=()=>{console.log('_');if(['0',undefined].includes(localStorage.sky_bgmode))bgset();};
 	bgset_();
 	setTimeout(()=>{bgset_();setInterval(bgset_,3600000);},3600000-(new Date().getTime()%3600000));
 }
-window.dispatchEvent(new Event('styexe'));
+document.dispatchEvent(new Event('styexe'));
