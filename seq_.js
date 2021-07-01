@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack;
 alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2106302\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2107010\nMIT License\n',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	...{
 		ja:{
@@ -261,15 +261,21 @@ icbtn.onclick=()=>selins(['']);
 iwbtn.onclick=()=>selins([['','']]);
 rmbtn.onclick=()=>{
 	if(sel){
+		if(sel.dx==calced.length){icbtn.onclick();return;}
 		let tmp=sel.dat[0].ind.length-1;tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
 		urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, `${tmp[2]-tmp[1]+1})`, `0,...${JSON.stringify(ind2n(tmp[0]).slice(tmp[1],tmp[2]+1))})`]);
 		calc();tims.igscr=true;scr.scrollLeft=sel.x;sel=null;cxbtn.disabled=ccbtn.disabled=true;
 	}else{
-		let tmp=ecur[2].length-1;tmp=[ecur[2].slice(0,tmp),ecur[2][tmp]-ecur[1]];
-		if(!~tmp[1])return;
-		tmp[2]=ind2c([...tmp[0],tmp[1]]).pos;
-		urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, '1)', `0,${JSON.stringify(ind2n([...tmp[0],tmp[1]]))})`]);
-		calc();tims.igscr=true;scr.scrollLeft=tmp[2];
+		let tmp=ecur[2].length-1;
+		if(!tmp&&main.scores.length==1){
+			if(main.scores[0]){urset(['main.scores.splice(0,1,',`'')`,`${JSON.stringify(main.scores[0])})`]);calc();}else return;
+		}else{
+			tmp=[ecur[2].slice(0,tmp),ecur[2][tmp]-ecur[1]];
+			if(!~tmp[1])return;
+			tmp[2]=ind2c([...tmp[0],tmp[1]]).pos;
+			urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, '1)', `0,${JSON.stringify(ind2n([...tmp[0],tmp[1]]))})`]);
+			calc();tims.igscr=true;scr.scrollLeft=tmp[2];
+		}
 	}
 	seqset();draw();kbset();
 };
