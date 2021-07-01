@@ -65,6 +65,8 @@
 
 			#palette{box-sizing:border-box;max-width:372px;padding:4px;border-radius:8px;background-color:#0004;margin:0 auto;}
 			#palette .a{box-shadow:0 0 2px 4px #fea inset;}
+			#clip{background-color:#0004;border-radius:4px;padding:4px;margin:8px 0;}
+			#clip *{background-color:#0004;border-radius:4px;margin:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;}#clip :first-child{border:2px solid #aefc;}
 
 			label[for=alcb],#albox{position:fixed;pointer-events:none;opacity:0;transition:.2s;}
 			label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0004;z-index:3;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
@@ -115,15 +117,11 @@
 			</button><button id="cxbtn" class="grid bg" style="--bp:0 -100%;">cut
 			</button><button id="ccbtn" class="grid bg" style="--bp:-100% -100%;">copy
 			</button><button id="cvbtn" class="grid bg" style="--bp:-200% -100%;">paste
-			</button><button id="icbtn" class="grid bg showtxt" style="--bp:-600% -100%;">cell
-			</button><button id="iwbtn" class="grid bg showtxt" style="--bp:-600% -100%;">wrap
 			</button><button id="rmbtn" class="grid bg" style="--bp:-500% -100%;">remove
-			</button><br>
-			palette <br>
-			palette <br>
-			palette <br>
-			palette <br>
-			palette <br>
+			</button><button id="icbtn" class="grid bg style showtxt" style="--bp:-600% -100%;">cell
+			</button><button id="iwbtn" class="grid bg style showtxt" style="--bp:-600% -100%;">wrap
+			</button>
+			<div id="clip"></div>
 		</div>
 		<label for="alcb"></label>
 		<pre id="albox" class="style">example
