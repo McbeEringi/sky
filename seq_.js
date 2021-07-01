@@ -63,6 +63,7 @@ calc=()=>{
 	};
 	core(main.scores);
 	scrw.style.width=(calced.length=pos-1)+'px';
+	if(scr.scrollLeft>calced.length)scr.scrollLeft=calced.length;
 },
 draw=()=>{
 	if(!calced)return;//window.scrollY>240
