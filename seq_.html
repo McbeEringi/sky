@@ -70,7 +70,7 @@
 
 			label[for=alcb],#albox{position:fixed;pointer-events:none;opacity:0;transition:.2s;}
 			label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0004;z-index:3;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
-			#albox{top:50%;left:50%;max-width:100%;padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#2228;z-index:4;}
+			#albox{top:50%;left:50%;max-width:calc(100% - 32px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#2228;z-index:4;}
 			#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
 
 			#emode:checked~.kb,#emode:not(:checked)~#palette{display:none;}#emode:checked~* label[for=emode]{transform:rotateZ(90deg);}
@@ -81,7 +81,7 @@
 		<input type="checkbox" id="alcb">
 		<div class="disp">
 			<span id="name_">Loading assets<br>Please wait…</span>
-			<canvas id="c">JavaScript seems disabled</canvas>
+			<canvas id="c"><br>JavaScript seems disabled</canvas>
 			<div id="scr"><div id="scrw"></div></div>
 			<div class="cfg">
 				<input type="checkbox" id="cfgcb">
