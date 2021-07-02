@@ -1,12 +1,17 @@
 'use strict';
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[];
-alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
+alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2107020\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2107021\nMIT License\n',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
+	nodat:'no saved data found',sample:'download sample',load:'Loading…',
+	err:x=>`failed to ${['read','write'][x]} datas`,saveq:'do you want to save the current data?',
 	...{
 		ja:{
 			title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',
+			nodat:'保存されたデータはありません',sample:'サンプルをダウンロード',load:'読み込み中…',
+			err:x=>`データの${['読み出し','書き込み'][x]}に失敗しました`,
+			saveq:'現在のデータを保存しますか?'
 		}
 	}[window.navigator.language.slice(0,2)]
 },
@@ -173,8 +178,45 @@ tstep=x=>{
 	pset();tpause();kbset();
 	if(tstat())sytar(ind2n(calced.note[curpos].ind));
 },
+browse=()=>{
+	tpause();
+	alert(texts.load);
+	let s=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-100% -200%;">new</button><button onclick="dbfx.imp();"class="grid bg" style="--bp:-600% -200%;">import</button><hr>`;
+	Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),{
+		onsuccess:e=>{
+			let tmp=e.target.result;
+			// TODO: sort
+			console.log(tmp);dbfx.tmp=tmp;
+			if(!tmp.length){alert(`${s}${texts.nodat}\n<button onclick="this.textContent='${texts.load}';this.disabled=true;dbfx.sam(browse);">${texts.sample}</button>`,1);return;}
+			s+='<div class="items">';
+			tmp.forEach((x,i)=>
+				s+=`<div onclick="dbfx.ope(${i});"><p>${x}</p><div><button
+					onclick="dbfx.ren(${i});event.stopPropagation();" class="grid bg" style="--bp:-400% -200%;">rename</button><button
+					onclick="dbfx.dup(${i});event.stopPropagation();" class="grid bg" style="--bp:-300% -200%;">dupe</button><button
+					onclick="dbfx.exp(${i});event.stopPropagation();" class="grid bg" style="--bp:-700% -200%;">export</button><button
+					onclick="dbfx.del(${i});event.stopPropagation();" class="grid bg" style="--bp:-200% -200%;">delete</button></div></div>`
+			);
+			alert(s+'</div>',1);
+		},
+		onerror:e=>alert(`${s}⚠️\n${texts.err(0)}\n\n${e.target.error}`)
+	});
+},
 dbfx={
-	sav:()=>alert('sav'),
+	sav:fx=>{
+		const core=()=>Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(main),{
+			onsuccess:fx||(()=>alert(`✅\n${texts.save}`)),
+			onerror:()=>Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').put(main),{
+				onsuccess:fx||(()=>alert(`✅\n${texts.osave}`)),
+				onerror:e=>alert(`⚠️\n${texts.err(1)}\n\n${e.target.error}`)
+			})
+		});
+		if(main.name){core();return;}
+		alert(`${texts.title}\n<input class="style input" placeholder="untitled">\n<button class="grid bg" style="--bp:-500% -200%;">save</button>`);
+		document.querySelector('#albox button').onclick=()=>{
+			main.name=document.querySelector('#albox input').value||`untitled ${new Date().toLocaleString()}`;
+			document.title=`sky_seq ${name_.textContent=main.name}`;core();
+		};
+	},
 	get:function(i,fx,fx_){
 		console.log(this.tmp[i]);
 		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').get(this.tmp[i]),{
@@ -195,7 +237,8 @@ dbfx={
 				{onsuccess:()=>{console.log(y.name);t(y.name);},onerror:c}
 			)
 		))).then(fx||(()=>{}))
-	)
+	),
+	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>console.log('delall done')
 },
 init=()=>{
 	main={sc:0,bpm:120,scores:new Array(8).fill(''),...main};urstack=[[],[]];
@@ -275,29 +318,8 @@ prevbtn.onclick=()=>tstep(-1);
 nextbtn.onclick=()=>tstep( 1);
 undobtn.onclick=()=> urdo(-1);
 redobtn.onclick=()=> urdo( 1);
-filebtn.onclick=()=>{
-	tpause();
-	alert('Loading…');
-	let s=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-100% -200%;">new</button><button onclick="dbfx.imp();"class="grid bg" style="--bp:-600% -200%;">import</button><br>`;
-	Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),{
-		onsuccess:e=>{
-			let tmp=e.target.result;
-			// TODO: sort
-			console.log(tmp);dbfx.tmp=tmp;
-			if(!tmp.length)alert(`${texts.nodat}<br><button onclick="this.textContent='Loading…';this.disabled=true;dbfx.sam(filebtn.onclick);">download sample</button>`);
-			tmp.forEach((x,i)=>
-				s+=`<div class="item"><span onclick="dbfx.ope(${i});">${x}</span><br><button
-					onclick="dbfx.ren(${i});" class="grid bg" style="--bp:-400% -200%;">rename</button><button
-					onclick="dbfx.dup(${i});" class="grid bg" style="--bp:-300% -200%;">dupe</button><button
-					onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-600% -200%;">export</button><button
-					onclick="dbfx.del(${i});" class="grid bg" style="--bp:-200% -200%;">delete</button></div>`
-			);
-			alert(s);
-		},
-		onerror:e=>alert(`⚠️\n${texts.err(0)}\n\n${e.target.error}${s}`)
-	});
-};
-savebtn.onclick=()=>alert(null);
+filebtn.onclick=()=>alert(`${texts.saveq}\n<button onclick="browse();" class="grid bg" style="--bp:-500% -100%;">don´t save</button>	<button onclick="dbfx.sav(browse);" class="grid bg" style="--bp:-400% -100%;">save</button>`);
+savebtn.onclick=()=>dbfx.sav();
 infobtn.onclick=()=>alert(texts.info+'\n<a class="grid bg icotxt" href="manual/seq.html">?</a>');
 
 emode.onchange=()=>{sel=null;cxbtn.disabled=ccbtn.disabled=true;slbtn.classList.remove('a');draw();};
@@ -381,7 +403,7 @@ if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
 			let c=document.createElement('canvas'),ctx=c.getContext('2d');
 			c.width=img.naturalWidth;c.height=img.naturalHeight;
 			ctx.drawImage(img,0,0);
-			document.body.insertAdjacentHTML('beforeend',`<style>#kb>div::after,.bg{background-image:url(${c.toDataURL()});}</style>`);
+			document.body.insertAdjacentHTML('beforeend',`<style>#kb>div::after,#alfsccb:checked~label[for=alcb]::before,.bg{background-image:url(${c.toDataURL()});}</style>`);
 		};
 		img.src='img/seq.svg';
 	});
