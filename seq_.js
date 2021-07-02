@@ -211,8 +211,9 @@ dbfx={
 		});
 		if(main.name){core();return;}
 		alert(`${texts.title}\n<input class="style input" placeholder="untitled">\n<button class="grid bg" style="--bp:-500% -200%;">save</button>`);
-		document.querySelector('#albox button').onclick=()=>{
-			main.name=document.querySelector('#albox input').value||`untitled ${new Date().toLocaleString()}`;
+		albox.querySelector('input').focus();
+		albox.querySelector('button').onclick=()=>{
+			main.name=albox.querySelector('input').value||`untitled ${new Date().toLocaleString()}`;
 			document.title=`sky_seq ${name_.textContent=main.name}`;core();
 		};
 	},
