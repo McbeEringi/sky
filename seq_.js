@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[];
 alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2107011\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2107020\nMIT License\n',
 	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
 	...{
 		ja:{
@@ -10,11 +10,13 @@ const texts={
 		}
 	}[window.navigator.language.slice(0,2)]
 },
+mod=(x,y)=>{if(((y-1)&y)==0)return x&(y-1);else{while(x<0)x+=y;while(x>=y)x-=y;return x;}},
 ctx=c.getContext('2d'),res=window.devicePixelRatio||1,cfg={pad:12,w:16},
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
 n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6','3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
-pos2p=(pos_=Tone.Transport.position)=>{let tmp=pos_.split(':').map(x=>Number(x));return(tmp[0]*Tone.Transport.timeSignature+tmp[1]+tmp[2]*.25)%main.scores.length;},
-p2pos=p_=>`${Math.floor(p_/Tone.Transport.timeSignature)}:${Math.floor(p_)%Tone.Transport.timeSignature}:${(p_*4)%4}`,
+n2c=x=>{['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'][mod(x+main.sc,12)]+Math.floor((x+main.sc)*.08333)+4;},
+pos2p=(pos_=Tone.Transport.position)=>{let tmp=pos_.split(':').map(x=>Number(x));return mod(tmp[0]*Tone.Transport.timeSignature+tmp[1]+tmp[2]*.25,main.scores.length);},
+p2pos=p_=>`${Math.floor(p_/Tone.Transport.timeSignature)}:${mod(Math.floor(p_),Tone.Transport.timeSignature)}:${mod(p_*4,4)}`,
 n2Hz=x=>440*Math.pow(2,(Number(x)+main.sc)/12)*2,//C4~C6
 ind2n=x=>x.reduce((a,y)=>a[y],main.scores),
 ind2c=x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);},
@@ -26,7 +28,7 @@ sytar=(n,t)=>{n=n.split(',');if(n[0])synth.triggerAttackRelease(n.map(n2Hz),'1m'
 seq=new Tone.Sequence((time,note)=>{
 	//Tone.Draw.schedule(()=>{},time);
 	sytar(note,time);curset();kbset(note);
-	curpos=(curpos+1)%calced.note.length;
+	curpos=mod(curpos+1,calced.note.length);
 },[],'4n').start(0),
 frr=(ct,col,x,y,dx,dy,r=0)=>{
 	ct.fillStyle=col;
@@ -95,7 +97,7 @@ draw=()=>{
 				let col='#fea';
 				if(n2i[n]==undefined){
 					n=Number(n);col='#fea8';
-					if(n>0)n=(n+9)%24-9;else n=(n+10)%24+14;
+					if(n>0)n=mod(n+9,24)-9;else n=mod(n+10,24)+14;
 				}
 				frr(ctx,col,x.pos+1+pos,225-Number(n2i[String(n)])*16,cfg.w-2,14,4);//240-16+1
 			});
@@ -167,9 +169,26 @@ tpause=()=>{Tone.Transport.pause();requestIdleCallback(()=>{curset();kbset();});
 tstop=e=>{Tone.Transport.stop();requestIdleCallback(()=>{curpos=0;curset();kbset();});},
 tstep=x=>{
 	Tone.start();
-	curpos=((curpos+x)%calced.note.length+calced.note.length)%calced.note.length;
+	curpos=mod(curpos+x,calced.note.length);
 	pset();tpause();kbset();
 	if(tstat())sytar(ind2n(calced.note[curpos].ind));
+},
+dbfx={
+	sav:()=>alert('sav'),
+	ope:()=>alert('ope'),
+	ren:()=>alert('ren'),
+	dup:()=>alert('dup'),
+	del:()=>alert('del'),
+	imp:()=>alert('imp'),
+	exp:()=>alert('exp'),
+	sam:fx=>fetch('sample.json').then(x=>x.json()).then(x=>
+		Promise.allSettled(x.map(y=>new Promise((t,c)=>
+			Object.assign(
+				idb.result.transaction('seq','readwrite').objectStore('seq').add(y),
+				{onsuccess:()=>{console.log(y.name);t(y.name);},onerror:c}
+			)
+		))).then(fx||(()=>{}))
+	)
 },
 init=()=>{
 	main={sc:0,bpm:120,scores:new Array(8).fill(''),...main};
@@ -248,7 +267,28 @@ prevbtn.onclick=()=>tstep(-1);
 nextbtn.onclick=()=>tstep( 1);
 undobtn.onclick=()=> urdo(-1);
 redobtn.onclick=()=> urdo( 1);
-filebtn.onclick=()=>alert(null);
+filebtn.onclick=()=>{
+	tpause();
+	alert('Loading…');
+	let s=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-100% -200%;">new</button><button onclick="dbfx.imp();"class="grid bg" style="--bp:-600% -200%;">import</button><br>`;
+	Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),{
+		onsuccess:e=>{
+			let tmp=e.target.result;
+			//ins sort
+			console.log(tmp);//dbfx.tmp=tmp;
+			if(!tmp.length)alert(`${texts.nodat}<br><button onclick="this.textContent='Loading…';this.disabled=true;dbfx.sam(filebtn.onclick);">download sample</button>`);
+			tmp.forEach((x,i)=>
+			s+=`<div class="item"><span onclick="dbfx.ope(${i});">${x}</span><br><button
+				onclick="dbfx.ren(${i});" class="grid bg" style="--bp:-400% -200%;">rename</button><button
+				onclick="dbfx.dup(${i});" class="grid bg" style="--bp:-300% -200%;">dupe</button><button
+				onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-600% -200%;">export</button><button
+				onclick="dbfx.del(${i});" class="grid bg" style="--bp:-200% -200%;">delete</button></div>`
+			);
+			alert(s);
+		},
+		onerror:e=>alert(`⚠️\n${texts.err(0)}\n\n${e.target.error}${s}`)
+	});
+};
 savebtn.onclick=()=>alert(null);
 infobtn.onclick=()=>alert(texts.info+'\n<a class="grid bg icotxt" href="manual/seq.html">?</a>');
 
