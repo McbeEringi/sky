@@ -2,16 +2,15 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[];
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2107021\nMIT License\n',
-	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
-	nodat:'no saved data found',sample:'download sample',load:'Loading…',
-	err:x=>`failed to ${['read','write'][x]} datas`,saveq:'do you want to save the current data?',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2107022\nMIT License\n',
+	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',
+	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
+	err:x=>`failed to ${['read','write'][x]} datas`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
 	...{
 		ja:{
 			title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',
 			nodat:'保存されたデータはありません',sample:'サンプルをダウンロード',load:'読み込み中…',
-			err:x=>`データの${['読み出し','書き込み'][x]}に失敗しました`,
-			saveq:'現在のデータを保存しますか?'
+			err:x=>`データの${['読み出し','書き込み'][x]}に失敗しました`,saveq:'現在のデータを保存しますか？',delq:x=>`「${x}」を削除してよろしいですか？`
 		}
 	}[window.navigator.language.slice(0,2)]
 },
@@ -217,25 +216,29 @@ dbfx={
 			document.title=`sky_seq ${name_.textContent=main.name}`;core();
 		};
 	},
-	get:function(i,fx,fx_){
-		console.log(this.tmp[i]);
+	get:(i,fx)=>{
+		console.log(dbfx.tmp[i]);
 		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').get(this.tmp[i]),{
 			onsuccess:fx,
-			onerror:fx_||(e=>alert(`⚠️\n${texts.err(0)}\n\n${e.target.error}`))
+			onerror:e=>alert(`⚠️\n${texts.err(0)}\n\n${e.target.error}`)
 		});
 	},
 	ope:i=>dbfx.get(i,e=>{main=e.target.result;init();alcb.checked=false;}),
 	ren:()=>alert('ren'),
 	dup:()=>alert('dup'),
-	del:()=>alert('del'),
+	del:i=>{
+		alert(`${texts.delq(dbfx.tmp[i])}\n<button onclick="dbfx.del_(${i});" class="grid bg" style="--bp:-400% -100%;background-color:#f448;">delete</button>	<button onclick="browse();" class="grid bg" style="--bp:-500% -100%;">cancel</button>`);
+		albox.lastElementChild.focus();
+	},
+	del_:i=>{Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').delete(dbfx.tmp[i]),{onsuccess:browse,onerror:e=>albox.textContent=`⚠️\n${texts.err(1)}\n\n${e.target.error}`});},
 	imp:()=>alert('imp'),
 	exp:()=>alert('exp'),
 	sam:fx=>fetch('sample.json').then(x=>x.json()).then(x=>
 		Promise.allSettled(x.map(y=>new Promise((t,c)=>
-			Object.assign(
-				idb.result.transaction('seq','readwrite').objectStore('seq').add(y),
-				{onsuccess:()=>{console.log(y.name);t(y.name);},onerror:c}
-			)
+			Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(y),{
+				onsuccess:()=>{console.log(y.name);t(y.name);},
+				onerror:c
+			})
 		))).then(fx||(()=>{}))
 	),
 	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>console.log('delall done')
@@ -248,7 +251,7 @@ init=()=>{
 };
 
 document.onkeydown=e=>{
-	if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;
+	if(['INPUT','TEXTAREA','BUTTON'].includes(document.activeElement.tagName))return;
 	if(alcb.checked){if(['Space','Enter'].includes(e.code)){e.preventDefault();alcb.checked=false;}return;}
 	if(e.ctrlKey||e.metaKey)
 		switch(e.code){
