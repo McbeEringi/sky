@@ -251,7 +251,7 @@ init=()=>{
 };
 
 document.onkeydown=e=>{
-	if(['INPUT','TEXTAREA','BUTTON'].includes(document.activeElement.tagName))return;
+	if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;
 	if(alcb.checked){if(['Space','Enter'].includes(e.code)){e.preventDefault();alcb.checked=false;}return;}
 	if(e.ctrlKey||e.metaKey)
 		switch(e.code){

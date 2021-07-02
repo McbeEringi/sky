@@ -51,7 +51,7 @@
 
 			.ui{max-width:260px;margin:8px 0;}
 			.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#0006;font-size:0;border-radius:25%;box-shadow:0 0 8px #0008;text-align:center;vertical-align:middle;border:none;outline:none;padding:0;transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
-			.grid:not(input){cursor:pointer;}.grid:active{background-color:#8888;}.grid:disabled{filter:grayscale(1)opacity(.7);}.grid:focus{box-shadow:0 0 8px #0008,0 0 0 2px #aef;}.showtxt,.icotxt{color:#caf0f6;font-size:18px;}.icotxt{--bp:-200% 0;color:#fea;font-size:26px;text-shadow:0 0 2px #f00;}
+			.grid:not(input){cursor:pointer;}.grid:active{background-color:#8888;}.grid:disabled{filter:grayscale(1)opacity(.7);}.showtxt,.icotxt{color:#caf0f6;font-size:18px;}.icotxt{--bp:-200% 0;color:#fea;font-size:26px;text-shadow:0 0 2px #f00;}
 
 			.kb{position:relative;height:100vh;}
 			#kb{max-width:400px;margin:0 auto;border-radius:8px;background-color:#0004;font-size:0;touch-action:none;}
@@ -74,7 +74,7 @@
 			label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0004;z-index:3;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
 			#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
 			#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#2228;text-align:center;white-space:pre-wrap;overflow:scroll;z-index:4;}
-			#albox .grid{backdrop-filter:none;-webkit-backdrop-filter:none;}
+			#albox .grid{backdrop-filter:none;-webkit-backdrop-filter:none;}#albox .grid:focus{box-shadow:0 0 8px #0008,0 0 0 2px #aef;}
 			#alfcb:checked~#albox{width:100%;height:100%;}#alfcb:checked~label[for=alcb]::before{content:"";display:block;width:48px;height:48px;position:absolute;top:0;right:0;--bp:-500% -100%;}
 			#albox .items{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));grid-gap:8px;}
 			#albox .items>div{background:#8884;color:#eee;box-sizing:border-box;padding:4px;border-radius:8px;font-size:large;cursor:pointer;}
