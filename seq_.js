@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[];
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2107022\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2107030\nMIT License\n',
 	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`failed to ${['read','write'][x]} datas`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
@@ -130,7 +130,7 @@ selins=x=>{
 	if(sel){
 		let tmp=sel.dat[0].ind.length-1;tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
 		urset(['main.scores'+tmp[0].map(y=>`[${y}]`).join('')+`.splice(${tmp[1]},`, `${tmp[2]-tmp[1]+1},...${JSON.stringify(x)})`, `${x.length},...${JSON.stringify(ind2n(tmp[0]).slice(tmp[1],tmp[2]+1))})`]);
-		calc();tims.igscr=true;scr.scrollLeft=sel.x+w;sel=null;cxbtn.disabled=ccbtn.disabled=true;
+		calc();tims.igscr=true;scr.scrollLeft=sel.x+w;sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));
 	}else{
 		let tmp=ecur[2].length-1;tmp=[ecur[2].slice(0,tmp),ecur[2][tmp]-ecur[1]+1];
 		urset(['main.scores'+tmp[0].map(y=>`[${y}]`).join('')+`.splice(${tmp[1]},`, `0,...${JSON.stringify(x)})`, `${x.length})`]);
@@ -158,12 +158,12 @@ cbset=x=>{
 		clip.appendChild(e);
 	})
 },
-urset=x=>{Function(x[0]+x[1])();urstack[1]=[];urstack[0].push(x);while(urstack[0].length>Number(localStorage.seq_urMax))urstack[0].shift();console.log(x);undobtn.disabled=false;redobtn.disabled=true;},
+urset=x=>{Function(x[0]+x[1])();urstack[1]=[];urstack[0].push(x);while(urstack[0].length>Number(localStorage.seq_urMax))urstack[0].shift();console.log(x);undobtn.classList.remove('dis');redobtn.classList.add('dis');},
 urdo=x=>{
 	let tmp;
 	while(x<0){if(urstack[0].length){urstack[1].unshift(tmp=urstack[0].pop());tmp=tmp[0]+tmp[2];x++;console.log('undo:	'+tmp);Function(tmp)();}else{break;}}
 	while(0<x){if(urstack[1].length){urstack[0].push(tmp=urstack[1].shift());tmp=tmp[0]+tmp[1];x--;console.log('redo:	'+tmp);Function(tmp)();}else{break;}}
-	undobtn.disabled=!urstack[0].length;redobtn.disabled=!urstack[1].length;
+	undobtn.classList[urstack[0].length?'remove':'add']('dis');redobtn.classList[urstack[1].length?'remove':'add']('dis');
 	if(tmp){calc();draw();seqset();kbset();}
 },
 bpmset=()=>{let x=Number(bpm_.value);if(x>0)Tone.Transport.bpm.value=main.bpm=x;else bpm_.value=Tone.Transport.bpm.value=main.bpm;},
@@ -180,7 +180,7 @@ tstep=x=>{
 browse=()=>{
 	tpause();
 	alert(texts.load);
-	let s=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-100% -200%;">new</button><button onclick="dbfx.imp();"class="grid bg" style="--bp:-600% -200%;">import</button><hr>`;
+	let s=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-100% -200%;">new</button><button onclick="dbfx.imp();" class="grid bg" style="--bp:-600% -200%;">import</button><hr>`;
 	Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),{
 		onsuccess:e=>{
 			let tmp=e.target.result;
@@ -189,11 +189,11 @@ browse=()=>{
 			if(!tmp.length){alert(`${s}${texts.nodat}\n<button onclick="this.textContent='${texts.load}';this.disabled=true;dbfx.sam(browse);">${texts.sample}</button>`,1);return;}
 			s+='<div class="items">';
 			tmp.forEach((x,i)=>
-				s+=`<div onclick="dbfx.ope(${i});"><p>${x}</p><div><button
-					onclick="dbfx.ren(${i});event.stopPropagation();" class="grid bg" style="--bp:-400% -200%;">rename</button><button
-					onclick="dbfx.dup(${i});event.stopPropagation();" class="grid bg" style="--bp:-300% -200%;">dupe</button><button
-					onclick="dbfx.exp(${i});event.stopPropagation();" class="grid bg" style="--bp:-700% -200%;">export</button><button
-					onclick="dbfx.del(${i});event.stopPropagation();" class="grid bg" style="--bp:-200% -200%;">delete</button></div></div>`
+				s+=`<button onclick="dbfx.ope(${i});this.blur();" class="style"><p>${x}</p><div><p
+					onclick="dbfx.ren(${i});event.stopPropagation();" class="grid bg" style="--bp:-400% -200%;">rename</p><p
+					onclick="dbfx.dup(${i});event.stopPropagation();" class="grid bg" style="--bp:-300% -200%;">dupe</p><p
+					onclick="dbfx.exp(${i});event.stopPropagation();" class="grid bg" style="--bp:-700% -200%;">export</p><p
+					onclick="dbfx.del(${i});event.stopPropagation();" class="grid bg" style="--bp:-200% -200%;">delete</p></div></button>`
 			);
 			alert(s+'</div>',1);
 		},
@@ -246,25 +246,25 @@ dbfx={
 init=()=>{
 	main={sc:0,bpm:120,scores:new Array(8).fill(''),...main};urstack=[[],[]];
 	document.title='sky_seq '+(name_.textContent=main.name||'');
-	redobtn.disabled=undobtn.disabled=true;bpm_.value=sc_.value='';
+	[redobtn,undobtn,cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));bpm_.value=sc_.value='';
 	calc();seqset();tstop();bpmset();scset();
 };
 
 document.onkeydown=e=>{
-	if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;
-	if(alcb.checked){if(['Space','Enter'].includes(e.code)){e.preventDefault();alcb.checked=false;}return;}
+	if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
+	if(alcb.checked){if(['Space','Enter','Escape'].includes(e.code)){e.preventDefault();alcb.checked=false;}return;}
 	if(e.ctrlKey||e.metaKey)
 		switch(e.code){
 			case'KeyZ':e.preventDefault();urdo(e.shiftKey?1:-1);break;
 			case'KeyS':e.preventDefault();savebtn.onclick();break;
 			case'KeyO':e.preventDefault();filebtn.onclick();break;
-			case'KeyA':if(emode.checked&&!slbtn.disabled){e.preventDefault();slbtn.onclick();}break;
-			case'KeyX':if(emode.checked&&!cxbtn.disabled){e.preventDefault();cxbtn.onclick();}break;
-			case'KeyC':if(emode.checked&&!ccbtn.disabled){e.preventDefault();ccbtn.onclick();}break;
-			case'KeyV':if(emode.checked&&!cvbtn.disabled){e.preventDefault();cvbtn.onclick();}break;
-			case'KeyD':if(emode.checked&&!rmbtn.disabled){e.preventDefault();rmbtn.onclick();}break;
-			case'KeyF':if(emode.checked&&!icbtn.disabled){e.preventDefault();icbtn.onclick();}break;
-			case'KeyG':if(emode.checked&&!iwbtn.disabled){e.preventDefault();iwbtn.onclick();}break;
+			case'KeyA':if(emode.checked&&!slbtn.classList.contains('dis')){e.preventDefault();slbtn.onclick();}break;
+			case'KeyX':if(emode.checked&&!cxbtn.classList.contains('dis')){e.preventDefault();cxbtn.onclick();}break;
+			case'KeyC':if(emode.checked&&!ccbtn.classList.contains('dis')){e.preventDefault();ccbtn.onclick();}break;
+			case'KeyV':if(emode.checked&&!cvbtn.classList.contains('dis')){e.preventDefault();cvbtn.onclick();}break;
+			case'KeyD':if(emode.checked&&!rmbtn.classList.contains('dis')){e.preventDefault();rmbtn.onclick();}break;
+			case'KeyF':if(emode.checked&&!icbtn.classList.contains('dis')){e.preventDefault();icbtn.onclick();}break;
+			case'KeyG':if(emode.checked&&!iwbtn.classList.contains('dis')){e.preventDefault();iwbtn.onclick();}break;
 		}
 	else
 		switch(e.code){
@@ -321,24 +321,25 @@ prevbtn.onclick=()=>tstep(-1);
 nextbtn.onclick=()=>tstep( 1);
 undobtn.onclick=()=> urdo(-1);
 redobtn.onclick=()=> urdo( 1);
-filebtn.onclick=()=>alert(`${texts.saveq}\n<button onclick="browse();" class="grid bg" style="--bp:-500% -100%;">don´t save</button>	<button onclick="dbfx.sav(browse);" class="grid bg" style="--bp:-400% -100%;">save</button>`);
+filebtn.onclick=()=>{
+	alert(`${texts.saveq}\n<button onclick="browse();" class="grid bg" style="--bp:-500% -100%;">don´t save</button>	<button onclick="dbfx.sav(browse);" class="grid bg" style="--bp:-400% -100%;">save</button>`);
+	albox.lastElementChild.focus();
+};
 savebtn.onclick=()=>dbfx.sav();
 infobtn.onclick=()=>alert(texts.info+'\n<a class="grid bg icotxt" href="manual/seq.html">?</a>');
 
-emode.onchange=()=>{sel=null;cxbtn.disabled=ccbtn.disabled=true;slbtn.classList.remove('a');draw();};
+emode.onchange=()=>{sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));slbtn.classList.remove('a');draw();};
 slbtn.onclick=()=>{
 	if(slbtn.classList.toggle('a')){
-		cxbtn.disabled=ccbtn.disabled=true;
-		cvbtn.disabled=icbtn.disabled=iwbtn.disabled=rmbtn.disabled=true;
+		[cxbtn,ccbtn, cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.add('dis'));
 		sel={x:ecur[0],dx:3,col:'#feaa',dat:ecur};//ecur=[pos,prev,ind]
 		draw();
 	}else{
-		if(sel.dat[0]==ecur[0]){sel=null;cvbtn.disabled=icbtn.disabled=iwbtn.disabled=rmbtn.disabled=false;return;}
+		if(sel.dat[0]==ecur[0]){sel=null;[cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.remove('dis'));return;}
 		let dat=selfix(sel.dat,ecur).map(ind2c);
 		sel={x:dat[0].pos,dx:dat[1].pos+(dat[1].dx||cfg.w)-dat[0].pos,col:'#fea6',dat};//dat:[ind,ind]
 		console.log(sel);
-		cxbtn.disabled=ccbtn.disabled=false;
-		cvbtn.disabled=icbtn.disabled=iwbtn.disabled=rmbtn.disabled=false;
+		[cxbtn,ccbtn, cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.remove('dis'));
 		draw();
 	}
 };
@@ -348,14 +349,14 @@ cxbtn.onclick=()=>{
 	s=ind2n(tmp[0]).slice(tmp[1],tmp[2]+1);cbset(s);
 	if(sel.dx==calced.length){icbtn.onclick();return;}
 	urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, `${tmp[2]-tmp[1]+1})`, `0,...${JSON.stringify(s)})`]);
-	calc();tims.igscr=true;scr.scrollLeft=sel.x;sel=null;cxbtn.disabled=ccbtn.disabled=true;
+	calc();tims.igscr=true;scr.scrollLeft=sel.x;sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));
 	seqset();draw();kbset();
 };
 ccbtn.onclick=()=>{
 	if(!sel)return;
 	let tmp=sel.dat[0].ind.length-1;tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
 	cbset(ind2n(tmp[0]).slice(tmp[1],tmp[2]+1));
-	sel=null;cxbtn.disabled=ccbtn.disabled=true;draw();
+	sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));draw();
 };
 cvbtn.onclick=()=>selins(clips[0]);
 rmbtn.onclick=()=>{
@@ -363,7 +364,7 @@ rmbtn.onclick=()=>{
 		if(sel.dx==calced.length){icbtn.onclick();return;}
 		let tmp=sel.dat[0].ind.length-1;tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
 		urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, `${tmp[2]-tmp[1]+1})`, `0,...${JSON.stringify(ind2n(tmp[0]).slice(tmp[1],tmp[2]+1))})`]);
-		calc();tims.igscr=true;scr.scrollLeft=sel.x;sel=null;cxbtn.disabled=ccbtn.disabled=true;
+		calc();tims.igscr=true;scr.scrollLeft=sel.x;sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));
 	}else{
 		let tmp=ecur[2].length-1;
 		if(!tmp&&main.scores.length==1){
