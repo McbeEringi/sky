@@ -406,7 +406,7 @@ if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
 			let c=document.createElement('canvas'),ctx=c.getContext('2d');
 			c.width=img.naturalWidth;c.height=img.naturalHeight;
 			ctx.drawImage(img,0,0);
-			document.body.insertAdjacentHTML('beforeend',`<style>#kb>div::after,#alfsccb:checked~label[for=alcb]::before,.bg{background-image:url(${c.toDataURL()});}</style>`);
+			document.body.insertAdjacentHTML('beforeend',`<style>#kb>div::after,#alfcb:checked~label[for=alcb]::before,.bg{background-image:url(${c.toDataURL()});}</style>`);
 		};
 		img.src='img/seq.svg';
 	});
