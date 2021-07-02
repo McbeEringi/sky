@@ -218,7 +218,7 @@ dbfx={
 	},
 	get:(i,fx)=>{
 		console.log(dbfx.tmp[i]);
-		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').get(this.tmp[i]),{
+		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').get(dbfx.tmp[i]),{
 			onsuccess:fx,
 			onerror:e=>alert(`⚠️\n${texts.err(0)}\n\n${e.target.error}`)
 		});
