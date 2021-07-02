@@ -175,7 +175,14 @@ tstep=x=>{
 },
 dbfx={
 	sav:()=>alert('sav'),
-	ope:()=>alert('ope'),
+	get:function(i,fx,fx_){
+		console.log(this.tmp[i]);
+		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').get(this.tmp[i]),{
+			onsuccess:fx,
+			onerror:fx_||(e=>alert(`⚠️\n${texts.err(0)}\n\n${e.target.error}`))
+		});
+	},
+	ope:i=>dbfx.get(i,e=>{main=e.target.result;init();alcb.checked=false;}),
 	ren:()=>alert('ren'),
 	dup:()=>alert('dup'),
 	del:()=>alert('del'),
@@ -191,9 +198,10 @@ dbfx={
 	)
 },
 init=()=>{
-	main={sc:0,bpm:120,scores:new Array(8).fill(''),...main};
-	calc();seqset();tstop();bpmset();scset();document.title='sky_seq '+(name_.textContent=main.name||'');
-	urstack=[[],[]];redobtn.disabled=undobtn.disabled=true;
+	main={sc:0,bpm:120,scores:new Array(8).fill(''),...main};urstack=[[],[]];
+	document.title='sky_seq '+(name_.textContent=main.name||'');
+	redobtn.disabled=undobtn.disabled=true;bpm_.value=sc_.value='';
+	calc();seqset();tstop();bpmset();scset();
 };
 
 document.onkeydown=e=>{
@@ -274,15 +282,15 @@ filebtn.onclick=()=>{
 	Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),{
 		onsuccess:e=>{
 			let tmp=e.target.result;
-			//ins sort
-			console.log(tmp);//dbfx.tmp=tmp;
+			// TODO: sort
+			console.log(tmp);dbfx.tmp=tmp;
 			if(!tmp.length)alert(`${texts.nodat}<br><button onclick="this.textContent='Loading…';this.disabled=true;dbfx.sam(filebtn.onclick);">download sample</button>`);
 			tmp.forEach((x,i)=>
-			s+=`<div class="item"><span onclick="dbfx.ope(${i});">${x}</span><br><button
-				onclick="dbfx.ren(${i});" class="grid bg" style="--bp:-400% -200%;">rename</button><button
-				onclick="dbfx.dup(${i});" class="grid bg" style="--bp:-300% -200%;">dupe</button><button
-				onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-600% -200%;">export</button><button
-				onclick="dbfx.del(${i});" class="grid bg" style="--bp:-200% -200%;">delete</button></div>`
+				s+=`<div class="item"><span onclick="dbfx.ope(${i});">${x}</span><br><button
+					onclick="dbfx.ren(${i});" class="grid bg" style="--bp:-400% -200%;">rename</button><button
+					onclick="dbfx.dup(${i});" class="grid bg" style="--bp:-300% -200%;">dupe</button><button
+					onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-600% -200%;">export</button><button
+					onclick="dbfx.del(${i});" class="grid bg" style="--bp:-200% -200%;">delete</button></div>`
 			);
 			alert(s);
 		},
@@ -361,7 +369,7 @@ iwbtn.onclick=()=>selins([['','']]);
 	cfg.w2=cfg.w/2;
 	//setInterval(()=>console.log(ecur),500);
 
-	main=localStorage.seq_ezsave?JSON.parse(localStorage.seq_ezsave):{};
+	if(localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
 
 	init();
 	if(texts.notice)requestIdleCallback(()=>alert(texts.notice));
