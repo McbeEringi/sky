@@ -253,7 +253,7 @@ init=()=>{
 
 document.onkeydown=e=>{
 	if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
-	if(alcb.checked){if(['Space','Enter','Escape'].includes(e.code)){e.preventDefault();alcb.checked=false;}return;}
+	if(alcb.checked){if(['Escape','Backspace'].includes(e.code)){e.preventDefault();alcb.checked=false;}return;}
 	if(e.ctrlKey||e.metaKey)
 		switch(e.code){
 			case'KeyZ':e.preventDefault();urdo(e.shiftKey?1:-1);break;
