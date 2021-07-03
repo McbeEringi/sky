@@ -256,7 +256,7 @@ dbfx={
 	},
 	del_:i=>{Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').delete(dbfx.tmp[i]),{onsuccess:browse,onerror:e=>alert(`${texts.err(1)}${e.target.error}`)});},
 	imp:()=>{
-		alert(`${texts.imp}<input class="style input" placeholder="...sky/seq.html#..."><button class="grid bg" style="--bp:-600% -200%;">import</button>`);
+		alert(`${texts.imp}\n<input class="style input" placeholder="...sky/seq.html#...">\n<button class="grid bg" style="--bp:-600% -200%;">import</button>`);
 		albox.querySelector('input').focus();
 		albox.querySelector('button').onclick=()=>{
 			let tmp=urlfx.i(albox.querySelector('input').value.split('#',2)[1]);
@@ -307,8 +307,8 @@ urlfx={
 	}
 },
 ezsave=()=>{if(!from_url){localStorage.seq_ezsave=JSON.stringify(main);console.log('ezsave');}},
-dlJson=(x=main)=>{
-	let e=document.createElement('a');e.download=`${x.name||'JSON'}.json`;e.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
+dljson=(x=main)=>{
+	let e=document.createElement('a');e.download=`${x.name||'untitled'}.json`;e.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
 	e.click();setTimeout(URL.revokeObjectURL,10000,e.href);
 },
 init=()=>{
@@ -397,7 +397,7 @@ filebtn.onclick=()=>{
 	albox.lastElementChild.focus();
 };
 savebtn.onclick=()=>dbfx.sav();
-infobtn.onclick=()=>alert(texts.info+'\n<a class="grid bg icotxt" href="manual/seq.html">?</a>');
+infobtn.onclick=()=>alert(texts.info+'\n<p class="grid icotxt" onclick="alert(\'???\');">?</p><p class="grid icotxt" onclick="dljson();">⤓</p>',1);
 
 emode.onchange=()=>{sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));slbtn.classList.remove('a');draw();};
 slbtn.onclick=()=>{
