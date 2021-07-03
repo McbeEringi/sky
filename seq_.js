@@ -18,7 +18,7 @@ mod=(x,y)=>{if(((y-1)&y)==0)return x&(y-1);else{while(x<0)x+=y;while(x>=y)x-=y;r
 ctx=c.getContext('2d'),cfg={pad:12,w:16},
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
 n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6','3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
-n2c=x=>{['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'][mod(x+main.sc,12)]+Math.floor((x+main.sc)*.08333)+4;},
+n2c=x=>{if(x){x=Number(x);return['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'][mod(x,12)]+Math.floor(x*.08333+3.833);}},
 pos2p=(pos_=Tone.Transport.position)=>{let tmp=pos_.split(':').map(x=>Number(x));return mod(tmp[0]*Tone.Transport.timeSignature+tmp[1]+tmp[2]*.25,main.scores.length);},
 p2pos=p_=>`${Math.floor(p_/Tone.Transport.timeSignature)}:${mod(Math.floor(p_),Tone.Transport.timeSignature)}:${mod(p_*4,4)}`,
 n2Hz=x=>440*Math.pow(2,(Number(x)+main.sc)/12)*2,//C4~C6
@@ -154,7 +154,7 @@ cbset=x=>{
 	clip.textContent='';
 	clips.forEach((y,i)=>{
 		let e=document.createElement('p');
-		e.textContent=y;e.onclick=()=>cbset(i);
+		e.textContent=y.replace(/-?\d+/g,n2c);e.onclick=()=>cbset(i);
 		clip.appendChild(e);
 	})
 },
