@@ -1,21 +1,21 @@
 'use strict';
-let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[];
+let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
 	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2107030\nMIT License\n',
-	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',
+	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
-	err:x=>`failed to ${['read','write'][x]} datas`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
+	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
 	...{
 		ja:{
-			title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',
+			title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',imp:'URLから読み込む',exp:x=>`「${x}」をURLに書き出す`,
 			nodat:'保存されたデータはありません',sample:'サンプルをダウンロード',load:'読み込み中…',
-			err:x=>`データの${['読み出し','書き込み'][x]}に失敗しました`,saveq:'現在のデータを保存しますか？',delq:x=>`「${x}」を削除してよろしいですか？`
+			err:x=>`⚠️\nデータの${['読み出し','書き込み'][x]}に失敗しました\n\n`,saveq:'現在のデータを保存しますか？',delq:x=>`「${x}」を削除してよろしいですか？`
 		}
 	}[window.navigator.language.slice(0,2)]
 },
 mod=(x,y)=>{if(((y-1)&y)==0)return x&(y-1);else{while(x<0)x+=y;while(x>=y)x-=y;return x;}},
-ctx=c.getContext('2d'),res=window.devicePixelRatio||1,cfg={pad:12,w:16},
+ctx=c.getContext('2d'),cfg={pad:12,w:16},
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
 n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6','3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
 n2c=x=>{['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'][mod(x+main.sc,12)]+Math.floor((x+main.sc)*.08333)+4;},
@@ -197,43 +197,84 @@ browse=()=>{
 			);
 			alert(s+'</div>',1);
 		},
-		onerror:e=>alert(`${s}⚠️\n${texts.err(0)}\n\n${e.target.error}`)
+		onerror:e=>alert(`${s}${texts.err(0)}${e.target.error}`)
 	});
 },
 dbfx={
 	sav:fx=>{
-		const core=()=>Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(main),{
-			onsuccess:fx||(()=>alert(`✅\n${texts.save}`)),
-			onerror:()=>Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').put(main),{
-				onsuccess:fx||(()=>alert(`✅\n${texts.osave}`)),
-				onerror:e=>alert(`⚠️\n${texts.err(1)}\n\n${e.target.error}`)
-			})
-		});
-		if(main.name){core();return;}
+		if(main.name){dbfx.sav_(fx);return;}
 		alert(`${texts.title}\n<input class="style input" placeholder="untitled">\n<button class="grid bg" style="--bp:-500% -200%;">save</button>`);
 		albox.querySelector('input').focus();
 		albox.querySelector('button').onclick=()=>{
 			main.name=albox.querySelector('input').value||`untitled ${new Date().toLocaleString()}`;
-			document.title=`sky_seq ${name_.textContent=main.name}`;core();
+			document.title=`sky_seq ${name_.textContent=main.name}`;dbfx.sav_(fx);
 		};
+	},
+	sav_:fx=>{
+		from_url=false;
+		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(main),{
+			onsuccess:fx||(()=>alert(`✅\n${texts.save}`)),
+			onerror:()=>Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').put(main),{
+				onsuccess:fx||(()=>alert(`✅\n${texts.osave}`)),
+				onerror:e=>alert(`${texts.err(1)}${e.target.error}`)
+			})
+		});
 	},
 	get:(i,fx)=>{
 		console.log(dbfx.tmp[i]);
 		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').get(dbfx.tmp[i]),{
 			onsuccess:fx,
-			onerror:e=>alert(`⚠️\n${texts.err(0)}\n\n${e.target.error}`)
+			onerror:e=>alert(`${texts.err(0)}${e.target.error}`)
 		});
 	},
-	ope:i=>dbfx.get(i,e=>{main=e.target.result;init();alcb.checked=false;}),
-	ren:()=>alert('ren'),
-	dup:()=>alert('dup'),
+	ope:i=>dbfx.get(i,e=>{main=e.target.result;from_url=false;init();alcb.checked=false;}),
+	ren:i=>{
+		alert(`${texts.title}\n<input class="style input" value="${dbfx.tmp[i]}" placeholder="${dbfx.tmp[i]}"">\n<button class="grid bg" style="--bp:-400% -200%;">rename</button>`);
+		albox.querySelector('input').focus();
+		albox.querySelector('button').onclick=()=>dbfx.ren_(i,albox.querySelector('input').value);
+	},
+	ren_:(i,x)=>{
+		if(!x||dbfx.tmp[i]==x){browse();return;}
+		dbfx.get(i,e=>{
+			let dat=e.target.result;dat.name=x;
+			Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(dat),{
+				onsuccess:()=>dbfx.del_(i),
+				onerror:e=>alert(`${texts.err(1)}${e.target.error}`)
+			});
+		});
+	},
+	dup:i=>dbfx.get(i,e=>{
+		let dat=e.target.result;dat.name+=texts.copy;
+		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(dat),{
+			onsuccess:browse,
+			onerror:e=>alert(`${texts.err(1)}${e.target.error}`)
+		});
+	}),
 	del:i=>{
 		alert(`${texts.delq(dbfx.tmp[i])}\n<button onclick="dbfx.del_(${i});" class="grid bg" style="--bp:-400% -100%;background-color:#f448;">delete</button>	<button onclick="browse();" class="grid bg" style="--bp:-500% -100%;">cancel</button>`);
 		albox.lastElementChild.focus();
 	},
-	del_:i=>{Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').delete(dbfx.tmp[i]),{onsuccess:browse,onerror:e=>albox.textContent=`⚠️\n${texts.err(1)}\n\n${e.target.error}`});},
-	imp:()=>alert('imp'),
-	exp:()=>alert('exp'),
+	del_:i=>{Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').delete(dbfx.tmp[i]),{onsuccess:browse,onerror:e=>alert(`${texts.err(1)}${e.target.error}`)});},
+	imp:()=>{
+		alert(`${texts.imp}<input class="style input" placeholder="...sky/seq.html#..."><button class="grid bg" style="--bp:-600% -200%;">import</button>`);
+		albox.querySelector('input').focus();
+		albox.querySelector('button').onclick=()=>{
+			let tmp=urlfx.i(albox.querySelector('input').value.split('#',2)[1]);
+			if(tmp){
+				main=tmp;alcb.checked=false;from_url=true;init();
+				//idb.result.transaction('seq','readwrite').objectStore('seq').add(tmp);
+			}else albox.querySelector('input').focus();
+		};
+		//requestIdleCallback(()=>navigator.clipboard.readText().then(x=>albox.querySelector('input').value=x).catch(console.log));
+	},
+	exp:i=>{
+		dbfx.get(i,e=>{
+			alert(`${texts.exp(e.target.result.name)}\n<input class="style input" value="${urlfx.o(e.target.result)}">\n<button class="grid bg" style="--bp:-300% -200%;">copy</button>	<button class="grid bg" style="--bp:-300% -300%;">tweet</button>`);
+			let b=albox.querySelectorAll('button');b[0].focus();
+			b[0].onclick=()=>navigator.clipboard.writeText(albox.querySelector('input').value).then(browse);
+			b[1].onclick=()=>{window.open(`https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_seq&url=${encodeURIComponent(albox.querySelector('input').value)}`);browse();};
+		});
+	},
 	sam:fx=>fetch('sample.json').then(x=>x.json()).then(x=>
 		Promise.allSettled(x.map(y=>new Promise((t,c)=>
 			Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(y),{
@@ -244,6 +285,32 @@ dbfx={
 	),
 	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>console.log('delall done')
 },
+urlfx={
+	dmap:(x,fx)=>x.map(y=>{if(Array.isArray(y))return urlfx.dmap(y,fx);else return fx(y);}),
+	o:(dat=main||{})=>{
+		dat.scores=urlfx.dmap(dat.scores,x=>x.split(',').map(y=>{if(y){y=Number(y)+15;return(y<0?'-':'')+Math.abs(y).toString(36);}}).join('.'));
+		dat.scores=JSON.stringify(dat.scores).replace(/\"/g,'').replace(/\],\[/g,'*').replace(/,/g,'~').replace(/\[/g,'!').replace(/\]/g,'_');
+		return 'https://mcbeeringi.github.io/sky/seq.html#'+encodeURIComponent(JSON.stringify(dat));
+	},
+	i:(str=location.hash.slice(1))=>{
+		if(!str)return;
+		let dat;
+		try{
+			dat=JSON.parse(decodeURIComponent(str));
+			if(!dat.scores)return;
+			dat.scores=dat.scores.replace(/\*/g,'],[').replace(/~/g,',').replace(/!/g,'[').replace(/_/g,']');
+			dat.scores=JSON.parse(dat.scores.replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3').replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3'));
+			dat.scores=urlfx.dmap(dat.scores,x=>x.split('.').map(y=>{if(y)return parseInt(y,36)-15;}).join(','));
+			console.log('load url',dat);
+			return dat;
+		}catch(e){console.log(e);return;}
+	}
+},
+ezsave=()=>{if(!from_url){localStorage.seq_ezsave=JSON.stringify(main);console.log('ezsave');}},
+dlJson=(x=main)=>{
+	let e=document.createElement('a');e.download=`${x.name||'JSON'}.json`;e.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
+	e.click();setTimeout(URL.revokeObjectURL,10000,e.href);
+},
 init=()=>{
 	main={sc:0,bpm:120,scores:new Array(8).fill(''),...main};urstack=[[],[]];
 	document.title='sky_seq '+(name_.textContent=main.name||'');
@@ -251,6 +318,8 @@ init=()=>{
 	calc();seqset();tstop();bpmset();scset();
 };
 
+window.onresize=()=>{c.width=cfg.res*c.parentNode.clientWidth;c.height=cfg.res*240;ctx.scale(cfg.res,cfg.res);draw();}
+document.onvisibilitychange=()=>{if(document.visibilityState=='hidden')ezsave();};
 document.onkeydown=e=>{
 	if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
 	if(alcb.checked){if(['Escape','Backspace'].includes(e.code)){e.preventDefault();alcb.checked=false;}return;}
@@ -266,6 +335,7 @@ document.onkeydown=e=>{
 			case'KeyD':if(emode.checked&&!rmbtn.classList.contains('dis')){e.preventDefault();rmbtn.onclick();}break;
 			case'KeyF':if(emode.checked&&!icbtn.classList.contains('dis')){e.preventDefault();icbtn.onclick();}break;
 			case'KeyG':if(emode.checked&&!iwbtn.classList.contains('dis')){e.preventDefault();iwbtn.onclick();}break;
+			case'KeyE':console.log(urlfx.o());break;
 		}
 	else
 		switch(e.code){
@@ -316,7 +386,7 @@ sc_.onchange=scset;
 	x.addEventListener('mousedown',keyfx);
 });
 
-playbtn.onclick=e=>{if(tstat())tstart();else tpause();};
+playbtn.onclick=e=>{if(tstat()){ezsave();tstart();}else tpause();};
 stopbtn.onclick=tstop;
 prevbtn.onclick=()=>tstep(-1);
 nextbtn.onclick=()=>tstep( 1);
@@ -384,19 +454,17 @@ icbtn.onclick=()=>selins(['']);
 iwbtn.onclick=()=>selins([['','']]);
 
 {
-	(window.onresize=()=>{
-		c.width=res*c.parentNode.clientWidth;
-		c.height=res*240;
-		ctx.scale(res,res);
-		draw();
-	})();
 	localStorage.seq_urMax=128;
 	localStorage.seq_clipMax=8;
+	cfg.res=cfg.res||window.devicePixelRatio||1;
 	cfg.pad2=cfg.pad/2;
 	cfg.w2=cfg.w/2;
+	from_url=Boolean(main=urlfx.i());
+	setInterval(ezsave,60000);
+	window.onresize();
 	//setInterval(()=>console.log(ecur),500);
 
-	if(localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
+	if(!main&&localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
 
 	init();
 	if(texts.notice)requestIdleCallback(()=>alert(texts.notice));
