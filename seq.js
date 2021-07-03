@@ -405,8 +405,8 @@ infobtn.onclick=()=>alert(`
 	undo & redo limit: <input type="range" value="${cfg.urMax}" min="16" max="256" step="16"><br>
 	clipboard history limit: <input type="range" value="${cfg.clipMax}" min="2" max="32" step="1"><br>
 	<h2>sound</h2>
-	sequencer: <input type="range" value=".5" min="0" max="1" step=".0625"><br>
-	keyboard: <input type="range" value=".5" min="0" max="1" step=".0625"><br>
+	sequencer: <input type="range" value="${cfg.seqvol}" min="0" max="1" step=".0625"><br>
+	keyboard: <input type="range" value="${cfg.kbvol}" min="0" max="1" step=".0625"><br>
 	<h2>backup</h2>
 	create file: <button>save</button><br>
 	recover from file: <input type="file"><br>
@@ -469,7 +469,7 @@ iwbtn.onclick=()=>selins([['','']]);
 
 {
 	alcb.checked=false;
-	cfg={pad:12,w:16,clipMax:8,urMax:128,res:window.devicePixelRatio||1,kbvol:1,seqvol:1};
+	cfg={pad:12,w:16,clipMax:8,urMax:128,res:window.devicePixelRatio||1,seqvol:1,kbvol:1};
 	localStorage.seq_cfg=JSON.stringify(cfg);
 	cfg.pad2=cfg.pad/2;
 	cfg.w2=cfg.w/2;
