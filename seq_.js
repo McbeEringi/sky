@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2107031\nMIT License\n',
+	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2107032\nMIT License\n',
 	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
@@ -31,8 +31,8 @@ synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https:
 sytar=(n,t)=>{n=n.split(',');if(n[0])synth.triggerAttackRelease(n.map(n2Hz),'1m',t,1);},
 seq=new Tone.Sequence((time,note)=>{
 	//Tone.Draw.schedule(()=>{},time);
-	sytar(note,time);curset();kbset(note);
-	curpos=mod(curpos+1,calced.note.length);
+	curset();curpos=mod(curpos+1,calced.note.length);
+	sytar(note,time);kbset(note);
 },[],'4n').start(0),
 frr=(ct,col,x,y,dx,dy,r=0)=>{
 	ct.fillStyle=col;
@@ -100,8 +100,8 @@ draw=()=>{
 			note.split(',').forEach(n=>{
 				let col='#fea';
 				if(n2i[n]==undefined){
-					n=Number(n);col='#fea8';
-					if(n>0)n=mod(n+9,24)-9;else n=mod(n+10,24)+14;
+					col=n>0?'#feaa':'#fea6';
+					n=mod(Number(n)+9,24)-9;
 				}
 				frr(ctx,col,x.pos+1+pos,225-Number(n2i[String(n)])*16,cfg.w-2,14,4);//240-16+1
 			});
