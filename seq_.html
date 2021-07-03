@@ -76,7 +76,7 @@
 			#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
 			#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#2228;text-align:center;white-space:pre-wrap;overflow:scroll;z-index:4;}
 			#albox .grid{backdrop-filter:none;-webkit-backdrop-filter:none;}
-			#alfcb:checked~#albox{width:100%;height:100%;}#alfcb:checked~label[for=alcb]::before{content:"";display:block;width:48px;height:48px;position:absolute;top:0;right:0;--bp:-500% -100%;}
+			#alfcb:checked~#albox{width:100%;height:100%;text-align:unset;white-space:unset;}#alfcb:checked~label[for=alcb]::before{content:"";display:block;width:48px;height:48px;position:absolute;top:0;right:0;--bp:-500% -100%;}
 			#albox .items{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));grid-gap:8px;}
 			#albox .items>*{background-color:#8884;color:#eee;box-sizing:border-box;padding:4px;border:none;border-radius:8px;font-size:large;cursor:pointer;transition:.2s;}
 			#albox .items>*:active{background-color:#888c;}#albox .items>*:focus{outline:none;box-shadow:0 0 0 2px #aef;}

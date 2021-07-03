@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:2107032\nMIT License\n',
+	info:'Powerd by Tone.js<br>Audio: GarageBand<br>author:@McbeEringi<br>build:2107033<br>MIT License<br>',
 	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
@@ -397,7 +397,23 @@ filebtn.onclick=()=>{
 	albox.lastElementChild.focus();
 };
 savebtn.onclick=()=>dbfx.sav();
-infobtn.onclick=()=>alert(texts.info+'\n<p class="grid icotxt" onclick="alert(\'???\');">?</p><p class="grid icotxt" onclick="dljson();">⤓</p>',1);
+infobtn.onclick=()=>alert(`
+	<h1 style="float:left;margin:0;">sky_seq</h1>
+	<p style="float:right;opacity:.7;margin:2em 0;">${texts.info}</p>
+	<hr style="clear:both;">
+	WORK IN PROGRESS
+	<h2>sound</h2>
+	sequence: <input type="range"><br>
+	user: <input type="range"><br>
+	<h2>display</h2>
+	cell width: <input type="range"><br>
+	wrap pad: <input type="range"><br>
+	<h2>backup</h2>
+	create backup:<button>save</button><br>
+	recover from backup: <input type="file"><br>
+
+	<p class="grid icotxt" onclick="alert(\'???\');">?</p><p class="grid icotxt" onclick="dljson();">⤓</p>
+`,1);
 
 emode.onchange=()=>{sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));slbtn.classList.remove('a');draw();};
 slbtn.onclick=()=>{
