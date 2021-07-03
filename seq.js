@@ -1,389 +1,298 @@
 'use strict';
-alert=(x,pe,mw)=>{albox.textContent=x;albox.style.pointerEvents=pe?'':'none';albox.style.maxWidth=mw?'100%':'';alcb.checked=true;}
-//window.onbeforeunload=e=>{e.preventDefault();return'';};
-
-let synth,sc,main,calced,curpos,userscr=[false,false],urstack,seqsett,screxet,from_url,recorder,instrsc;
-const texts=Object.assign({
-	info:'Powerd by Tone.js\nAudio: GarageBand\n\nauthor:@McbeEringi\nbuild:β_2104060\nMIT License\n',
-	notice:'this project is still in progress but I´ve noticed it´s already laggy.\n So I decided to refactor this page. \nDatas you saved here will´be taken over.',
-	title:'enter title',del:'delete',cancel:'cancel',save:'saved.',osave:'overwrite saved.',copy:' copy',
-	nodat:'no datas found',err:x=>`coudnt ${['load','delete','save'][x]} datas.`,
-	exp:x=>`Ready to export "${x}"`,imp:'import from URL',
-	delq:x=>`Are you sure you want to delete "${x}"?`
-},{
-	ja:{
-		notice:'お知らせ\n\n製作途中ですが既に重くなってしまっているので別の場所で新しく作り直しています。\n完成まであと少しになりました。ここで保存したデータはそのまま引き継がれる予定です。\n進捗は情報表示のリンクから確認できます',
-		title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',
-		nodat:'データがありません',err:x=>`データの${['読み込み','削除','保存'][x]}に失敗しました`,
-		exp:x=>`「${x}」を書き出す`,imp:'URLから読みこむ',
-		delq:x=>`「${x}」を削除してよろしいですか？`
-	}
-}[window.navigator.language.slice(0,2)]),
-llog=(x,c)=>{if(dbgcb.checked){if(c)log.textContent='';log.textContent+=`${x}\n`;}},
-seq=new Tone.Sequence((time,note)=>{
-	note=note.split(',');
-	curpset();scrset();kbset(note);//Tone.Draw.schedule(()=>{},time);
-	llog(Tone.Transport.position,1);
-	if(note[0]){
-		if(main.arp){let arp=main.arp*.01;note.map(toHz).forEach((x,i)=>synth.triggerAttackRelease(x,'1m',time+arp*i,kbfixed.checked?.3:1));}
-		else synth.triggerAttackRelease(note.map(toHz),'1m',time,kbfixed.checked?.3:1);
-		llog(`${note.map(x=>n2c[(Number(x)+main.sc+48)%12]+(Math.floor((Number(x)+main.sc)*.08333)+4)/*49+Number(x)+main.sc*/)}`);
-	}
-},[],'4n').start(0),
-stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]=`a${i}.mp3`;}return s;},
-instr_li=[
-	['musicbox',1,stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'})],
-	['harp',-1,stdli(3,5)],
-	['contrabass',-2,stdli(2)],
-	['horn',-1,stdli(3)],
-	['piano',0,stdli(1,7,{'a0':'a0.mp3'})],
-	['flute',0,stdli(4,6)],
-	['quena',0,stdli(4,6)],
-	['guitar',-1,stdli(3,5)],
-	['ukulele',-1,stdli(3,5)],
-	['piano',1,stdli(1,7,{'a0':'a0.mp3'})],
-	['glock',1,stdli(5)],
-	['pipa',-1,stdli(3)]
-],
-toHz=x=>440*Math.pow(2,(Number(x)+main.sc)/12+instrsc),//C4~C6
+let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg;
+alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
+const texts={
+	info:'Powerd by Tone.js<br>Audio: GarageBand<br>author:@McbeEringi<br>build:2107033<br>MIT License<br>',
+	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
+	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
+	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
+	...{
+		ja:{
+			title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',imp:'URLから読み込む',exp:x=>`「${x}」をURLに書き出す`,
+			nodat:'保存されたデータはありません',sample:'サンプルをダウンロード',load:'読み込み中…',
+			err:x=>`⚠️\nデータの${['読み出し','書き込み'][x]}に失敗しました\n\n`,saveq:'現在のデータを保存しますか？',delq:x=>`「${x}」を削除してよろしいですか？`
+		}
+	}[window.navigator.language.slice(0,2)]
+},
+mod=(x,y)=>{if(((y-1)&y)==0)return x&(y-1);else{while(x<0)x+=y;while(x>=y)x-=y;return x;}},
+ctx=c.getContext('2d'),
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
 n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6','3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
-n2c=['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'],
-pos2p=pos_=>{let tmp=pos_.split(':').map(x=>Number(x));return tmp[0]*Tone.Transport.timeSignature+tmp[1]+tmp[2]*.25;},
-p2pos=p_=>`${Math.floor(p_/Tone.Transport.timeSignature)}:${Math.floor(p_)%Tone.Transport.timeSignature}:${(p_*4)%4}`,
-scset=()=>{if(Number.isInteger(Number(sc_.value)))main.sc=Number(sc_.value);else sc_.value=main.sc;llog(main.sc);},
-arpset=()=>{if(Number.isInteger(Number(arp_.value)))main.arp=Number(arp_.value);else arp_.value=main.arp;llog(main.arp);},
-bpmset=()=>{let tmp=Number(bpm_.value);if(tmp){Tone.Transport.bpm.value=tmp;main.bpm=tmp;}else bpm_.value=main.bpm;llog(main.bpm);},
-tsset=()=>{let tmp=Number(ts_.value);if(tmp){main.ts=tmp;Tone.Transport.timeSignature=tmp||4;}else ts_.value=main.ts;
-	stybeat.textContent=main.ts>1?`#disp>.noteW:nth-child(${main.ts}n+1){overflow:hidden;}#disp>.noteW:nth-child(${main.ts}n+1)::before{content:"";position:absolute;display:block;width:2px;height:100%;background:#feac;}`:'';
-	llog(main.ts);
+n2c=x=>{if(x){x=Number(x);return['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'][mod(x,12)]+Math.floor(x*.08333+3.833);}},
+pos2p=(pos_=Tone.Transport.position)=>{let tmp=pos_.split(':').map(x=>Number(x));return mod(tmp[0]*Tone.Transport.timeSignature+tmp[1]+tmp[2]*.25,main.scores.length);},
+p2pos=p_=>`${Math.floor(p_/Tone.Transport.timeSignature)}:${mod(Math.floor(p_),Tone.Transport.timeSignature)}:${mod(p_*4,4)}`,
+n2Hz=x=>440*Math.pow(2,(Number(x)+main.sc)/12)*2,//C4~C6
+ind2n=x=>x.reduce((a,y)=>a[y],main.scores),
+ind2c=x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);},
+tstat=()=>Tone.Transport.state!='started',
+seqset=()=>{clearTimeout(tims.seqset);tims.seqset=setTimeout(()=>requestIdleCallback(()=>{seq.events=main.scores;console.log('seqset')}),300);},
+stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]=`a${i}.mp3`;}return s;},
+synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/musicbox/').toDestination(),
+sytar=(n,t)=>{n=n.split(',');if(n[0])synth.triggerAttackRelease(n.map(n2Hz),'1m',t,cfg.seqvol);},
+seq=new Tone.Sequence((time,note)=>{
+	//Tone.Draw.schedule(()=>{},time);
+	curset();curpos=mod(curpos+1,calced.note.length);
+	sytar(note,time);kbset(note);
+},[],'4n').start(0),
+frr=(ct,col,x,y,dx,dy,r=0)=>{
+	ct.fillStyle=col;
+	ct.beginPath();
+	ct.moveTo(x,y+r);ct.arc(x+r,y+r,r,Math.PI,Math.PI*1.5);
+	ct.lineTo(x+dx-r,y);ct.arc(x+dx-r,y+r,r,Math.PI*1.5,0);
+	ct.lineTo(x+dx,y+dy-r);ct.arc(x+dx-r,y+dy-r,r,0,Math.PI*.5);
+	ct.lineTo(x+r,y+dy);ct.arc(x+r,y+dy-r,r,Math.PI*.5,Math.PI);
+	ct.fill();
 },
-curset=()=>{
-	let tmp=calced.e[curpos].getBoundingClientRect().left+dispScr.scrollLeft+window.scrollX;
-	let dbpds=dispBar.clientWidth/dispScr.scrollWidth;
-	dispCur.style.left=tmp+'px';
-	dispBar.children[1].style.width=`${Math.max(1,16*dbpds)}px`;
-	dispBar.children[1].style.left=`${16*dbpds<1?(tmp+8)*dbpds-.5:tmp*dbpds}px`;
+calc=()=>{
+	calced={box:[],note:[]};
+	let pos=0,
+	core=(x,l=1,p=0,ind=[])=>{
+		let odl=1/l;
+		x.forEach((y,i)=>{
+			if(typeof y=='object'){
+				let tmp=pos;
+				pos+=cfg.pad+1;
+				core(y,l*y.length,p,[...ind,i]);
+				pos+=cfg.pad;
+				calced.box.push({pos:tmp,ind:[...ind,i],dx:pos-tmp});
+			}
+			else{
+				calced.note.push({pos,ind:[...ind,i],p});
+				pos+=cfg.w;
+			}
+			pos+=1;
+			p+=odl;
+		});
+	};
+	core(main.scores);
+	scrw.style.width=(calced.length=pos-1)+'px';
+	if(scr.scrollLeft>calced.length)scr.scrollLeft=calced.length;
 },
-curpset=p=>{
-	if(typeof p=='number'&&isFinite(p)){curpos=calced.p.indexOf(p);}
-	else{p=pos2p(Tone.Transport.position)%main.scores.length;curpos=calced.p.indexOf(Math.floor(p));while(p>=calced.p[curpos])curpos++;curpos--;}
-	curset();
-},
-kbset=(x=calced.ind[curpos].split('-').reduce((a,x)=>a[x],main.scores).split(','))=>{
-	let tmp=x.map(y=>n2i[y]);
-	document.querySelectorAll('#kb p').forEach((e,i)=>e.classList[tmp.includes(String(i))?'add':'remove']('press'));
-	return x;
-},
-scrset=()=>{
-	let dcbl=dispCur.getBoundingClientRect().left+window.scrollX;
-	if(window.innerWidth>520){
-		if(16<dcbl&&dcbl<dispScr.clientWidth-64&&userscr[1]){userscr[1]=false;curct.style.display='none';}
-		if(!userscr[1]){
-			userscr[0]=true;//dispCur.scrollIntoView();
-			if(curpos==0)dispScr.scrollLeft=0;
-			else if(curpos==calced.length-1)dispScr.scrollLeft=dispScr.scrollWidth;
-			else if(dcbl>dispScr.clientWidth-64)dispScr.scrollLeft+=dcbl-16;
-			else if(dcbl<16)dispScr.scrollLeft-=dispScr.clientWidth-dcbl-64;
-			else userscr[0]=false;
+draw=()=>{
+	if(!calced)return;//window.scrollY>240
+	let w=c.parentNode.clientWidth,pos=w*.5-scr.scrollLeft,cppos=calced.note[curpos].pos;
+	ctx.clearRect(0,0,w,240);
+	ecur=null;
+	for(let x of calced.box){
+		if(x.pos+x.dx+pos<0)continue;if(w<x.pos+pos)break;
+		frr(ctx,'#4444',x.pos+pos,0,x.dx,240,4);
+		if(Math.abs(x.pos-scr.scrollLeft+x.dx*.5)<=x.dx*.5){
+			let cur;
+			if(scr.scrollLeft<=x.pos+cfg.pad){
+				cur=x.pos-scr.scrollLeft+cfg.pad2>0;
+				if(emode.checked)ecur=[x.pos+(cur?-2:cfg.pad-1),true,cur?x.ind:[...x.ind,0]];
+			}else if(x.pos+x.dx-cfg.pad<=scr.scrollLeft){
+				cur=x.pos-scr.scrollLeft+x.dx-cfg.pad2>0;
+				if(emode.checked)ecur=[x.pos+x.dx+(cur?-cfg.pad-2:-1),false,cur?[...x.ind,ind2n(x.ind).length-1]:x.ind];
+			}
 		}
-	}else{
-		if(dispScr.clientWidth*.5-24<dcbl&&dcbl<dispScr.clientWidth*.5+8&&userscr[1]){userscr[1]=false;curct.style.display='none';}
-		if(!userscr[1]){userscr[0]=true;dispScr.scrollLeft+=dcbl+8-dispScr.clientWidth*.5;}
 	}
+	for(let x of calced.note){
+		if(x.pos+cfg.w+pos<0)continue;if(w<x.pos+pos)break;
+		let cur=Math.abs(x.pos-scr.scrollLeft+cfg.w2)<=cfg.w2;
+		frr(ctx,cppos==x.pos?'#aef8':'#0004',x.pos+pos,0,cfg.w,240,4);
+		if(cur){
+			cur=x.pos-scr.scrollLeft+cfg.w2>0;
+			if(emode.checked)ecur=[x.pos+(cur?-2:cfg.w-1),cur,x.ind];
+		}
+		let note=ind2n(x.ind);
+		if(note)
+			note.split(',').forEach(n=>{
+				let col='#fea';
+				if(n2i[n]==undefined){
+					col=n>0?'#feaa':'#fea6';
+					n=mod(Number(n)+9,24)-9;
+				}
+				frr(ctx,col,x.pos+1+pos,225-Number(n2i[String(n)])*16,cfg.w-2,14,4);//240-16+1
+			});
+		//ctx.fillStyle='#fff';ctx.fillText(x.p,pos+x.pos,16,16);ctx.fillText(x.ind,pos+x.pos,32,16);
+	}
+	if(emode.checked)frr(ctx,'#fea8',w*.5,0,1,240);
+	if(ecur)frr(ctx,'#feac',ecur[0]+pos,0,3,240);
+	if(sel)frr(ctx,sel.col,sel.x+pos,0,sel.dx,240);
 },
-urset=()=>{urstack[2]=[];urstack[0].push(urstack[1]);urstack[1]=JSON.stringify(main.scores);while(urstack[0].length>Number(localStorage.seq_undoMax))urstack[0].shift();llog('urstacked')},
-ccset=()=>{
-	console.time('ccset');
-	calced={ind:[],p:[]};
-	calced.e=document.querySelectorAll('#disp .note');
-	calced.e.forEach(e=>{
-		calced.ind.push(e.dataset.ind);
-		calced.p.push(Number(e.dataset.p));
-	});
-	calced.length=calced.e.length;
-	console.timeEnd('ccset');
+selfix=(ind0,ind1)=>{
+	if(ind0[0]>ind1[0])[ind0,ind1]=[ind1,ind0];
+	ind0.shift();ind1.shift();//[stat,ind]
+	let l=Math.min(ind0[1].length,ind1[1].length);
+	for(let i=0;true;i++)
+		if(ind0[1][i]!=ind1[1][i]||i+1==l){
+			ind0=[...ind0[1].slice(0,i),ind0[1][i]+((i+1==ind0[1].length?ind0[0]:true )? 0:1)];
+			ind1=[...ind1[1].slice(0,i),ind1[1][i]+((i+1==ind1[1].length?ind1[0]:false)?-1:0)];
+			break;
+		}
+	return[ind0,ind1];
 },
-syset=(x=0)=>{
-	let state=Tone.Transport.state=='started';
-	if(state)tpause();
-	requestIdleCallback(()=>{
-		synth=new Tone.Sampler(instr_li[x][2],()=>{if(state)tplay();},`https://mcbeeringi.github.io/sky/audio/instr/${instr_li[x][0]}/`).toDestination();
-		if(recorder)synth.connect(recorder);
-		instrsc=instr_li[x][1];
-	});
-	instrbtn.setAttribute('style',`--bp:-${x%8}00% -${Math.floor(x*.125+4)}00%;`);
-	return instr_li[x];
+selins=x=>{
+	if(!x)return;if(typeof x=='string')x=JSON.parse(x);
+	let w=-1,m=y=>{if(typeof y=='string')w+=cfg.w+1;else{w+=cfg.pad*2+2;y.forEach(m);}};
+	x.forEach(m);
+	if(sel){
+		let tmp=sel.dat[0].ind.length-1;tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
+		urset(['main.scores'+tmp[0].map(y=>`[${y}]`).join('')+`.splice(${tmp[1]},`, `${tmp[2]-tmp[1]+1},...${JSON.stringify(x)})`, `${x.length},...${JSON.stringify(ind2n(tmp[0]).slice(tmp[1],tmp[2]+1))})`]);
+		calc();tims.igscr=true;scr.scrollLeft=sel.x+w;sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));
+	}else{
+		let tmp=ecur[2].length-1;tmp=[ecur[2].slice(0,tmp),ecur[2][tmp]-ecur[1]+1];
+		urset(['main.scores'+tmp[0].map(y=>`[${y}]`).join('')+`.splice(${tmp[1]},`, `0,...${JSON.stringify(x)})`, `${x.length})`]);
+		calc();tims.igscr=true;scr.scrollLeft=ecur[0]+w;
+	}
+	seqset();draw();kbset();
 },
-tplay=()=>{distrs.checked=true;Tone.Transport.start();playbtn.classList.add('ghl_');},
-tpause=()=>{Tone.Transport.pause();playbtn.classList.remove('ghl_');distrs.checked=false;},
-tstop=()=>{Tone.Transport.stop();playbtn.classList.remove('ghl_');distrs.checked=false;curpos=0;curset();userscr[0]=true;dispScr.scrollLeft=0;userscr[1]=false;curct.style.display='none';kbset();},
+curset=()=>{if(!emode.checked){tims.igscr=true;scr.scrollLeft=calced.note[curpos].pos+cfg.w2;}draw();},
+pset=()=>Tone.Transport.position=p2pos(calced.note[curpos].p),
+kbset=(x=calced.note[curpos].ind.reduce((a,x)=>a[x],main.scores))=>{
+	let tmp=x.split(',');
+	[...kb.children].forEach((y,i)=>y.classList[tmp.includes(i2n[i])?'add':'remove']('a'));
+},
+cbset=x=>{
+	if(typeof x=='number')x=clips[x];
+	if(x){
+		clips.unshift(typeof x=='string'?x:JSON.stringify(x));
+		clips=[...new Set(clips)];
+		while(clips.length>cfg.clipMax)clips.pop();
+	}
+	clip.textContent='';
+	clips.forEach((y,i)=>{
+		let e=document.createElement('p');
+		e.textContent=y.replace(/-?\d+/g,n2c);e.onclick=()=>cbset(i);
+		clip.appendChild(e);
+	})
+},
+urset=x=>{Function(x[0]+x[1])();urstack[1]=[];urstack[0].push(x);while(urstack[0].length>cfg.urMax)urstack[0].shift();console.log(x);undobtn.classList.remove('dis');redobtn.classList.add('dis');},
+urdo=x=>{
+	let tmp;
+	while(x<0){if(urstack[0].length){urstack[1].unshift(tmp=urstack[0].pop());tmp=tmp[0]+tmp[2];x++;console.log('undo:	'+tmp);Function(tmp)();}else{break;}}
+	while(0<x){if(urstack[1].length){urstack[0].push(tmp=urstack[1].shift());tmp=tmp[0]+tmp[1];x--;console.log('redo:	'+tmp);Function(tmp)();}else{break;}}
+	undobtn.classList[urstack[0].length?'remove':'add']('dis');redobtn.classList[urstack[1].length?'remove':'add']('dis');
+	if(tmp){calc();draw();seqset();kbset();}
+},
+bpmset=()=>{let x=Number(bpm_.value);if(x>0)Tone.Transport.bpm.value=main.bpm=x;else bpm_.value=Tone.Transport.bpm.value=main.bpm;},
+scset=()=>{let x=Number(sc_.value);if(sc_.value&&Number.isInteger(x))main.sc=x;else sc_.value=main.sc;},
+tstart=()=>{Tone.start();Tone.Transport.start();},
+tpause=()=>{Tone.Transport.pause();requestIdleCallback(()=>{curset();kbset();});},
+tstop=e=>{Tone.Transport.stop();requestIdleCallback(()=>{curpos=0;curset();kbset();});},
 tstep=x=>{
 	Tone.start();
+	curpos=mod(curpos+x,calced.note.length);
+	pset();tpause();kbset();
+	if(tstat())sytar(ind2n(calced.note[curpos].ind));
+},
+browse=()=>{
 	tpause();
-	curpos+=x;
-	if(curpos<0)curpos=calced.length+curpos%calced.length;else if(curpos>=calced.length)curpos=curpos%calced.length;
-	Tone.Transport.position=p2pos(calced.p[curpos]);
-	curset();setTimeout(scrset,100);
-	let note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
-},
-urdo=x=>{
-	let tmp=false;
-	while(x<0){if(urstack[0].length){urstack[2].unshift(urstack[1]);urstack[1]=urstack[0].pop();x++;tmp=true;llog('undo');}else{domshake(undobtn);break;}}
-	while(0<x){if(urstack[2].length){urstack[0].push(urstack[1]);urstack[1]=urstack[2].shift();x--;tmp=true;llog('redo');}else{domshake(redobtn);break;}}
-	if(tmp){
-		main.scores=JSON.parse(urstack[1]);requestIdleCallback(()=>seq.events=main.scores);requestIdleCallback(()=>{a2d();curpset();kbset();});
-	}
-},
-rawedit=()=>{
-	tpause();
-	alert('',1,1);
-	let str=JSON.stringify(main.scores/*,null,'	'*/).replace(/,/g,', ');
-	let txta=document.createElement('textarea');
-	albox.appendChild(txta);
-	txta.value=str;
-	txta.classList.add('style');
-	requestIdleCallback(()=>{
-		let ind=0;
-		for(let i=0;i<curpos*2+1;i++)ind=txta.value.indexOf('"',ind+1);
-		txta.setSelectionRange(ind+1,txta.value.indexOf('"',ind+1));
-	});
-	txta.oninput=()=>{
-		clearTimeout(seqsett);
-		seqsett=setTimeout(()=>{
-			let tmp;
-			try{tmp=JSON.parse(txta.value.replace(/\s/g,''));}catch(e){console.log(e);}
-			if(tmp){
-				main.scores=tmp;requestIdleCallback(()=>seq.events=main.scores);urset();
-				llog('raw good');
-				requestIdleCallback(a2d);curpset();
-				synth.triggerAttackRelease(toHz(3),'1m');
-				synth.triggerAttackRelease(toHz(7),'1m','+.05',.9);
-				synth.triggerAttackRelease(toHz(10),'1m','+.1',.8);
-			}else{
-				llog('raw bad');
-				/*synth.triggerAttackRelease(toHz(8),'1m');
-				synth.triggerAttackRelease(toHz(7),'1m','+.05',.9);
-				synth.triggerAttackRelease(toHz(1),'1m','+.1',.8);*/
-			}
-		},1000);
-	};
-},
-domshake=x=>{x.onanimationend=()=>x.classList.remove('shake');x.classList.add('shake');},
-dbfx={
-	tmp:[],
-	get:function(i,fx,fx_){
-		console.log(this.tmp[i]);
-		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').get(this.tmp[i]),{
-			onsuccess:fx,
-			onerror:fx_||(e=>albox.textContent=`⚠️\n${texts.err(0)}\n\n${e.target.error}`)
-		});
-	},
-	open:i=>dbfx.get(i,e=>{main=e.target.result;init();alcb.checked=false;}),
-	dupe:i=>dbfx.get(i,e=>{
-		let dat=e.target.result;dat.name+=texts.copy;
-		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(dat),{
-			onsuccess:load,
-			onerror:e=>albox.textContent=`⚠️\n${texts.err(2)}\n\n${e.target.error}`
-		});
-	}),
-	exp:i=>{
-		dbfx.get(i,e=>{
-			alert('',1);
-			albox.insertAdjacentHTML('beforeend',`${texts.exp(e.target.result.name)}<input class="style" value="${urlfx.e(e.target.result)}"><button
-			onclick="navigator.clipboard.writeText(this.previousElementSibling.value).then(()=>alcb.checked=false);" class="grid bg" style="--bp:-300% -100%;">copy</button><button
-			onclick="window.open('https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_sequencer&url='+encodeURIComponent(this.previousElementSibling.previousElementSibling.value));alcb.checked=false;" class="grid bg" style="--bp:-700% -300%;">tweet</button>`);
-		});
-	},
-	imp:()=>{
-		alert('',1);
-		albox.insertAdjacentHTML('beforeend',`${texts.imp}<input class="style" onchange="this.nextElementSibling.click();"><button
-		onclick="{let tmp=urlfx.l(this.previousElementSibling.value.split('#',2)[1]);if(tmp){main=tmp;alcb.checked=false;init();idb.result.transaction('seq','readwrite').objectStore('seq').add(tmp);}else domshake(this);}" class="grid bg" style="--bp:-600% -100%;">import</button>`);
-		requestIdleCallback(()=>navigator.clipboard.readText().then(x=>albox.querySelector('input').value=x).catch(console.log));
-	},
-	delW:function(i){
-		alert('',1);
-		albox.insertAdjacentHTML('beforeend',`${texts.delq(this.tmp[i])}<br><br><button
-		onclick="dbfx.del(${i});" class="style dialogb" style="background:#f448;">${texts.del}</button><button
-		onclick="load();" class="style dialogb">${texts.cancel}</button>`);
-		albox.lastElementChild.focus();
-	},
-	del:function(i){Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').delete(this.tmp[i]),{onsuccess:load,onerror:e=>albox.textContent=`⚠️\n${texts.err(1)}\n\n${e.target.error}`});},
-	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>llog('delall done'),
-	save:()=>Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(main),{
-		onsuccess:()=>alert(`✅\n${texts.save}`),
-		onerror:()=>Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').put(main),{
-			onsuccess:()=>alert(`✅\n${texts.osave}`),
-			onerror:e=>alert(`⚠️\n${texts.err(2)}\n\n${e.target.error}`)
-		})
-	}),
-	renameW:function(i){
-		albox.textContent='';
-		albox.insertAdjacentHTML('beforeend',`${texts.title}<input class="style" value="${this.tmp[i]}" onchange="this.nextElementSibling.click();"><button
-		onclick="dbfx.rename(${i},this.previousElementSibling.value);" class="grid bg" style="--bp:-200% -100%;">rename</button>`);
-		albox.querySelector('input').focus();
-	},
-	rename:(i,x)=>{
-		if(dbfx.tmp[i]==x){load();return;}
-		dbfx.get(i,e=>{
-			let dat=e.target.result;dat.name=x;
-			Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(dat),{
-				onsuccess:()=>dbfx.del(i),
-				onerror:e=>alert(`⚠️\n${texts.err(2)}\n\n${e.target.error}`)
-			});
-		});
-	}
-},
-save=()=>{
-	if(!main.name){
-		alert('',1,1);
-		albox.insertAdjacentHTML('beforeend',`${texts.title}<input class="style" onchange="this.nextElementSibling.click();"><button
-		onclick="{let tmp=this.previousElementSibling.value||('untitled '+new Date().toLocaleString());name_.textContent=main.name=tmp;document.title='sky_seq '+tmp;dbfx.save();}" class="grid bg" style="--bp:-500% -100%;">save</button>`);
-		albox.querySelector('input').focus();
-	}else dbfx.save();
-},
-load=()=>{
-	tpause();
-	alert('',1,1);
-	let tpl=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-100% -100%;">new</button><button onclick="dbfx.imp();"class="grid bg" style="--bp:-600% -100%;">import</button><br>`;
+	alert(texts.load);
+	let s=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-100% -200%;">new</button><button onclick="dbfx.imp();" class="grid bg" style="--bp:-600% -200%;">import</button><hr>`;
 	Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),{
 		onsuccess:e=>{
 			let tmp=e.target.result;
-			//ins sort
-			albox.insertAdjacentHTML('beforeend',tpl);
+			// TODO: sort
 			console.log(tmp);dbfx.tmp=tmp;
-			if(!tmp.length)albox.insertAdjacentHTML('beforeend',`${texts.nodat}<br><button onclick="this.textContent='Loading…';this.disabled=true;impsample(load);">download sample</button>`);
-			tmp.forEach((x,i)=>requestIdleCallback(()=>{
-				albox.insertAdjacentHTML('beforeend',`<div><span onclick="dbfx.open(${i});">${x}</span><br><button
-					onclick="dbfx.renameW(${i});" class="grid bg" style="--bp:-200% -100%;">rename</button><button
-					onclick="dbfx.dupe(${i});" class="grid bg" style="--bp:-300% -100%;">dupe</button><button
-					onclick="dbfx.exp(${i});" class="grid bg" style="--bp:-700% -100%;">export</button><button
-					onclick="dbfx.delW(${i});" class="grid bg" style="--bp:-400% -100%;">delete</button></div>`
-				);
-			}));
+			if(!tmp.length){alert(`${s}${texts.nodat}\n<button onclick="this.textContent='${texts.load}';this.disabled=true;dbfx.sam(browse);">${texts.sample}</button>`,1);return;}
+			s+='<div class="items">';
+			tmp.forEach((x,i)=>
+				s+=`<button onclick="dbfx.ope(${i});this.blur();" class="style"><p>${x}</p><div><p
+					onclick="dbfx.ren(${i});event.stopPropagation();" class="grid bg" style="--bp:-400% -200%;">rename</p><p
+					onclick="dbfx.dup(${i});event.stopPropagation();" class="grid bg" style="--bp:-300% -200%;">dupe</p><p
+					onclick="dbfx.exp(${i});event.stopPropagation();" class="grid bg" style="--bp:-700% -200%;">export</p><p
+					onclick="dbfx.del(${i});event.stopPropagation();" class="grid bg" style="--bp:-200% -200%;">delete</p></div></button>`
+			);
+			alert(s+'</div>',1);
 		},
-		onerror:e=>{
-			albox.textContent=`⚠️\n${texts.err(0)}\n\n${e.target.error}`;
-			albox.insertAdjacentHTML('beforeend',tpl);
-		}
+		onerror:e=>alert(`${s}${texts.err(0)}${e.target.error}`)
 	});
 },
-sopt={
-	group:{
-		name:"group_",
-		pull:(to,from)=>to.el.id=='palette'?'clone':true,
-		put:true,
+dbfx={
+	sav:fx=>{
+		if(main.name){dbfx.sav_(fx);return;}
+		alert(`${texts.title}\n<input class="style input" placeholder="untitled">\n<button class="grid bg" style="--bp:-500% -200%;">save</button>`);
+		albox.querySelector('input').focus();
+		albox.querySelector('button').onclick=()=>{
+			main.name=albox.querySelector('input').value||`untitled ${new Date().toLocaleString()}`;
+			document.title=`sky_seq ${name_.textContent=main.name}`;dbfx.sav_(fx);
+		};
 	},
-	onStart:()=>dispCur.style.opacity='0',onEnd:()=>dispCur.style.opacity='1',
-	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
-	onClone:e=>e.clone.querySelectorAll('.sort').forEach(x=>new Sortable(x,sopt)),
-	onSort:e=>{
-		console.log(e);
-		const clto=(e.pullMode=='clone'&&e.target.isEqualNode(e.to)),
-			clfrom=(e.pullMode=='clone'&&e.target.isEqualNode(e.from));
-		if(clfrom)ccset();
-		else if(clto||e.target.isEqualNode(e.from))
-			requestIdleCallback(()=>{
-				if(e.to.id=='trash'||e.from.contains(e.to))d2d(e.from);
-				else if(clto||e.to.contains(e.from))d2d(e.to);
-				else{d2d(e.from);d2d(e.to);}
-				ccset();
-				if(curpos<0)curpos=0;else if(calced.length-1<curpos)curpos=calced.length-1;
-				curset();d2a();urset();kbset();
+	sav_:fx=>{
+		from_url=false;
+		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(main),{
+			onsuccess:fx||(()=>alert(`✅\n${texts.save}`)),
+			onerror:()=>Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').put(main),{
+				onsuccess:fx||(()=>alert(`✅\n${texts.osave}`)),
+				onerror:e=>alert(`${texts.err(1)}${e.target.error}`)
+			})
+		});
+	},
+	get:(i,fx)=>{
+		console.log(dbfx.tmp[i]);
+		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').get(dbfx.tmp[i]),{
+			onsuccess:fx,
+			onerror:e=>alert(`${texts.err(0)}${e.target.error}`)
+		});
+	},
+	ope:i=>dbfx.get(i,e=>{main=e.target.result;from_url=false;init();alcb.checked=false;}),
+	ren:i=>{
+		alert(`${texts.title}\n<input class="style input" value="${dbfx.tmp[i]}" placeholder="${dbfx.tmp[i]}"">\n<button class="grid bg" style="--bp:-400% -200%;">rename</button>`);
+		albox.querySelector('input').focus();
+		albox.querySelector('button').onclick=()=>dbfx.ren_(i,albox.querySelector('input').value);
+	},
+	ren_:(i,x)=>{
+		if(!x||dbfx.tmp[i]==x){browse();return;}
+		dbfx.get(i,e=>{
+			let dat=e.target.result;dat.name=x;
+			Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(dat),{
+				onsuccess:()=>dbfx.del_(i),
+				onerror:e=>alert(`${texts.err(1)}${e.target.error}`)
 			});
-	}
-},
-a2d=()=>{
-	const core=(scores,e,b,l=1)=>{
-		if(b)e.textContent='';
-		else{
-			let sort=document.createElement('div');
-			e.classList.add('sortW');
-			sort.classList.add('sort');
-			new Sortable(sort,sopt);
-			e=e.appendChild(sort);
-		}
-		scores.forEach((x,i)=>{
-			let div = document.createElement('div');
-			div.classList.add('noteW');
-			e.appendChild(div);
-			if(b)div.dataset.p=div.dataset.ind=i;
-			else{
-				div.dataset.ind=div.parentNode.parentNode.dataset.ind+'-'+i;
-				div.dataset.p=Number(div.parentNode.parentNode.dataset.p)+l*i;
-			}
-			div.dataset.l=l;
-			if(typeof x=='string'){
-				div.dataset.note=x;
-				if(x)x.split(',').forEach(y=>{
-					let note=document.createElement('p');
-					if(n2i[y]==undefined){
-						if(Number(y)>0)y=String((Number(y)+9)%24-9);
-						else y=String((Number(y)+10)%24+14);
-						note.style.opacity=.5;
-					}
-					note.style.bottom=Number(n2i[y])*16+'px';
-					div.appendChild(note);
-				});
-				div.classList.add('note');
-			}else core(x,div,0,l/x.length);
 		});
-	};
-	console.time('a2d');
-	core(main.scores,disp,1);
-	console.timeEnd('a2d');
-	ccset();dispScr.onscroll();
-},
-d2a=()=>{
-	const core=e=>
-		Array.from(e.children,x=>{
-			if(x.classList.contains('note'))return x.dataset.note;
-			else if(x.classList.contains('sortW'))return core(x.children[0]);
+	},
+	dup:i=>dbfx.get(i,e=>{
+		let dat=e.target.result;dat.name+=texts.copy;
+		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(dat),{
+			onsuccess:browse,
+			onerror:e=>alert(`${texts.err(1)}${e.target.error}`)
 		});
-	console.time('d2a');
-	main.scores=core(disp);requestIdleCallback(()=>seq.events=main.scores);
-	console.timeEnd('d2a');
-},
-d2d=(x=disp)=>{
-	const core=y=>{
-		let l=Number(y.dataset.l)/y.children[0].childNodes.length;
-		Array.from(y.children[0].children,(z,i)=>{
-			z.dataset.ind=`${y.dataset.ind}-${i}`;
-			z.dataset.p=(Number(y.dataset.p)+l*i);
-			z.dataset.l=l;
-			if(z.classList.contains('sortW'))core(z);
+	}),
+	del:i=>{
+		alert(`${texts.delq(dbfx.tmp[i])}\n<button onclick="dbfx.del_(${i});" class="grid bg" style="--bp:-400% -100%;background-color:#f448;">delete</button>	<button onclick="browse();" class="grid bg" style="--bp:-500% -100%;">cancel</button>`);
+		albox.lastElementChild.focus();
+	},
+	del_:i=>{Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').delete(dbfx.tmp[i]),{onsuccess:browse,onerror:e=>alert(`${texts.err(1)}${e.target.error}`)});},
+	imp:()=>{
+		alert(`${texts.imp}\n<input class="style input" placeholder="...sky/seq.html#...">\n<button class="grid bg" style="--bp:-600% -200%;">import</button>`);
+		albox.querySelector('input').focus();
+		albox.querySelector('button').onclick=()=>{
+			let tmp=urlfx.i(albox.querySelector('input').value.split('#',2)[1]);
+			if(tmp){
+				main=tmp;alcb.checked=false;from_url=true;init();
+				//idb.result.transaction('seq','readwrite').objectStore('seq').add(tmp);
+			}else albox.querySelector('input').focus();
+		};
+		//requestIdleCallback(()=>navigator.clipboard.readText().then(x=>albox.querySelector('input').value=x).catch(console.log));
+	},
+	exp:i=>{
+		dbfx.get(i,e=>{
+			alert(`${texts.exp(e.target.result.name)}\n<input class="style input" value="${urlfx.o(e.target.result)}">\n<button class="grid bg" style="--bp:-300% -200%;">copy</button>	<button class="grid bg" style="--bp:-300% -300%;">tweet</button>`);
+			let b=albox.querySelectorAll('button');b[0].focus();
+			b[0].onclick=()=>navigator.clipboard.writeText(albox.querySelector('input').value).then(browse);
+			b[1].onclick=()=>{window.open(`https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_seq&url=${encodeURIComponent(albox.querySelector('input').value)}`);browse();};
 		});
-	};
-	console.time('d2d');
-	if(x.id=='disp'){
-		Array.from(x.children,(y,i)=>{
-			y.dataset.p=y.dataset.ind=i;y.dataset.l=1;
-			if(y.classList.contains('sortW'))core(y);
-		})
-	}else core(x.parentNode);
-	console.timeEnd('d2d');
+	},
+	sam:fx=>fetch('sample.json').then(x=>x.json()).then(x=>
+		Promise.allSettled(x.map(y=>new Promise((t,c)=>
+			Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(y),{
+				onsuccess:()=>{console.log(y.name);t(y.name);},
+				onerror:c
+			})
+		))).then(fx||(()=>{}))
+	),
+	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>console.log('delall done')
 },
-init=(dummy=(from_url=false))=>{
-	tpause();
-	if(!main)main={name:'',sc:0,bpm:120,ts:4,arp:0,instr:0,scores:new Array(8).fill(''),pin:[]};
-	if(main.arp==undefined)main.arp=0;if(main.instr==undefined)main.instr=0;
-	disp.textContent='Loading sheet…';
-	urstack=[[],JSON.stringify(main.scores),[]];
-	requestIdleCallback(()=>seq.events=main.scores);sc_.value=main.sc;arp_.value=main.arp;
-	bpm_.value=main.bpm;bpmset();ts_.value=main.ts;tsset();//Tone.Transport.swing=1;
-	name_.textContent=main.name;document.title='sky_seq '+main.name;syset(main.instr);
-	requestIdleCallback(a2d);
-	requestIdleCallback(tstop);
-},
-ezsave=()=>{if(!from_url){localStorage.seq_ezsave=JSON.stringify(main);console.log('ezsave');}},
 urlfx={
 	dmap:(x,fx)=>x.map(y=>{if(Array.isArray(y))return urlfx.dmap(y,fx);else return fx(y);}),
-	e:(dat=Object.assign({},main))=>{
+	o:(dat=main||{})=>{
 		dat.scores=urlfx.dmap(dat.scores,x=>x.split(',').map(y=>{if(y){y=Number(y)+15;return(y<0?'-':'')+Math.abs(y).toString(36);}}).join('.'));
 		dat.scores=JSON.stringify(dat.scores).replace(/\"/g,'').replace(/\],\[/g,'*').replace(/,/g,'~').replace(/\[/g,'!').replace(/\]/g,'_');
 		return 'https://mcbeeringi.github.io/sky/seq.html#'+encodeURIComponent(JSON.stringify(dat));
 	},
-	l:(str=location.hash.slice(1))=>{
+	i:(str=location.hash.slice(1))=>{
 		if(!str)return;
 		let dat;
 		try{
@@ -396,173 +305,192 @@ urlfx={
 			return dat;
 		}catch(e){console.log(e);return;}
 	}
+},
+ezsave=()=>{if(!from_url){localStorage.seq_ezsave=JSON.stringify(main);console.log('ezsave');}},
+dljson=(x=main)=>{
+	let e=document.createElement('a');e.download=`${x.name||'untitled'}.json`;e.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
+	e.click();setTimeout(URL.revokeObjectURL,10000,e.href);
+},
+init=()=>{
+	main={sc:0,bpm:120,scores:new Array(8).fill(''),...main};urstack=[[],[]];
+	document.title='sky_seq '+(name_.textContent=main.name||'');
+	[redobtn,undobtn,cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));bpm_.value=sc_.value='';
+	calc();seqset();tstop();bpmset();scset();
 };
 
-//albox.onclick=e=>{if(e.target!=e.currentTarget&&['BUTTON','LABEL'].includes(e.target.tagName))console.log('click')};
-ibtn.onclick=()=>{alert(texts.info,1);albox.innerHTML+=`<label for="uiflip" class="grid showtxt">flip UI</label><button onclick="rawedit();" class="grid bg" style="--bp:-400% -200%;">raw edit</button><label for="dbgcb" class="grid showtxt">debug</label><a href="seq_.html" class="grid showtxt">new page</a>`;};
-curct.onclick=()=>{userscr[0]=true;dispScr.scrollLeft+=dispCur.getBoundingClientRect().left+window.scrollX-16;};
-playbtn.onclick=()=>{
-	Tone.start();
-	let state=Tone.Transport.state!='started';
-	if(state&&!from_url)ezsave();
-	if(state)tplay();else tpause();
-};
-document.querySelectorAll('#kb p').forEach((e,i)=>{
-	const keyfx=ev=>{
-		ev.preventDefault();Tone.start();
-		if(kblock.checked)synth.triggerAttackRelease(toHz(i2n[i]));
-		else{
-			clearTimeout(seqsett);
-			let arr=calced.ind[curpos].split('-').reduce((a,c)=>a[c],main.scores).split(',');
-			if(e.classList.contains('press')==false){
-				synth.triggerAttackRelease(toHz(i2n[i]));
-				requestIdleCallback(()=>{let note=document.createElement('p');note.style.bottom=i*16+'px';calced.e[curpos].appendChild(note);});
-				arr=[...arr,i2n[i]].filter(x=>x);
-			}else{
-				requestIdleCallback(()=>calced.e[curpos].querySelectorAll(`p[style*="${i*16}"]`).forEach(e=>calced.e[curpos].removeChild(e)));
-				arr=arr.filter(x=>x!=i2n[i]);
-			}
-			arr=arr.join(',');calced.e[curpos].dataset.note=arr;
-			arr=`main.scores[${calced.ind[curpos].replace(/-/g,'][')}]='${arr}';`;llog(arr);
-			Function(arr)();
-			seqsett=setTimeout(()=>{requestIdleCallback(()=>seq.events=main.scores);urset();},500);
-			e.classList.toggle('press');
+window.onresize=()=>{c.width=cfg.res*c.parentNode.clientWidth;c.height=cfg.res*240;ctx.scale(cfg.res,cfg.res);draw();}
+document.onvisibilitychange=()=>{if(document.visibilityState=='hidden')ezsave();};
+document.onkeydown=e=>{
+	if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
+	if(alcb.checked){if(['Escape','Backspace'].includes(e.code)){e.preventDefault();alcb.checked=false;}return;}
+	if(e.ctrlKey||e.metaKey)
+		switch(e.code){
+			case'KeyZ':e.preventDefault();urdo(e.shiftKey?1:-1);break;
+			case'KeyS':e.preventDefault();savebtn.onclick();break;
+			case'KeyO':e.preventDefault();filebtn.onclick();break;
+			case'KeyA':if(emode.checked&&!slbtn.classList.contains('dis')){e.preventDefault();slbtn.onclick();}break;
+			case'KeyX':if(emode.checked&&!cxbtn.classList.contains('dis')){e.preventDefault();cxbtn.onclick();}break;
+			case'KeyC':if(emode.checked&&!ccbtn.classList.contains('dis')){e.preventDefault();ccbtn.onclick();}break;
+			case'KeyV':if(emode.checked&&!cvbtn.classList.contains('dis')){e.preventDefault();cvbtn.onclick();}break;
+			case'KeyD':if(emode.checked&&!rmbtn.classList.contains('dis')){e.preventDefault();rmbtn.onclick();}break;
+			case'KeyF':if(emode.checked&&!icbtn.classList.contains('dis')){e.preventDefault();icbtn.onclick();}break;
+			case'KeyG':if(emode.checked&&!iwbtn.classList.contains('dis')){e.preventDefault();iwbtn.onclick();}break;
+			case'KeyE':console.log(urlfx.o());break;
 		}
-	};
-	e.addEventListener('touchstart',keyfx,{passive:false});
-	e.addEventListener('mousedown',keyfx,{passive:false});
-});
-document.addEventListener('keydown',e=>{
-	if(alcb.checked&&albox.style.pointerEvents){alcb.checked=false;return;}
-	if(!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)&&!alcb.checked){
-		llog(e.code);
+	else
 		switch(e.code){
 			case'Space':e.preventDefault();playbtn.onclick();break;
-			case'ArrowUp':e.preventDefault();if(e.shiftKey)bpm_.parentNode.nextElementSibling.click();else sc_.value=++main.sc;break;
-			case'ArrowDown':e.preventDefault();if(e.shiftKey)bpm_.parentNode.previousElementSibling.click();else sc_.value=--main.sc;break;
-			case'ArrowLeft':e.preventDefault();if(e.shiftKey)tstep(-10);else tstep(-1);break;
-			case'ArrowRight':e.preventDefault();if(e.shiftKey)tstep(10);else tstep(1);break;
-			case'KeyE':if(e.metaKey||e.ctrlKey){console.log(urlfx.e());}break;
-			case'KeyO':if(e.metaKey||e.ctrlKey){if(!e.shiftKey){e.preventDefault();load();}}break;
-			case'KeyS':if(e.metaKey||e.ctrlKey){if(!e.shiftKey){e.preventDefault();save();}}break;
-			case'KeyZ':if(e.metaKey||e.ctrlKey){e.preventDefault();urdo(e.shiftKey?1:-1);}break;
-			default:
-				const keymap={
-					KeyR:'kbb00',KeyT:'kbb01',KeyY:'kbb02',KeyU:'kbb03',KeyI:'kbb04',
-					KeyF:'kbb10',KeyG:'kbb11',KeyH:'kbb12',KeyJ:'kbb13',KeyK:'kbb14',
-					KeyC:'kbb20',KeyV:'kbb21',KeyB:'kbb22',KeyN:'kbb23',KeyM:'kbb24'
-				}
-				if(keymap[e.code]&&!e.altKey&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey){
-					window[keymap[e.code]].dispatchEvent(new Event('mousedown'));
-				}
+			case'ArrowLeft':e.preventDefault();tstep(e.shiftKey?-8:-1);break;
+			case'ArrowRight':e.preventDefault();tstep(e.shiftKey?8:1);break;
+			case'Tab':e.preventDefault();emode.click();break;
+			case'KeyJ':e.preventDefault();tstop();break;
+			case'KeyK':e.preventDefault();tpause();break;
+			case'KeyL':e.preventDefault();tstart();break;
+		default:
+				const keymap=Array.from('QWERTASDFGZXCVB',x=>`Key${x}`);
+				if(keymap.includes(e.code)&&!emode.checked)
+					kb.children[keymap.indexOf(e.code)].dispatchEvent(new Event('mousedown'));
+		}
+};
+scr.addEventListener('wheel',e=>{e.preventDefault();scr.scrollLeft+=(Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY)*(e.shiftKey?.1:1);});
+scr.addEventListener('scroll',()=>{if(tims.igscr){tims.igscr=false;return;}requestAnimationFrame(draw);},{passive:true});
+scr.onclick=e=>{
+	//if(emode.checked){scr.scrollLeft=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5;else
+	Tone.start();
+	let cp=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5,
+	ind=calced.note.findIndex(x=>x.pos<=cp&&cp<x.pos+cfg.w);
+	if(!~ind)return;
+	curpos=ind;pset();draw();kbset();
+	if(tstat())sytar(ind2n(calced.note[curpos].ind));
+};
+bpm_.onchange=bpmset;
+sc_.onchange=scset;
+[...kb.children].forEach((x,i)=>{
+	const keyfx=e=>{
+		e.preventDefault();
+		if(tstat()){
+			let ind=calced.note[curpos].ind,
+				arr=ind2n(ind).split(',').filter(y=>y);
+			if(x.classList.toggle('a')){
+				Tone.start();
+				synth.triggerAttackRelease(n2Hz(i2n[i]),'1m',undefined,cfg.kbvol);
+				arr=arr.concat(i2n[i]);
+			}else{
+				arr=arr.filter(y=>y!=i2n[i]);
+			}
+			urset([`main.scores[${ind.join('][')}]=`, `'${arr.join(',')}'`, `'${ind2n(ind)}'`]);
+			seqset();calc();curset();
+		}else synth.triggerAttackRelease(n2Hz(i2n[i]),'1m',undefined,cfg.kbvol);
+	};
+	x.addEventListener('touchstart',keyfx);
+	x.addEventListener('mousedown',keyfx);
+});
+
+playbtn.onclick=e=>{if(tstat()){ezsave();tstart();}else tpause();};
+stopbtn.onclick=tstop;
+prevbtn.onclick=()=>tstep(-1);
+nextbtn.onclick=()=>tstep( 1);
+undobtn.onclick=()=> urdo(-1);
+redobtn.onclick=()=> urdo( 1);
+filebtn.onclick=()=>{
+	alert(`${texts.saveq}\n<button onclick="browse();" class="grid bg" style="--bp:-500% -100%;">don´t save</button>	<button onclick="dbfx.sav(browse);" class="grid bg" style="--bp:-400% -100%;">save</button>`);
+	albox.lastElementChild.focus();
+};
+savebtn.onclick=()=>dbfx.sav();
+infobtn.onclick=()=>alert(`
+	<h1 style="float:left;margin:0;">sky_seq</h1>
+	<p style="float:right;opacity:.7;margin:2em 0;">${texts.info}</p>
+	<hr style="clear:both;">
+	<h2>behavior</h2>
+	undo & redo limit: <input type="range" value="${cfg.urMax}" min="16" max="256" step="16"><br>
+	clipboard history limit: <input type="range" value="${cfg.clipMax}" min="2" max="32" step="1"><br>
+	<h2>sound</h2>
+	sequencer: <input type="range" value=".5" min="0" max="1" step=".0625"><br>
+	keyboard: <input type="range" value=".5" min="0" max="1" step=".0625"><br>
+	<h2>backup</h2>
+	create file: <button>save</button><br>
+	recover from file: <input type="file"><br>
+	(All data will be deleted and over written)
+`,1);
+
+emode.onchange=()=>{sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));slbtn.classList.remove('a');draw();};
+slbtn.onclick=()=>{
+	if(slbtn.classList.toggle('a')){
+		[cxbtn,ccbtn, cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.add('dis'));
+		sel={x:ecur[0],dx:3,col:'#feaa',dat:ecur};//ecur=[pos,prev,ind]
+		draw();
+	}else{
+		if(sel.dat[0]==ecur[0]){sel=null;[cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.remove('dis'));return;}
+		let dat=selfix(sel.dat,ecur).map(ind2c);
+		sel={x:dat[0].pos,dx:dat[1].pos+(dat[1].dx||cfg.w)-dat[0].pos,col:'#fea6',dat};//dat:[ind,ind]
+		console.log(sel);
+		[cxbtn,ccbtn, cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.remove('dis'));
+		draw();
+	}
+};
+cxbtn.onclick=()=>{
+	if(!sel)return;
+	let tmp=sel.dat[0].ind.length-1,s;tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
+	s=ind2n(tmp[0]).slice(tmp[1],tmp[2]+1);cbset(s);
+	if(sel.dx==calced.length){icbtn.onclick();return;}
+	urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, `${tmp[2]-tmp[1]+1})`, `0,...${JSON.stringify(s)})`]);
+	calc();tims.igscr=true;scr.scrollLeft=sel.x;sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));
+	seqset();draw();kbset();
+};
+ccbtn.onclick=()=>{
+	if(!sel)return;
+	let tmp=sel.dat[0].ind.length-1;tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
+	cbset(ind2n(tmp[0]).slice(tmp[1],tmp[2]+1));
+	sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));draw();
+};
+cvbtn.onclick=()=>selins(clips[0]);
+rmbtn.onclick=()=>{
+	if(sel){
+		if(sel.dx==calced.length){icbtn.onclick();return;}
+		let tmp=sel.dat[0].ind.length-1;tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
+		urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, `${tmp[2]-tmp[1]+1})`, `0,...${JSON.stringify(ind2n(tmp[0]).slice(tmp[1],tmp[2]+1))})`]);
+		calc();tims.igscr=true;scr.scrollLeft=sel.x;sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));
+	}else{
+		let tmp=ecur[2].length-1;
+		if(!tmp&&main.scores.length==1){
+			if(main.scores[0]){urset(['main.scores.splice(0,1,',`'')`,`${JSON.stringify(main.scores[0])})`]);calc();}else return;
+		}else{
+			tmp=[ecur[2].slice(0,tmp),ecur[2][tmp]-ecur[1]];
+			if(!~tmp[1])return;
+			tmp[2]=ind2c([...tmp[0],tmp[1]]).pos;
+			urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, '1)', `0,${JSON.stringify(ind2n([...tmp[0],tmp[1]]))})`]);
+			calc();tims.igscr=true;scr.scrollLeft=tmp[2];
 		}
 	}
-});
-disp.onclick=e=>{
-	if(e.target.classList.contains('note')){
-		Tone.start();llog(e.target.dataset.p);
-		e.target.style.background='#fea8';setTimeout(()=>e.target.style.background='',100);
-		Tone.Transport.position=p2pos(e.target.dataset.p);
-		curpset(Number(e.target.dataset.p));
-		let note=kbset();if(note[0])synth.triggerAttackRelease(note.map(toHz));
-	}
+	seqset();draw();kbset();
 };
-undobtn.onclick=()=>urdo(-1);redobtn.onclick=()=>urdo(1);
-dispScr.onwheel=e=>{e.preventDefault();dispScr.scrollLeft+=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;};
-onresize=dispScr.onscroll=e=>{
-	if(userscr[0])userscr[0]=false;else userscr[1]=true;
-	if(screxet)return;
-	const tmp=()=>{
-		screxet=null;
-		let dbpds=dispBar.clientWidth/dispScr.scrollWidth;
-		dispBar.children[0].style.width=`${dispBar.clientWidth*dbpds}px`;
-		dispBar.children[0].style.left=`${dispScr.scrollLeft*dbpds}px`;
-		if(userscr[1])curct.style.display='';
-	};
-	tmp();screxet=setTimeout(tmp,100);
-};
-recbtn.onclick=e=>{
-	if(e.target.classList.toggle('ghl_'))recorder.start();
-	else(async()=>{
-		tpause();
-		let recording=await recorder.stop(),e=document.createElement('a');
-		e.download=`${main.name||'recording'}.${/\/mp/.test(recorder.mimeType)?'m4a':'webm'}`;e.href=URL.createObjectURL(recording);
-		e.click();llog('rcstop');setTimeout(URL.revokeObjectURL,10000,e.href);
-	})();
-};
-instrbtn.onclick=()=>{
-	alert('',1);
-	albox.insertAdjacentHTML('beforeend',
-`<form ><label class="grid bg" style="--bp:-0%   -400%;"><input type="radio" name="instr" value="0" >
-</label><label class="grid bg" style="--bp:-100% -400%;"><input type="radio" name="instr" value="1" >
-</label><label class="grid bg" style="--bp:-200% -400%;"><input type="radio" name="instr" value="2" >
-</label><label class="grid bg" style="--bp:-300% -400%;"><input type="radio" name="instr" value="3" >
-</label><label class="grid bg" style="--bp:-400% -400%;"><input type="radio" name="instr" value="4" >
-</label><label class="grid bg" style="--bp:-500% -400%;"><input type="radio" name="instr" value="5" >
-</label><label class="grid bg" style="--bp:-600% -400%;"><input type="radio" name="instr" value="6" >
-</label><label class="grid bg" style="--bp:-700% -400%;"><input type="radio" name="instr" value="7" >
-</label><label class="grid bg" style="--bp:-0%   -500%;"><input type="radio" name="instr" value="8" >
-</label><label class="grid bg" style="--bp:-100% -500%;"><input type="radio" name="instr" value="9" >
-</label><label class="grid bg" style="--bp:-200% -500%;"><input type="radio" name="instr" value="10">
-</label><label class="grid bg" style="--bp:-300% -500%;"><input type="radio" name="instr" value="11">
-</label></form>`);
-	let e=albox.querySelector('form');//e.instr.value=main.instr;
-	e.onchange=()=>syset(main.instr=Number(e.instr.value));
-};
+icbtn.onclick=()=>selins(['']);
+iwbtn.onclick=()=>selins([['','']]);
 
+{
+	alcb.checked=false;
+	cfg={pad:12,w:16,clipMax:8,urMax:128,res:window.devicePixelRatio||1,kbvol:1,seqvol:1};
+	localStorage.seq_cfg=JSON.stringify(cfg);
+	cfg.pad2=cfg.pad/2;
+	cfg.w2=cfg.w/2;
+	from_url=Boolean(main=urlfx.i());
+	setInterval(ezsave,60000);
+	window.onresize();
+	//setInterval(()=>console.log(ecur),500);
 
-alert(texts.notice,0,1);
-if(!localStorage.seq_undoMax){
-	localStorage.seq_undoMax=24;
-	requestIdleCallback(()=>{
-		fetch('sample.json').then(x=>x.json()).then(x=>x.forEach((y,i)=>idb.result.transaction('seq','readwrite').objectStore('seq').add(y).onsuccess=()=>{if(x.length==i+1)load();}));
-	});
+	if(!main&&localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
+
+	init();
+	if(texts.notice)requestIdleCallback(()=>alert(texts.notice));
 }
-log.textContent=texts.info;
-from_url=Boolean(main=urlfx.l())
-if(!from_url&&localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
-try{recorder=new Tone.Recorder();}catch(e){console.log(e);recbtn.disabled=true;}
-setInterval(ezsave,60000);
-document.onvisibilitychange=()=>{if(document.visibilityState=='hidden')ezsave();};
-init(1);document.body.focus();
-new Sortable(tpl,{
-	group:{
-		name:'group_',
-		pull:'clone',
-		put:false
-	},
-	onStart:()=>dispCur.style.opacity='0',
-	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
-	sort:false,draggable:'.noteW',
-	onEnd:e=>{
-		dispCur.style.opacity='1';
-		if(e.pullMode=='clone'&&e.item.children.length)Array.from(e.item.children,e=>new Sortable(e,sopt));
-	},
-});
-new Sortable(palette,{
-	group:{
-		name:'group_',
-		pull:(to,from)=>to.el.id=='trash'?true:'clone',
-		put:true
-	},
-	onStart:()=>dispCur.style.opacity='0',onEnd:()=>dispCur.style.opacity='1',
-	onClone:e=>e.clone.querySelectorAll('.sort').forEach(x=>new Sortable(x,sopt)),
-	invertSwap:true,animation:150,forceFallback:true,direction:'horizontal',delay:100,delayOnTouchOnly:false,
-	draggable:'.noteW'
-});
-new Sortable(trash,{group:'group_',onAdd:e=>e.item.parentNode.removeChild(e.item)});
-new Sortable(disp,sopt);
-
-
-const impsample=fx=>fetch('sample.json').then(x=>x.json()).then(x=>
-	Promise.allSettled(x.map(y=>new Promise((t,c)=>{
-		let tmp=idb.result.transaction('seq','readwrite').objectStore('seq').add(y);
-		tmp.onsuccess=()=>{llog(y.name);t(y.name);};tmp.onerror=()=>c();
-	}))).then(fx||(()=>{}))
-),
-dljson=(x=main)=>{
-	let e=document.createElement('a');
-	e.download=`${x.name||'JSON'}.json`;
-	e.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
-	e.click();setTimeout(URL.revokeObjectURL,10000,e.href);
-};
+if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
+	requestIdleCallback(()=>{
+		let img=new Image();
+		img.onload=()=>{
+			let c=document.createElement('canvas'),ctx=c.getContext('2d');
+			c.width=img.naturalWidth;c.height=img.naturalHeight;
+			ctx.drawImage(img,0,0);
+			document.body.insertAdjacentHTML('beforeend',`<style>#kb>div::after,#alfcb:checked~label[for=alcb]::before,.bg{background-image:url(${c.toDataURL()});}</style>`);
+		};
+		img.src='img/seq.svg';
+	});
