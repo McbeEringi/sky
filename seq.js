@@ -6,14 +6,14 @@ const texts={
 	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
-	buiq:'All data will be deleted and over written.\nThis operation is irreversible.\nAre you sure you want to continue?',
+	buiq:'All data will be over written.\nThis operation is irreversible.\nAre you sure you want to continue?',
 	fubu:'Backups made in future versions cannot be loaded.',invf:'invailed file.',
 	...{
 		ja:{
 			title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',imp:'URLから読み込む',exp:x=>`「${x}」をURLに書き出す`,
 			nodat:'保存されたデータはありません',sample:'サンプルをダウンロード',load:'読み込み中…',
 			err:x=>`⚠️\nデータの${['読み出し','書き込み'][x]}に失敗しました\n\n`,saveq:'現在のデータを保存しますか？',delq:x=>`「${x}」を削除してよろしいですか？`,
-			buiq:'全てのデータは削除または上書きされます。\nこの操作は元に戻せません。\n本当にこの操作を続けますか?',
+			buiq:'全てのデータは上書きされます。\nこの操作は元に戻せません。\n本当にこの操作を続けますか?',
 			fubu:'将来のバージョンで作成されたバックアップは読み込めません',invf:'このファイルは使用できません',
 		}
 	}[window.navigator.language.slice(0,2)]
@@ -309,7 +309,7 @@ dbfx={
 	bui:x=>{
 		alert(`${texts.buiq}\n<button class="grid bg" style="--bp:-400% -100%;background-color:#f448;">recover</button>	<button onclick="infobtn.onclick();" class="grid bg" style="--bp:-500% -100%;">cancel</button>`);
 		let e=albox.querySelectorAll('button');
-		e[0].onclick=()=>dbfx.delAll(()=>
+		e[0].onclick=()=>
 			Promise.allSettled(x.data.map(y=>new Promise((t,c)=>
 				Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').put(y),{
 					onsuccess:()=>{console.log('recovered',y.name);t(y.name);},
@@ -320,8 +320,7 @@ dbfx={
 				localStorage.seq_cfg=JSON.stringify(cfg=x.cfg);
 				init();
 				alcb.checked=false;
-			}).catch(e=>alert(`${texts.err(1)}${e}`))
-		);
+			}).catch(e=>alert(`${texts.err(1)}${e}`));
 		e[1].focus();
 	}
 },
@@ -446,8 +445,8 @@ infobtn.onclick=()=>{
 		undo & redo limit: <input type="range" value="${cfg.urMax}" min="16" max="256" step="16"><span>${cfg.urMax}</span><br>
 		clipboard history limit: <input type="range" value="${cfg.clipMax}" min="2" max="32" step="1"><span>${cfg.clipMax}</span><br>
 		<h3>backup</h3>
-		create file: <button onclick="tpause();dbfx.buo();">save</button><br>
-		recover from file: <input type="file" accept=".json" onclick="tpause();"><input type="hidden"><br>
+		create backup file: <button onclick="tpause();dbfx.buo();">backup</button><br>
+		recover from file: <input type="file" accept=".json" onclick="tpause();"><label><input type="hidden"><span style="white-space:pre-wrap;font-size:x-small;opacity:.7;"></span></label><br>
 		<hr>
 		<h2>usage</h2>
 		coming soon…
@@ -464,7 +463,8 @@ infobtn.onclick=()=>{
 					let x=JSON.parse(r.target.result);
 					if(!x.sky_seq_backup_version)throw texts.invf;
 					if(x.sky_seq_backup_version>1)throw texts.fubu;
-					e[5].value=`${new Date(x.date).toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric'})} (${x.data.length}sheets)`;
+					e[5].value=new Date(x.date).toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric'});
+					e[5].nextSibling.textContent=x.data.map(y=>y.name).join(',   ');
 					e[5].onclick=()=>dbfx.bui(x);
 					e[4].type='hidden';e[5].type='button';
 				}catch(e){alert(`${texts.err(0)}${e}`);}
