@@ -302,7 +302,7 @@ dbfx={
 					};
 				new Blob([JSON.stringify(x)]).arrayBuffer().then(b=>new Int8Array(b).map(y=>~y).buffer).then(b=>{
 					a.download=`${new Date().toLocaleDateString()}.skyseq`;a.href=URL.createObjectURL(new Blob([b]));
-					a.click();setTimeout(URL.revokeObjectURL,10000,e.href);
+					a.click();setTimeout(URL.revokeObjectURL,10000,a.href);
 				});
 			},
 			onerror:e=>alert(`${texts.err(0)}${e.target.error}`)
