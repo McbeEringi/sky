@@ -7,12 +7,14 @@ const texts={
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
 	buiq:'All data will be deleted and over written.\nThis operation is irreversible.\nAre you sure you want to continue?',
+	fubu:'Backups made in future versions cannot be loaded.',invf:'invailed file.',
 	...{
 		ja:{
 			title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',imp:'URLから読み込む',exp:x=>`「${x}」をURLに書き出す`,
 			nodat:'保存されたデータはありません',sample:'サンプルをダウンロード',load:'読み込み中…',
 			err:x=>`⚠️\nデータの${['読み出し','書き込み'][x]}に失敗しました\n\n`,saveq:'現在のデータを保存しますか？',delq:x=>`「${x}」を削除してよろしいですか？`,
-			buiq:'全てのデータは削除または上書きされます。\nこの操作は元に戻せません。\n本当にこの処理を続けますか?'
+			buiq:'全てのデータは削除または上書きされます。\nこの操作は元に戻せません。\n本当にこの操作を続けますか?',
+			fubu:'将来のバージョンで作成されたバックアップは読み込めません',invf:'このファイルは使用できません',
 		}
 	}[window.navigator.language.slice(0,2)]
 },
@@ -291,7 +293,7 @@ dbfx={
 			onsuccess:e=>{
 				let a=document.createElement('a'),
 					x={
-						format_version:1,
+						sky_seq_backup_version:1,
 						build:texts.build,
 						date:Date.now(),
 						data:e.target.result,
@@ -460,7 +462,8 @@ infobtn.onclick=()=>{
 			onload:r=>{
 				try{
 					let x=JSON.parse(r.target.result);
-					if(x.format_version>1)throw'unknown format_version.';
+					if(!x.sky_seq_backup_version)throw texts.invf;
+					if(x.sky_seq_backup_version>1)throw texts.fubu;
 					e[5].value=`recover to ${new Date(x.date).toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric'})}`;
 					e[5].onclick=()=>dbfx.bui(x);
 					e[4].type='hidden';e[5].type='button';
