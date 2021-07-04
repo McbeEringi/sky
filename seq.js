@@ -2,15 +2,17 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	info:'Powerd by Tone.js<br>Audio: GarageBand<br>author:@McbeEringi<br>build:2107033<br>MIT License<br>',
+	build:'2107040',
 	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
+	buiq:'All data will be deleted and over written.\nThis operation is irreversible.\nAre you sure you want to continue?',
 	...{
 		ja:{
 			title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',imp:'URLから読み込む',exp:x=>`「${x}」をURLに書き出す`,
 			nodat:'保存されたデータはありません',sample:'サンプルをダウンロード',load:'読み込み中…',
-			err:x=>`⚠️\nデータの${['読み出し','書き込み'][x]}に失敗しました\n\n`,saveq:'現在のデータを保存しますか？',delq:x=>`「${x}」を削除してよろしいですか？`
+			err:x=>`⚠️\nデータの${['読み出し','書き込み'][x]}に失敗しました\n\n`,saveq:'現在のデータを保存しますか？',delq:x=>`「${x}」を削除してよろしいですか？`,
+			buiq:'全てのデータは削除または上書きされます。\nこの操作は元に戻せません。\n本当にこの処理を続けますか?'
 		}
 	}[window.navigator.language.slice(0,2)]
 },
@@ -28,7 +30,7 @@ tstat=()=>Tone.Transport.state!='started',
 seqset=()=>{clearTimeout(tims.seqset);tims.seqset=setTimeout(()=>requestIdleCallback(()=>{seq.events=main.scores;console.log('seqset')}),300);},
 stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]=`a${i}.mp3`;}return s;},
 synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/musicbox/').toDestination(),
-sytar=(n,t)=>{n=n.split(',');if(n[0])synth.triggerAttackRelease(n.map(n2Hz),'1m',t,cfg.seqvol);},
+sytar=(n,t)=>{n=n.split(',');if(n[0])synth.triggerAttackRelease(n.map(n2Hz),undefined,t,cfg.seqvol);},
 seq=new Tone.Sequence((time,note)=>{
 	//Tone.Draw.schedule(()=>{},time);
 	curset();curpos=mod(curpos+1,calced.note.length);
@@ -283,7 +285,43 @@ dbfx={
 			})
 		))).then(fx||(()=>{}))
 	),
-	delAll:()=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>console.log('delall done')
+	delAll:fx=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>{console.log('delall done');if(fx)fx();},
+	buo:()=>{
+		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').getAll(),{
+			onsuccess:e=>{
+				let a=document.createElement('a'),
+					x={
+						format_version:1,
+						build:texts.build,
+						date:Date.now(),
+						data:e.target.result,
+						ezsave:main,
+						cfg:cfg
+					};
+				a.download=`sky_seq-${new Date().toLocaleDateString()}.json`;a.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
+				a.click();setTimeout(URL.revokeObjectURL,10000,e.href);
+			},
+			onerror:e=>alert(`${texts.err(0)}${e.target.error}`)
+		});
+	},
+	bui:x=>{
+		alert(`${texts.buiq}\n<button class="grid bg" style="--bp:-400% -100%;background-color:#f448;">recover</button>	<button onclick="infobtn.onclick();" class="grid bg" style="--bp:-500% -100%;">cancel</button>`);
+		let e=albox.querySelectorAll('button');
+		e[0].onclick=()=>dbfx.delAll(()=>
+			Promise.allSettled(x.data.map(y=>new Promise((t,c)=>
+				Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').put(y),{
+					onsuccess:()=>{console.log('recovered',y.name);t(y.name);},
+					onerror:c
+				})
+			))).then(()=>{
+				localStorage.seq_ezsave=JSON.stringify(main=x.ezsave);
+				localStorage.seq_cfg=JSON.stringify(cfg=x.cfg);
+				init();
+				alcb.checked=false;
+			}).catch(e=>alert(`${texts.err(1)}${e}`))
+		);
+		e[1].focus();
+	}
 },
 urlfx={
 	dmap:(x,fx)=>x.map(y=>{if(Array.isArray(y))return urlfx.dmap(y,fx);else return fx(y);}),
@@ -306,11 +344,7 @@ urlfx={
 		}catch(e){console.log(e);return;}
 	}
 },
-ezsave=()=>{if(!from_url){localStorage.seq_ezsave=JSON.stringify(main);console.log('ezsave');}},
-dljson=(x=main)=>{
-	let e=document.createElement('a');e.download=`${x.name||'untitled'}.json`;e.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
-	e.click();setTimeout(URL.revokeObjectURL,10000,e.href);
-},
+ezsave=()=>{if(!from_url&&main){localStorage.seq_ezsave=JSON.stringify(main);console.log('ezsave');}},
 init=()=>{
 	main={sc:0,bpm:120,scores:new Array(8).fill(''),...main};urstack=[[],[]];
 	document.title='sky_seq '+(name_.textContent=main.name||'');
@@ -373,14 +407,14 @@ sc_.onchange=scset;
 				arr=ind2n(ind).split(',').filter(y=>y);
 			if(x.classList.toggle('a')){
 				Tone.start();
-				synth.triggerAttackRelease(n2Hz(i2n[i]),'1m',undefined,cfg.kbvol);
+				synth.triggerAttackRelease(n2Hz(i2n[i]),undefined,undefined,cfg.kbvol);
 				arr=arr.concat(i2n[i]);
 			}else{
 				arr=arr.filter(y=>y!=i2n[i]);
 			}
 			urset([`main.scores[${ind.join('][')}]=`, `'${arr.join(',')}'`, `'${ind2n(ind)}'`]);
 			seqset();calc();curset();
-		}else synth.triggerAttackRelease(n2Hz(i2n[i]),'1m',undefined,cfg.kbvol);
+		}else synth.triggerAttackRelease(n2Hz(i2n[i]),undefined,undefined,cfg.kbvol);
 	};
 	x.addEventListener('touchstart',keyfx);
 	x.addEventListener('mousedown',keyfx);
@@ -397,21 +431,47 @@ filebtn.onclick=()=>{
 	albox.lastElementChild.focus();
 };
 savebtn.onclick=()=>dbfx.sav();
-infobtn.onclick=()=>alert(`
-	<h1 style="float:left;margin:0;">sky_seq</h1>
-	<p style="float:right;opacity:.7;margin:2em 0;">${texts.info}</p>
-	<hr style="clear:both;">
-	<h2>behavior</h2>
-	undo & redo limit: <input type="range" value="${cfg.urMax}" min="16" max="256" step="16"><br>
-	clipboard history limit: <input type="range" value="${cfg.clipMax}" min="2" max="32" step="1"><br>
-	<h2>sound</h2>
-	sequencer: <input type="range" value="${cfg.seqvol}" min="0" max="1" step=".0625"><br>
-	keyboard: <input type="range" value="${cfg.kbvol}" min="0" max="1" step=".0625"><br>
-	<h2>backup</h2>
-	create file: <button>save</button><br>
-	recover from file: <input type="file"><br>
-	(All data will be deleted and over written)
-`,1);
+infobtn.onclick=()=>{
+	alert(`
+		<h1 style="float:left;margin:0;">sky_seq</h1>
+		<p style="float:right;opacity:.7;margin:2em 0;">Powerd by Tone.js<br>Audio: GarageBand<br>author:@McbeEringi<br>build:${texts.build}<br>MIT License</p>
+		<hr style="clear:both;">
+		<h2>config</h2>
+		<h3>sound</h3>
+		sequencer: <input type="range" value="${cfg.seqvol}" min="0" max="1" step=".0625"><span>${cfg.seqvol*16}</span><br>
+		keyboard: <input type="range" value="${cfg.kbvol}" min="0" max="1" step=".0625"><span>${cfg.kbvol*16}</span><br>
+		<h3>behavior</h3>
+		undo & redo limit: <input type="range" value="${cfg.urMax}" min="16" max="256" step="16"><span>${cfg.urMax}</span><br>
+		clipboard history limit: <input type="range" value="${cfg.clipMax}" min="2" max="32" step="1"><span>${cfg.clipMax}</span><br>
+		<h3>backup</h3>
+		create file: <button onclick="tpause();dbfx.buo();">save</button><br>
+		recover from file: <input type="file" accept=".json" onclick="tpause();"><input type="hidden"><br>
+		<hr>
+		<h2>usage</h2>
+		coming soon…
+	`,1);
+	let e=albox.querySelectorAll('input'),cfgsave=()=>localStorage.seq_cfg=JSON.stringify(cfg);
+	e[0].oninput=()=>{e[0].nextSibling.textContent=(cfg.seqvol=Number(e[0].value))*16;if(tstat())synth.triggerAttackRelease([3,7].map(n2Hz),undefined,undefined,cfg.seqvol);};e[0].onchange=cfgsave;
+	e[1].oninput=()=>{e[1].nextSibling.textContent=(cfg.kbvol =Number(e[1].value))*16;if(tstat())synth.triggerAttackRelease([3,7].map(n2Hz),undefined,undefined,cfg.kbvol );};e[1].onchange=cfgsave;
+	e[2].oninput=()=>e[2].nextSibling.textContent=cfg.urMax  =Number(e[2].value);e[2].onchange=cfgsave;
+	e[3].oninput=()=>e[3].nextSibling.textContent=cfg.clipMax=Number(e[3].value);e[3].onchange=cfgsave;
+	e[4].onchange=()=>{
+		Object.assign(new FileReader(),{
+			onload:r=>{
+				try{
+					let x=JSON.parse(r.target.result);
+					if(x.format_version>1)throw'unknown format_version.';
+					e[5].value=`recover to ${new Date(x.date).toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric'})}`;
+					e[5].onclick=()=>dbfx.bui(x);
+					e[4].type='hidden';e[5].type='button';
+				}catch(e){alert(`${texts.err(0)}${e}`);}
+			},
+			onerror:r=>alert(`${texts.err(0)}${r.target.error}`)
+		}).readAsText(e[4].files[0]);
+	}
+
+}
+//
 
 emode.onchange=()=>{sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));slbtn.classList.remove('a');draw();};
 slbtn.onclick=()=>{
@@ -469,12 +529,15 @@ iwbtn.onclick=()=>selins([['','']]);
 
 {
 	alcb.checked=false;
-	cfg={pad:12,w:16,clipMax:8,urMax:128,res:window.devicePixelRatio||1,seqvol:1,kbvol:1};
-	localStorage.seq_cfg=JSON.stringify(cfg);
+	if(localStorage.seq_cfg)cfg=JSON.parse(localStorage.seq_cfg);
+	else{
+		localStorage.seq_cfg=JSON.stringify(cfg={pad:12,w:16,clipMax:8,urMax:128,res:window.devicePixelRatio||1,seqvol:1,kbvol:1});
+		infobtn.onclick();
+	}
 	cfg.pad2=cfg.pad/2;
 	cfg.w2=cfg.w/2;
 	from_url=Boolean(main=urlfx.i());
-	setInterval(ezsave,60000);
+	tims.ezsave=setInterval(ezsave,60000);
 	window.onresize();
 	//setInterval(()=>console.log(ecur),500);
 

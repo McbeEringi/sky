@@ -13,16 +13,13 @@ PWA, Offline support
 	- ambient sounds
 	- inpage recording
 
-- sky_sequencer (beta)
-	- drag&drop interface
+- sky_seq
 	- custom
 		- key
-		- tempo
 		- tuplet
 		- meter
-		- auto arpeggio
-	- url share
-	- inpage recording
+	- url sharing
+	- full backup
 
 - sky_info
 	- treasure candles
