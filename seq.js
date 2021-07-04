@@ -454,8 +454,8 @@ infobtn.onclick=()=>{
 	`,1);
 	let e=albox.querySelectorAll('input'),cfgsave=()=>localStorage.seq_cfg=JSON.stringify(cfg);
 	e[0].oninput=()=>{e[0].nextSibling.textContent=(cfg.seqvol=Number(e[0].value))*16;if(tstat())synth.triggerAttackRelease([3,7].map(n2Hz),undefined,undefined,cfg.seqvol);};e[0].onchange=cfgsave;
-	e[1].oninput=()=>{e[1].nextSibling.textContent=(cfg.kbvol =Number(e[1].value))*16;if(tstat())synth.triggerAttackRelease([3,7].map(n2Hz),undefined,undefined,cfg.kbvol );};e[1].onchange=cfgsave;
-	e[2].oninput=()=>e[2].nextSibling.textContent=cfg.urMax  =Number(e[2].value);e[2].onchange=cfgsave;
+	e[1].oninput=()=>{e[1].nextSibling.textContent=(cfg.kbvol=Number(e[1].value))*16;synth.triggerAttackRelease([3,7].map(n2Hz),undefined,undefined,cfg.kbvol);};e[1].onchange=cfgsave;
+	e[2].oninput=()=>e[2].nextSibling.textContent=cfg.urMax=Number(e[2].value);e[2].onchange=cfgsave;
 	e[3].oninput=()=>e[3].nextSibling.textContent=cfg.clipMax=Number(e[3].value);e[3].onchange=cfgsave;
 	e[4].onchange=()=>{
 		Object.assign(new FileReader(),{
@@ -464,7 +464,7 @@ infobtn.onclick=()=>{
 					let x=JSON.parse(r.target.result);
 					if(!x.sky_seq_backup_version)throw texts.invf;
 					if(x.sky_seq_backup_version>1)throw texts.fubu;
-					e[5].value=`recover to ${new Date(x.date).toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric'})}`;
+					e[5].value=`${new Date(x.date).toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric'})} (${x.data.length}sheets)`;
 					e[5].onclick=()=>dbfx.bui(x);
 					e[4].type='hidden';e[5].type='button';
 				}catch(e){alert(`${texts.err(0)}${e}`);}
