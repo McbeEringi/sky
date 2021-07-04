@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	build:'2107040',
+	build:'2107041',
 	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
@@ -296,12 +296,14 @@ dbfx={
 						sky_seq_backup_version:1,
 						build:texts.build,
 						date:Date.now(),
-						data:e.target.result,
-						ezsave:main,
+						data:e.target.result.map(y=>{y.scores=urlfx.zip(y.scores);return y;}),
+						ezsave:{...main,scores:urlfx.zip(main.scores)},
 						cfg:cfg
 					};
-				a.download=`sky_seq-${new Date().toLocaleDateString()}.json`;a.href=URL.createObjectURL(new Blob([JSON.stringify(x)],{type:'application/json'}));
-				a.click();setTimeout(URL.revokeObjectURL,10000,e.href);
+				new Blob([JSON.stringify(x)]).arrayBuffer().then(b=>new Int8Array(b).map(y=>~y).buffer).then(b=>{
+					a.download=`${new Date().toLocaleDateString()}.skyseq`;a.href=URL.createObjectURL(new Blob([b]));
+					a.click();setTimeout(URL.revokeObjectURL,10000,e.href);
+				});
 			},
 			onerror:e=>alert(`${texts.err(0)}${e.target.error}`)
 		});
@@ -310,13 +312,14 @@ dbfx={
 		alert(`${texts.buiq}\n<button class="grid bg" style="--bp:-400% -100%;background-color:#f448;">recover</button>	<button onclick="infobtn.onclick();" class="grid bg" style="--bp:-500% -100%;">cancel</button>`);
 		let e=albox.querySelectorAll('button');
 		e[0].onclick=()=>
-			Promise.allSettled(x.data.map(y=>new Promise((t,c)=>
+			Promise.allSettled(x.data.map(y=>new Promise((t,c)=>{
+				y.scores=urlfx.unzip(y.scores);
 				Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').put(y),{
 					onsuccess:()=>{console.log('recovered',y.name);t(y.name);},
 					onerror:c
-				})
-			))).then(()=>{
-				localStorage.seq_ezsave=JSON.stringify(main=x.ezsave);
+				});
+			}))).then(()=>{
+				localStorage.seq_ezsave=JSON.stringify(main={...x.ezsave,scores:urlfx.unzip(x.ezsave.scores)});
 				localStorage.seq_cfg=JSON.stringify(cfg=x.cfg);
 				init();
 				alcb.checked=false;
@@ -326,24 +329,16 @@ dbfx={
 },
 urlfx={
 	dmap:(x,fx)=>x.map(y=>{if(Array.isArray(y))return urlfx.dmap(y,fx);else return fx(y);}),
-	o:(dat=main||{})=>{
-		dat.scores=urlfx.dmap(dat.scores,x=>x.split(',').map(y=>{if(y){y=Number(y)+15;return(y<0?'-':'')+Math.abs(y).toString(36);}}).join('.'));
-		dat.scores=JSON.stringify(dat.scores).replace(/\"/g,'').replace(/\],\[/g,'*').replace(/,/g,'~').replace(/\[/g,'!').replace(/\]/g,'_');
-		return 'https://mcbeeringi.github.io/sky/seq.html#'+encodeURIComponent(JSON.stringify(dat));
+	zip:x=>{
+		x=urlfx.dmap(x,y=>y.split(',').map(z=>{if(z){z=Number(z)+15;return(z<0?'-':'')+Math.abs(z).toString(36);}}).join('.'));
+		return JSON.stringify(x).replace(/\"/g,'').replace(/\],\[/g,'*').replace(/,/g,'~').replace(/\[/g,'!').replace(/\]/g,'_');
 	},
-	i:(str=location.hash.slice(1))=>{
-		if(!str)return;
-		let dat;
-		try{
-			dat=JSON.parse(decodeURIComponent(str));
-			if(!dat.scores)return;
-			dat.scores=dat.scores.replace(/\*/g,'],[').replace(/~/g,',').replace(/!/g,'[').replace(/_/g,']');
-			dat.scores=JSON.parse(dat.scores.replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3').replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3'));
-			dat.scores=urlfx.dmap(dat.scores,x=>x.split('.').map(y=>{if(y)return parseInt(y,36)-15;}).join(','));
-			console.log('load url',dat);
-			return dat;
-		}catch(e){console.log(e);return;}
-	}
+	unzip:x=>{
+		x=x.replace(/\*/g,'],[').replace(/~/g,',').replace(/!/g,'[').replace(/_/g,']').replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3').replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3');
+		return urlfx.dmap(JSON.parse(x),y=>y.split('.').map(z=>{if(z)return parseInt(z,36)-15;}).join(','));
+	},
+	o:(dat=main)=>{dat.scores=urlfx.zip(dat.scores);return 'https://mcbeeringi.github.io/sky/seq.html#'+encodeURIComponent(JSON.stringify(dat));},
+	i:(dat=location.hash.slice(1))=>{if(!dat)return;try{dat=JSON.parse(decodeURIComponent(dat));if(!dat.scores)return;dat.scores=urlfx.unzip(dat.scores);return dat;}catch(e){alert(`${texts.err(0)}${e}`);}}
 },
 ezsave=()=>{if(!from_url&&main){localStorage.seq_ezsave=JSON.stringify(main);console.log('ezsave');}},
 init=()=>{
@@ -446,7 +441,7 @@ infobtn.onclick=()=>{
 		clipboard history limit: <input type="range" value="${cfg.clipMax}" min="2" max="32" step="1"><span>${cfg.clipMax}</span><br>
 		<h3>backup</h3>
 		create backup file: <button onclick="tpause();dbfx.buo();">backup</button><br>
-		recover from file: <input type="file" accept=".json" onclick="tpause();"><label><input type="hidden"><span style="white-space:pre-wrap;font-size:x-small;opacity:.7;"></span></label><br>
+		recover from file: <input type="file" onclick="tpause();" accept=".skyseq"><label><input type="hidden"><span style="white-space:pre-wrap;font-size:x-small;opacity:.7;"></span></label><br>
 		<hr>
 		<h2>usage</h2>
 		coming soon…
@@ -456,23 +451,16 @@ infobtn.onclick=()=>{
 	e[1].oninput=()=>{e[1].nextSibling.textContent=(cfg.kbvol=Number(e[1].value))*16;synth.triggerAttackRelease([3,7].map(n2Hz),undefined,undefined,cfg.kbvol);};e[1].onchange=cfgsave;
 	e[2].oninput=()=>e[2].nextSibling.textContent=cfg.urMax=Number(e[2].value);e[2].onchange=cfgsave;
 	e[3].oninput=()=>e[3].nextSibling.textContent=cfg.clipMax=Number(e[3].value);e[3].onchange=cfgsave;
-	e[4].onchange=()=>{
-		Object.assign(new FileReader(),{
-			onload:r=>{
-				try{
-					let x=JSON.parse(r.target.result);
-					if(!x.sky_seq_backup_version)throw texts.invf;
-					if(x.sky_seq_backup_version>1)throw texts.fubu;
-					e[5].value=new Date(x.date).toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric'});
-					e[5].nextSibling.textContent=x.data.map(y=>y.name).join(',   ');
-					e[5].onclick=()=>dbfx.bui(x);
-					e[4].type='hidden';e[5].type='button';
-				}catch(e){alert(`${texts.err(0)}${e}`);}
-			},
-			onerror:r=>alert(`${texts.err(0)}${r.target.error}`)
-		}).readAsText(e[4].files[0]);
-	}
-
+	e[4].onchange=()=>
+		e[4].files[0].arrayBuffer().then(b=>new Int8Array(b).map(y=>~y).buffer).then(b=>new Blob([b]).text()).then(t=>{
+			let x=JSON.parse(t);
+			if(!x.sky_seq_backup_version)throw texts.invf;
+			if(x.sky_seq_backup_version>1)throw texts.fubu;
+			e[5].value=new Date(x.date).toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric'});
+			e[5].nextSibling.textContent=x.data.map(y=>y.name).join(',   ');
+			e[5].onclick=()=>dbfx.bui(x);
+			e[4].type='hidden';e[5].type='button';
+		}).catch(e=>alert(`${texts.err(0)}${e}`));
 }
 //
 
