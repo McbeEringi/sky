@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	build:'2107041',
+	build:'2107050',
 	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
@@ -464,7 +464,7 @@ infobtn.onclick=()=>{
 }
 //
 
-emode.onchange=()=>{sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));slbtn.classList.remove('a');draw();};
+emode.onchange=()=>{sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));[cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.remove('dis'));slbtn.classList.remove('a');draw();};
 slbtn.onclick=()=>{
 	if(slbtn.classList.toggle('a')){
 		[cxbtn,ccbtn, cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.add('dis'));
@@ -508,6 +508,7 @@ rmbtn.onclick=()=>{
 		}else{
 			tmp=[ecur[2].slice(0,tmp),ecur[2][tmp]-ecur[1]];
 			if(!~tmp[1])return;
+			console.log([...tmp[0],tmp[1]],calced);
 			tmp[2]=ind2c([...tmp[0],tmp[1]]).pos;
 			urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, '1)', `0,${JSON.stringify(ind2n([...tmp[0],tmp[1]]))})`]);
 			calc();tims.igscr=true;scr.scrollLeft=tmp[2];
