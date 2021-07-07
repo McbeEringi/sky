@@ -2,33 +2,33 @@ const idbName='sky_idb',idbVer=3,idb=indexedDB.open(idbName,idbVer),urlq={},
 	bgd=document.createElement('div'),bgi=document.createElement('img'),hbb=document.createElement('div'),
 	bgset=(x,b=localStorage.sky_bgmode)=>{
 		const bgcol=[
-				"#fff1cf,#ced980",//morn
-				"#cce5f0,#ced980",//day
-				"#f08300,#f8b862",//dusk
-				"#192f60,#274a78",//night
-				"#fbfaf6,#ced980"//cloud
-			];
+				'#fff1cf,#ced980',//morn
+				'#cce5f0,#ced980',//day
+				'#f08300,#f8b862',//dusk
+				'#192f60,#274a78',//night
+				'#fbfaf6,#ced980'//cloud
+			],url='https://mcbeeringi.github.io/sky/img/photo/summer.jpg';
 		switch(b){
 			case'1':
 				bgi.setAttribute('style','display:none;');
 				Object.assign(idb.result.transaction('stuff','readwrite').objectStore('stuff').get('bgimg'),{
-					onsuccess:e=>bg.style.backgroundImage=e.target.result?`url(${URL.createObjectURL(e.target.result)})`:'',
-					onerror:e=>bg.style.backgroundImage=''
+					onsuccess:e=>bg.style.backgroundImage=`url(${e.target.result?URL.createObjectURL(e.target.result):url})`,
+					onerror:e=>bg.style.backgroundImage=`url(${url})`
 				});
 				break;
 			case'2':bgi.setAttribute('style','display:none;');bg.style.backgroundImage=localStorage.sky_bgcode;break;
 			default:bgi.setAttribute('style','');bg.style.backgroundImage=`linear-gradient(${bgcol[x]||bgcol[[3,3,3,3,3,0,0,0,0,1,1,1,1,1,1,1,4,2,2,2,2,3,3,3][new Date().getHours()]]})`;break;
 		}
 	},
-	bgset_=()=>{console.log('_');if(localStorage.sky_bgmode=='0')bgset();};
+	bgset_=()=>{if(localStorage.sky_bgmode=='0'){console.log('_');bgset();}};
 idb.onupgradeneeded=e=>{
 	console.log('idb upgrade');
 	try{idb.result.createObjectStore('stuff');}catch(e){}
 	try{idb.result.createObjectStore('seq',{keyPath:'name'});}catch(e){}
 	try{idb.result.createObjectStore('instr',{keyPath:'name'});}catch(e){}
 }
-idb.onsuccess=e=>{console.log('idb open success');window.dispatchEvent(new Event('idbready'));bgset_();};
-idb.onerror=e=>{console.log('idb open error',e);bgset(-1,'0');};
+idb.onsuccess=e=>{console.log('idb open success');window.dispatchEvent(new Event('idbready'));bgset();};
+idb.onerror=e=>{console.log('idb open error',e);bgset(-1);};
 
 document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c&display=swap" media="print" onload="this.media='all'">
 <style>
