@@ -47,7 +47,7 @@ bgi.setAttribute('alt','background');bgi.setAttribute('width','1');bgi.setAttrib
 hbb.setAttribute('id','hisbackb');hbb.onclick=()=>history.back();document.body.appendChild(hbb);
 
 location.search.substr(1).split('&').map(x=>x.split('=')).forEach(x=>urlq[x[0]]=x[1]||'');console.log(urlq);
-if(urlq.pwa=='1')bgi.setAttribute('style','display:block;');
+if(urlq.pwa=='1')hbb.setAttribute('style','display:block;');
 
 setTimeout(()=>{bgset_();setInterval(bgset_,3600000);},3600000-(new Date().getTime()%3600000));bgset_();
 document.dispatchEvent(new Event('styexe'));
