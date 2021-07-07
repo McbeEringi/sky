@@ -39,7 +39,7 @@ bgset=(x,b)=>{
 };
 if(!localStorage.sky_bgcode)localStorage.sky_bgcode='linear-gradient(60deg,#214,#415)';
 if(localStorage.sky_bgmode==undefined)localStorage.sky_bgmode='0';
-const bgset_=()=>{console.log('_');if(localStorage.sky_bgmode='0')bgset();};
+const bgset_=()=>{console.log('_');if(localStorage.sky_bgmode=='0')bgset();};
 bgset_();
 setTimeout(()=>{bgset_();setInterval(bgset_,3600000);},3600000-(new Date().getTime()%3600000));
 document.dispatchEvent(new Event('styexe'));
