@@ -16,8 +16,10 @@ PWA, Offline support
 - sky_seq
 	- custom
 		- key
-		- tuplet
-		- meter
+		- bpm
+	- range selection copy & paste
+	- clipboard history
+	- undo & redo
 	- url sharing
 	- full backup
 
