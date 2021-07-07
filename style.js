@@ -7,14 +7,13 @@ const idbName='sky_idb',idbVer=3,idb=indexedDB.open(idbName,idbVer),urlq={},
 				"#f08300,#f8b862",//dusk
 				"#192f60,#274a78",//night
 				"#fbfaf6,#ced980"//cloud
-			],
-			url='https://mcbeeringi.github.io/sky/img/photo/summer.jpg';
+			];
 		switch(b){
 			case'1':
 				bgi.setAttribute('style','display:none;');
 				Object.assign(idb.result.transaction('stuff','readwrite').objectStore('stuff').get('bgimg'),{
-					onsuccess:e=>bg.style.backgroundImage=`url(${e.target.result?URL.createObjectURL(e.target.result):url})`,
-					onerror:e=>bg.style.backgroundImage=`url(${url})`
+					onsuccess:e=>bg.style.backgroundImage=e.target.result?`url(${URL.createObjectURL(e.target.result)})`:'',
+					onerror:e=>bg.style.backgroundImage=''
 				});
 				break;
 			case'2':bgi.setAttribute('style','display:none;');bg.style.backgroundImage=localStorage.sky_bgcode;break;
@@ -34,7 +33,11 @@ idb.onerror=e=>{console.log('idb open error',e);bgset(-1,'0');};
 document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c&display=swap" media="print" onload="this.media='all'">
 <style>
 :root,.style{background:#222;font-family:"M PLUS Rounded 1c",sans-serif;color:#fff;text-shadow:0 0 4px #222;word-wrap:break-word;}*{-webkit-tap-highlight-color:#0000;}
+<<<<<<< HEAD
 #bg{position:fixed;top:0;left:0;z-index:-16;width:100vw;height:100vh;transition:background 1s;pointer-events:none;background:center/cover;user-select:none;-webkit-user-select:none;}
+=======
+#bg{position:fixed;top:0;left:0;z-index:-16;width:100vw;height:100vh;transition:background 1s;pointer-events:none;background:center/cover url("https://mcbeeringi.github.io/sky/img/photo/summer.jpg");user-select:none;-webkit-user-select:none;}
+>>>>>>> ee48660f3ab38795510d682ec1bb75fc12483f4b
 #bg>img{opacity:.2;width:100vmin;height:auto;float:right;transform:translateX(25%);background:none;}
 a:link,a:visited{color:#aef;}a:hover{color:#8af;}a:active{color:#48f;}
 #hisbackb{display:none;position:fixed;left:2px;bottom:2px;width:48px;height:48px;border-radius:12px;background:#2228 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='filter:drop-shadow(0 0 4px %23f00);'%3E%3Cpath d='M32,8L16,24L32,40' stroke='%23fea' stroke-width='2px' fill='%230000'/%3E%3C/svg%3E");}
