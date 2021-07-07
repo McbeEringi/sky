@@ -91,8 +91,8 @@
 						if(i==localStorage.sky_bgmode)x.checked=true;
 						x.onclick=()=>{localStorage.sky_bgmode=i;bgset();}
 					});
-					document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
 					bgcode.value=localStorage.sky_bgcode;
+					document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
 					if(urlq.pwa){
 						document.querySelectorAll('a').forEach(e=>e.href=e.href+'?pwa=1');
 						document.querySelectorAll('.nopwa').forEach(e=>e.style.display='none');
@@ -102,7 +102,6 @@
 					}
 				}catch(e){}
 			};
-
 			document.addEventListener('styexe',fx);fx();
 		</script>
 	</body>
