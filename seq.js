@@ -2,12 +2,14 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	build:'2107050',
+	build:'2107070',
 	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
 	buiq:'All data will be over written.\nThis operation is irreversible.\nAre you sure you want to continue?',
 	fubu:'Backups made in future versions cannot be loaded.',invf:'invailed file.',
+	cfg:'config',sound:'sound',seq:'sequencer',kb:'keyboard',bhv:'behavior',udl:'undo & redo limit',chl:'clopboard his limit',bu:'backup',cbf:'create backup file',rff:'recover from file',
+	usage:'usage',
 	...{
 		ja:{
 			title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',imp:'URLから読み込む',exp:x=>`「${x}」をURLに書き出す`,
@@ -15,11 +17,12 @@ const texts={
 			err:x=>`⚠️\nデータの${['読み出し','書き込み'][x]}に失敗しました\n\n`,saveq:'現在のデータを保存しますか？',delq:x=>`「${x}」を削除してよろしいですか？`,
 			buiq:'全てのデータは上書きされます。\nこの操作は元に戻せません。\n本当にこの操作を続けますか?',
 			fubu:'将来のバージョンで作成されたバックアップは読み込めません',invf:'このファイルは使用できません',
+			cfg:'設定',sound:'サウンド',seq:'シーケンサ',kb:'キーボード',bhv:'動作',udl:'取り消し上限',chl:'コピー履歴上限',bu:'バックアップ',cbf:'バックアップを作成',rff:'ファイルから復元',
+			usg:'使い方'
 		}
 	}[window.navigator.language.slice(0,2)]
 },
 mod=(x,y)=>{if(((y-1)&y)==0)return x&(y-1);else{while(x<0)x+=y;while(x>=y)x-=y;return x;}},
-llog=(...x)=>{console.log(x);log.textContent+=JSON.stringify(x)+'\n';},
 ctx=c.getContext('2d'),
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
 n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6','3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
@@ -72,6 +75,7 @@ calc=()=>{
 	core(main.scores);
 	scrw.style.width=(calced.length=pos-1)+'px';
 	if(scr.scrollLeft>calced.length)scr.scrollLeft=calced.length;
+	if(curpos>calced.note.length-1)curpos=calced.note.length-1;
 },
 draw=()=>{
 	if(!calced)return;//window.scrollY>240
@@ -110,7 +114,7 @@ draw=()=>{
 				}
 				frr(ctx,col,x.pos+1+pos,225-Number(n2i[String(n)])*16,cfg.w-2,14,4);//240-16+1
 			});
-		if(debugcb.checked){ctx.fillStyle='#fff';ctx.fillText(x.p.toFixed(2),pos+x.pos,16,16);ctx.fillText(x.ind,pos+x.pos,32,16);}
+		if(cfg.debug){ctx.fillStyle='#fff';ctx.fillText(x.p.toFixed(2),pos+x.pos,16,16);ctx.fillText(x.ind,pos+x.pos,32,16);}
 	}
 	if(emode.checked)frr(ctx,'#fea8',w*.5,0,1,240);
 	if(ecur)frr(ctx,'#feac',ecur[0]+pos,0,3,240);
@@ -433,20 +437,19 @@ infobtn.onclick=()=>{
 		<h1 style="float:left;margin:0;">sky_seq</h1>
 		<p style="float:right;opacity:.7;margin:2em 0;">Powerd by Tone.js<br>Audio: GarageBand<br>author:@McbeEringi<br>build:${texts.build}<br>MIT License</p>
 		<hr style="clear:both;">
-		<h2>config</h2>
-		<h3>sound</h3>
-		sequencer: <input type="range" value="${cfg.seqvol}" min="0" max="1" step=".0625"><span>${cfg.seqvol*16}</span><br>
-		keyboard: <input type="range" value="${cfg.kbvol}" min="0" max="1" step=".0625"><span>${cfg.kbvol*16}</span><br>
-		<h3>behavior</h3>
-		undo & redo limit: <input type="range" value="${cfg.urMax}" min="16" max="256" step="16"><span>${cfg.urMax}</span><br>
-		clipboard history limit: <input type="range" value="${cfg.clipMax}" min="2" max="32" step="1"><span>${cfg.clipMax}</span><br>
-		<h3>backup</h3>
-		create backup file: <button onclick="tpause();dbfx.buo();">backup</button><br>
-		recover from file: <input type="file" onclick="tpause();" accept=".skyseq"><label><input type="hidden"><span style="white-space:pre-wrap;font-size:x-small;opacity:.7;"></span></label><br>
+		<h2>${texts.cfg}</h2>
+		<h3>${texts.sound}</h3>
+		${texts.seq}: <input type="range" value="${cfg.seqvol}" min="0" max="1" step=".0625"><span>${cfg.seqvol*16}</span><br>
+		${texts.kb}: <input type="range" value="${cfg.kbvol}" min="0" max="1" step=".0625"><span>${cfg.kbvol*16}</span><br>
+		<h3>${texts.bhv}</h3>
+		${texts.udl}: <input type="range" value="${cfg.urMax}" min="16" max="256" step="16"><span>${cfg.urMax}</span><br>
+		${texts.chl}: <input type="range" value="${cfg.clipMax}" min="2" max="32" step="1"><span>${cfg.clipMax}</span><br>
+		<h3>${texts.bu}</h3>
+		${texts.cbf}: <button onclick="tpause();dbfx.buo();">${texts.bu}</button><br>
+		${texts.rff}: <input type="file" onclick="tpause();" accept=".skyseq"><label><input type="hidden"><span style="white-space:pre-wrap;font-size:x-small;opacity:.7;"></span></label><br>
 		<hr>
-		<h2>usage</h2>
+		<h2>${texts.usg}</h2>
 		coming soon…<br>
-		<label for="debugcb">debug</label>
 	`,1);
 	let e=albox.querySelectorAll('input'),cfgsave=()=>localStorage.seq_cfg=JSON.stringify(cfg);
 	e[0].oninput=()=>{e[0].nextSibling.textContent=(cfg.seqvol=Number(e[0].value))*16;if(tstat())synth.triggerAttackRelease([3,7].map(n2Hz),undefined,undefined,cfg.seqvol);};e[0].onchange=cfgsave;
@@ -476,7 +479,7 @@ slbtn.onclick=()=>{
 		if(sel.dat[0]==ecur[0]){sel=null;[cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.remove('dis'));return;}
 		let dat=selfix(sel.dat,ecur).map(ind2c);
 		sel={x:dat[0].pos,dx:dat[1].pos+(dat[1].dx||cfg.w)-dat[0].pos,col:'#fea6',dat};//dat:[ind,ind]
-		llog(sel);
+		console.log(sel);
 		[cxbtn,ccbtn, cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.remove('dis'));
 		draw();
 	}
@@ -510,7 +513,6 @@ rmbtn.onclick=()=>{
 		}else{
 			tmp=[ecur[2].slice(0,tmp),ecur[2][tmp]-ecur[1]];
 			if(!~tmp[1])return;
-			llog([...tmp[0],tmp[1]],ind2c([...tmp[0],tmp[1]]));
 			tmp[2]=ind2c([...tmp[0],tmp[1]]).pos;
 			urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, '1)', `0,${JSON.stringify(ind2n([...tmp[0],tmp[1]]))})`]);
 			calc();tims.igscr=true;scr.scrollLeft=tmp[2];
@@ -523,20 +525,15 @@ iwbtn.onclick=()=>selins([['','']]);
 
 {
 	alcb.checked=false;
-	if(localStorage.seq_cfg)cfg=JSON.parse(localStorage.seq_cfg);
-	else{
-		localStorage.seq_cfg=JSON.stringify(cfg={pad:12,w:16,clipMax:8,urMax:128,res:window.devicePixelRatio||1,seqvol:1,kbvol:1});
-		infobtn.onclick();
-	}
-	cfg.pad2=cfg.pad/2;
-	cfg.w2=cfg.w/2;
-	from_url=Boolean(main=urlfx.i());
-	tims.ezsave=setInterval(ezsave,60000);
-	window.onresize();
-	llog(texts.build);
-	//setInterval(()=>console.log(ecur),500);
 
+	cfg={pad:12,w:16,clipMax:8,urMax:128,res:window.devicePixelRatio||1,seqvol:1,kbvol:1,debug:false,...JSON.parse(localStorage.seq_cfg||{})};
+	if(!localStorage.seq_cfg){localStorage.seq_cfg=JSON.stringify(cfg);infobtn.onclick();}
+	cfg.pad2=cfg.pad/2;cfg.w2=cfg.w/2;
+	window.onresize();
+
+	from_url=Boolean(main=urlfx.i());
 	if(!main&&localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
+	tims.ezsave=setInterval(ezsave,60000);
 
 	init();
 	if(texts.notice)requestIdleCallback(()=>alert(texts.notice));
