@@ -2,14 +2,14 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	build:'2107070',
+	build:'2107071',
 	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
 	buiq:'All data will be over written.\nThis operation is irreversible.\nAre you sure you want to continue?',
 	fubu:'Backups made in future versions cannot be loaded.',invf:'invailed file.',
-	cfg:'config',sound:'sound',seq:'sequencer',kb:'keyboard',bhv:'behavior',udl:'undo & redo limit',chl:'clopboard his limit',bu:'backup',cbf:'create backup file',rff:'recover from file',
-	usage:'usage',
+	cfg:'config',sound:'sound',seq:'sequencer',kb:'keyboard',bhv:'behavior',udl:'undo & redo limit',res:'sheet resolution',chl:'clopboard his limit',bu:'backup',cbf:'create backup file',rff:'recover from file',
+	usg:'usage',
 	...{
 		ja:{
 			title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',imp:'URLから読み込む',exp:x=>`「${x}」をURLに書き出す`,
@@ -17,7 +17,7 @@ const texts={
 			err:x=>`⚠️\nデータの${['読み出し','書き込み'][x]}に失敗しました\n\n`,saveq:'現在のデータを保存しますか？',delq:x=>`「${x}」を削除してよろしいですか？`,
 			buiq:'全てのデータは上書きされます。\nこの操作は元に戻せません。\n本当にこの操作を続けますか?',
 			fubu:'将来のバージョンで作成されたバックアップは読み込めません',invf:'このファイルは使用できません',
-			cfg:'設定',sound:'サウンド',seq:'シーケンサ',kb:'キーボード',bhv:'動作',udl:'取り消し上限',chl:'コピー履歴上限',bu:'バックアップ',cbf:'バックアップを作成',rff:'ファイルから復元',
+			cfg:'設定',sound:'サウンド',seq:'シーケンサ',kb:'キーボード',bhv:'動作',udl:'取り消し上限',res:'譜面解像度',chl:'コピー履歴上限',bu:'バックアップ',cbf:'バックアップを作成',rff:'ファイルから復元',
 			usg:'使い方'
 		}
 	}[window.navigator.language.slice(0,2)]
@@ -435,7 +435,7 @@ savebtn.onclick=()=>dbfx.sav();
 infobtn.onclick=()=>{
 	alert(`
 		<h1 style="float:left;margin:0;">sky_seq</h1>
-		<p style="float:right;opacity:.7;margin:2em 0;">Powerd by Tone.js<br>Audio: GarageBand<br>author:@McbeEringi<br>build:${texts.build}<br>MIT License</p>
+		<p style="float:right;opacity:.7;margin:2em 0;">Powerd by Tone.js<br>Audio: GarageBand<br>author:<a href="https://twitter.com/McbeEringi">@McbeEringi</a><br>build:${texts.build}<br>MIT License</p>
 		<hr style="clear:both;">
 		<h2>${texts.cfg}</h2>
 		<h3>${texts.sound}</h3>
@@ -444,6 +444,7 @@ infobtn.onclick=()=>{
 		<h3>${texts.bhv}</h3>
 		${texts.udl}: <input type="range" value="${cfg.urMax}" min="16" max="256" step="16"><span>${cfg.urMax}</span><br>
 		${texts.chl}: <input type="range" value="${cfg.clipMax}" min="2" max="32" step="1"><span>${cfg.clipMax}</span><br>
+		${texts.res}: <input type="range" value="${cfg.res}" min=".1" max="${window.devicePixelRatio}" step=".1"><span>${cfg.res}</span><br>
 		<h3>${texts.bu}</h3>
 		${texts.cbf}: <button onclick="tpause();dbfx.buo();">${texts.bu}</button><br>
 		${texts.rff}: <input type="file" onclick="tpause();" accept=".skyseq"><label><input type="hidden"><span style="white-space:pre-wrap;font-size:x-small;opacity:.7;"></span></label><br>
@@ -456,15 +457,16 @@ infobtn.onclick=()=>{
 	e[1].oninput=()=>{e[1].nextSibling.textContent=(cfg.kbvol=Number(e[1].value))*16;synth.triggerAttackRelease([3,7].map(n2Hz),undefined,undefined,cfg.kbvol);};e[1].onchange=cfgsave;
 	e[2].oninput=()=>e[2].nextSibling.textContent=cfg.urMax=Number(e[2].value);e[2].onchange=cfgsave;
 	e[3].oninput=()=>e[3].nextSibling.textContent=cfg.clipMax=Number(e[3].value);e[3].onchange=cfgsave;
-	e[4].onchange=()=>
-		e[4].files[0].arrayBuffer().then(b=>new Int8Array(b).map(y=>~y).buffer).then(b=>new Blob([b]).text()).then(t=>{
+	e[4].oninput=()=>{e[4].nextSibling.textContent=cfg.res=Number(e[4].value);window.onresize();};e[4].onchange=cfgsave;
+	e[5].onchange=()=>
+		e[5].files[0].arrayBuffer().then(b=>new Int8Array(b).map(y=>~y).buffer).then(b=>new Blob([b]).text()).then(t=>{
 			let x=JSON.parse(t);
 			if(!x.sky_seq_backup_version)throw texts.invf;
 			if(x.sky_seq_backup_version>1)throw texts.fubu;
-			e[5].value=new Date(x.date).toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric'});
-			e[5].nextSibling.textContent=x.data.map(y=>y.name).join(',   ');
-			e[5].onclick=()=>dbfx.bui(x);
-			e[4].type='hidden';e[5].type='button';
+			e[6].value=new Date(x.date).toLocaleString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric'});
+			e[6].nextSibling.textContent=x.data.map(y=>y.name).join(',   ');
+			e[6].onclick=()=>dbfx.bui(x);
+			e[5].type='hidden';e[6].type='button';
 		}).catch(e=>alert(`${texts.err(0)}${e}`));
 }
 //
