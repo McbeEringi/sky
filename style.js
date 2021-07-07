@@ -6,7 +6,7 @@ idb.onupgradeneeded=e=>{
 	try{idb.result.createObjectStore('seq',{keyPath:'name'});}catch(e){}
 	try{idb.result.createObjectStore('instr',{keyPath:'name'});}catch(e){}
 }
-idb.onsuccess=e=>{console.log('idb open success');window.dispatchEvent(new Event('idbready'));if(!['0',undefined].includes(localStorage.sky_bgmode))bgset();};
+idb.onsuccess=e=>{console.log('idb open success');window.dispatchEvent(new Event('idbready'));bgset_();};
 idb.onerror=e=>{console.log('idb open error',e);bgset(-1,'0');};
 
 document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c&display=swap" media="print" onload="this.media='all'">
@@ -32,15 +32,14 @@ const bgcol=[
 ],
 bgset=(x,b)=>{
 	switch(b||localStorage.sky_bgmode){
+		case'0':e_img.setAttribute('style','');bg.style.backgroundImage=`linear-gradient(${bgcol[x]||bgcol[[3,3,3,3,3,0,0,0,0,1,1,1,1,1,1,1,4,2,2,2,2,3,3,3][new Date().getHours()]]})`;break;
 		case'1':e_img.setAttribute('style','display:none;');idb.result.transaction('stuff','readwrite').objectStore('stuff').get('bgimg').onsuccess=e=>bg.style.backgroundImage=`url(${e.target.result?URL.createObjectURL(e.target.result):'https://mcbeeringi.github.io/sky/img/photo/summer.jpg'})`;break;
 		case'2':e_img.setAttribute('style','display:none;');bg.style.backgroundImage=localStorage.sky_bgcode;break;
-		default:e_img.setAttribute('style','');bg.style.backgroundImage=`linear-gradient(${bgcol[x]||bgcol[[3,3,3,3,3,0,0,0,0,1,1,1,1,1,1,1,4,2,2,2,2,3,3,3][new Date().getHours()]]})`;
 	}
 };
-{
-	if(!localStorage.sky_bgcode)localStorage.sky_bgcode='linear-gradient(60deg,#214,#415)';
-	const bgset_=()=>{console.log('_');if(['0',undefined].includes(localStorage.sky_bgmode))bgset();};
-	bgset_();
-	setTimeout(()=>{bgset_();setInterval(bgset_,3600000);},3600000-(new Date().getTime()%3600000));
-}
+if(!localStorage.sky_bgcode)localStorage.sky_bgcode='linear-gradient(60deg,#214,#415)';
+if(localStorage.sky_bgmode==undefined)localStorage.sky_bgmode='0';
+const bgset_=()=>{console.log('_');if(localStorage.sky_bgmode='0')bgset();};
+bgset_();
+setTimeout(()=>{bgset_();setInterval(bgset_,3600000);},3600000-(new Date().getTime()%3600000));
 document.dispatchEvent(new Event('styexe'));
