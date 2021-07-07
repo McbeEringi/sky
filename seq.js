@@ -19,6 +19,7 @@ const texts={
 	}[window.navigator.language.slice(0,2)]
 },
 mod=(x,y)=>{if(((y-1)&y)==0)return x&(y-1);else{while(x<0)x+=y;while(x>=y)x-=y;return x;}},
+llog=(...x)=>{console.log(x);log.textContent+=JSON.stringify(x)+'\n';},
 ctx=c.getContext('2d'),
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
 n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6','3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
@@ -109,7 +110,7 @@ draw=()=>{
 				}
 				frr(ctx,col,x.pos+1+pos,225-Number(n2i[String(n)])*16,cfg.w-2,14,4);//240-16+1
 			});
-		//ctx.fillStyle='#fff';ctx.fillText(x.p,pos+x.pos,16,16);ctx.fillText(x.ind,pos+x.pos,32,16);
+		if(debugcb.checked){ctx.fillStyle='#fff';ctx.fillText(x.p.toFixed(2),pos+x.pos,16,16);ctx.fillText(x.ind,pos+x.pos,32,16);}
 	}
 	if(emode.checked)frr(ctx,'#fea8',w*.5,0,1,240);
 	if(ecur)frr(ctx,'#feac',ecur[0]+pos,0,3,240);
@@ -444,7 +445,8 @@ infobtn.onclick=()=>{
 		recover from file: <input type="file" onclick="tpause();" accept=".skyseq"><label><input type="hidden"><span style="white-space:pre-wrap;font-size:x-small;opacity:.7;"></span></label><br>
 		<hr>
 		<h2>usage</h2>
-		coming soon…
+		coming soon…<br>
+		<label for="debugcb">debug</label>
 	`,1);
 	let e=albox.querySelectorAll('input'),cfgsave=()=>localStorage.seq_cfg=JSON.stringify(cfg);
 	e[0].oninput=()=>{e[0].nextSibling.textContent=(cfg.seqvol=Number(e[0].value))*16;if(tstat())synth.triggerAttackRelease([3,7].map(n2Hz),undefined,undefined,cfg.seqvol);};e[0].onchange=cfgsave;
@@ -474,7 +476,7 @@ slbtn.onclick=()=>{
 		if(sel.dat[0]==ecur[0]){sel=null;[cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.remove('dis'));return;}
 		let dat=selfix(sel.dat,ecur).map(ind2c);
 		sel={x:dat[0].pos,dx:dat[1].pos+(dat[1].dx||cfg.w)-dat[0].pos,col:'#fea6',dat};//dat:[ind,ind]
-		console.log(sel);
+		llog(sel);
 		[cxbtn,ccbtn, cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.remove('dis'));
 		draw();
 	}
@@ -508,7 +510,7 @@ rmbtn.onclick=()=>{
 		}else{
 			tmp=[ecur[2].slice(0,tmp),ecur[2][tmp]-ecur[1]];
 			if(!~tmp[1])return;
-			console.log([...tmp[0],tmp[1]],calced);
+			llog([...tmp[0],tmp[1]],ind2c([...tmp[0],tmp[1]]));
 			tmp[2]=ind2c([...tmp[0],tmp[1]]).pos;
 			urset(['main.scores'+tmp[0].map(x=>`[${x}]`).join('')+`.splice(${tmp[1]},`, '1)', `0,${JSON.stringify(ind2n([...tmp[0],tmp[1]]))})`]);
 			calc();tims.igscr=true;scr.scrollLeft=tmp[2];
@@ -531,6 +533,7 @@ iwbtn.onclick=()=>selins([['','']]);
 	from_url=Boolean(main=urlfx.i());
 	tims.ezsave=setInterval(ezsave,60000);
 	window.onresize();
+	llog(texts.build);
 	//setInterval(()=>console.log(ecur),500);
 
 	if(!main&&localStorage.seq_ezsave)main=JSON.parse(localStorage.seq_ezsave);
