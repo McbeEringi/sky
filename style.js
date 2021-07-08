@@ -50,4 +50,5 @@ location.search.substr(1).split('&').map(x=>x.split('=')).forEach(x=>urlq[x[0]]=
 if(urlq.pwa=='1')hbb.setAttribute('style','display:block;');
 
 setTimeout(()=>{bgset_();setInterval(bgset_,3600000);},3600000-(new Date().getTime()%3600000));bgset_();
+document.addEventListener('visiblitychange',bgset_);
 document.dispatchEvent(new Event('styexe'));
