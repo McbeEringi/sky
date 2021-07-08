@@ -528,7 +528,7 @@ iwbtn.onclick=()=>selins([['','']]);
 {
 	alcb.checked=false;
 
-	cfg={pad:12,w:16,clipMax:8,urMax:128,res:window.devicePixelRatio||1,seqvol:1,kbvol:1,debug:false,...JSON.parse(localStorage.seq_cfg||{})};
+	cfg={pad:12,w:16,clipMax:8,urMax:128,res:window.devicePixelRatio||1,seqvol:1,kbvol:1,debug:false,...JSON.parse(localStorage.seq_cfg||'')};
 	if(!localStorage.seq_cfg){localStorage.seq_cfg=JSON.stringify(cfg);infobtn.onclick();}
 	cfg.pad2=cfg.pad/2;cfg.w2=cfg.w/2;
 	window.onresize();
