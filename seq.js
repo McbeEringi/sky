@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	build:'2107080',
+	build:'2107090',
 	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
@@ -36,7 +36,12 @@ tstat=()=>Tone.Transport.state!='started',
 seqset=()=>{clearTimeout(tims.seqset);tims.seqset=setTimeout(()=>requestIdleCallback(()=>{seq.events=main.scores;console.log('seqset')}),300);},
 stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]=`a${i}.mp3`;}return s;},
 synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/musicbox/').toDestination(),
-sytar=(n,t)=>{n=n.split(',');if(n[0])synth.triggerAttackRelease(n.map(n2Hz),undefined,t,cfg.seqvol);},
+sytar=(n,t=Tone.now())=>{
+	if(!n)return;
+	n=n.split(',').map(n2Hz);
+	if(main.arp){let a=main.arp*.01;n.forEach((x,i)=>synth.triggerAttackRelease(x,undefined,t+a*i,cfg.seqvol));}
+	else synth.triggerAttackRelease(n,undefined,t,cfg.seqvol);
+},
 seq=new Tone.Sequence((time,note)=>{
 	//Tone.Draw.schedule(()=>{},time);
 	curset();curpos=mod(curpos+1,calced.note.length);
@@ -177,8 +182,9 @@ urdo=x=>{
 },
 bpmset=()=>{let x=Number(bpm_.value);if(x>0)Tone.Transport.bpm.value=main.bpm=x;else bpm_.value=Tone.Transport.bpm.value=main.bpm;},
 scset=()=>{let x=Number(sc_.value);if(sc_.value&&Number.isInteger(x))main.sc=x;else sc_.value=main.sc;},
+arpset=()=>{let x=Number(arp_.value);if(arp_.value&&Number.isInteger(x))main.arp=x;else arp_.value=main.arp;},
 tstart=()=>{Tone.start();Tone.Transport.start();},
-tpause=()=>{Tone.Transport.pause();requestIdleCallback(()=>{curset();kbset();});},
+tpause=()=>{Tone.Transport.pause();requestIdleCallback(()=>{pset();curset();kbset();});},
 tstop=e=>{Tone.Transport.stop();requestIdleCallback(()=>{curpos=0;curset();kbset();});},
 tstep=x=>{
 	Tone.start();
@@ -278,7 +284,7 @@ dbfx={
 	},
 	exp:i=>{
 		dbfx.get(i,e=>{
-			alert(`${texts.exp(e.target.result.name)}\n<input class="style input" value="${urlfx.o(e.target.result)}">\n<button class="grid bg" style="--bp:-300% -200%;">copy</button>	<button class="grid bg" style="--bp:-300% -300%;">tweet</button>`);
+			alert(`${texts.exp(e.target.result.name)}\n<input class="style input" value="${urlfx.o(e.target.result)}">\n<button class="grid bg" style="--bp:-300% -200%;">copy</button>	<button class="grid bg" style="--bp:-400% -300%;">tweet</button>`);
 			let b=albox.querySelectorAll('button');b[0].focus();
 			b[0].onclick=()=>navigator.clipboard.writeText(albox.querySelector('input').value).then(browse);
 			b[1].onclick=()=>{window.open(`https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_seq&url=${encodeURIComponent(albox.querySelector('input').value)}`);browse();};
@@ -347,10 +353,10 @@ urlfx={
 },
 ezsave=()=>{if(!from_url&&main){localStorage.seq_ezsave=JSON.stringify(main);console.log('ezsave');}},
 init=()=>{
-	main={sc:0,bpm:120,scores:new Array(8).fill(''),...main};urstack=[[],[]];
+	main={sc:0,bpm:120,arp:0,scores:new Array(8).fill(''),...main};urstack=[[],[]];
 	document.title='sky_seq '+(name_.textContent=main.name||'');
-	[redobtn,undobtn,cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));bpm_.value=sc_.value='';
-	calc();seqset();tstop();bpmset();scset();
+	[redobtn,undobtn,cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));bpm_.value=sc_.value=arp_.value='';
+	calc();seqset();tstop();bpmset();scset();arpset();
 };
 
 window.onresize=()=>{c.width=cfg.res*c.parentNode.clientWidth;c.height=cfg.res*240;ctx.scale(cfg.res,cfg.res);draw();}
@@ -400,6 +406,7 @@ scr.onclick=e=>{
 };
 bpm_.onchange=bpmset;
 sc_.onchange=scset;
+arp_.onchange=arpset;
 [...kb.children].forEach((x,i)=>{
 	const keyfx=e=>{
 		e.preventDefault();
