@@ -1,9 +1,9 @@
 'use strict';
-let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg;
+let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg,isc,synth;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
 	build:'2107090',
-	title:'Enter title',del:'Delete',cancel:'Cancel',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
+	title:'Enter title',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
 	buiq:'All data will be over written.\nThis operation is irreversible.\nAre you sure you want to continue?',
@@ -12,7 +12,7 @@ const texts={
 	usg:'usage',
 	...{
 		ja:{
-			title:'タイトルを入力',del:'削除',cancel:'キャンセル',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',imp:'URLから読み込む',exp:x=>`「${x}」をURLに書き出す`,
+			title:'タイトルを入力',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',imp:'URLから読み込む',exp:x=>`「${x}」をURLに書き出す`,
 			nodat:'保存されたデータはありません',sample:'サンプルをダウンロード',load:'読み込み中…',
 			err:x=>`⚠️\nデータの${['読み出し','書き込み'][x]}に失敗しました\n\n`,saveq:'現在のデータを保存しますか？',delq:x=>`「${x}」を削除してよろしいですか？`,
 			buiq:'全てのデータは上書きされます。\nこの操作は元に戻せません。\n本当にこの操作を続けますか?',
@@ -29,13 +29,40 @@ n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'
 n2c=x=>{if(x){x=Number(x);return['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'][mod(x,12)]+Math.floor(x*.08333+3.833);}},
 pos2p=(pos_=Tone.Transport.position)=>{let tmp=pos_.split(':').map(x=>Number(x));return mod(tmp[0]*Tone.Transport.timeSignature+tmp[1]+tmp[2]*.25,main.scores.length);},
 p2pos=p_=>`${Math.floor(p_/Tone.Transport.timeSignature)}:${mod(Math.floor(p_),Tone.Transport.timeSignature)}:${mod(p_*4,4)}`,
-n2Hz=x=>440*Math.pow(2,(Number(x)+main.sc)/12)*2,//C4~C6
+n2Hz=x=>440*Math.pow(2,(Number(x)+main.sc)/12+isc),//C4~C6
 ind2n=x=>x.reduce((a,y)=>a[y],main.scores),
 ind2c=x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);},
 tstat=()=>Tone.Transport.state!='started',
 seqset=()=>{clearTimeout(tims.seqset);tims.seqset=setTimeout(()=>requestIdleCallback(()=>{seq.events=main.scores;console.log('seqset')}),300);},
 stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]=`a${i}.mp3`;}return s;},
-synth=new Tone.Sampler(stdli(4,6,{'a3':'a3.mp3','d#7':'ds7.mp3'}),()=>{},'https://mcbeeringi.github.io/sky/audio/instr/musicbox/').toDestination(),
+instr_li=[//[baseurl, octave, map, (map2)]
+	['musicbox',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
+	['harp',-1,stdli(3,5)],
+	null,
+	['contrabass',-2,stdli(2)],
+	['horn',-1,stdli(3)],
+	['piano',0,stdli(1,7,{a0:'a0.mp3'})],
+	null,
+	null,
+	['flute',0,stdli(4,6)],
+	['quena',0,stdli(4,6)],
+	['guitar',-1,stdli(3,5)],
+	['ukulele',-1,stdli(3,5)],
+	['piano',1,stdli(1,7,{a0:'a0.mp3'})],
+	['glock',0,stdli(4,6)],
+	null,
+	null,
+	['pipa',-1,stdli(3,5)],
+	['bugle',0,stdli(4,6)]
+],
+syset=()=>{
+	let x=main.instr;
+	if(!instr_li[x])main.instr=x=0;//avoid null
+	instrbtn.setAttribute('style',`--bp:-${mod(x,8)}00% -${Math.floor(x*.125)+1}00%;`);
+	x=instr_li[x];
+	synth=new Tone.Sampler(x[2],null,`https://mcbeeringi.github.io/sky/audio/instr/${x[0]}/`).toDestination();
+	isc=x[1];
+},
 sytar=(n,t=Tone.now())=>{
 	if(!n)return;
 	n=n.split(',').map(n2Hz);
@@ -348,15 +375,15 @@ urlfx={
 		x=x.replace(/\*/g,'],[').replace(/~/g,',').replace(/!/g,'[').replace(/_/g,']').replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3').replace(/([\[\,])([^\[\]\,\"]*)([\]\,])/g,'$1"$2"$3');
 		return urlfx.dmap(JSON.parse(x),y=>y.split('.').map(z=>{if(z)return parseInt(z,36)-15;}).join(','));
 	},
-	o:(dat=main)=>{dat.scores=urlfx.zip(dat.scores);return 'https://mcbeeringi.github.io/sky/seq.html#'+encodeURIComponent(JSON.stringify(dat));},
+	o:(dat={...main})=>{dat.scores=urlfx.zip(dat.scores);return 'https://mcbeeringi.github.io/sky/seq.html#'+encodeURIComponent(JSON.stringify(dat));},
 	i:(dat=location.hash.slice(1))=>{if(!dat)return;try{dat=JSON.parse(decodeURIComponent(dat));if(!dat.scores)return;dat.scores=urlfx.unzip(dat.scores);return dat;}catch(e){alert(`${texts.err(0)}${e}`);}}
 },
 ezsave=()=>{if(!from_url&&main){localStorage.seq_ezsave=JSON.stringify(main);console.log('ezsave');}},
 init=()=>{
-	main={sc:0,bpm:120,arp:0,scores:new Array(8).fill(''),...main};urstack=[[],[]];
+	main={sc:0,bpm:120,arp:0,instr:0,scores:new Array(8).fill(''),...main};urstack=[[],[]];
 	document.title='sky_seq '+(name_.textContent=main.name||'');
 	[redobtn,undobtn,cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));bpm_.value=sc_.value=arp_.value='';
-	calc();seqset();tstop();bpmset();scset();arpset();
+	syset();calc();seqset();tstop();bpmset();scset();arpset();
 };
 
 window.onresize=()=>{c.width=cfg.res*c.parentNode.clientWidth;c.height=cfg.res*240;ctx.scale(cfg.res,cfg.res);draw();}
@@ -403,6 +430,11 @@ scr.onclick=e=>{
 	if(!~ind)return;
 	curpos=ind;pset();draw();kbset();
 	if(tstat())sytar(ind2n(calced.note[curpos].ind));
+};
+instrbtn.onclick=()=>{
+	alert([0,1,3,4,5,8,9,10,11,12,13,16,17].map(x=>`<button class="grid bg tex" style="--bp:-${mod(x,8)}00% -${Math.floor(x*.125)+1}00%" data-i="${x}">${instr_li[x][0]}</button>`).join(''));
+	albox.querySelector(`[data-i="${main.instr}"]`).focus();
+	albox.querySelectorAll('button').forEach(x=>x.onclick=()=>{main.instr=Number(x.dataset.i);syset();});
 };
 bpm_.onchange=bpmset;
 sc_.onchange=scset;
