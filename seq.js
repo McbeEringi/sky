@@ -435,7 +435,7 @@ scr.onclick=e=>{
 instrbtn.onclick=()=>{
 	alert([0,1,3,4,5,8,9,10,11,12,13,16,17].map(x=>`<button class="grid bg tex" style="--bp:-${mod(x,8)}00% -${Math.floor(x*.125)+1}00%" data-i="${x}">${instr_li[x][0]}</button>`).join(''));
 	albox.querySelector(`[data-i="${main.instr}"]`).focus();
-	albox.querySelectorAll('button').forEach(x=>x.onclick=()=>{main.instr=Number(x.dataset.i);syset();});
+	albox.querySelectorAll('button').forEach(x=>x.onclick=()=>{x.focus();main.instr=Number(x.dataset.i);syset();});
 };
 bpm_.onchange=bpmset;
 sc_.onchange=scset;
