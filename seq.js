@@ -60,6 +60,7 @@ syset=()=>{
 	if(!instr_li[x])main.instr=x=0;//avoid null
 	instrbtn.setAttribute('style',`--bp:-${mod(x,8)}00% -${Math.floor(x*.125)+1}00%;`);
 	x=instr_li[x];
+	if(synth)synth.dispose();
 	synth=new Tone.Sampler(x[2],null,`https://mcbeeringi.github.io/sky/audio/instr/${x[0]}/`).toDestination();
 	isc=x[1];
 },
