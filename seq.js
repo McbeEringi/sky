@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg,isc,synth;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	build:'2107090',
+	build:'2107100',
 	title:'Enter title',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
