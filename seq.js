@@ -33,7 +33,7 @@ n2Hz=x=>440*Math.pow(2,(Number(x)+main.sc)/12+isc),//C4~C6
 ind2n=x=>x.reduce((a,y)=>a[y],main.scores),
 ind2c=x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);},
 tstat=()=>Tone.Transport.state!='started',
-seqset=()=>{clearTimeout(tims.seqset);tims.seqset=setTimeout(()=>requestIdleCallback(()=>{seq.events=main.scores;console.log('seqset')}),300);},
+seqset=()=>{clearTimeout(tims.seqset);tims.seqset=setTimeout(()=>requestIdleCallback(()=>{seq.events=main.scores;console.log('seqset')}),3000);},
 stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]=`a${i}.mp3`;}return s;},
 instr_li=[//[baseurl, octave, map, (map2)]
 	['musicbox',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
