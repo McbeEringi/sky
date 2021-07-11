@@ -66,7 +66,7 @@
 			</p>
 			<hr>
 			<p>
-				[sky_menu] build:2107071 <br>
+				[sky_menu] build:2107110 <br>
 				<span id="cachedisp"></span><br>
 				<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense <br>
 				<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>{if(x)location.reload(true);})">force update</button>
@@ -78,9 +78,6 @@
 				cfg1.style.display=bgmode.value=='1'?'':'none';
 				cfg2.style.display=bgmode.value=='2'?'':'none';
 			};
-			document.querySelector(`select>option[value="${localStorage.sky_bgmode}"]`).selected=true;
-			document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
-			bgcode.value=localStorage.sky_bgcode;disp();
 			bgmode.onchange=()=>{
 				localStorage.sky_bgmode=bgmode.value;
 				disp();bgset();
@@ -92,6 +89,9 @@
 			caches.keys().then(x=>cachedisp.textContent=x[0]||'cache empty');
 			let fx=()=>{
 				try{
+					document.querySelector(`select>option[value="${localStorage.sky_bgmode}"]`).selected=true;
+					document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
+					bgcode.value=localStorage.sky_bgcode;disp();
 					if(urlq.pwa){
 						document.querySelectorAll('a').forEach(e=>e.href=e.href+'?pwa=1');
 						document.querySelectorAll('.nopwa').forEach(e=>e.style.display='none');
