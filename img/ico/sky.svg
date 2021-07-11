@@ -12,5 +12,5 @@
 	<path d="M64,64m22.4,-20.8a25.6,25.6,-24,1,1,-44.8,0
 			M64,64m44,-27.2a44.8,44.8,-6.4,1,1,-88,0l16,7.2a30.4,30.4,-19.2,1,0,56,0l16,-7.2z
 			M64,64m25.6,0q-25.6,0,-25.6,-28.8q0,28.8,-25.6,28.8q25.6,0,25.6,28.8q0,-28.8,25.6,-28.8z"
-		style="fill:#0000;stroke:#fea;stroke-width:2;filter:url(#sh);"/>
+		style="fill:#0000;stroke:#fea;stroke-width:2;filter:url(#sh);stroke-linecap:round;stroke-linejoin:round;"/>
 </svg>

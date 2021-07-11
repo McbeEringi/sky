@@ -9,5 +9,10 @@
 		</filter>
 	</defs>
 	<path d="M0,0h128v128h-128" fill="url(#bg)"/>
-	<path d="M0,0m64,9l55,55l-55,55l-55,-55zm39,55a39,39,0,1,0,0,.0001z" style="fill:#0000;stroke:#fea;stroke-width:3;filter:url(#sh);stroke-linecap:round;stroke-linejoin:round;"/>
+	<path d="
+		M30,99l9,-24l26,12l-7,15m7,-15m-13,-6l4,-8
+		M87,98l-21,-17l18,-20l22,20m-22,-20m-9,10l-8-6
+		M57,56q8,-6,14,3q-9,-78,-14,-3z
+	" style="fill:#0000;stroke:#fea;stroke-width:3;filter:url(#sh);stroke-linecap:round;stroke-linejoin:round;"/>
+	<!--<image href="https://mcbeeringi.github.io/sky/img/tex.png" width="1024" height="512"/>-->
 </svg>
