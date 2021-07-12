@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg,isc,synth;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	build:'2107100',
+	build:'2107120',
 	title:'Enter title',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
@@ -33,7 +33,7 @@ n2Hz=x=>440*Math.pow(2,(Number(x)+main.sc)/12+isc),//C4~C6
 ind2n=x=>x.reduce((a,y)=>a[y],main.scores),
 ind2c=x=>{let s=x.join();return calced[typeof ind2n(x)=='string'?'note':'box'].find(y=>y.ind.join()==s);},
 tstat=()=>Tone.Transport.state!='started',
-seqset=()=>{clearTimeout(tims.seqset);tims.seqset=setTimeout(()=>requestIdleCallback(()=>{seq.events=main.scores;console.log('seqset')}),1500);},
+seqset=(x=1500)=>{clearTimeout(tims.seqset);tims.seqset=setTimeout(()=>requestIdleCallback(()=>{seq.events=main.scores;console.log('seqset')}),x);},
 stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s[`d#${i}`]=`ds${i}.mp3`;s[`a${i}`]=`a${i}.mp3`;}return s;},
 instr_li=[//[baseurl, octave, map, (map2)]
 	['musicbox',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
@@ -384,7 +384,7 @@ init=()=>{
 	main={sc:0,bpm:120,arp:0,instr:0,scores:new Array(8).fill(''),...main};urstack=[[],[]];
 	document.title='sky_seq '+(name_.textContent=main.name||'');
 	[redobtn,undobtn,cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));bpm_.value=sc_.value=arp_.value='';
-	syset();calc();seqset();tstop();bpmset();scset();arpset();
+	syset();calc();seqset(0);tstop();bpmset();scset();arpset();
 };
 
 window.onresize=()=>{c.width=cfg.res*c.parentNode.clientWidth;c.height=cfg.res*240;ctx.scale(cfg.res,cfg.res);draw();}
