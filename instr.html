@@ -306,7 +306,7 @@
 								ebtn=document.createElement('div'),
 								dbtn=document.createElement('div');
 							wrap.classList.add('cisel');
-							name.classList.add('name');name.textContent=x||texts.default;name.onclick=()=>{cinstr=x;save();ciset();cfg();};
+							name.classList.add('name');name.textContent=x||texts.default;name.onclick=()=>{cinstr=x;menu.instr.value=0;save();ciset();set();cfg();};
 							ebtn.classList.add('grid','button','tex');ebtn.setAttribute('style','--bp:-100% 0;');ebtn.onclick=()=>cicfg(x);
 							dbtn.classList.add('grid','button');dbtn.setAttribute('style','--bp:-400% 0;');
 							dbtn.onclick=()=>{if(cinstr==x){cinstr='';save();ciset();}Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').delete(x),{onsuccess:cfg,onerror:e=>albox.textContent=e.target.error})};
