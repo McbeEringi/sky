@@ -32,10 +32,9 @@
 	<style>
 		:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;--key_size:min(88px,20vw);--bp:0 0;}
 		html,body{width:100%;height:100%;position:relative;margin:0;overflow:hidden;text-align:center;}*::-webkit-scrollbar{display:none;}
-		input[type=radio]{display:none;}
+		body>input,input[type=radio]{display:none;}
+		hr{border:none;}hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		@keyframes flip{0%{transform:rotateY(0deg);}100%{transform:rotateY(360deg);}}
-		@keyframes bob{0%{transform:scale(1);}100%{transform:scale(.97);}}
-		body>input{display:none;}
 
 		#kb{display:inline-grid;grid-template-columns:repeat(5,var(--key_size));grid-auto-rows:0;grid-template-rows:repeat(3,var(--key_size));margin:calc(var(--key_size) * .5) 0 0 0;vertical-align:bottom;touch-action:none;}
 		#kb p{position:relative;margin:0;}
@@ -51,11 +50,13 @@
 		.grid{display:inline-block;width:70px;height:70px;margin:7px;border-radius:16px;position:relative;cursor:pointer;background:var(--bp)/800% #3338 url(img/instr.svg);}
 		.grid::before{content:"";display:block;height:100%;box-sizing:border-box;border:16px solid #0000;border-image:url(img/sel.svg) 33.333%;-webkit-border-image:url(img/sel.svg) 33.333%;opacity:0;transition:.2s;}
 		.grid.tex{background-image:url(img/tex.webp);}
+		.grid.btn:active{transform:scale(.85);}.grid.btn:not(:active){transition:.2s;}
 		*:checked+.grid::before{opacity:1;}*:checked+.grid{transform:rotateY(360deg);transition:.5s;}*:disabled+.grid{filter:grayscale(1)opacity(.7);}
 
 		body>[for=drwcb]{display:none;pointer-events:none;}
 		#drawer{width:252px;height:100%;padding-top:50.4px;position:absolute;top:0;right:0;overflow-y:scroll;background-color:#3338;transform:translateX(100%);transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
-		#menu>label{display:inline-block;}#menu>label>.grid{display:block;animation:bob .6s ease-in-out 0s infinite alternate;}
+		#menu>label{display:inline-block;}#menu>label>.grid{display:block;}
+		#scd_{position:absolute;top:0;left:0;width:100%;height:100%;transition:.2s;transform:rotate(45deg);filter:drop-shadow(0 0 2px #aef);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M6 6h1v1h-1z' fill='%23caf0f6'/%3E%3C/svg%3E");}
 		.btnw{position:absolute;top:0;right:0;transform-origin:top right;transform:scale(.6);}
 		.btnw>*{transition:transform .4s linear;}.btnw>[for=kbsize]{--bp:-500% 0;}.btnw>[for=drwcb]{--bp:0 -100%;}
 		@media(max-width:700px){
@@ -65,9 +66,15 @@
 
 		#kbsize:checked~.btnw>[for=kbsize]{transform:rotateY(360deg);--bp:-600% 0;}#kbsize:checked~*{--key_size:min(110px,20vw);}
 		#drwcb:checked~.btnw>[for=drwcb]{transform:rotateY(360deg);background-image:url(img/instr.svg);--bp:-400% 0 !important;}#drwcb:checked~#drawer{transform:translateX(0);}#drwcb:checked~[for=drwcb]{pointer-events:auto;}
+
+		label[for=alcb],#albox{position:fixed;pointer-events:none;opacity:0;transition:.2s;}
+		label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0004;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
+		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#2228;white-space:pre-wrap;overflow:scroll;overflow-x:hidden;}
 	</style>
 	<input type="checkbox" id="drwcb">
 	<input type="checkbox" id="kbsize">
+	<input type="checkbox" id="alcb">
 	<div id="kb">Please enable JavaScript to use this app.</div>
 	<label for="drwcb"></label>
 	<div id="drawer">
@@ -92,17 +99,34 @@
 			</label><label><input type="radio" name="instr" value="17"         ><div class="grid tex" style="--bp:-100% -300%;"></div>
 			</label>
 		</form>
+		<hr>
+		<div id="scd">
+						<div class="grid btn" style="--bp:-600% -0%;">
+			</div><div class="grid btn" style="--bp:-200% -0%;filter:saturate(.3);"><div id="scd_"></div>
+			</div><div class="grid btn" style="--bp:-500% -0%;"></div>
+		</div>
+		<hr>
+		<div id="cfgbtn" class="grid btn tex" style="--bp:-100% 0;">
+		</div><div id="infobtn" class="grid btn tex" style="--bp:0 0;"></div>
 	</div>
 	<div class="btnw">
 		<label for="kbsize" class="grid"></label>
 		<label for="drwcb" id="mico" class="grid tex"></label>
 	</div>
-	<pre id="log">build: 2108170 beta</pre>
+	<label for="alcb"></label><pre id="albox"></pre>
 
 	<script src="https://cdn.jsdelivr.net/npm/tone/build/Tone.js"></script>
 	<script>
 		'use strict';
+		let synth,synth_,sc=0;
+		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const reverb=new Tone.Reverb({wet:0,decay:.001}).toDestination(),
+		texts=Object.assign({
+			info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nRecorded by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108171\nMIT License',
+		},{
+			ja:{
+			}
+		}[window.navigator.language.slice(0,2)]),
 		stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 		instr_li=[//[baseurl, octave, map, (map2)]
 			['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
@@ -125,10 +149,7 @@
 			['audio/instr/bugle/',0,stdli(4,6)]//210529
 		],
 		kbmode=(x=menu.instr.value)=>[0,0,1,0,0,0,2,2,0,0,0,0,0,0,3,1,0,0][Number(x)||0],
-		_keymap=[
-			Array.from('QWERTASDFGZXCVB',x=>`Key${x}`),
-			Array.from('QWERASDF',x=>`Key${x}`)
-		],
+		_keymap=['QWERTASDFGZXCVB','QWERASDF'].map(x=>Array.from(x,y=>`Key${y}`)),
 		keymap=(x=kbmode())=>_keymap[[0,1,1,1][x]],
 		i2n=(i,x=kbmode())=>[
 			[-9,-7,-5,-4,-2,0,2,3,5,7,8,10,12,14,15],
@@ -136,16 +157,17 @@
 			[-9,-7,-2,0,-9,-7,-2,0],
 			[-7,0,3,5,8,10,12,15]
 		][x][i],
-		setSynth=(fx=()=>{kb.style.opacity='1'; kb.style.pointerEvents='auto';})=>{
-			synth=new Tone.Sampler(instr_li[menu.instr.value][2],fx,instr_li[menu.instr.value][0]).connect(reverb);
-		},
+		setSynth=(fx=()=>{kb.style.opacity='1'; kb.style.pointerEvents='auto';})=>synth=new Tone.Sampler(instr_li[menu.instr.value][2],fx,instr_li[menu.instr.value][0]).connect(reverb),
 		set=()=>{
 			kb.style.opacity='.2';kb.style.pointerEvents='none';
-			switch([0,1,2,1][kbmode()]){
-				case 1:
+			scd.style.opacity='1';scd.style.pointerEvents='auto';
+			scale();
+			switch(kbmode()){
+				case 1: scd.style.opacity='.5';scd.style.pointerEvents='none';scd_.style.transform='';
+				case 3:
 					kb.classList.add('oct');
 					setSynth();
-					synth_=synth;
+					synth_=null;
 					break;
 				case 2:
 					kb.classList.add('oct');
@@ -163,17 +185,24 @@
 				default:
 					kb.classList.remove('oct');
 					setSynth();
-					synth_=synth;
+					synth_=null;
 			}
-			//save();
 			mico.setAttribute('style',`--bp:${[menu.instr.value%8,Math.floor(menu.instr.value*.125+1)].map(x=>(x*-100)+'%').join(' ')};`);
 		},
 		trigger=i=>{
 			const x=kbmode();
-			(i>3?synth_:synth).triggerAttackRelease(440*Math.pow(2,i2n(i,x)/12+instr_li[menu.instr.value][1]));
+			(x==2&&i>3?synth_:synth).triggerAttackRelease(440*Math.pow(2,(i2n(i,x)+(x==1?0:sc))/12+instr_li[menu.instr.value][1]));
+		},
+		scale=s=>{
+			scd_.style.transform=`rotate(${sc*30+45}deg)`;
+			if(s){
+				synth.triggerAttackRelease(440*Math.pow(2,(3 +sc)/12+instr_li[menu.instr.value][1]),undefined,'+.05');
+				synth.triggerAttackRelease(440*Math.pow(2,(7 +sc)/12+instr_li[menu.instr.value][1]),undefined,'+.1');
+				synth.triggerAttackRelease(440*Math.pow(2,(10+sc)/12+instr_li[menu.instr.value][1]),undefined,'+.15');
+			}
 		};
-		let synth,synth_;
 
+		document.querySelectorAll('.grid.btn').forEach(x=>x.ontouchstart=()=>{});
 		kb.textContent='';
 		for(let i=0;i<15;i++){
 			const x=document.createElement('p');
@@ -193,11 +222,14 @@
 			if(keymap().includes(e.code))
 				kb.children[keymap().indexOf(e.code)].dispatchEvent(new Event('mousedown'));
 		};
-		menu.onchange=()=>{
-			set();
-		};
+		menu.onchange=set;
+		scd.children[0].onclick=()=>{sc--;scale(1);};
+		scd.children[1].onclick=()=>{sc=0;scale(1);};
+		scd.children[2].onclick=()=>{sc++;scale(1);};
+		cfgbtn.onclick=()=>alert('まだだよ');
+		infobtn.onclick=()=>alert(texts.info);
 
-		menu.onchange();
+		set();scale();
 		if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
 			{
 				let img=new Image();
