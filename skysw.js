@@ -38,6 +38,7 @@ const cacheName='cache210814_0',STATIC_DATA=[
 noCache=[
 	'analytics',
 	'seq_',
+	'instr_',
 	'test'
 ];
 
