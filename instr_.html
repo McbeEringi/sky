@@ -38,17 +38,17 @@
 		#kb{display:inline-grid;grid-template-columns:repeat(5,var(--key_size));grid-template-rows:repeat(3,var(--key_size));margin:calc(var(--key_size) * .5) 0 0 0;touch-action:none;}
 		#kb p{position:relative;margin:0;}
 		#kb p::before{content:"";position:absolute;display:block;width:78.4%;height:78.4%;margin:10.8%;border-radius:17%;background:0 0/800% #3338 url(img/instr.svg);}
-		#kb:not(.p) p:nth-of-type(5n+1)::before{background-position:-100% 0;}
-		#kb:not(.p) p:nth-of-type(5n+2)::before{background-position:-200% 0;}
-		#kb:not(.p) p:nth-of-type(5n+3)::before{background-position:-100% 0;}
-		#kb:not(.p) p:nth-of-type(5n+4)::before{background-position:-200% 0;}
-		#kb:not(.p) p:nth-of-type(5n  )::before{background-position:-100% 0;}
-		#kb:not(.p) p:nth-of-type(7n+1)::before{background-position:-000% 0;}
-		#kb.p{grid-template-columns:repeat(4,var(--key_size));grid-template-rows:repeat(2,var(--key_size));}
-		#kb.p p:nth-of-type(4n+1)::before{background-position:-200% 0;}
-		#kb.p p:nth-of-type(4n+2)::before{background-position:-100% 0;}
-		#kb.p p:nth-of-type(4n+3)::before{background-position:-200% 0;}
-		#kb.p p:nth-of-type(4n  )::before{background-position:-100% 0;}
+		#kb:not(.oct) p:nth-of-type(5n+1)::before{background-position:-100% 0;}
+		#kb:not(.oct) p:nth-of-type(5n+2)::before{background-position:-200% 0;}
+		#kb:not(.oct) p:nth-of-type(5n+3)::before{background-position:-100% 0;}
+		#kb:not(.oct) p:nth-of-type(5n+4)::before{background-position:-200% 0;}
+		#kb:not(.oct) p:nth-of-type(5n  )::before{background-position:-100% 0;}
+		#kb:not(.oct) p:nth-of-type(7n+1)::before{background-position:-000% 0;}
+		#kb.oct{grid-template-columns:repeat(4,var(--key_size));grid-template-rows:repeat(2,var(--key_size));}
+		#kb.oct p:nth-of-type(4n+1)::before{background-position:-200% 0;}
+		#kb.oct p:nth-of-type(4n+2)::before{background-position:-100% 0;}
+		#kb.oct p:nth-of-type(4n+3)::before{background-position:-200% 0;}
+		#kb.oct p:nth-of-type(4n  )::before{background-position:-100% 0;}
 		#kb p.anm::before{animation:flip .4s ease-in-out;}
 
 		.grid{width:70px;height:70px;margin:7px;border-radius:16px;position:relative;cursor:pointer;background:var(--bp)/800% #3338 url(img/instr.svg);}
@@ -105,12 +105,12 @@
 			kb.style.opacity='.2';kb.style.pointerEvents='none';
 			switch([0,1,2,1][kbmode()]){
 				case 1:
-					kb.classList.add('p');
+					kb.classList.add('oct');
 					setSynth();
 					synth_=synth;
 					break;
 				case 2:
-					kb.classList.add('p');
+					kb.classList.add('oct');
 					Promise.all([
 						new Promise(t=>
 							setSynth(t)
@@ -123,7 +123,7 @@
 					});
 					break;
 				default:
-					kb.classList.remove('p');
+					kb.classList.remove('oct');
 					setSynth();
 					synth_=synth;
 			}/*
