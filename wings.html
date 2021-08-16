@@ -7,7 +7,24 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<title>sky_wings</title>
+		<meta name="Description" content="Sky wings reminder">
 		<link rel="shortcut icon" type="image/svg+xml" href="img/ico/sky.svg">
+		<meta property="og:type" content="website">
+		<meta property="og:title" content="sky_wings">
+		<meta property="og:description" content="Skyの羽リマインダ">
+		<meta property="og:url" content="https://mcbeeringi.github.io/sky/wings.html">
+		<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/sky.jpg">
+		<!--iOS-->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="default">
+		<meta name="apple-mobile-web-app-title" content="sky stuff">
+		<link rel="apple-touch-icon" href="img/sky.png">
+		<!--sw-->
+		<link rel="manifest" href="skymf.json">
+		<meta name="theme-color" content="#214"/>
+		<script>
+			if('serviceWorker'in navigator&&location.protocol.includes('http')&&location.hostname!='localhost')window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});});
+		</script>
 	</head>
 	<body>
 		<script src="style.js" async></script>
