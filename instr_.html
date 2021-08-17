@@ -46,6 +46,7 @@
 		#kb.oct p:nth-of-type(4n+1)::before{background-position:-200% 0;}#kb.oct p:nth-of-type(4n+2)::before{background-position:-100% 0;}
 		#kb.oct p:nth-of-type(4n+3)::before{background-position:-200% 0;}#kb.oct p:nth-of-type(4n  )::before{background-position:-100% 0;}
 		#kb p.anm::before{animation:flip .4s ease-in-out;}
+		#kbsize:checked~.btnw>[for=kbsize]{transform:rotateY(360deg);--bp:-600% 0;}#kbsize:checked~*{--key_size:min(110px,20vw);}
 
 		.grid{display:inline-block;width:70px;height:70px;margin:7px;border-radius:16px;position:relative;cursor:pointer;background:var(--bp)/800% #3338 url(img/instr.svg);}
 		.grid::before{content:"";display:block;height:100%;box-sizing:border-box;border:16px solid #0000;border-image:url(img/sel.svg) 33.333%;-webkit-border-image:url(img/sel.svg) 33.333%;opacity:0;transition:.2s;}
@@ -54,7 +55,7 @@
 		*:checked+.grid::before{opacity:1;}*:checked+.grid{transform:rotateY(360deg);transition:.5s;}*:disabled+.grid{filter:grayscale(1)opacity(.7);}
 
 		body>[for=drwcb]{display:none;pointer-events:none;}
-		#drawer{width:252px;height:100%;padding-top:50.4px;position:absolute;top:0;right:0;overflow-y:scroll;background-color:#3338;transform:translateX(100%);transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+		#drawer{width:252px;height:100%;padding-top:50.4px;box-sizing:border-box;position:absolute;top:0;right:0;overflow-y:scroll;background-color:#3338;transform:translateX(100%);transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 		#menu>label{display:inline-block;}#menu>label>.grid{display:block;}
 		#scd_{position:absolute;top:0;left:0;width:100%;height:100%;transition:.2s;transform:rotate(45deg);filter:drop-shadow(0 0 2px #aef);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M6 6h1v1h-1z' fill='%23caf0f6'/%3E%3C/svg%3E");}
 		.btnw{position:absolute;top:0;right:0;transform-origin:top right;transform:scale(.6);}
@@ -63,14 +64,12 @@
 			body>[for=drwcb]{display:block;width:100%;height:100%;position:absolute;top:0;left:0;}
 			.btnw{top:unset;bottom:0;transform-origin:bottom right;}#drawer{padding-top:unset;padding-bottom:50.4px;}
 		}
-
-		#kbsize:checked~.btnw>[for=kbsize]{transform:rotateY(360deg);--bp:-600% 0;}#kbsize:checked~*{--key_size:min(110px,20vw);}
 		#drwcb:checked~.btnw>[for=drwcb]{transform:rotateY(360deg);background-image:url(img/instr.svg);--bp:-400% 0 !important;}#drwcb:checked~#drawer{transform:translateX(0);}#drwcb:checked~[for=drwcb]{pointer-events:auto;}
 
 		label[for=alcb],#albox{position:fixed;pointer-events:none;opacity:0;transition:.2s;}
 		label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0004;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
-		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
 		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#2228;white-space:pre-wrap;overflow:scroll;overflow-x:hidden;}
+		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
 	</style>
 	<input type="checkbox" id="drwcb">
 	<input type="checkbox" id="kbsize">
@@ -122,7 +121,7 @@
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const reverb=new Tone.Reverb({wet:0,decay:.001}).toDestination(),
 		texts=Object.assign({
-			info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nRecorded by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108171\nMIT License',
+			info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nRecorded by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108172\nMIT License',
 		},{
 			ja:{
 			}
