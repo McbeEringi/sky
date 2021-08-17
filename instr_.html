@@ -39,11 +39,14 @@
 
 		#kb{display:inline-grid;grid-template-columns:repeat(5,var(--key_size));grid-auto-rows:0;grid-template-rows:repeat(3,var(--key_size));margin:calc(var(--key_size) * .5) 0 0 0;vertical-align:bottom;touch-action:none;}
 		#kb.oct{grid-template-columns:repeat(4,var(--key_size));grid-template-rows:repeat(2,var(--key_size));}
+		#kb.nov{grid-template-columns:repeat(3,var(--key_size));grid-template-rows:repeat(3,var(--key_size));}
 		#kb p{position:relative;margin:0;}
 		#kb p::before{content:"";display:block;width:78.4%;height:78.4%;margin:10.8%;border-radius:17%;background:0 0/800% #3338 url(img/instr.svg);}
 		#kb p:nth-of-type(5n+1)::before{background-position:-200% 0;}#kb p:nth-of-type(5n+2)::before{background-position:-100% 0;}
 		#kb p:nth-of-type(5n+3)::before{background-position:-200% 0;}#kb p:nth-of-type(5n+4)::before{background-position:-100% 0;}
 		#kb p:nth-of-type(5n  )::before{background-position:-200% 0;}#kb p:nth-of-type(7n+1)::before{background-position:0 0;}
+		#kb.oct p:nth-of-type(2n+1)::before{background-position:-200% 0;}#kb.oct p:nth-of-type(2n  )::before{background-position:-100% 0;}
+		#kb.nov p:nth-of-type(3n+1)::before{background-position:-200% 0;}#kb.nov p:nth-of-type(3n+2)::before{background-position:-100% 0;}#kb.nov p:nth-of-type(3n  )::before{background-position:-200% 0;}
 		#kb p.anm::before{animation:flip .4s linear;}
 		#kbsize:checked~.btnw>[for=kbsize]{transform:rotateY(360deg);--bp:-600% 0;}#kbsize:checked~*{--key_size:min(110px,20vw);}
 
@@ -69,6 +72,13 @@
 		label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0004;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
 		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#2228;white-space:pre-wrap;overflow:scroll;overflow-x:hidden;}
 		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
+
+		#albox>.cili>*{background-color:#222;height:32px;line-height:32px;margin:4px 0;}
+		#albox>.cili>div{display:flex;}
+		#albox>.cili>div>p{height:100%;margin:0;}
+		#albox>.cili>div>p:nth-of-type(1){flex-grow:1;padding:0 1.5ex;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+		#albox>.cili>div>p:nth-of-type(2){flex-shrink:0;width:32px;background-color:#8f8;}
+		#albox>.cili>div>p:nth-of-type(3){flex-shrink:0;width:32px;background-color:#f88;}
 	</style>
 	<input type="checkbox" id="drwcb">
 	<input type="checkbox" id="kbsize">
@@ -119,22 +129,24 @@
 		let synth,synth_,sc,rev;
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const texts=Object.assign({
-			info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nRecorded by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108175\nMIT License',
+			info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nRecorded by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108176\nMIT License',
 			rev:'reverb',
-			ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault']
+			ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault'],
+			dft:'default'
 		},{
 			ja:{
 				rev:'リバーブ',
-				ambs:'環境音',none:'なし',ambn:['温泉','ホーム','雨林','書庫']
+				ambs:'環境音',none:'なし',ambn:['温泉','ホーム','雨林','書庫'],
+				dft:'デフォルト'
 			}
 		}[window.navigator.language.slice(0,2)]),
 		amb={c:-1,dat:{}},
 		reverb=new Tone.Reverb().toDestination(),
 		revset=(w=rev[0],d=rev[1])=>{rev=[w,d];reverb.wet.value=w;reverb.decay=Math.pow(2,d);},
 		stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
-		cistd=['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
+		cidft=['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
 		instr_li=[//[baseurl, octave, map, (map2)]
-			cistd,
+			cidft,
 			['audio/instr/harp/',-1,stdli(3,5)],//210503
 			['audio/instr/percussion/',-1,{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],
 			['audio/instr/contrabass/',-2,stdli(2)],
@@ -154,8 +166,7 @@
 			['audio/instr/bugle/',0,stdli(4,6)]//210529
 		],
 		kbmode=(x=menu.instr.value)=>[0,0,1,0,0,0,2,2,0,0,0,0,0,0,3,1,0,0][Number(x)||0],
-		_keymap=['QWERTASDFGZXCVB','QWERASDF'].map(x=>Array.from(x,y=>`Key${y}`)),
-		keymap=(x=kbmode())=>_keymap[[0,1,1,1][x]],
+		keymap=['QWERTASDFGZXCVB','QWERASDF','QWEASDZXC'].map(x=>Array.from(x,y=>`Key${y}`)),
 		i2n=(i,x=kbmode())=>[
 			[-9,-7,-5,-4,-2,0,2,3,5,7,8,10,12,14,15],
 			[0,1,2,3,12,13,14,15],
@@ -202,6 +213,40 @@
 			if(amb.dat[x]){amb.dat[x].start();s();}
 			else amb.dat[x]=new Tone.Player({url:`audio/env${x}.mp3`,volume:-4,autostart:true,loop:true,fadeIn:5,fadeOut:2,onload:s,onerror:f}).connect(reverb);
 		}),
+		ciset=(x)=>{alert(x);},
+		cicfg=()=>{},
+		cfg=()=>{
+			alert(`= ${texts.ambs} =
+<select><option value="-1">${texts.none}</option><option disabled>────────</option>${texts.ambn.map((x,i)=>'<option value="'+i+'">'+x+'</option>').join('')}</select>
+<hr>= ${texts.rev} =
+mix:<input type="range" value="${rev[0]}" min="0" max="1" step="0.0625" onchange="revset(this.value);save();">
+time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375" onchange="revset(undefined,this.value);save();">
+<hr>= <div class="grid tex" style="width:32px;height:32px;margin:0;background-color:#0000;--bp:0 -100%;"></div>config =
+`);
+			let e=albox.querySelector('select');
+			e.value=amb.c;e.onchange=()=>{e.disabled=true;ambset(amb.c=Number(e.value)).catch(console.log).finally(()=>e.disabled=false);save();};
+			Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').getAllKeys(),{
+				onsuccess:e=>{
+					const tmp=['0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ','WIP','example'],//e.target.result,
+						wrap=document.createElement('div');
+					wrap.classList.add('cili');
+					tmp.forEach(x=>{
+						const w=document.createElement('div'),n=document.createElement('p'),c=document.createElement('p'),d=document.createElement('p');
+						n.textContent=x;
+						n.onclick=()=>ciset(x);
+						c.onclick=()=>alert(x+' cfg');
+						d.onclick=()=>alert(x+' del');
+						[n,c,d].forEach(y=>w.appendChild(y));
+						wrap.appendChild(w);
+					});
+					const dft=document.createElement('p'),plus=document.createElement('p');
+					dft.textContent=texts.dft;dft.onclick=()=>ciset();wrap.appendChild(dft);
+					plus.textContent='new';plus.onclick=()=>alert('new');wrap.appendChild(plus);
+					albox.appendChild(wrap);
+				},
+				onerror:console.log
+			});
+		},
 		save=()=>{localStorage.instr_stat=JSON.stringify({sc,instr:menu.instr.value,reverb:rev,amb:amb.c});console.log('saved');},
 		load=()=>({sc,instr:menu.instr.value,reverb:rev,amb:amb.c}={sc:0,instr:'0',reverb:['0','0'],amb:1,ci:'',...JSON.parse(localStorage.instr_stat||'{}')});
 
@@ -215,22 +260,12 @@
 			x.addEventListener('animationend',()=>{x.classList.remove('anm');},{passive:true});
 			kb.appendChild(x);
 		}
-		document.onkeydown=e=>{if(keymap().includes(e.code))kb.children[keymap().indexOf(e.code)].dispatchEvent(new Event('mousedown'));};
+		document.onkeydown=e=>{const x=keymap[[0,1,1,1][kbmode()]];if(x.includes(e.code))kb.children[x.indexOf(e.code)].dispatchEvent(new Event('mousedown'));};
 		menu.onchange=()=>{set();save();};
 		scd.children[0].onclick=()=>{sc--;scale(1);save();};
 		scd.children[1].onclick=()=>{sc=0;scale(1);save();};
 		scd.children[2].onclick=()=>{sc++;scale(1);save();};
-		cfgbtn.onclick=()=>{
-			alert(`= ${texts.ambs} =
-<select><option value="-1">${texts.none}</option><option disabled>────────</option>${texts.ambn.map((x,i)=>'<option value="'+i+'">'+x+'</option>').join('')}</select>
-<hr>= ${texts.rev} =
-mix:<input type="range" value="${rev[0]}" min="0" max="1" step="0.0625" onchange="revset(this.value);save();">
-time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375" onchange="revset(undefined,this.value);save();">
-<hr>= <div class="grid tex" style="width:32px;height:32px;margin:0;background-color:#0000;--bp:0 -100%;"></div>config =
-`);
-			let e=albox.querySelector('select');
-			e.value=amb.c;e.onchange=()=>{e.disabled=true;ambset(amb.c=Number(e.value)).catch(console.log).finally(()=>e.disabled=false);save();};
-		};
+		cfgbtn.onclick=cfg;
 		infobtn.onclick=()=>{
 			alert(`${texts.info}`);
 		}
