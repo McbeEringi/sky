@@ -227,7 +227,7 @@ time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375" onchange
 			e.value=amb.c;e.onchange=()=>{e.disabled=true;ambset(amb.c=Number(e.value)).catch(console.log).finally(()=>e.disabled=false);save();};
 			Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').getAllKeys(),{
 				onsuccess:e=>{
-					const tmp=['0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ','WIP','example'],//e.target.result,
+					const tmp=[...e.target.result,'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ','WIP','example'],
 						wrap=document.createElement('div');
 					wrap.classList.add('cili');
 					tmp.forEach(x=>{
