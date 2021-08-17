@@ -60,7 +60,7 @@
 		#menu>label{display:inline-block;}#menu>label>.grid{display:block;}
 		#scd_{position:absolute;top:0;left:0;width:100%;height:100%;transition:.2s;transform:rotate(45deg);filter:drop-shadow(0 0 2px #aef);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M6 6h1v1h-1z' fill='%23caf0f6'/%3E%3C/svg%3E");}
 		.btnw{position:absolute;top:0;right:0;transform-origin:top right;transform:scale(.6);}
-		.btnw>*{transition:transform .4s linear;}.btnw>[for=kbsize]{--bp:-500% 0;}.btnw>[for=drwcb]{--bp:0 -100%;}
+		.btnw>*{transition:transform .5s;}.btnw>[for=kbsize]{--bp:-500% 0;}.btnw>[for=drwcb]{--bp:0 -100%;}
 		@media(max-width:700px){
 			body>[for=drwcb]{display:block;width:100%;height:100%;position:absolute;top:0;left:0;}
 			.btnw{top:unset;bottom:0;transform-origin:bottom right;}#drawer{padding-top:unset;padding-bottom:50.4px;}
@@ -79,24 +79,24 @@
 	<label for="drwcb"></label>
 	<div id="drawer">
 		<form id="menu">
-							<label><input type="radio" name="instr" value="0"  checked ><div class="grid tex" style="--bp:-0%   -100%;"></div>
-			</label><label><input type="radio" name="instr" value="1"          ><div class="grid tex" style="--bp:-100% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="2"          ><div class="grid tex" style="--bp:-200% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="3"          ><div class="grid tex" style="--bp:-300% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="4"          ><div class="grid tex" style="--bp:-400% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="5"          ><div class="grid tex" style="--bp:-500% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="6"          ><div class="grid tex" style="--bp:-600% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="7"  disabled><div class="grid tex" style="--bp:-700% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="8"          ><div class="grid tex" style="--bp:-0%   -200%;"></div>
-			</label><label><input type="radio" name="instr" value="9"          ><div class="grid tex" style="--bp:-100% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="10"         ><div class="grid tex" style="--bp:-200% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="11"         ><div class="grid tex" style="--bp:-300% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="12"         ><div class="grid tex" style="--bp:-400% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="13"         ><div class="grid tex" style="--bp:-500% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="14"         ><div class="grid tex" style="--bp:-600% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="15"         ><div class="grid tex" style="--bp:-700% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="16"         ><div class="grid tex" style="--bp:-0%   -300%;"></div>
-			</label><label><input type="radio" name="instr" value="17"         ><div class="grid tex" style="--bp:-100% -300%;"></div>
+							<label><input type="radio" name="instr" value="0" checked><div class="grid tex" style="--bp:-0%   -100%;"></div>
+			</label><label><input type="radio" name="instr" value="1" ><div class="grid tex" style="--bp:-100% -100%;"></div>
+			</label><label><input type="radio" name="instr" value="2" ><div class="grid tex" style="--bp:-200% -100%;"></div>
+			</label><label><input type="radio" name="instr" value="3" ><div class="grid tex" style="--bp:-300% -100%;"></div>
+			</label><label><input type="radio" name="instr" value="4" ><div class="grid tex" style="--bp:-400% -100%;"></div>
+			</label><label><input type="radio" name="instr" value="5" ><div class="grid tex" style="--bp:-500% -100%;"></div>
+			</label><label><input type="radio" name="instr" value="6" ><div class="grid tex" style="--bp:-600% -100%;"></div>
+			</label><label><input type="radio" name="instr" value="7" disabled><div class="grid tex" style="--bp:-700% -100%;"></div>
+			</label><label><input type="radio" name="instr" value="8" ><div class="grid tex" style="--bp:-0%   -200%;"></div>
+			</label><label><input type="radio" name="instr" value="9" ><div class="grid tex" style="--bp:-100% -200%;"></div>
+			</label><label><input type="radio" name="instr" value="10"><div class="grid tex" style="--bp:-200% -200%;"></div>
+			</label><label><input type="radio" name="instr" value="11"><div class="grid tex" style="--bp:-300% -200%;"></div>
+			</label><label><input type="radio" name="instr" value="12"><div class="grid tex" style="--bp:-400% -200%;"></div>
+			</label><label><input type="radio" name="instr" value="13"><div class="grid tex" style="--bp:-500% -200%;"></div>
+			</label><label><input type="radio" name="instr" value="14"><div class="grid tex" style="--bp:-600% -200%;"></div>
+			</label><label><input type="radio" name="instr" value="15"><div class="grid tex" style="--bp:-700% -200%;"></div>
+			</label><label><input type="radio" name="instr" value="16"><div class="grid tex" style="--bp:-0%   -300%;"></div>
+			</label><label><input type="radio" name="instr" value="17"><div class="grid tex" style="--bp:-100% -300%;"></div>
 			</label>
 		</form>
 		<hr>
@@ -121,11 +121,16 @@
 		let synth,synth_,sc,rev;
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const texts=Object.assign({
-			info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nRecorded by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108173\nMIT License',
+			info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nRecorded by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108174\nMIT License',
+			rev:'reverb',
+			ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault']
 		},{
 			ja:{
+				rev:'リバーブ',
+				ambs:'環境音',none:'なし',ambn:['温泉','ホーム','雨林','書庫']
 			}
 		}[window.navigator.language.slice(0,2)]),
+		amb={c:-1,dat:{}},
 		reverb=new Tone.Reverb().toDestination(),
 		revset=(w=rev[0],d=rev[1])=>{rev=[w,d];reverb.wet.value=w;reverb.decay=Math.pow(2,d);},
 		stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
@@ -167,27 +172,17 @@
 			switch(kbmode()){
 				case 1: scd.style.opacity='.5';scd.style.pointerEvents='none';scd_.style.transform='';
 				case 3:
-					kb.classList.add('oct');
-					setSynth();
-					synth_=null;
+					kb.classList.add('oct');setSynth();synth_=null;
 					break;
 				case 2:
 					kb.classList.add('oct');
 					Promise.all([
-						new Promise(t=>
-							setSynth(t)
-						),
-						new Promise(t=>
-							synth_=new Tone.Sampler(instr_li[menu.instr.value][3],t,instr_li[menu.instr.value][0]).connect(reverb)
-						)
-					]).then(()=>{
-						kb.style.opacity='1'; kb.style.pointerEvents='auto';
-					});
+						new Promise(t=>setSynth(t)),
+						new Promise(t=>synth_=new Tone.Sampler(instr_li[menu.instr.value][3],t,instr_li[menu.instr.value][0]).connect(reverb))
+					]).then(()=>{kb.style.opacity='1'; kb.style.pointerEvents='auto';});
 					break;
 				default:
-					kb.classList.remove('oct');
-					setSynth();
-					synth_=null;
+					kb.classList.remove('oct');setSynth();synth_=null;
 			}
 			mico.setAttribute('style',`--bp:${[menu.instr.value%8,Math.floor(menu.instr.value*.125+1)].map(x=>(x*-100)+'%').join(' ')};`);
 		},
@@ -203,48 +198,46 @@
 				synth.triggerAttackRelease(440*Math.pow(2,(10+sc)/12+instr_li[menu.instr.value][1]),undefined,'+.15');
 			}
 		},
-		save=()=>{localStorage.instr_stat=JSON.stringify({sc,instr:menu.instr.value,reverb:rev});console.log('saved');},
-		load=()=>({sc,instr:menu.instr.value,reverb:rev}={sc:0,instr:'0',reverb:['0','0'],env:0,ci:'',...JSON.parse(localStorage.instr_stat||'{}')});
+		ambset=(x=amb.c)=>new Promise((s,f)=>{
+			Object.keys(amb.dat).forEach(i=>amb.dat[i].stop());
+			if(!~x){s();return;}
+			if(amb.dat[x]){amb.dat[x].start();s();}
+			else amb.dat[x]=new Tone.Player({url:`audio/env${x}.mp3`,volume:-4,autostart:true,loop:true,fadeIn:5,fadeOut:2,onload:s,onerror:f}).connect(reverb);
+		}),
+		save=()=>{localStorage.instr_stat=JSON.stringify({sc,instr:menu.instr.value,reverb:rev,amb:amb.c});console.log('saved');},
+		load=()=>({sc,instr:menu.instr.value,reverb:rev,amb:amb.c}={sc:0,instr:'0',reverb:['0','0'],amb:1,ci:'',...JSON.parse(localStorage.instr_stat||'{}')});
 
-		//document.body.addEventListener('pointerdown',Tone.start,{once:true});
+		document.body.addEventListener('pointerdown',Tone.start,{once:true});
 		document.querySelectorAll('.grid.btn').forEach(x=>x.ontouchstart=()=>{});
 		kb.textContent='';
 		for(let i=0;i<15;i++){
 			const x=document.createElement('p');
-			['touchstart','mousedown'].forEach(y=>x.addEventListener(y,e=>{
-				trigger(i);
-				x.classList.remove('anm');void x.offsetWidth;x.classList.add('anm');
-			},{passive:true}));
-			['touchend','touchcancel'].forEach(y=>x.addEventListener(y,e=>{
-				e.preventDefault();
-			},{passive:false}));
-			x.addEventListener('animationend',()=>{
-				x.classList.remove('anm');
-			},{passive:true});
+			['touchstart','mousedown'].forEach(y=>x.addEventListener(y,e=>{trigger(i);x.classList.remove('anm');void x.offsetWidth;x.classList.add('anm');},{passive:true}));
+			['touchend','touchcancel'].forEach(y=>x.addEventListener(y,e=>{e.preventDefault();},{passive:false}));
+			x.addEventListener('animationend',()=>{x.classList.remove('anm');},{passive:true});
 			kb.appendChild(x);
 		}
-		document.onkeydown=e=>{
-			if(keymap().includes(e.code))
-				kb.children[keymap().indexOf(e.code)].dispatchEvent(new Event('mousedown'));
-		};
+		document.onkeydown=e=>{if(keymap().includes(e.code))kb.children[keymap().indexOf(e.code)].dispatchEvent(new Event('mousedown'));};
 		menu.onchange=()=>{set();save();};
 		scd.children[0].onclick=()=>{sc--;scale(1);save();};
 		scd.children[1].onclick=()=>{sc=0;scale(1);save();};
 		scd.children[2].onclick=()=>{sc++;scale(1);save();};
 		cfgbtn.onclick=()=>{
-			alert(`= reverb =
-  wet:<input type="range" value="${rev[0]}" min="0" max="1" step="0.0625" onchange="revset(this.value);save();">
-decay:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375" onchange="revset(undefined,this.value);save();">
-<hr>= ambient sound =
-<select></select>
+			alert(`= ${texts.ambs} =
+<select><option value="-1">${texts.none}</option><option disabled>────────</option>${texts.ambn.map((x,i)=>'<option value="'+i+'">'+x+'</option>').join('')}</select>
+<hr>= ${texts.rev} =
+mix:<input type="range" value="${rev[0]}" min="0" max="1" step="0.0625" onchange="revset(this.value);save();">
+time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375" onchange="revset(undefined,this.value);save();">
 <hr>= <div class="grid tex" style="width:32px;height:32px;margin:0;background-color:#0000;--bp:0 -100%;"></div>config =
 `);
+			let e=albox.querySelector('select');
+			e.value=amb.c;e.onchange=()=>{e.disabled=true;ambset(amb.c=Number(e.value)).catch(console.log).finally(()=>e.disabled=false);save();};
 		};
 		infobtn.onclick=()=>{
 			alert(`${texts.info}`);
 		}
 
-		load();set();scale();revset();
+		load();set();scale();revset();ambset();
 		if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
 			{
 				let img=new Image();
