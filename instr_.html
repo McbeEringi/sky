@@ -29,6 +29,7 @@
 </head>
 <body>
 	<script src="style.js" async></script>
+	<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'img/tex.webp'});</script>
 	<style>
 		:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;--key_size:min(88px,20vw);--bp:0 0;}
 		html,body{width:100%;height:100%;position:relative;margin:0;overflow:hidden;text-align:center;}*::-webkit-scrollbar{display:none;}
@@ -48,11 +49,11 @@
 		#kb p.anm::before{animation:flip .4s ease-in-out;}
 		#kbsize:checked~.btnw>[for=kbsize]{transform:rotateY(360deg);--bp:-600% 0;}#kbsize:checked~*{--key_size:min(110px,20vw);}
 
-		.grid{display:inline-block;width:70px;height:70px;margin:7px;border-radius:16px;position:relative;cursor:pointer;background:var(--bp)/800% #3338 url(img/instr.svg);}
+		.grid{display:inline-block;width:70px;height:70px;margin:7px;border-radius:16px;position:relative;vertical-align:middle;cursor:pointer;background:var(--bp)/800% #3338 url(img/instr.svg);}
 		.grid::before{content:"";display:block;height:100%;box-sizing:border-box;border:16px solid #0000;border-image:url(img/sel.svg) 33.333%;-webkit-border-image:url(img/sel.svg) 33.333%;opacity:0;transition:.2s;}
-		.grid.tex{background-image:url(img/tex.webp);}
+		.tex{background-image:url(img/tex.webp);}.nowebp .tex{background-image:url(img/tex.png);}
 		.grid.btn:active{transform:scale(.85);}.grid.btn:not(:active){transition:.2s;}
-		*:checked+.grid::before{opacity:1;}*:checked+.grid{transform:rotateY(360deg);transition:.5s;}*:disabled+.grid{filter:grayscale(1)opacity(.7);}
+		*:checked+.grid::before,.grid.a::before{opacity:1;}*:checked+.grid,.grid.a{transform:rotateY(360deg);transition:.5s;}*:disabled+.grid,.grid.d{filter:grayscale(1)opacity(.7);}
 
 		body>[for=drwcb]{display:none;pointer-events:none;}
 		#drawer{width:252px;height:100%;padding-top:50.4px;box-sizing:border-box;position:absolute;top:0;right:0;overflow-y:scroll;background-color:#3338;transform:translateX(100%);transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
@@ -112,23 +113,25 @@
 		<label for="kbsize" class="grid"></label>
 		<label for="drwcb" id="mico" class="grid tex"></label>
 	</div>
-	<label for="alcb"></label><pre id="albox"></pre>
+	<label for="alcb"></label><pre id="albox" class="style"></pre>
 
 	<script src="https://cdn.jsdelivr.net/npm/tone/build/Tone.js"></script>
 	<script>
 		'use strict';
-		let synth,synth_,sc=0;
+		let synth,synth_,sc,rev;
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
-		const reverb=new Tone.Reverb({wet:0,decay:.001}).toDestination(),
-		texts=Object.assign({
-			info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nRecorded by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108172\nMIT License',
+		const texts=Object.assign({
+			info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nRecorded by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108173\nMIT License',
 		},{
 			ja:{
 			}
 		}[window.navigator.language.slice(0,2)]),
+		reverb=new Tone.Reverb().toDestination(),
+		revset=(w=rev[0],d=rev[1])=>{rev=[w,d];reverb.wet.value=w;reverb.decay=Math.pow(2,d);},
 		stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
+		cistd=['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
 		instr_li=[//[baseurl, octave, map, (map2)]
-			['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
+			cistd,
 			['audio/instr/harp/',-1,stdli(3,5)],//210503
 			['audio/instr/percussion/',-1,{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],
 			['audio/instr/contrabass/',-2,stdli(2)],
@@ -199,8 +202,11 @@
 				synth.triggerAttackRelease(440*Math.pow(2,(7 +sc)/12+instr_li[menu.instr.value][1]),undefined,'+.1');
 				synth.triggerAttackRelease(440*Math.pow(2,(10+sc)/12+instr_li[menu.instr.value][1]),undefined,'+.15');
 			}
-		};
+		},
+		save=()=>{localStorage.instr_stat=JSON.stringify({sc,instr:menu.instr.value,reverb:rev});console.log('saved');},
+		load=()=>({sc,instr:menu.instr.value,reverb:rev}={sc:0,instr:'0',reverb:['0','0'],env:0,ci:'',...JSON.parse(localStorage.instr_stat||'{}')});
 
+		//document.body.addEventListener('pointerdown',Tone.start,{once:true});
 		document.querySelectorAll('.grid.btn').forEach(x=>x.ontouchstart=()=>{});
 		kb.textContent='';
 		for(let i=0;i<15;i++){
@@ -221,14 +227,24 @@
 			if(keymap().includes(e.code))
 				kb.children[keymap().indexOf(e.code)].dispatchEvent(new Event('mousedown'));
 		};
-		menu.onchange=set;
-		scd.children[0].onclick=()=>{sc--;scale(1);};
-		scd.children[1].onclick=()=>{sc=0;scale(1);};
-		scd.children[2].onclick=()=>{sc++;scale(1);};
-		cfgbtn.onclick=()=>alert('まだだよ');
-		infobtn.onclick=()=>alert(texts.info);
+		menu.onchange=()=>{set();save();};
+		scd.children[0].onclick=()=>{sc--;scale(1);save();};
+		scd.children[1].onclick=()=>{sc=0;scale(1);save();};
+		scd.children[2].onclick=()=>{sc++;scale(1);save();};
+		cfgbtn.onclick=()=>{
+			alert(`= reverb =
+  wet:<input type="range" value="${rev[0]}" min="0" max="1" step="0.0625" onchange="revset(this.value);save();">
+decay:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375" onchange="revset(undefined,this.value);save();">
+<hr>= ambient sound =
+<select></select>
+<hr>= <div class="grid tex" style="width:32px;height:32px;margin:0;background-color:#0000;--bp:0 -100%;"></div>config =
+`);
+		};
+		infobtn.onclick=()=>{
+			alert(`${texts.info}`);
+		}
 
-		set();scale();
+		load();set();scale();revset();
 		if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
 			{
 				let img=new Image();
@@ -236,7 +252,7 @@
 					let c=document.createElement('canvas'),ctx=c.getContext('2d');
 					c.width=img.naturalWidth;c.height=img.naturalHeight;
 					ctx.drawImage(img,0,0);
-					document.body.insertAdjacentHTML('beforeend',`<style>#kb p::before{background-image:url(${c.toDataURL()});}</style>`);
+					document.body.insertAdjacentHTML('beforeend',`<style>#kb p::before,.grid:not(.tex){background-image:url(${c.toDataURL()});}</style>`);
 				};
 				img.src='img/instr.svg';
 			}
