@@ -251,14 +251,14 @@ time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375" onchange
 					tmp.forEach(x=>{
 						const w=document.createElement('div'),n=document.createElement('p'),c=document.createElement('p'),d=document.createElement('p');
 						n.textContent=x;
-						n.onclick=()=>ciset(ci=x);
+						n.onclick=()=>{ciset(ci=x);save();set();};
 						c.onclick=()=>alert(x+' cfg');
 						d.onclick=()=>alert(x+' del');
 						[n,c,d].forEach(y=>w.appendChild(y));
 						wrap.appendChild(w);
 					});
 					const dft=document.createElement('p'),plus=document.createElement('p');
-					dft.textContent=texts.dft;dft.onclick=()=>ciset(ci='');wrap.appendChild(dft);
+					dft.textContent=texts.dft;dft.onclick=()=>{ciset(ci='');save();set();};wrap.appendChild(dft);
 					plus.textContent='new';plus.onclick=()=>alert('new');wrap.appendChild(plus);
 					albox.appendChild(wrap);
 				},
