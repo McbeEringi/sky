@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>sky_instruments</title>
-	<meta name="Description" content="Sky's instruments simulator. PWA(offline) compatible.">
+	<meta name="Description" content="Sky:CotL. PWA(offline) compatible.">
 	<link rel="shortcut icon" type="image/svg+xml" href="img/ico/instr.svg">
 	<meta property="og:type" content="website">
 	<meta property="og:title" content="sky_instruments">
@@ -31,7 +31,7 @@
 	<script src="style.js" async></script>
 	<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'img/tex.webp'});</script>
 	<style>
-		:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;--key_size:min(88px,20vw);--bp:0 0;}
+		:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;--key_size:min(88px,20vw);--bp:0 0;--size:70px;}
 		html,body{width:100%;height:100%;position:relative;margin:0;overflow:hidden;text-align:center;}*::-webkit-scrollbar{display:none;}
 		body>input,input[type=radio]{display:none;}
 		hr{border:none;}hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
@@ -50,21 +50,21 @@
 		#kb p.anm::before{animation:flip .4s linear;}
 		#kbsize:checked~.btnw>[for=kbsize]{transform:rotateY(360deg);--bp:-600% 0;}#kbsize:checked~*{--key_size:min(110px,20vw);}
 
-		.grid{display:inline-block;width:70px;height:70px;margin:7px;border-radius:16px;position:relative;vertical-align:middle;cursor:pointer;background:var(--bp)/800% #3338 url(img/instr.svg);}
-		.grid::before{content:"";display:block;height:100%;box-sizing:border-box;border:16px solid #0000;border-image:url(img/sel.svg) 33.333%;-webkit-border-image:url(img/sel.svg) 33.333%;opacity:0;transition:.2s;}
+		.grid{display:inline-block;width:var(--size);height:var(--size);margin:calc(var(--size) * .1);border-radius:calc(var(--size) * .23);position:relative;vertical-align:middle;cursor:pointer;background:var(--bp)/800% #3338 url(img/instr.svg);}
+		.grid::before{content:"";display:block;height:100%;box-sizing:border-box;border:calc(var(--size) * .23) solid #0000;border-image:url(img/sel.svg) 33.333%;-webkit-border-image:url(img/sel.svg) 33.333%;opacity:0;transition:.2s;}
 		.tex{background-image:url(img/tex.webp);}.nowebp .tex{background-image:url(img/tex.png);}
 		.grid.btn:active{transform:scale(.85);}.grid.btn:not(:active){transition:.2s;}
 		*:checked+.grid::before,.grid.a::before{opacity:1;}*:checked+.grid,.grid.a{transform:rotateY(360deg);transition:.5s;}*:disabled+.grid,.grid.d{filter:grayscale(1)opacity(.7);}
 
 		body>[for=drwcb]{display:none;pointer-events:none;}
-		#drawer{width:252px;height:100%;padding-top:50.4px;box-sizing:border-box;position:absolute;top:0;right:0;overflow-y:scroll;background-color:#3338;transform:translateX(100%);transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+		#drawer{width:252px;height:100%;padding-top:48px;box-sizing:border-box;position:absolute;top:0;right:0;overflow-y:scroll;background-color:#3338;transform:translateX(100%);transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 		#menu>label{display:inline-block;}#menu>label>.grid{display:block;}
 		#scd_{position:absolute;top:0;left:0;width:100%;height:100%;transition:.2s;transform:rotate(45deg);filter:drop-shadow(0 0 2px #aef);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M6 6h1v1h-1z' fill='%23caf0f6'/%3E%3C/svg%3E");}
-		.btnw{position:absolute;top:0;right:0;transform-origin:top right;transform:scale(.6);}
+		.btnw{position:absolute;top:0;right:0;--size:40px;}
 		.btnw>*{transition:transform .5s;}.btnw>[for=kbsize]{--bp:-500% 0;}.btnw>[for=drwcb]{--bp:0 -100%;}
 		@media(max-width:700px){
 			body>[for=drwcb]{display:block;width:100%;height:100%;position:absolute;top:0;left:0;}
-			.btnw{top:unset;bottom:0;transform-origin:bottom right;}#drawer{padding-top:unset;padding-bottom:50.4px;}
+			.btnw{top:unset;bottom:0;transform-origin:bottom right;}#drawer{padding-top:unset;padding-bottom:48px;}
 		}
 		#drwcb:checked~.btnw>[for=drwcb]{transform:rotateY(360deg);background-image:url(img/instr.svg);--bp:-400% 0 !important;}#drwcb:checked~#drawer{transform:translateX(0);}#drwcb:checked~[for=drwcb]{pointer-events:auto;}
 
@@ -73,13 +73,13 @@
 		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#2228;white-space:pre-wrap;overflow:scroll;overflow-x:hidden;}
 		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
 
-		#albox>.cili>*{background-color:#3338;height:32px;line-height:32px;margin:4px 0;border-radius:8px;cursor:pointer;}
-		#albox>.cili>*.a{background-color:#fea8;}
-		#albox>.cili>div{display:flex;}
-		#albox>.cili>div>p{height:100%;margin:0;}
-		#albox>.cili>div>p:nth-of-type(1){flex-grow:1;padding:0 1.5ex;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-		#albox>.cili>div>p:nth-of-type(2){flex-shrink:0;width:32px;--bp:-100% 0;}
-		#albox>.cili>div>p:nth-of-type(3){flex-shrink:0;width:32px;--bp:-400% 0;}
+		.cic,#cie>p{height:32px;line-height:32px;margin:4px 0;display:flex;}
+		.cic,#cie>p>*{background-color:#3338;border-radius:8px;cursor:pointer;}
+		.cic.a{background-color:#fea8;}
+		.cic *{margin:0;}
+		.cic *:not(.grid){flex-grow:1;padding:0 1.5ex;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+		.cic .grid{flex-shrink:0;--size:32px;--bp:-400% 0;}.cic .grid.tex{--bp:-100% 0;}
+		.cic.plus .grid{--bp:-500% 0;background-color:#0000;}
 	</style>
 	<input type="checkbox" id="drwcb">
 	<input type="checkbox" id="kbsize">
@@ -88,24 +88,24 @@
 	<label for="drwcb"></label>
 	<div id="drawer">
 		<form id="menu">
-							<label><input type="radio" name="instr" value="0" checked><div class="grid tex" style="--bp:-0%   -100%;"></div>
-			</label><label><input type="radio" name="instr" value="1" ><div class="grid tex" style="--bp:-100% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="2" ><div class="grid tex" style="--bp:-200% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="3" ><div class="grid tex" style="--bp:-300% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="4" ><div class="grid tex" style="--bp:-400% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="5" ><div class="grid tex" style="--bp:-500% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="6" ><div class="grid tex" style="--bp:-600% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="7" disabled><div class="grid tex" style="--bp:-700% -100%;"></div>
-			</label><label><input type="radio" name="instr" value="8" ><div class="grid tex" style="--bp:-0%   -200%;"></div>
-			</label><label><input type="radio" name="instr" value="9" ><div class="grid tex" style="--bp:-100% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="10"><div class="grid tex" style="--bp:-200% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="11"><div class="grid tex" style="--bp:-300% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="12"><div class="grid tex" style="--bp:-400% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="13"><div class="grid tex" style="--bp:-500% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="14"><div class="grid tex" style="--bp:-600% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="15"><div class="grid tex" style="--bp:-700% -200%;"></div>
-			</label><label><input type="radio" name="instr" value="16"><div class="grid tex" style="--bp:-0%   -300%;"></div>
-			</label><label><input type="radio" name="instr" value="17"><div class="grid tex" style="--bp:-100% -300%;"></div>
+							<label><input type="radio" name="instr" value="0" checked><p class="grid tex" style="--bp:-0%   -100%;"></p>
+			</label><label><input type="radio" name="instr" value="1" ><p class="grid tex" style="--bp:-100% -100%;"></p>
+			</label><label><input type="radio" name="instr" value="2" ><p class="grid tex" style="--bp:-200% -100%;"></p>
+			</label><label><input type="radio" name="instr" value="3" ><p class="grid tex" style="--bp:-300% -100%;"></p>
+			</label><label><input type="radio" name="instr" value="4" ><p class="grid tex" style="--bp:-400% -100%;"></p>
+			</label><label><input type="radio" name="instr" value="5" ><p class="grid tex" style="--bp:-500% -100%;"></p>
+			</label><label><input type="radio" name="instr" value="6" ><p class="grid tex" style="--bp:-600% -100%;"></p>
+			</label><label><input type="radio" name="instr" value="7" disabled><p class="grid tex" style="--bp:-700% -100%;"></p>
+			</label><label><input type="radio" name="instr" value="8" ><p class="grid tex" style="--bp:-0%   -200%;"></p>
+			</label><label><input type="radio" name="instr" value="9" ><p class="grid tex" style="--bp:-100% -200%;"></p>
+			</label><label><input type="radio" name="instr" value="10"><p class="grid tex" style="--bp:-200% -200%;"></p>
+			</label><label><input type="radio" name="instr" value="11"><p class="grid tex" style="--bp:-300% -200%;"></p>
+			</label><label><input type="radio" name="instr" value="12"><p class="grid tex" style="--bp:-400% -200%;"></p>
+			</label><label><input type="radio" name="instr" value="13"><p class="grid tex" style="--bp:-500% -200%;"></p>
+			</label><label><input type="radio" name="instr" value="14"><p class="grid tex" style="--bp:-600% -200%;"></p>
+			</label><label><input type="radio" name="instr" value="15"><p class="grid tex" style="--bp:-700% -200%;"></p>
+			</label><label><input type="radio" name="instr" value="16"><p class="grid tex" style="--bp:-0%   -300%;"></p>
+			</label><label><input type="radio" name="instr" value="17"><p class="grid tex" style="--bp:-100% -300%;"></p>
 			</label>
 		</form>
 		<hr>
@@ -130,15 +130,15 @@
 		let synth,synth_,sc,rev,ci;
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const texts=Object.assign({
-			info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nRecorded by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108182\nMIT License',
+			info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nRecorded by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108190\nMIT License',
 			rev:'reverb',
 			ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault'],
-			dft:'default'
+			dft:'default',cin:'name'
 		},{
 			ja:{
 				rev:'リバーブ',
 				ambs:'環境音',none:'なし',ambn:['温泉','ホーム','雨林','書庫'],
-				dft:'デフォルト'
+				dft:'デフォルト',cin:'楽器名'
 			}
 		}[window.navigator.language.slice(0,2)]),
 		amb={c:-1,dat:{}},
@@ -178,7 +178,7 @@
 		set=()=>{
 			kb.style.opacity='.2';kb.style.pointerEvents='none';
 			scd.style.opacity='1';scd.style.pointerEvents='auto';
-			scale();
+			scale();kb.classList.remove('oct','nov');
 			switch(kbmode()){
 				case 1: scd.style.opacity='.5';scd.style.pointerEvents='none';scd_.style.transform='';
 				case 3:
@@ -192,7 +192,7 @@
 					]).then(()=>{kb.style.opacity='1'; kb.style.pointerEvents='auto';});
 					break;
 				default:
-					kb.classList.remove('oct');setSynth();synth_=null;
+					setSynth();synth_=null;
 			}
 			mico.setAttribute('style',`--bp:${[menu.instr.value%8,Math.floor(menu.instr.value*.125+1)].map(x=>(x*-100)+'%').join(' ')};`);
 		},
@@ -234,34 +234,61 @@
 				onerror:fail
 			});
 		}),
-		cicfg=()=>{},
+		cicfg=(x='')=>{
+			alcb.checked=false;return;
+			const alcbl=document.querySelector('label[for=alcb]'),
+				row=(n,f={name:texts.selectf},i)=>{
+					cie.insertAdjacentHTML('beforeend',``);
+				};
+			new Promise((f,r)=>{
+				alcbl.style.pointerEvents='none';
+				alert(`<input class="style" placeholder="${texts.cin}" autocomplete="text" style="max-width:10em;" value="${x}"><hr><div id="cie"></div><div class="cic plus"><p><p class="grid"></p></p></div><hr>`);
+				const p=document.createElement('p'),b=document.createElement('p');
+				p.setAttribute('style','--bp:-400% 0;--size:48px;');p.onclick=()=>f(0);
+				b.setAttribute('style','--bp:-300% 0;--size:48px;');b.onclick=()=>f(1);
+				[p,b].forEach(x=>{x.classList.add('grid','btn');albox.appendChild(x);});
+				if(x)
+					Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').get(x),{
+						onsuccess:e=>e.target.result.dat.forEach((y,i)=>{prevdat[i]=y[1];row(...y,i);}),
+						onerror:e=>cie.textContent=e.target.error
+					});
+				else row('A#4');
+			})
+			.then(x=>{
+				alcbl.style.pointerEvents='';
+				if(!x){cfg();return;}
+				alert(x);
+			});
+		},
 		cfg=()=>{
 			alert(`= ${texts.ambs} =
 <select><option value="-1">${texts.none}</option><option disabled>────────</option>${texts.ambn.map((x,i)=>'<option value="'+i+'">'+x+'</option>').join('')}</select>
 <hr>= ${texts.rev} =
-mix:<input type="range" value="${rev[0]}" min="0" max="1" step="0.0625" onchange="revset(this.value);save();">
-time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375" onchange="revset(undefined,this.value);save();">
-<hr>=<div class="grid tex a" style="--bp:0 -100%;transform:scale(.8);cursor:unset;"></div>=
+mix:<input type="range" value="${rev[0]}" min="0" max="1" step="0.0625">
+time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375">
+<hr>=<p class="grid tex a" style="--bp:0 -100%;--size:57px;cursor:unset;"></p>=
 `);
-			let e=albox.querySelector('select');
-			e.value=amb.c;e.onchange=()=>{e.disabled=true;ambset(amb.c=Number(e.value)).catch(console.log).finally(()=>e.disabled=false);save();};
+			const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=range]');
+			sel.value=amb.c;sel.onchange=()=>{sel.disabled=true;ambset(amb.c=Number(sel.value)).catch(console.log).finally(()=>sel.disabled=false);save();};
+			rng[0].onchange=()=>{revset(rng[0].value);save();};rng[1].onchange=()=>{revset(undefined,rng[1].value);save();};
 			Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').getAllKeys(),{
 				onsuccess:e=>{
 					const wrap=document.createElement('div'),dft=document.createElement('p'),plus=document.createElement('p');
-					wrap.classList.add('cili');
-					if(!ci)dft.classList.add('a');dft.textContent=texts.dft;
 					dft.onclick=()=>ciset('').then(()=>{save();set();cfg();}).catch(console.log);
-					plus.textContent='new';plus.onclick=()=>alert('new');
+					dft.classList.add('cic');if(!ci)dft.classList.add('a');
+					dft.insertAdjacentHTML('beforeend',`<p>${texts.dft}</p>`);
+					plus.onclick=()=>cicfg();
+					plus.classList.add('cic','plus');
+					plus.insertAdjacentHTML('beforeend','<p><p class="grid"></p></p>');
 					e.target.result.forEach(x=>{
 						const w=document.createElement('div'),n=document.createElement('p'),c=document.createElement('p'),d=document.createElement('p');
-						if(ci==x)w.classList.add('a');n.textContent=x;c.classList.add('grid','tex');d.classList.add('grid');
+						w.classList.add('cic');if(ci==x)w.classList.add('a');n.textContent=x;c.classList.add('grid','tex');d.classList.add('grid');
 						n.onclick=()=>ciset(x).then(()=>{save();set();cfg();}).catch(console.log);
-						c.onclick=()=>alert(x+' cfg');
+						c.onclick=()=>cicfg(x);
 						d.onclick=()=>Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').delete(x),{onsuccess:()=>{if(ci==x)dft.onclick();else cfg();},onerror:console.log});
-						[n,c,d].forEach(y=>w.appendChild(y));
-						wrap.appendChild(w);
+						[n,c,d].forEach(y=>w.appendChild(y));wrap.appendChild(w);
 					});
-					wrap.appendChild(dft);wrap.appendChild(plus);albox.appendChild(wrap);
+					[dft,plus].forEach(x=>wrap.appendChild(x));albox.appendChild(wrap);
 				},
 				onerror:console.log
 			});
@@ -275,12 +302,16 @@ time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375" onchange
 		kb.textContent='';
 		for(let i=0;i<15;i++){
 			const x=document.createElement('p');
-			['touchstart','mousedown'].forEach(y=>x.addEventListener(y,e=>{trigger(i);x.classList.remove('anm');void x.offsetWidth;x.classList.add('anm');},{passive:true}));
+			['touchstart','mousedown'].forEach(y=>x.addEventListener(y,e=>{e.preventDefault();trigger(i);x.classList.remove('anm');void x.offsetWidth;x.classList.add('anm');},{passive:false}));
 			['touchend','touchcancel'].forEach(y=>x.addEventListener(y,e=>{e.preventDefault();},{passive:false}));
 			x.addEventListener('animationend',()=>{x.classList.remove('anm');},{passive:true});
 			kb.appendChild(x);
 		}
-		document.onkeydown=e=>{const x=keymap[[0,1,1,1][kbmode()]];if(x.includes(e.code))kb.children[x.indexOf(e.code)].dispatchEvent(new Event('mousedown'));};
+		document.onkeydown=e=>{
+			if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
+			const x=keymap[[0,1,1,1][kbmode()]];
+			if(x.includes(e.code))kb.children[x.indexOf(e.code)].dispatchEvent(new Event('mousedown'));
+		};
 		menu.onchange=()=>{set();save();};
 		scd.children[0].onclick=()=>{sc--;scale(1);save();};
 		scd.children[1].onclick=()=>{sc=0;scale(1);save();};
@@ -298,7 +329,7 @@ time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375" onchange
 					let c=document.createElement('canvas'),ctx=c.getContext('2d');
 					c.width=img.naturalWidth;c.height=img.naturalHeight;
 					ctx.drawImage(img,0,0);
-					document.body.insertAdjacentHTML('beforeend',`<style>#kb p::before,.grid:not(.tex){background-image:url(${c.toDataURL()});}</style>`);
+					document.body.insertAdjacentHTML('beforeend',`<style>#kb p::before,.grid:not(.tex),#drwcb:checked~.btnw>[for=drwcb]{background-image:url(${c.toDataURL()});}</style>`);
 				};
 				img.src='img/instr.svg';
 			}
