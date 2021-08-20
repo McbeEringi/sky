@@ -1,108 +1,121 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-	<head prefix="og: http://ogp.me/ns#">
+<head prefix="og: http://ogp.me/ns#">
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145066191-2"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-145066191-2');</script>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<title>McbeEringi sky</title>
-		<meta name="Description" content="McbeEringi Sky Top">
-		<link rel="shortcut icon" type="image/svg+xml" href="img/sky.svg">
-		<meta property="og:type" content="website">
-		<meta property="og:title" content="sky">
-		<meta property="og:description" content="Skyのツールのトップページです">
-		<meta property="og:url" content="https://mcbeeringi.github.io/sky/index.html">
-		<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/sky.png">
-		<!--iOS-->
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="default">
-		<meta name="apple-mobile-web-app-title" content="sky stuff">
-		<link rel="apple-touch-icon" href="img/sky.png">
-		<!--sw-->
-		<link rel="manifest" href="skymf.json">
-		<meta name="theme-color" content="#214"/>
-		<script>
-			if('serviceWorker'in navigator&&location.protocol.includes('http')&&location.hostname!='localhost')window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});});
-		</script>
-	</head>
-	<body>
-		<script src="style.js" async></script>
-		<style>
-			html,body{height:100%;}
-			details,summary{display:inline-block;vertical-align:top;}details *{max-width:100%;}
-			details{background-color:#0004;padding:8px;border-radius:8px;box-sizing:border-box;max-width:100%;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
-			.stuff>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;}
-			@media(max-width:504px){.stuff{text-align:center;}}
-			.stuff>a::before{content:"";display:block;height:150px;border-radius:20%;background:no-repeat center/cover var(--img);}
-			.stuff>a:hover{transform:scale(1.05);filter:brightness(1.2)saturate(1.2)drop-shadow(0 0 8px #fea);}
-			#pwab{width:100%;max-width:256px;height:auto;image-rendering:crisp-edges;image-rendering:pixelated;background:#0004;border-radius:8px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;pointer-events:none;}
-		</style>
-		<h1>Sky</h1>
-		<div class="stuff">
-			<a href="instr.html" style="--img:url(img/ico/instr.svg);">sky_instruments</a>
-			<a href="info.html" style="--img:url(img/ico/info.svg);">sky_info</a>
-			<a href="seq.html" style="--img:url(img/ico/seq.svg);">sky_seq</a>
-			<a href="wings.html" style="--img:url(img/ico/sky.svg);">sky_wings</a>
-			<a href="stuff.html" style="--img:url(img/ico/sky.svg);" class="nopwa">sky_stuff</a>
-		</div>
-		<img id="pwab" width="7" height="3" alt="pwa_banner"><br>
-		<details>
-			<summary>Config</summary><br>
-			<label>
-				background:
-				<select id="bgmode">
-					<option value="0">dynamic</option>
-					<option value="1">photo</option>
-					<option value="2">css code</option>
-				</select>
-			</label>
-			<p id="cfg1">
-				<label>choose image<br><input type="file" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg').onsuccess=()=>bgset();"></label><br>
-				<button onclick="idb.result.transaction('stuff','readwrite').objectStore('stuff').delete('bgimg').onsuccess=()=>bgset();">reset to default</button>
-			</p>
-			<p id="cfg2">
-				<a href="https://developer.mozilla.org/docs/Web/CSS/gradient">background-image</a><br>
-				<textarea id="bgcode" rows="2" cols="40" class="style"></textarea>
-			</p>
-			<hr>
-			<p>
-				[sky_menu] build:2107110 <br>
-				<span id="cachedisp"></span><br>
-				<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense <br>
-				<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>{if(x)location.reload(true);})">force update</button>
-			</p>
-		</details>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>McbeEringi sky</title>
+	<meta name="Description" content="McbeEringi Sky Top">
+	<link rel="shortcut icon" type="image/svg+xml" href="img/sky.svg">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="sky">
+	<meta property="og:description" content="Skyのツールのトップページです">
+	<meta property="og:url" content="https://mcbeeringi.github.io/sky/index.html">
+	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/sky.png">
+	<!--iOS-->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="sky stuff">
+	<link rel="apple-touch-icon" href="img/sky.png">
+	<!--sw-->
+	<link rel="manifest" href="skymf.json">
+	<meta name="theme-color" content="#214"/>
+	<script>
+		if('serviceWorker'in navigator&&location.protocol.includes('http')&&location.hostname!='localhost')window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});});
+	</script>
+</head>
+<body>
+	<script src="style.js" async></script>
+	<style>
+		html,body{height:100%;}
+		details,summary{display:inline-block;vertical-align:top;}details *{max-width:100%;}
+		details{background-color:#0004;padding:8px;border-radius:8px;box-sizing:border-box;max-width:100%;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+		.stuff>a{display:inline-block;width:150px;margin:5px;vertical-align:top;text-align:center;transition:.2s;white-space:nowrap;}
+		@media(max-width:504px){.stuff{text-align:center;}}
+		.stuff>a::before{content:"";display:block;height:150px;border-radius:20%;background:no-repeat center/cover var(--img);}
+		.stuff>a:hover{transform:scale(1.05);filter:brightness(1.2)saturate(1.2)drop-shadow(0 0 8px #fea);}
+		#pwab{width:100%;max-width:256px;height:auto;image-rendering:crisp-edges;image-rendering:pixelated;background:#0004;border-radius:8px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;pointer-events:none;}
+	</style>
+	<h1>Sky</h1>
+	<div class="stuff">
+		<a href="instr.html" style="--img:url(img/ico/instr.svg);">sky_instruments</a>
+		<a href="info.html" style="--img:url(img/ico/info.svg);">sky_info</a>
+		<a href="seq.html" style="--img:url(img/ico/seq.svg);">sky_seq</a>
+		<a href="wings.html" style="--img:url(img/ico/sky.svg);">sky_wings</a>
+		<a href="stuff.html" style="--img:url(img/ico/sky.svg);" class="nopwa">sky_stuff</a>
+	</div>
+	<img id="pwab" width="7" height="3" alt="pwa_banner">
 
-		<script>
-			const disp=()=>{
-				cfg1.style.display=bgmode.value=='1'?'':'none';
-				cfg2.style.display=bgmode.value=='2'?'':'none';
-			};
-			bgmode.onchange=()=>{
-				localStorage.sky_bgmode=bgmode.value;
-				disp();bgset();
-			};
-			bgcode.oninput=()=>{
-				localStorage.sky_bgcode=bgcode.value;
-				bgset();
-			};
-			caches.keys().then(x=>cachedisp.textContent=x[0]||'cache empty');
-			let fx=()=>{
-				try{
-					document.querySelector(`select>option[value="${localStorage.sky_bgmode}"]`).selected=true;
-					document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
-					bgcode.value=localStorage.sky_bgcode;disp();
-					if(urlq.pwa){
-						document.querySelectorAll('a').forEach(e=>e.href=e.href+'?pwa=1');
-						document.querySelectorAll('.nopwa').forEach(e=>e.style.display='none');
-					}else{
-						pwab.style.display='inline';
-						pwab.src='img/pwab.png';
-					}
-				}catch(e){}
-			};
-			document.addEventListener('styexe',fx);fx();
-		</script>
-	</body>
+	<script>
+		const texts=Object.assign({
+			cfg:'Config',bg:'background',bgsl:['dynamic','photo','CSS code'],
+			imgsl:'choose an image',ac:'reset to default',
+			cemp:'cache empty',re:'force update'
+		},{
+			ja:{
+				cfg:'設定',bg:'背景',bgsl:['ダイナミック','画像','CSSコード'],
+				imgsl:'画像を選択.｡:+*+',ac:'デフォルトに戻す',
+				cemp:'キャッシュが空です',re:'強制更新'
+			}
+		}[window.navigator.language.slice(0,2)]),
+		disp=()=>{
+			cfg1.style.display=bgmode.value=='1'?'':'none';
+			cfg2.style.display=bgmode.value=='2'?'':'none';
+		};
+		pwab.insertAdjacentHTML('afterend',`<br>
+			<details>
+				<summary>${texts.cfg}</summary><br>
+				<label>
+					${texts.bg}:
+					<select id="bgmode">
+						<option value="0">${texts.bgsl[0]}</option>
+						<option value="1">${texts.bgsl[1]}</option>
+						<option value="2">${texts.bgsl[2]}</option>
+					</select>
+				</label>
+				<p id="cfg1">
+					<label>${texts.imgsl}<br><input type="file" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg').onsuccess=()=>bgset();"></label><br>
+					<button onclick="idb.result.transaction('stuff','readwrite').objectStore('stuff').delete('bgimg').onsuccess=()=>bgset();">${texts.ac}</button>
+				</p>
+				<p id="cfg2">
+					<a href="https://developer.mozilla.org/docs/Web/CSS/gradient">background-image</a><br>
+					<textarea id="bgcode" rows="2" cols="40" class="style"></textarea>
+				</p>
+				<hr>
+				<p>
+					[sky_menu] build:2108200 <br>
+					<span id="cachedisp"></span><br>
+					<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense <br>
+					<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>{if(x)location.reload(true);})">${texts.re}</button>
+				</p>
+			</details>
+		`);
+		bgmode.onchange=()=>{
+			localStorage.sky_bgmode=bgmode.value;
+			disp();bgset();
+		};
+		bgcode.oninput=()=>{
+			localStorage.sky_bgcode=bgcode.value;
+			bgset();
+		};
+		caches.keys().then(x=>cachedisp.textContent=x[0]||texts.cemp);
+		let fx=()=>{
+			try{
+				document.querySelector(`select>option[value="${localStorage.sky_bgmode}"]`).selected=true;
+				document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
+				bgcode.value=localStorage.sky_bgcode;disp();
+				if(urlq.pwa){
+					document.querySelectorAll('a').forEach(e=>e.href=e.href+'?pwa=1');
+					document.querySelectorAll('.nopwa').forEach(e=>e.style.display='none');
+				}else{
+					pwab.style.display='inline';
+					pwab.src='img/pwab.png';
+				}
+			}catch(e){}
+		};
+		document.addEventListener('styexe',fx);fx();
+	</script>
+</body>
 </html>

@@ -51,34 +51,50 @@
 			</div>
 		</div>
 		<hr>
-		<div style="user-select:none;-webkit-user-select:none;">
-			<label><input type="checkbox">草原(3)▶︎<div><div>["入口左手前","丸石奥","鳥の塔右奥","洞窟入口"]<br><img src="img/candle/00.webp" width="4" height="3"></div><div>["入口右奥","丸石右","4島中央","神殿内"]<br><img src="img/candle/01.webp" width="4" height="3"></div><div>["入口左奥","鳥の塔中央","洞窟内","神殿前"]<br><img src="img/candle/02.webp" width="4" height="3"></div></div></label>
-			<label><input type="checkbox">雨林(3)▶︎<div><div>["入口右手前","開拓地船","川&蟹木","晴れ間池"]<br><img src="img/candle/10.webp" width="4" height="3"></div><div>["入口左奥","開拓地奥木","墓所中央","神殿後"]<br><img src="img/candle/11.webp" width="4" height="3"></div><div>["入口右奥","川&amp;蟹出口","墓所橋","晴れ間奥"]<br><img src="img/candle/12.webp" width="4" height="3"></div></div></label>
-			<label><input type="checkbox">峡谷(2)▶︎<div><div>["入口左","スケート橋","天球儀入口","ゴール左"]<br><img src="img/candle/20.webp" width="4" height="3"></div><div>["入口右奥","スケート氷","天球儀出口","ゴール右"]<br><img src="img/candle/21.webp" width="4" height="3"></div></div></label>
-			<label><input type="checkbox">捨て地(3)▶︎<div><div>["入口後ろ","祠出口","投石台手前","戦場砦右奥"]<br><img src="img/candle/30.webp" width="4" height="3"></div><div>["入口左奥","祠闇花","投石台中央","難破船後端"]<br><img src="img/candle/31.webp" width="4" height="3"></div><div>["入口右奥","投石台出口","難破船先端","戦場砦上"]<br><img src="img/candle/32.webp" width="4" height="3"></div></div></label>
-			<label><input type="checkbox">書庫(2)▶︎<div><div>["1F手前","1F奥","2F奥","6F手前"]<br><img src="img/candle/40.webp" width="4" height="3"></div><div>["1F右","2F扉左","4F祠","6F奥"]<br><img src="img/candle/41.webp" width="4" height="3"></div></div></label>
+		<div style="user-select:none;-webkit-user-select:none;" id="gallery">
 		</div>
-		オフィス: ['無念','社畜','ピザ','つぼ','ネコ','宇宙','散歩'] (<a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area#The_Spirits_of_the_Office">Sky Wiki</a>)<br>
+		<span id="ogal"></span> (<a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area#The_Spirits_of_the_Office">Sky Wiki</a>)<br>
 		大キャンドル参考元: <a href="https://twitter.com/sky_tea11">ティー</a>様 <br><!--/status/1356572540437635073-->
 		<br>
-		[sky_info] build:2106180 <br>
+		[sky_info] build:2108200 <br>
 		<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
 
 		<script>
 			'use strict';
-			let imgf=new Image();imgf.onerror=()=>{imgf='JPG';jpgfall();};imgf.onload=()=>imgf=null;imgf.src='img/candle/00.webp';
+			let imgf=new Image();imgf.onerror=()=>imgf='JPG';imgf.onload=()=>imgf=null;imgf.src='img/candle/00.webp';
 			const jpgfall=()=>{if(typeof imgf=='string')document.querySelectorAll('img[src$="webp"]').forEach(e=>{if(e.src)e.src=e.src.replace('webp',imgf);});};
 
-			const o_dic=['無念','社畜','ピザ','つぼ','ネコ','宇宙','散歩'],
-			c_dic =[
-				//https://twitter.com/sky_tea11/status/1234038235149426689/photo/1
-				//https://twitter.com/i/events/1176090791342567424
-				['~草原~',['入口左手前','丸石奥','鳥の塔右奥','洞窟入口'],['入口右奥','丸石右','4島中央','神殿内'],['入口左奥','鳥の塔中央','洞窟内','神殿前']],
-				['~雨林~',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
-				['~峡谷~',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
-				['~捨て地~',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
-				['~書庫~',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
+			const o_dic={
+				ja:['無念','社畜','ピザ','つぼ','ネコ','宇宙','散歩']
+			}[window.navigator.language.slice(0,2)]||['Doom','Worker','Pizza','Vase','Cat','Space','Stroll'],
+			//https://twitter.com/sky_tea11/status/1234038235149426689/photo/1
+			//https://twitter.com/i/events/1176090791342567424
+			c_dic ={
+				ja:[
+					['~草原~',['入口左手前','丸石奥','鳥の塔右奥','洞窟入口'],['入口右奥','丸石右','4島中央','神殿内'],['入口左奥','鳥の塔中央','洞窟内','鯉池']],
+					['~雨林~',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
+					['~峡谷~',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
+					['~捨て地~',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
+					['~書庫~',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
+				]
+			}[window.navigator.language.slice(0,2)]||[
+				['~Daylight Prairie~',['social space left front','beyond the rock','birdnest right beyond','cave entrance'],['social space right beyond','right of the rock','center of village','in the shrine'],['social space left beyond','birdnest center','in cave','koi pond']],
+				['~Hidden Forest~',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
+				['~Valley of Triumph~',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
+				['~Golden Wasteland~',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
+				['~Vault of Knowledge~',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
 			],
+			texts=Object.assign({
+				ct:'current time',st:'  server time',dst:'(Daylight Saving Time)',
+				dtc:'DOUBLE TREASURE CANDLES ~Jan 3rd\n\n',
+				o:'Office Spirit'
+			},{
+				ja:{
+					ct:'　　現在時刻',st:'サーバー時刻',dst:'(サマータイム)',
+					dtc:'大キャン2倍 ~1/3\n\n',
+					o:'オフィス精霊'
+				}
+			}[window.navigator.language.slice(0,2)]),
 			calendar={
 				2020:{
 					12:{
@@ -110,10 +126,14 @@
 			limited=(x,i)=>{
 				let cal;
 				try{cal=calendar[x.getFullYear()][x.getMonth()+1][x.getDate()];}catch(e){return 1;}
-				window[`_${i}t`].textContent=`${cal[2]+1?'DOUBLE TREASURE CANDLES ~Jan 3rd\n\n':''}${c_dic[cal[0]][0]}\n${c_dic[cal[0]][cal[1]+1]}\n${c_dic[cal[0]][cal[2]+1]||''}`;
+				window[`_${i}t`].textContent=`${cal[2]+1?texts.dtc:''}${c_dic[cal[0]][0]}\n${c_dic[cal[0]][cal[1]+1]}\n${c_dic[cal[0]][cal[2]+1]||''}`;
 				window[`_${i}i`].src=`img/candle/${cal[0]}${cal[1]}.webp`;
 				if(cal[2]!=undefined){window[`_${i}i_`].style.display='inline';window[`_${i}i_`].src=`img/candle/${cal[0]}${cal[2]}.webp`;}
-			}
+			};
+
+			gallery.insertAdjacentHTML('beforeend',c_dic.map((x,i)=>`<label><input type="checkbox">${x[0]}(${x.length-1})▶︎<div>${x.slice(1).map((y,j)=>`<div>${JSON.stringify(y)}<br><img src="img/candle/${i}${j}.webp" width="4" height="3"></div>`).join('')}</div></label>`).join(''));
+			jpgfall();
+			ogal.textContent=`${texts.o}: ${JSON.stringify(o_dic)}`
 
 			let hbuf;
 			const c_fx=t=>{let s=[Math.floor((t.getTime()-new Date('2020/11/4 00:00').getTime())/86400000)%5];s[1]=Math.floor((t.getDate()-1)/5)%[3,3,2,3,2][s[0]];return s;},
@@ -123,12 +143,12 @@
 					window[`_${i}t`].textContent=`${c_dic[x[0]][0]}\n${c_dic[x[0]][x[1]+1]}`;
 					window[`_${i}i`].src=`img/candle/${x.join('')}.webp`;
 				}
-				window[`_${i}t`].textContent+=`\nオフィス精霊: ${o_dic[(t.getDate()-1)%7]}`;
+				window[`_${i}t`].textContent+=`\n${texts.o}: ${o_dic[(t.getDate()-1)%7]}`;
 			},
 			main=()=>{
 				let local=new Date(),server=new Date(local.getTime()-3600000*17),dst=server.getMonth()*40+server.getDate();//summertime(3/14~11/7) ? 16 : 17
-				if(dst=>94&&dst<=407){server=new Date(local.getTime()-3600000*16);dst='(Daylight Saving Time)';}else dst='';
-				time.textContent=`current time: ${local.toLocaleString()}\n  server time: ${server.toLocaleString()} ${dst}`;
+				if(dst=>94&&dst<=407){server=new Date(local.getTime()-3600000*16);dst=texts.dst;}else dst='';
+				time.textContent=`${texts.ct}: ${local.toLocaleString()}\n${texts.st}: ${server.toLocaleString()} ${dst}`;
 				if(hbuf!=server.getHours()){
 					hbuf=server.getHours();
 					console.log('exe');
