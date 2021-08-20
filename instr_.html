@@ -33,7 +33,7 @@
 	<style>
 		:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;--key_size:min(88px,20vw);--bp:0 0;--size:70px;}
 		html,body{width:100%;height:100%;position:relative;margin:0;overflow:hidden;text-align:center;}*::-webkit-scrollbar{display:none;}
-		body>input,input[type=radio]{display:none;}
+		body>input,input[type=radio]{display:none;}input{font-size:medium;}
 		hr{border:none;}hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		@keyframes flip{0%{transform:rotateY(0deg)scale(.8);}100%{transform:rotateY(360deg)scale(1);}}
 
@@ -53,7 +53,7 @@
 		.grid{display:inline-block;width:var(--size);height:var(--size);margin:calc(var(--size) * .1);border-radius:calc(var(--size) * .23);position:relative;vertical-align:middle;cursor:pointer;background:var(--bp)/800% #3338 url(img/instr.svg);}
 		.grid::before{content:"";display:block;height:100%;box-sizing:border-box;border:calc(var(--size) * .23) solid #0000;border-image:url(img/sel.svg) 33.333%;-webkit-border-image:url(img/sel.svg) 33.333%;opacity:0;transition:.2s;}
 		.tex{background-image:url(img/tex.webp);}.nowebp .tex{background-image:url(img/tex.png);}
-		.grid.btn:active{transform:scale(.85);}.grid.btn:not(:active){transition:.2s;}
+		.btn:active{transform:scale(.85);}.btn:not(:active){transition:.2s;}
 		*:checked+.grid::before,.grid.a::before{opacity:1;}*:checked+.grid,.grid.a{transform:rotateY(360deg);transition:.5s;}*:disabled+.grid,.grid.d{filter:grayscale(1)opacity(.7);}
 
 		body>[for=drwcb]{display:none;pointer-events:none;}
@@ -69,17 +69,24 @@
 		#drwcb:checked~.btnw>[for=drwcb]{transform:rotateY(360deg);background-image:url(img/instr.svg);--bp:-400% 0 !important;}#drwcb:checked~#drawer{transform:translateX(0);}#drwcb:checked~[for=drwcb]{pointer-events:auto;}
 
 		label[for=alcb],#albox{position:fixed;pointer-events:none;opacity:0;transition:.2s;}
-		label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0004;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
-		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#2228;white-space:pre-wrap;overflow:scroll;overflow-x:hidden;}
+		label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0008;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#0008;white-space:pre-wrap;overflow:scroll;overflow-x:hidden;}
 		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
+		#albox input{margin:0;border:0;padding:0;text-align:center;}
 
-		.cic,#cie>p{height:32px;line-height:32px;margin:4px 0;display:flex;}
-		.cic,#cie>p>*{background-color:#3338;border-radius:8px;cursor:pointer;}
+		.cic{height:32px;line-height:32px;margin:4px 0;display:flex;background-color:#3338;border:none;border-radius:8px;cursor:pointer;}
 		.cic.a{background-color:#fea8;}
 		.cic *{margin:0;}
 		.cic *:not(.grid){flex-grow:1;padding:0 1.5ex;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 		.cic .grid{flex-shrink:0;--size:32px;--bp:-400% 0;}.cic .grid.tex{--bp:-100% 0;}
 		.cic.plus .grid{--bp:-500% 0;background-color:#0000;}
+		#cie{line-height:32px;display:grid;grid-template-columns:3em 1fr 32px;grid-auto-rows:32px;gap:4px;}
+		#cie>*{background-color:#3338;border-radius:8px;}
+		#cie *{margin:0;}
+		#cie .grid{--size:32px;--bp:-400% 0;}
+		#cie .file{overflow:hidden;position:relative;flex-grow:1;}
+		#cie .file *{padding:0 1.5ex;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+		#cie .file input{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;padding:0;}
 	</style>
 	<input type="checkbox" id="drwcb">
 	<input type="checkbox" id="kbsize">
@@ -122,7 +129,7 @@
 		<label for="kbsize" class="grid"></label>
 		<label for="drwcb" id="mico" class="grid tex"></label>
 	</div>
-	<label for="alcb"></label><pre id="albox" class="style"></pre>
+	<label for="alcb"></label><pre id="albox" class="style">(/ω＼*)</pre>
 
 	<script src="https://cdn.jsdelivr.net/npm/tone/build/Tone.js"></script>
 	<script>
@@ -130,15 +137,13 @@
 		let synth,synth_,sc,rev,ci;
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const texts=Object.assign({
-			info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nRecorded by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108190\nMIT License',
-			rev:'reverb',
-			ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault'],
-			dft:'default',cin:'name'
+			info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nRecorded by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108200\nMIT License',
+			rev:'reverb',ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault'],
+			dft:'default',cin:'instrment label',fsel:'choose file',note:'note'
 		},{
 			ja:{
-				rev:'リバーブ',
-				ambs:'環境音',none:'なし',ambn:['温泉','ホーム','雨林','書庫'],
-				dft:'デフォルト',cin:'楽器名'
+				rev:'リバーブ',ambs:'環境音',none:'なし',ambn:['温泉','ホーム','雨林','書庫'],
+				dft:'デフォルト',cin:'楽器名',fsel:'ファイルを選択',note:'音名'
 			}
 		}[window.navigator.language.slice(0,2)]),
 		amb={c:-1,dat:{}},
@@ -187,8 +192,8 @@
 				case 2:
 					kb.classList.add('oct');
 					Promise.all([
-						new Promise(t=>setSynth(t)),
-						new Promise(t=>synth_=new Tone.Sampler(instr_li[menu.instr.value][3],t,instr_li[menu.instr.value][0]).connect(reverb))
+						new Promise(f=>setSynth(f)),
+						new Promise(f=>synth_=new Tone.Sampler(instr_li[menu.instr.value][3],f,instr_li[menu.instr.value][0]).connect(reverb))
 					]).then(()=>{kb.style.opacity='1'; kb.style.pointerEvents='auto';});
 					break;
 				default:
@@ -208,56 +213,58 @@
 				synth.triggerAttackRelease(440*Math.pow(2,(10+sc)/12+instr_li[menu.instr.value][1]),undefined,'+.15');
 			}
 		},
-		ambset=(x=amb.c)=>new Promise((s,f)=>{
+		ambset=(x=amb.c)=>new Promise((f,r)=>{
 			Object.keys(amb.dat).forEach(i=>amb.dat[i].stop());
-			if(!~x){s();return;}
-			if(amb.dat[x]){amb.dat[x].start();s();}
-			else amb.dat[x]=new Tone.Player({url:`audio/env${x}.mp3`,volume:-4,autostart:true,loop:true,fadeIn:5,fadeOut:2,onload:s,onerror:f}).connect(reverb);
+			if(!~x){f();return;}
+			if(amb.dat[x]){amb.dat[x].start();f();}
+			else amb.dat[x]=new Tone.Player({url:`audio/env${x}.mp3`,volume:-4,autostart:true,loop:true,fadeIn:5,fadeOut:2,onload:f,onerror:r}).connect(reverb);
 		}),
-		ciset=(x=ci)=>new Promise((succ,fail)=>{
+		ciset=(x=ci)=>new Promise((ff,rj)=>{
 			ci=x;
 			if(!instr_li[0][0])Object.keys(instr_li[0][2]).forEach(i=>setTimeout(URL.revokeObjectURL,0,instr_li[0][2][i]));
-			if(!x){succ(instr_li[0]=cidft);return;}
+			if(!x){ff(instr_li[0]=cidft);return;}
 			Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').get(x),{
 				onsuccess:e=>{
 					if(!e.target.result){fail('invailed key');return;}
 					Promise.all(
-						e.target.result.dat.map(y=>new Promise((s,f)=>setTimeout(()=>{
-							s([y[0],URL.createObjectURL(y[1])])
+						e.target.result.dat.map(y=>new Promise(f=>setTimeout(()=>{
+							f([y[0],URL.createObjectURL(y[1])])
 						},0)))
 					).then(y=>{
 						const s={};
 						y.forEach(z=>s[z[0]]=z[1]);
-						succ(instr_li[0]=['',0,s]);
-					}).catch(fail);
+						ff(instr_li[0]=['',0,s]);
+					}).catch(rj);
 				},
-				onerror:fail
+				onerror:rj
 			});
 		}),
 		cicfg=(x='')=>{
-			alcb.checked=false;return;
-			const alcbl=document.querySelector('label[for=alcb]'),
-				row=(n,f={name:texts.selectf},i)=>{
-					cie.insertAdjacentHTML('beforeend',``);
+			cfg();return;
+			let tmp=[];
+			const row=(n,f={name:texts.fsel},i)=>{
+					cie.insertAdjacentHTML('beforeend',`<input class="style" placeholder="${texts.note}" value="${n}"><div class="file"><p${f.name?'':' style="opacity:.5;"'}>${f.name||texts.fsel}</p><input type="file" onchange=""></div></div><p class="grid"></p>`);
 				};
 			new Promise((f,r)=>{
-				alcbl.style.pointerEvents='none';
-				alert(`<input class="style" placeholder="${texts.cin}" autocomplete="text" style="max-width:10em;" value="${x}"><hr><div id="cie"></div><div class="cic plus"><p><p class="grid"></p></p></div><hr>`);
+				alcb.disabled=true;
+				alert(`<input class="style" placeholder="${texts.cin}" autocomplete="text" style="height:32px;line-height:32px;background-color:#3338;border-radius:8px;max-width:10em;" value="${x}"><hr><div id="cie"></div><div class="cic plus btn"><p><p class="grid"></p></p></div><hr>`);
 				const p=document.createElement('p'),b=document.createElement('p');
 				p.setAttribute('style','--bp:-400% 0;--size:48px;');p.onclick=()=>f(0);
 				b.setAttribute('style','--bp:-300% 0;--size:48px;');b.onclick=()=>f(1);
 				[p,b].forEach(x=>{x.classList.add('grid','btn');albox.appendChild(x);});
 				if(x)
 					Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').get(x),{
-						onsuccess:e=>e.target.result.dat.forEach((y,i)=>{prevdat[i]=y[1];row(...y,i);}),
-						onerror:e=>cie.textContent=e.target.error
+						onsuccess:e=>e.target.result.dat.forEach((y,i)=>{tmp[i]=y[1];row(...y,i);}),
+						onerror:console.log
 					});
 				else row('A#4');
 			})
 			.then(x=>{
-				alcbl.style.pointerEvents='';
-				if(!x){cfg();return;}
-				alert(x);
+				alcb.disabled=false;
+				if(x){
+
+				}
+				cfg();
 			});
 		},
 		cfg=()=>{
@@ -273,16 +280,16 @@ time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375">
 			rng[0].onchange=()=>{revset(rng[0].value);save();};rng[1].onchange=()=>{revset(undefined,rng[1].value);save();};
 			Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').getAllKeys(),{
 				onsuccess:e=>{
-					const wrap=document.createElement('div'),dft=document.createElement('p'),plus=document.createElement('p');
+					const wrap=document.createElement('div'),dft=document.createElement('div'),plus=document.createElement('div');
 					dft.onclick=()=>ciset('').then(()=>{save();set();cfg();}).catch(console.log);
 					dft.classList.add('cic');if(!ci)dft.classList.add('a');
 					dft.insertAdjacentHTML('beforeend',`<p>${texts.dft}</p>`);
 					plus.onclick=()=>cicfg();
-					plus.classList.add('cic','plus');
-					plus.insertAdjacentHTML('beforeend','<p><p class="grid"></p></p>');
+					plus.classList.add('cic','plus','btn');
+					plus.insertAdjacentHTML('beforeend','<div><p class="grid"></p></div>');
 					e.target.result.forEach(x=>{
 						const w=document.createElement('div'),n=document.createElement('p'),c=document.createElement('p'),d=document.createElement('p');
-						w.classList.add('cic');if(ci==x)w.classList.add('a');n.textContent=x;c.classList.add('grid','tex');d.classList.add('grid');
+						w.classList.add('cic');if(ci==x)w.classList.add('a');n.textContent=x;c.classList.add('grid','tex','btn');d.classList.add('grid','btn');
 						n.onclick=()=>ciset(x).then(()=>{save();set();cfg();}).catch(console.log);
 						c.onclick=()=>cicfg(x);
 						d.onclick=()=>Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').delete(x),{onsuccess:()=>{if(ci==x)dft.onclick();else cfg();},onerror:console.log});
