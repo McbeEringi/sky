@@ -299,7 +299,7 @@ time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375">
 		init=()=>ciset().catch(console.log).finally(()=>{set();scale();revset();ambset();});
 
 		document.body.addEventListener('pointerdown',Tone.start,{once:true});
-		document.querySelectorAll('.grid.btn').forEach(x=>x.ontouchstart=()=>{});
+		document.querySelectorAll('.btn').forEach(x=>x.ontouchstart=()=>{});
 		kb.textContent='';
 		for(let i=0;i<15;i++){
 			const x=document.createElement('p');
