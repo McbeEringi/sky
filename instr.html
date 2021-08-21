@@ -41,7 +41,7 @@
 		#kb.oct{grid-template-columns:repeat(4,var(--key_size));grid-template-rows:repeat(2,var(--key_size));}
 		#kb.nov{grid-template-columns:repeat(3,var(--key_size));grid-template-rows:repeat(3,var(--key_size));}
 		#kb p{position:relative;margin:0;will-change:transform;}
-		#kb p::before{content:"";display:block;width:78.4%;height:78.4%;margin:10.8%;border-radius:17%;background:0 0/800% #3338 url(img/instr.svg);}
+		#kb p::before{content:"";display:block;width:78.4%;height:78.4%;margin:10.8%;border-radius:17%;background:0 0/800% #3338 url(img/instr.svg);will-change:transform;}
 		#kb p:nth-of-type(5n+1)::before{background-position:-200% 0;}#kb p:nth-of-type(5n+2)::before{background-position:-100% 0;}
 		#kb p:nth-of-type(5n+3)::before{background-position:-200% 0;}#kb p:nth-of-type(5n+4)::before{background-position:-100% 0;}
 		#kb p:nth-of-type(5n  )::before{background-position:-200% 0;}#kb p:nth-of-type(7n+1)::before{background-position:0 0;}
@@ -234,7 +234,7 @@
 		cicfg=(x='')=>{
 			let dat=[];
 			const row=(n='',f={name:texts.fsel},i='')=>
-					cie.insertAdjacentHTML('beforeend',`<input class="style" placeholder="${texts.note}" value="${n}"><div class="file btn"><p>${f.name}</p><input type="file" accept=".mp3 .ogg .m4a .wav .flac" data-i="${i}" onchange="this.previousElementSibling.textContent=this.files[0].name;"></div></div><p class="grid btn" onclick="for(let i=0;i<2;i++)cie.removeChild(this.previousElementSibling);cie.removeChild(this);"></p>`);
+					cie.insertAdjacentHTML('beforeend',`<input class="style" placeholder="${texts.note}" value="${n}"><div class="file btn"><p>${f.name}</p><input type="file" accept=".mp3,.ogg,.m4a,.wav,.flac" data-i="${i}" onchange="this.previousElementSibling.textContent=this.files[0].name;"></div></div><p class="grid btn" onclick="for(let i=0;i<2;i++)cie.removeChild(this.previousElementSibling);cie.removeChild(this);"></p>`);
 			new Promise((f,r)=>{
 				alcb.disabled=true;
 				alert(`<input class="style" placeholder="${texts.cin}" autocomplete="text" style="height:32px;line-height:32px;background-color:#3338;border-radius:8px;max-width:10em;" value="${x}"><hr><div id="cie"></div>`);
