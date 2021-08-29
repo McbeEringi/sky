@@ -193,6 +193,10 @@
 		</ul>
 
 		<button id="btn">clear</button>
+		<p>
+			[sky_menu] build:2108290 <br>
+			<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
+		</p>
 
 		<script>
 			const e=[...new Array(7).keys()].map(x=>[...document.querySelectorAll(`ul:nth-of-type(${x+1}) input`)]),
@@ -200,6 +204,7 @@
 			console.log(
 				(localStorage.sky_wings||'').split(',').map((x,i)=>Array.from(x,(y,j)=>e[i][j].checked=y>0))
 			);
+			alert(`${((localStorage.sky_wings||'').match(/[1]/g)||[]).length}/${e.flat().length}`);
 			document.querySelectorAll(`input`).forEach(x=>x.onchange=save);
 			btn.onclick=()=>{document.querySelectorAll(`input`).forEach(x=>x.checked=false);save();}
 		</script>
