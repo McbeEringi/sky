@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg,isc,synth;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	build:'2107120',
+	build:'2108290',
 	title:'Enter title',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
@@ -22,7 +22,7 @@ const texts={
 		}
 	}[window.navigator.language.slice(0,2)]
 },
-mod=(x,y)=>{if(((y-1)&y)==0)return x&(y-1);else{while(x<0)x+=y;while(x>=y)x-=y;return x;}},
+mod=(x,y)=>{while(x<0)x+=y;while(x>=y)x-=y;return x;},
 ctx=c.getContext('2d'),
 i2n=['-9','-7','-5','-4','-2','0','2','3','5','7','8','10','12','14','15'],
 n2i={'-9':'0','-8':'0.5','-7':'1','-6':'1.5','-5':'2','-4':'3','-3':'3.5','-2':'4','-1':'4.5','0':'5','1':'5.5','2':'6','3':'7','4':'7.5','5':'8','6':'8.5','7':'9','8':'10','9':'10.5','10':'11','11':'11.5','12':'12','13':'12.5','14':'13','15':'14'},
@@ -72,6 +72,7 @@ sytar=(n,t=Tone.now())=>{
 },
 seq=new Tone.Sequence((time,note)=>{
 	//Tone.Draw.schedule(()=>{},time);
+	console.log(Tone.Transport.position);
 	curset();curpos=mod(curpos+1,calced.note.length);
 	sytar(note,time);kbset(note);
 },[],'4n').start(0),
