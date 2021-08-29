@@ -72,7 +72,6 @@ sytar=(n,t=Tone.now())=>{
 },
 seq=new Tone.Sequence((time,note)=>{
 	//Tone.Draw.schedule(()=>{},time);
-	console.log(Tone.Transport.position);
 	curset();curpos=mod(curpos+1,calced.note.length);
 	sytar(note,time);kbset(note);
 },[],'4n').start(0),
