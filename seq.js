@@ -381,7 +381,7 @@ urlfx={
 },
 ezsave=()=>{if(!from_url&&main){localStorage.seq_ezsave=JSON.stringify(main);console.log('ezsave');}},
 init=()=>{
-	main={sc:0,bpm:120,arp:0,instr:0,scores:new Array(8).fill(''),...main};urstack=[[],[]];
+	main={sc:0,bpm:120,arp:0,instr:0,scores:[...new Array(4).fill(''),...new Array(4).fill(['',''])],...main};urstack=[[],[]];
 	document.title='sky_seq '+(name_.textContent=main.name||'');
 	[redobtn,undobtn,cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));bpm_.value=sc_.value=arp_.value='';
 	syset();calc();seqset(0);tstop();bpmset();scset();arpset();
