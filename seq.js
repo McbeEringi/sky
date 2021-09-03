@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg,isc,synth;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	build:'2108290',
+	build:'2109040',
 	title:'Enter title',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
@@ -151,7 +151,7 @@ draw=()=>{
 	}
 	if(emode.checked)frr(ctx,'#fea8',w*.5,0,1,240);
 	if(ecur)frr(ctx,'#feac',ecur[0]+pos,0,3,240);
-	if(sel)frr(ctx,sel.col,sel.x+pos,0,sel.dx,240);
+	if(emode.checked&&sel)frr(ctx,sel.col,sel.x+pos,0,sel.dx,240);
 },
 selfix=(ind0,ind1)=>{
 	if(ind0[0]>ind1[0])[ind0,ind1]=[ind1,ind0];
@@ -511,7 +511,7 @@ infobtn.onclick=()=>{
 }
 //
 
-emode.onchange=()=>{sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));[cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.remove('dis'));slbtn.classList.remove('a');draw();};
+emode.onchange=draw;//()=>{sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));[cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.remove('dis'));slbtn.classList.remove('a');draw();};
 slbtn.onclick=()=>{
 	if(slbtn.classList.toggle('a')){
 		[cxbtn,ccbtn, cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.add('dis'));
@@ -539,7 +539,7 @@ ccbtn.onclick=()=>{
 	if(!sel)return;
 	let tmp=sel.dat[0].ind.length-1;tmp=[sel.dat[0].ind.slice(0,tmp),sel.dat[0].ind[tmp],sel.dat[1].ind[tmp]];
 	cbset(ind2n(tmp[0]).slice(tmp[1],tmp[2]+1));
-	sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));draw();
+	/*sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));*/draw();
 };
 cvbtn.onclick=()=>selins(clips[0]);
 rmbtn.onclick=()=>{
