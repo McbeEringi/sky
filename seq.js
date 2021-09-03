@@ -421,7 +421,7 @@ document.onkeydown=e=>{
 					kb.children[keymap.indexOf(e.code)].dispatchEvent(new Event('mousedown'));
 		}
 };
-scr.addEventListener('wheel',e=>{e.preventDefault();scr.scrollLeft+=(Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY)*(e.shiftKey?.1:1);});
+scr.addEventListener('wheel',e=>{e.preventDefault();scr.scrollLeft+=(Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY)*(e.shiftKey?.1:1);},{passive:false});
 scr.addEventListener('scroll',()=>{if(tims.igscr){tims.igscr=false;return;}requestAnimationFrame(draw);},{passive:true});
 scr.onclick=e=>{
 	//if(emode.checked){scr.scrollLeft=e.clientX+window.scrollX+scr.scrollLeft-c.parentNode.clientWidth*.5;else
@@ -457,7 +457,7 @@ arp_.onchange=arpset;
 			seqset();calc();curset();
 		}else synth.triggerAttackRelease(n2Hz(i2n[i]),undefined,undefined,cfg.kbvol);
 	};
-	x.addEventListener('touchstart',keyfx);
+	x.addEventListener('touchstart',keyfx,{passive:false});
 	x.addEventListener('mousedown',keyfx);
 });
 
