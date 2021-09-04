@@ -2,7 +2,7 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg,isc,synth;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	build:'2109041',
+	build:'2109042',
 	title:'Enter title',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
@@ -312,10 +312,12 @@ dbfx={
 	},
 	exp:i=>{
 		dbfx.get(i,e=>{
-			alert(`${texts.exp(e.target.result.name)}\n<input class="style input" value="${urlfx.o(e.target.result)}">\n<button class="grid bg" style="--bp:-300% -200%;">copy</button>	<button class="grid bg" style="--bp:-400% -300%;">tweet</button>`);
-			let b=albox.querySelectorAll('button');b[0].focus();
-			b[0].onclick=()=>navigator.clipboard.writeText(albox.querySelector('input').value).then(browse);
-			b[1].onclick=()=>{window.open(`https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_seq&url=${encodeURIComponent(albox.querySelector('input').value)}`);browse();};
+			alert(`${texts.exp(e.target.result.name)}\n<input class="style input" value="${urlfx.o(e.target.result)}">\n<button class="grid bg" style="--bp:-300% -200%;">copy</button>	<button class="grid bg" style="--bp:-400% -300%;">tweet</button>	<button class="grid bg" style="--bp:-700% -200%;">share</button>`);
+			let b=albox.querySelectorAll('button'),el=albox.querySelector('input');b[0].focus();
+			b[0].onclick=()=>navigator.clipboard.writeText(el.value).then(browse);
+			b[1].onclick=()=>{window.open(`https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_seq&url=${encodeURIComponent(el.value)}`);browse();};
+			if(navigator.share)b[2].onclick=()=>navigator.share({title:`sky_seq ${e.target.result.name}`,text:`${e.target.result.name}\n Created w/ #sky_seq `,url:el.value});
+			else{b[2].remove();albox.lastChild.remove();}
 		});
 	},
 	sam:fx=>fetch('sample.json').then(x=>x.json()).then(x=>
