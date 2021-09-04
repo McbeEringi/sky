@@ -33,6 +33,7 @@
 			#wrap details{border:0;border-image:linear-gradient(#fea,#f66) 1;border-left:4px solid;padding:4px 4px 4px 16px;margin:8px 0;background-color:#0006;}
 			#wrap summary{border:0;border-image:linear-gradient(90deg,#aefc,#aef0) 1;border-bottom:2px solid;}
 			.ico{display:inline-block;margin:4px;--bp:0 0;background:#0008 var(--bp)/800%;width:40px;height:40px;border-radius:25%;vertical-align:middle;}
+			#ctrp{position:fixed;bottom:0;right:0;display:none;}
 		</style>
 
 		<div id="wrap"></div>
@@ -43,20 +44,22 @@
 				<li><a href="?seq">sky_seq</a></li>
 			</ul>
 		</details>
+		<div id="ctrp"><button onclick="dtopen(1);">openAll</button><br><button onclick="dtopen(0);">closeAll</button></div>
 		<p>
-			[sky_manual] build:2109043 <br>
+			[sky_manual] build:2109044 <br>
 			<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
 		</p>
 
 		<script>
-			const typeOf=x=>Number.isNaN(x)?'nan':Object.prototype.toString.call(x).slice(8,-1).toLowerCase(),
+			const dtopen=s=>document.body.querySelectorAll('#wrap details').forEach(x=>x.open=s),
+				typeOf=x=>Number.isNaN(x)?'nan':Object.prototype.toString.call(x).slice(8,-1).toLowerCase(),
 				rrg=/\$\{([\w\.]*),(\d{2}),?([^\}]*)\}/g,
 				rfx=(m,p1,p2,p3)=>`<p class="ico" style="background-image:url(../img/${p1});--bp:-${p2[0]}00% -${p2[1]}00%;${p3||''}"></p>`,
-				core=y=>Object.entries(y).map(z=>typeOf(z[1])=='object'?`<details><summary>${z[0].replace(rrg,rfx)}</summary>${core(z[1])}</details>`:`${z[0].replace(rrg,rfx)}\n`).join('');
+				core=y=>Object.entries(y).map(z=>typeOf(z[1])=='object'?`<details><summary>${z[0].replace(rrg,rfx)}</summary>${core(z[1])}</details>`:z[0].replace(rrg,rfx)).join('');
 			fetch(`${location.search.slice(1)}.json`).then(x=>x.json()).then(x=>{
 				console.log(x);
 				wrap.insertAdjacentHTML('beforeend',core(x));
-				//document.body.querySelectorAll('details').forEach(x=>x.open=true);
+				ctrp.style.display='block';
 			}).catch(x=>{
 				console.log(x);
 				document.body.querySelector('details').open=true;
