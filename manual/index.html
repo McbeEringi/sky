@@ -32,7 +32,7 @@
 			#wrap{backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);background-color:#0006;padding:4px;white-space:pre-wrap;border-radius:8px;}
 			#wrap details{border:0;border-image:linear-gradient(#fea,#f66) 1;border-left:4px solid;padding:4px 4px 4px 16px;margin:8px 0;background-color:#0006;}
 			#wrap summary{border:0;border-image:linear-gradient(90deg,#aefc,#aef0) 1;border-bottom:2px solid;}
-			.ico{display:inline-block;margin:4px;--bp:0 0;background:#0008 var(--bp)/800%;width:48px;height:48px;border-radius:25%;vertical-align:middle;}
+			.ico{display:inline-block;margin:4px;--bp:0 0;background:#0008 var(--bp)/800%;width:40px;height:40px;border-radius:25%;vertical-align:middle;}
 		</style>
 
 		<div id="wrap"></div>
@@ -43,12 +43,15 @@
 				<li><a href="?seq">sky_seq</a></li>
 			</ul>
 		</details>
-		[sky_manual] build:2109042 <br>
-		<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
+		<p>
+			[sky_manual] build:2109043 <br>
+			<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
+		</p>
 
 		<script>
-			const rfx=(m,p1,p2)=>`<p class="ico" style="background-image:url(../img/${p1});--bp:-${p2[0]}00% -${p2[1]}00%;"></p>`,
-				core=y=>Object.entries(y).map(z=>typeof z[1]=='object'?`<details><summary>${z[0]}</summary>${core(z[1])}</details>`:z.filter(w=>w).join(': ').replace(/\$\{([\w\.]*),(\d{2})\}/g,rfx)).join('');
+			const rrg=/\$\{([\w\.]*),(\d{2}),?([^\}]*)\}/g,
+				rfx=(m,p1,p2,p3)=>`<p class="ico" style="background-image:url(../img/${p1});--bp:-${p2[0]}00% -${p2[1]}00%;${p3||''}"></p>`,
+				core=y=>Object.entries(y).map(z=>typeof z[1]=='object'?`<details><summary>${z[0].replace(rrg,rfx)}</summary>${core(z[1])}</details>`:`${z[0].replace(rrg,rfx)}\n`).join('');
 			fetch(`${location.search.slice(1)}.json`).then(x=>x.json()).then(x=>{
 				console.log(x);
 				wrap.insertAdjacentHTML('beforeend',core(x));
