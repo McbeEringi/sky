@@ -2,14 +2,14 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg,isc,synth;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	build:'2109040',
+	build:'2109041',
 	title:'Enter title',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
 	buiq:'All data will be over written.\nThis operation is irreversible.\nAre you sure you want to continue?',
 	fubu:'Backups made in future versions cannot be loaded.',invf:'invailed file.',
 	cfg:'config',sound:'sound',seq:'sequencer',kb:'keyboard',bhv:'behavior',udl:'undo & redo limit',res:'sheet resolution',chl:'clopboard his limit',bu:'backup',cbf:'create backup file',rff:'recover from file',
-	usg:'usage',
+	usg:'usage',ntab:'Open in New Tab',
 	...{
 		ja:{
 			title:'タイトルを入力',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',imp:'URLから読み込む',exp:x=>`「${x}」をURLに書き出す`,
@@ -18,7 +18,7 @@ const texts={
 			buiq:'全てのデータは上書きされます。\nこの操作は元に戻せません。\n本当にこの操作を続けますか?',
 			fubu:'将来のバージョンで作成されたバックアップは読み込めません',invf:'このファイルは使用できません',
 			cfg:'設定',sound:'サウンド',seq:'シーケンサ',kb:'キーボード',bhv:'動作',udl:'取り消し上限',res:'譜面解像度',chl:'コピー履歴上限',bu:'バックアップ',cbf:'バックアップを作成',rff:'ファイルから復元',
-			usg:'使い方'
+			usg:'使い方',ntab:'新規タブで開く'
 		}
 	}[window.navigator.language.slice(0,2)]
 },
@@ -477,6 +477,10 @@ infobtn.onclick=()=>{
 		<h1 style="float:left;margin:0;">sky_seq</h1>
 		<p style="float:right;opacity:.7;margin:2em 0;">Powerd by Tone.js<br>Audio: GarageBand<br>author:<a href="https://twitter.com/McbeEringi">@McbeEringi</a><br>build:${texts.build}<br>MIT License</p>
 		<hr style="clear:both;">
+		<h2>${texts.usg}</h2>
+		<a href="manual/index.html?seq" target="_blank">${texts.ntab}</a><br>
+		<iframe src="manual/index.html?seq"></iframe>
+		<hr>
 		<h2>${texts.cfg}</h2>
 		<h3>${texts.sound}</h3>
 		${texts.seq}: <input type="range" value="${cfg.seqvol}" min="0" max="1" step=".0625"><span>${cfg.seqvol*16}</span><br>
@@ -488,9 +492,6 @@ infobtn.onclick=()=>{
 		<h3>${texts.bu}</h3>
 		${texts.cbf}: <button onclick="tpause();dbfx.buo();">${texts.bu}</button><br>
 		${texts.rff}: <input type="file" onclick="tpause();" accept=".skyseq"><label><input type="hidden"><span style="white-space:pre-wrap;font-size:x-small;opacity:.7;"></span></label><br>
-		<hr>
-		<h2>${texts.usg}</h2>
-		coming soon…<br>
 	`,1);
 	let e=albox.querySelectorAll('input'),cfgsave=()=>localStorage.seq_cfg=JSON.stringify(cfg);
 	e[0].oninput=()=>{e[0].nextSibling.textContent=(cfg.seqvol=Number(e[0].value))*16;if(tstat())synth.triggerAttackRelease([3,7].map(n2Hz),undefined,undefined,cfg.seqvol);};e[0].onchange=cfgsave;
