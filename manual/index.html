@@ -30,20 +30,20 @@
 		<script src="../style.js" async></script>
 		<style>
 			#wrap{backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);background-color:#0006;padding:4px;white-space:pre-wrap;}
-			#wrap details{border-left:4px double #fea;padding:4px 4px 4px 16px;margin:8px 0;background-color:#0006;}
-			#wrap summary{border-bottom:2px solid #aefc;}
+			#wrap details{border:0;border-image:linear-gradient(#fea,#f66) 1;border-left:4px solid;padding:4px 4px 4px 16px;margin:8px 0;background-color:#0006;}
+			#wrap summary{border:0;border-image:linear-gradient(90deg,#aefc,#aef0) 1;border-bottom:2px solid;}
 			.ico{display:inline-block;margin:4px;--bp:0 0;background:#0008 var(--bp)/800%;width:48px;height:48px;border-radius:25%;vertical-align:middle;}
 		</style>
 
 		<div id="wrap"></div>
 		<hr>
 		<details>
-			<summary>マニュアル一覧</summary>
+			<summary>MENU</summary>
 			<ul>
 				<li><a href="?seq">sky_seq</a></li>
 			</ul>
 		</details>
-		[sky_manual] build:2109040 <br>
+		[sky_manual] build:2109041 <br>
 		<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
 
 		<script>
@@ -52,6 +52,7 @@
 				const rfx=(m,p1,p2)=>`<p class="ico" style="background-image:url(../img/${p1});--bp:-${p2[0]}00% -${p2[1]}00%;"></p>`,
 					core=y=>Object.entries(y).map(z=>typeof z[1]=='object'?`<details><summary>${z[0]}</summary>${core(z[1])}</details>`:`${z.filter(w=>w).join(': ').replace(/\$\{([\w\.]*),(\d{2})\}/g,rfx)}`).join('');
 				wrap.insertAdjacentHTML('beforeend',core(x));
+				//document.body.querySelectorAll('details').forEach(x=>x.open=true);
 			}).catch(x=>{
 				console.warn(x);
 				document.body.querySelector('details').open=true;
