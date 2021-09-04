@@ -43,20 +43,20 @@
 				<li><a href="?seq">sky_seq</a></li>
 			</ul>
 		</details>
-		[sky_manual] build:2109041 <br>
+		[sky_manual] build:2109042 <br>
 		<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
 
 		<script>
+			const rfx=(m,p1,p2)=>`<p class="ico" style="background-image:url(../img/${p1});--bp:-${p2[0]}00% -${p2[1]}00%;"></p>`,
+				core=y=>Object.entries(y).map(z=>typeof z[1]=='object'?`<details><summary>${z[0]}</summary>${core(z[1])}</details>`:z.filter(w=>w).join(': ').replace(/\$\{([\w\.]*),(\d{2})\}/g,rfx)).join('');
 			fetch(`${location.search.slice(1)}.json`).then(x=>x.json()).then(x=>{
 				console.log(x);
-				const rfx=(m,p1,p2)=>`<p class="ico" style="background-image:url(../img/${p1});--bp:-${p2[0]}00% -${p2[1]}00%;"></p>`,
-					core=y=>Object.entries(y).map(z=>typeof z[1]=='object'?`<details><summary>${z[0]}</summary>${core(z[1])}</details>`:`${z.filter(w=>w).join(': ').replace(/\$\{([\w\.]*),(\d{2})\}/g,rfx)}`).join('');
 				wrap.insertAdjacentHTML('beforeend',core(x));
 				//document.body.querySelectorAll('details').forEach(x=>x.open=true);
 			}).catch(x=>{
-				console.warn(x);
+				console.log(x);
 				document.body.querySelector('details').open=true;
-				wrap.textContent='ｳｯ…(死因:取説の錬成)\n↓下のメニューから選んでください';
+				wrap.insertAdjacentHTML('beforeend','<h1>Sky_manual</h1>↓下のメニューから選んでください');
 			});
 		</script>
 	</body>

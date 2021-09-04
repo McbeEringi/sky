@@ -474,9 +474,8 @@ filebtn.onclick=()=>{
 savebtn.onclick=()=>dbfx.sav();
 infobtn.onclick=()=>{
 	alert(`
-		<h1 style="float:left;margin:0;">sky_seq</h1>
-		<p style="float:right;opacity:.7;margin:2em 0;">Powerd by Tone.js<br>Audio: GarageBand<br>author:<a href="https://twitter.com/McbeEringi">@McbeEringi</a><br>build:${texts.build}<br>MIT License</p>
-		<hr style="clear:both;">
+		<h1>sky_seq</h1>
+		<hr>
 		<h2>${texts.usg}</h2>
 		<a href="manual/index.html?seq" target="_blank">${texts.ntab}</a><br>
 		<iframe src="manual/index.html?seq"></iframe>
@@ -484,14 +483,16 @@ infobtn.onclick=()=>{
 		<h2>${texts.cfg}</h2>
 		<h3>${texts.sound}</h3>
 		${texts.seq}: <input type="range" value="${cfg.seqvol}" min="0" max="1" step=".0625"><span>${cfg.seqvol*16}</span><br>
-		${texts.kb}: <input type="range" value="${cfg.kbvol}" min="0" max="1" step=".0625"><span>${cfg.kbvol*16}</span><br>
+		${texts.kb}: <input type="range" value="${cfg.kbvol}" min="0" max="1" step=".0625"><span>${cfg.kbvol*16}</span>
 		<h3>${texts.bhv}</h3>
 		${texts.udl}: <input type="range" value="${cfg.urMax}" min="16" max="256" step="16"><span>${cfg.urMax}</span><br>
 		${texts.chl}: <input type="range" value="${cfg.clipMax}" min="2" max="32" step="1"><span>${cfg.clipMax}</span><br>
-		${texts.res}: <input type="range" value="${cfg.res}" min=".1" max="${window.devicePixelRatio}" step=".1"><span>${cfg.res}</span><br>
+		${texts.res}: <input type="range" value="${cfg.res}" min=".1" max="${window.devicePixelRatio}" step=".1"><span>${cfg.res}</span>
 		<h3>${texts.bu}</h3>
 		${texts.cbf}: <button onclick="tpause();dbfx.buo();">${texts.bu}</button><br>
-		${texts.rff}: <input type="file" onclick="tpause();" accept=".skyseq"><label><input type="hidden"><span style="white-space:pre-wrap;font-size:x-small;opacity:.7;"></span></label><br>
+		${texts.rff}: <input type="file" onclick="tpause();" accept=".skyseq"><label><input type="hidden"><span style="white-space:pre-wrap;font-size:x-small;opacity:.7;"></span></label>
+		<hr>
+		<p>Powerd by Tone.js<br>[sky_seq] build:${texts.build}<br><a href="https://twitter.com/McbeEringi">@McbeEringi</a> MIT License</p>
 	`,1);
 	let e=albox.querySelectorAll('input'),cfgsave=()=>localStorage.seq_cfg=JSON.stringify(cfg);
 	e[0].oninput=()=>{e[0].nextSibling.textContent=(cfg.seqvol=Number(e[0].value))*16;if(tstat())synth.triggerAttackRelease([3,7].map(n2Hz),undefined,undefined,cfg.seqvol);};e[0].onchange=cfgsave;

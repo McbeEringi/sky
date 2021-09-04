@@ -31,10 +31,10 @@
 		<style>
 			label{display:block;border-bottom:1px solid #888;}
 		</style>
-		<h2>Sky wings</h2>
-		<small>羽の収集状況のメモに.｡:+*+</small>
+		<h1>Sky wings</h1>
+		<p>羽の収集状況のメモに.｡:+*+</p>
 
-		<h3>孤島</h3>
+		<h2>孤島</h2>
 		<ul>
 			<label><li><input type="checkbox">孤島 - 岩上</li></label>
 			<label><li><input type="checkbox">孤島 - 船</li></label>
@@ -48,7 +48,7 @@
 			<label><li><input type="checkbox">預言 - 火</li></label>
 		</ul>
 
-		<h3>草原</h3>
+		<h2>草原</h2>
 		<ul>
 			<label><li><input type="checkbox">丸石 - 左小部屋</li></label>
 			<label><li><input type="checkbox">丸石 - 丸石上</li></label>
@@ -79,7 +79,7 @@
 			<label><li><input type="checkbox">楽園 - 奥浮島</li></label>
 		</ul>
 
-		<h3>雨林</h3>
+		<h2>雨林</h2>
 		<ul>
 			<label><li><input type="checkbox">開拓地 - 木上</li></label>
 			<label><li><input type="checkbox">開拓地 - 門前</li></label>
@@ -107,7 +107,7 @@
 			<label><li><input type="checkbox">大樹 - 地下</li></label>
 		</ul>
 
-		<h3>峡谷</h3>
+		<h2>峡谷</h2>
 		<ul>
 			<label><li><input type="checkbox">試し滑走</li></label>
 			<label><li><input type="checkbox">リンク - 中央</li></label>
@@ -135,7 +135,7 @@
 			<label><li><input type="checkbox">隠者 - 洞窟</li></label>
 		</ul>
 
-		<h3>捨て地</h3>
+		<h2>捨て地</h2>
 		<ul>
 			<label><li><input type="checkbox">倒壊祠 - 門上</li></label>
 			<label><li><input type="checkbox">倒壊祠 - 左</li></label>
@@ -161,7 +161,7 @@
 			<label><li><input type="checkbox">方舟 - 奥洞窟</li></label>
 		</ul>
 
-		<h3>書庫</h3>
+		<h2>書庫</h2>
 		<ul>
 			<label><li><input type="checkbox">箱 - 壺</li></label>
 			<label><li><input type="checkbox">箱 - 梯子</li></label>
@@ -177,7 +177,7 @@
 			<label><li><input type="checkbox">星月夜 - 冠</li></label>
 		</ul>
 
-		<h3>暴風域</h3>
+		<h2>暴風域</h2>
 		<ul>
 			<label><li><input type="checkbox">建物</li></label>
 			<br>
@@ -194,7 +194,7 @@
 
 		<button id="btn">clear</button>
 		<p>
-			[sky_menu] build:2108290 <br>
+			[sky_wings] build:2108290 <br>
 			<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
 		</p>
 
@@ -204,7 +204,7 @@
 			console.log(
 				(localStorage.sky_wings||'').split(',').map((x,i)=>Array.from(x,(y,j)=>e[i][j].checked=y>0))
 			);
-			alert(`${((localStorage.sky_wings||'').match(/[1]/g)||[]).length}/${e.flat().length}`);
+			window.onload=()=>alert(`${((localStorage.sky_wings||'').match(/[1]/g)||[]).length}/${e.flat().length}`);
 			document.querySelectorAll(`input`).forEach(x=>x.onchange=save);
 			btn.onclick=()=>{document.querySelectorAll(`input`).forEach(x=>x.checked=false);save();}
 		</script>
