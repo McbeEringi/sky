@@ -60,6 +60,7 @@
 				console.log(x);
 				wrap.insertAdjacentHTML('beforeend',core(x));
 				ctrp.style.display='block';
+				document.title=`sky_manual ${wrap.querySelector('h1').textContent}`;
 			}).catch(x=>{
 				console.log(x);
 				document.body.querySelector('details').open=true;
