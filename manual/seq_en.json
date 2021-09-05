@@ -37,6 +37,5 @@
 			"Import" :{"If you press i ︎ → Backup → Restore from file → Select file, you will be prompted to select a backup file.  \nAfter selecting the appropriate file, press the date button to restore the score.  \nThe currently saved sheet music will not disappear, but the backup sheet music will overwrite any sheet music with the same name.  \nThe current score will also be overwritten.":0}
 		}
 	},
-	"build:2109043":0,
-	"Translated with <a href=\"https://miraitranslate.com/trial\">MiraiTranslate</a>":0
+	"build:2109043\nTranslated with <a href=\"https://miraitranslate.com/trial\">MiraiTranslate</a>":0
 }
