@@ -20,8 +20,8 @@ const cacheName='cache210905_1',STATIC_DATA=[
 	//instr
 	'instr.html?pwa=1','img/instr.svg',
 	'https://cdn.jsdelivr.net/npm/tone/build/Tone.js',
-	//'img/photo/hotsprv.mp4',
-	'audio/open.mp3','audio/close.mp3','audio/choose.mp3',
+	//'img/photo/hotsprv.mp4','audio/open.mp3','audio/close.mp3','audio/choose.mp3',
+	'audio/metronome.mp3',
 	'audio/instr/musicbox/a3.mp3',
 	'audio/instr/musicbox/a4.mp3',
 	'audio/instr/musicbox/a5.mp3',

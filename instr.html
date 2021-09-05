@@ -86,6 +86,11 @@
 		#cie .file{overflow:hidden;position:relative;flex-grow:1;}
 		#cie .file *{padding:0 1.5ex;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 		#cie .file input{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;padding:0;}
+
+		input[type=checkbox].toggle{--size:24px;appearance:none;-webkit-appearance:none;outline:none;display:inline-block;width:calc(var(--size)*1.62);height:var(--size);border-radius:calc(var(--size)*0.5);position:relative;vertical-align:middle;background-color:#666;transition:.1s;}
+	  input[type=checkbox].toggle::before{content:"";display:block;width:var(--size);height:var(--size);border-radius:50%;position:absolute;top:0;left:0;transform:scale(.85);background-color:#fff;transition:.1s;}
+	  input[type=checkbox]:checked.toggle{background-color:#6f6;}
+	  input[type=checkbox]:checked.toggle::before{left:calc(var(--size)*0.62);}
 	</style>
 	<input type="checkbox" id="drwcb">
 	<input type="checkbox" id="kbsize">
@@ -137,17 +142,18 @@
 		let synth,synth_,sc,rev,ci;
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const texts=Object.assign({
-			info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by Tone.js\n[sky_instr] build:2109050\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+			info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by Tone.js\n[sky_instr] build:2109060\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 			rev:'reverb',ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault'],
-			dft:'default',cin:'instrment label',fsel:'choose file',note:'note'
+			dft:'default',cin:'instrment label',fsel:'choose file',note:'note',mrn:'metronome'
 		},{
 			ja:{
 				rev:'リバーブ',ambs:'環境音',none:'なし',ambn:['温泉','ホーム','雨林','書庫'],
-				dft:'デフォルト',cin:'楽器名',fsel:'ファイルを選択',note:'音名'
+				dft:'デフォルト',cin:'楽器名',fsel:'ファイルを選択',note:'音名',mrn:'メトロノーム'
 			}
 		}[window.navigator.language.slice(0,2)]),
 		amb={c:-1,dat:{}},
 		reverb=new Tone.Reverb().toDestination(),
+		mrn=new Tone.Player("audio/metronome.mp3").connect(reverb),
 		revset=(w=rev[0],d=rev[1])=>{rev=[w,d];reverb.wet.value=w;reverb.decay=Math.pow(2,d);},
 		stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 		cidft=['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
@@ -272,11 +278,17 @@
 <hr>= ${texts.rev} =
 mix:<input type="range" value="${rev[0]}" min="0" max="1" step="0.0625">
 time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375">
+<hr>= ${texts.mrn} =
+<input type="checkbox" class="toggle">
+bpm=<span>${Math.round(Tone.Transport.bpm.value)}</span>
+<input type="range" value="${Tone.Transport.bpm.value}" min="40" max="208" step="2">
 <hr>=<p class="grid tex a" style="--bp:0 -100%;--size:57px;cursor:unset;"></p>=
 `);
 			const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=range]');
 			sel.value=amb.c;sel.onchange=()=>{sel.disabled=true;ambset(amb.c=Number(sel.value)).catch(console.log).finally(()=>sel.disabled=false);save();};
 			rng[0].onchange=()=>{revset(rng[0].value);save();};rng[1].onchange=()=>{revset(undefined,rng[1].value);save();};
+			rng[2].oninput=()=>rng[2].previousElementSibling.textContent=Tone.Transport.bpm.value=rng[2].value;rng[2].onchange=save;
+			albox.querySelector('.toggle').onchange=()=>Tone.Transport.toggle();
 			Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').getAllKeys(),{
 				onsuccess:e=>{
 					const wrap=document.createElement('div'),dft=document.createElement('div'),plus=document.createElement('div');
@@ -295,8 +307,8 @@ time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375">
 				onerror:console.log
 			});
 		},
-		save=()=>{localStorage.instr_stat=JSON.stringify({sc,instr:menu.instr.value,reverb:rev,amb:amb.c,ci});console.log('saved');},
-		load=()=>({sc,instr:menu.instr.value,reverb:rev,amb:amb.c,ci}={sc:0,instr:'0',reverb:['0','0'],amb:1,ci:'',...JSON.parse(localStorage.instr_stat||'{}')}),
+		save=()=>{localStorage.instr_stat=JSON.stringify({sc,instr:menu.instr.value,reverb:rev,amb:amb.c,ci,bpm:Tone.Transport.bpm.value});console.log('saved');},
+		load=()=>({sc,instr:menu.instr.value,reverb:rev,amb:amb.c,ci,bpm:Tone.Transport.bpm.value}={sc:0,instr:'0',reverb:['0','0'],amb:1,ci:'',...JSON.parse(localStorage.instr_stat||'{}')}),
 		init=()=>ciset().catch(console.log).finally(()=>{set();scale();revset();ambset();});
 
 		document.body.addEventListener('pointerdown',Tone.start,{once:true});
@@ -319,9 +331,8 @@ time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375">
 		scd.children[1].onclick=()=>{sc=0;scale(1);save();};
 		scd.children[2].onclick=()=>{sc++;scale(1);save();};
 		cfgbtn.onclick=cfg;
-		infobtn.onclick=()=>{
-			alert(`${texts.info}`);
-		}
+		infobtn.onclick=()=>alert(`${texts.info}`);
+		Tone.Transport.scheduleRepeat(t=>mrn.start(t),'4n');
 
 		{
 			load();
