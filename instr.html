@@ -123,7 +123,7 @@
 		<hr>
 		<div id="cfgbtn" class="grid btn tex" style="--bp:-100% 0;">
 		</div><div id="infobtn" class="grid btn tex" style="--bp:0 0;">
-		</div><a id="infobtn" class="grid btn" style="--bp:-100% -100%;" href="manual/index.html?m=instr" target="_blank"></a>
+		</div><a class="grid btn" style="--bp:-100% -100%;" href="manual/index.html?m=instr" target="_blank"></a>
 	</div>
 	<div class="btnw">
 		<label for="kbsize" class="grid"></label>
@@ -325,6 +325,7 @@ time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375">
 
 		{
 			load();
+			if(window.navigator.language.slice(0,2)!='ja')document.querySelector('a[href]').href+='_en';
 			const fx=()=>{if(urlq.pwa)document.querySelectorAll('a[href]').forEach(e=>{e.href+='&pwa=1';e.target='';});};
 			if(typeof urlq=='undefined')document.addEventListener('styexe',fx,{once:true});else fx();
 			if(typeof idb=='undefined')window.addEventListener('idbready',init,{once:true});else init();
