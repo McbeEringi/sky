@@ -1,0 +1,42 @@
+{
+	"<h1>sky_seq manual</h1>":0,
+	"Overview \nThis is a web app that allows you to create and share music scores specialized for sky instruments.  \nAllows you to create more accurate music scores than existing web apps.  \nYou can also open the sheet music directly from the shared URL and start working.  \nAll features are available offline by adding them to the home screen.":0,
+	"Create a musical score":{
+		"The created score is automatically saved by the autosave function.  \nIt is recommended that you save manually when you are finished, as this is a separate save from the manual save to the terminal.":0,
+		"New":{"Press ${seq.svg,02} → ${seq.svg,12} to create a new score.":0},
+		"${seq.svg,70} tone, tempo, and instrument settings":{"Press ${seq.svg,70} to open the score setting screen.  \n Use ${seq.svg,13} to set the key (integer) \n Use ${seq.svg,23} to set the tempo (natural number) \n Use ${seq.svg,33} to set the amount of sound deviation (integer) \n Use ${tex.png,01} to select the instrument.  \nThese settings are saved as part of the score.":0},
+		"${seq.svg,03,transform:rotateZ(90deg);} Rhythm editing":{
+			"If the keyboard is in the center of the screen, it is in note editing mode.  \nPress ${seq.svg,03,transform:rotateZ(90deg);} to switch to note editing mode.":0,
+			"About Cursors":{"The yellow vertical bar is the edit cursor. Scroll the staff horizontally.":0},
+			"${seq.svg,31} Range Selection":{"Press ${seq.svg,31} → Staff Scroll → ${seq.svg,31} to select notes of the same level.  \nWhen crossing hierarchies, the selection is based on the shallowest hierarchy.":0},
+			"${seq.svg,01} Cut ${seq.svg,11} Copy":{"The cut copy is performed with the range selected.  \nCut and copied notes are displayed as copy history immediately below.":0},
+			"${seq.svg,21} Paste":{"The top blue note in the copy history is inserted at the edit cursor.  \nIf you want to paste past copy history, you can move to the top of copy history by pressing the desired history.  \nIf a range selection is selected, the selected notes will be deleted and inserted.":0},
+			"${seq.svg,53} Delete":{"The note in front of the edit cursor is deleted.  \nDeletes selected notes if range selection is selected.":0},
+			"${seq.svg,61} Add Note":{"The note is inserted at the edit cursor.  \nNote length varies by hierarchy.":0},
+			"${seq.svg,63} seq (break time signature)" :{"A hierarchical note is inserted at the edit cursor.  \nBy default, there are two notes in the hierarchy, so they are 1/2 of the original length.  \nUse more hierarchies and notes in the hierarchy to represent triplets and even shorter notes.":0}
+		},
+		"${seq.svg,03} note typing":{
+			"If the keyboard is in the center of the screen, it is in note editing mode.  \nPress ${seq.svg,03} to switch to rhythm editing mode.  \nWork like punching a music box.":0,
+			"About Cursors":{"The cyan vertical bar is the playback cursor. Press elsewhere to move.  \n ${seq.svg,50,transform:scaleX(-1);} ${seq.svg,50}.  \nThe note entered at the cursor will be displayed on the keyboard.":0},
+			"${seq.svg,00} Keyboard" :{"Press the ${seq.svg,00} ${seq.svg,10} ${seq.svg,20} key to record a note at the playback cursor.  \nPress again to erase the record.":0}
+		},
+		"${seq.svg,30} Play/Stop":{"Press ${seq.svg,30} to play the score. Press again to pause.  \nPress ${seq.svg,40} to go back to the beginning and stop.  \nKeyboard editing is disabled during playback, but can be used for practice.":0},
+		"Undo ${seq.svg,60} and Redo ${seq.svg,60,transform:scaleX(-1);} Operations":{"You can undo and redo rhythm editing and note typing with ${seq.svg,60} and ${seq.svg,60,transform:scaleX(-1);}, respectively.":0},
+		"Practice" :{"Pressing the keyboard does not change the score while it is playing. You can practice as it is.  \nScroll down to move the keyboard to the top of the screen.  \nYou can adjust the volume from i ︎ → Settings.":0}
+	},
+	"Manage and share music":{
+		"${seq.svg,52} Save":{"The sheet music you are working on is saved.  \nIf you have not already done so, you will be prompted to enter a title. Press ${seq.svg,52} to save.  \nIf a score with the same title has already been saved, it will be overwritten.":0},
+		"${seq.svg,02} Open":{"Displays a list of saved scores after you confirm the save.  \nYou can open a score by pressing the title of the score you want to open.":0},
+		"Changing the ${seq.svg,42} Title":{"If you press ${seq.svg,02} → score → ${seq.svg,42}, you will be prompted to enter a new title for the score.  \nPress ${seq.svg,42} to save changes.":0},
+		"${seq.svg,32} Replication":{"Press ${seq.svg,02} → score → ${seq.svg,32} to make a copy of the score.":0},
+		"${seq.svg,22} Delete":{"Press ${seq.svg,02} → Music → ${seq.svg,22} to display the deletion confirmation screen.  \nPress ${seq.svg,51} to abort the operation.  \nPress ${seq.svg,41} to delete the score.":0},
+		"${seq.svg,72} Shared":{"Press ${seq.svg,02} → ${seq.svg,72} to display URL for sharing.  \nPress ${seq.svg,32} to copy to clipboard.  \nPress ${seq.svg,43} to open the Twitter Tweet screen.":0},
+		"${seq.svg,62} Load notation":{"Open the shared URL in a browser or \npress ${seq.svg,02} → ${seq.svg,62} and enter the URL to load the music.  \nImported score is not eligible for autosave. You must save it manually the first time.  \nIf you do not save a score that was open before you imported it, it will be lost.":0},
+		"Backup":{
+			"Create":{"If you press i ︎ → Backup → Create Backup, a backup file is created and downloaded to the terminal.  \nThe backup will contain all the saved scores and the current score and i → setting values.":0},
+			"Import" :{"If you press i ︎ → Backup → Restore from file → Select file, you will be prompted to select a backup file.  \nAfter selecting the appropriate file, press the date button to restore the score.  \nThe currently saved sheet music will not disappear, but the backup sheet music will overwrite any sheet music with the same name.  \nThe current score will also be overwritten.":0}
+		}
+	},
+	"build:2109043":0,
+	"Translated with <a href=\"https://miraitranslate.com/trial\">MiraiTranslate</a>":0
+}
