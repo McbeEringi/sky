@@ -9,5 +9,5 @@
 		</filter>
 	</defs>
 	<path d="M0,0h128v128h-128" fill="url(#bg)"/>
-	<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" style="fill:#0000;stroke:#fea;stroke-width:3;filter:url(#sh);stroke-linecap:round;stroke-linejoin:round;font-size:128px;font-family:sans-serif;">?</text>
+	<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" style="fill:#0000;stroke:#fea;stroke-width:3;filter:url(#sh);stroke-linecap:round;stroke-linejoin:round;font-size:96px;font-family:sans-serif;">?</text>
 </svg>
