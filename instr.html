@@ -325,7 +325,7 @@ time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375">
 
 		{
 			load();
-			const fx=()=>{if(urlq.pwa)document.querySelectorAll('a[href]').forEach(e=>e.href+='&pwa=1');};
+			const fx=()=>{if(urlq.pwa)document.querySelectorAll('a[href]').forEach(e=>{e.href+='&pwa=1';e.target='';});};
 			if(typeof urlq=='undefined')document.addEventListener('styexe',fx,{once:true});else fx();
 			if(typeof idb=='undefined')window.addEventListener('idbready',init,{once:true});else init();
 		}

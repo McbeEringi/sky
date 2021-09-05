@@ -56,20 +56,22 @@
 				typeOf=x=>Number.isNaN(x)?'nan':Object.prototype.toString.call(x).slice(8,-1).toLowerCase(),
 				rrg=/\$\{([\w\.]*),(\d{2}),?([^\}]*)\}/g,
 				rfx=(m,p1,p2,p3)=>`<p class="ico" style="background-image:url(../img/${p1});--bp:-${p2[0]}00% -${p2[1]}00%;${p3||''}"></p>`,
-				core=y=>Object.entries(y).map(z=>typeOf(z[1])=='object'?`<details><summary>${z[0].replace(rrg,rfx)}</summary>${core(z[1])}</details>`:z[0].replace(rrg,rfx)).join('');
-			document.addEventListener('styexe',()=>{
-				if(urlq.pwa)document.querySelectorAll('a[href]').forEach(x=>x.href+='&pwa=1');
-				fetch(`${urlq.m}.json`).then(x=>x.json()).then(x=>{
-					console.log(x);
-					wrap.insertAdjacentHTML('beforeend',core(x));
-					ctrp.style.display='block';
-					document.title=`sky_manual ${wrap.querySelector('h1').textContent}`;
-				}).catch(x=>{
-					console.log(x);
-					document.querySelector('details').open=true;
-					wrap.insertAdjacentHTML('beforeend','<h1>Sky_manual</h1>↓下のメニューから選んでください');
-				});
-			})
+				core=y=>Object.entries(y).map(z=>typeOf(z[1])=='object'?`<details><summary>${z[0].replace(rrg,rfx)}</summary>${core(z[1])}</details>`:z[0].replace(rrg,rfx)).join(''),
+				fx=()=>{
+					if(urlq.pwa)document.querySelectorAll('a[href]').forEach(e=>{e.href+='&pwa=1';e.target='';});
+					fetch(`${urlq.m}.json`).then(x=>x.json()).then(x=>{
+						console.log(x);
+						wrap.insertAdjacentHTML('beforeend',core(x));
+						ctrp.style.display='block';
+						document.title=`sky_manual ${wrap.querySelector('h1').textContent}`;
+					}).catch(x=>{
+						console.log(x);
+						document.querySelector('details').open=true;
+						wrap.insertAdjacentHTML('beforeend','<h1>Sky_manual</h1>↓下のメニューから選んでください');
+					});
+				};
+
+				if(typeof urlq=='undefined')document.addEventListener('styexe',fx,{once:true});else fx();
 		</script>
 	</body>
 </html>
