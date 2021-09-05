@@ -1,0 +1,19 @@
+{
+	"<h1>sky_instr manual</h1>":0,
+	"Overview \nLets you preview and practice Sky instruments.  \nYou can also make your own instruments by providing a sound source.":0,
+	"Musical instruments":{
+		"Press ${tex.png,01} to select an instrument.  \nYou can change the size of the keyboard with ${instr.svg,50}.":0,
+		"Creating instruments":{
+			"You can create and replace instruments with instrument files that provide ${tex.png,01} instruments.":0,
+			"New":{"You can create a new instrument from ${tex.png,01} → ${tex.png,10} → ${instr.svg,50}.  \nSee the Editing section for editing screens.":0},
+			"Edit":{"You can edit instruments from ${tex.png,01} → ${tex.png,10} → instrument name → ${tex.png,01}.  \nYou must create at least one sound name/audio file pair.  \nSound names can be written as MIDI keyboard numbers or A4 #.  \nAudio files can be .mp3, .ogg, .m4a, .wav, or .flac, depending on your browser.  \nIn general, .mp3 should work fine.":0},
+			"Toggle":{"${tex.png,01} → ${tex.png,10} → Press the instrument name to select the instrument.  \nThe currently selected instrument has a yellow background.":0},
+			"Delete" :{"Press ${tex.png,01} → ${tex.png,10} → instrument name → ${tex.png,01} → ${instr.svg,40} to delete the instrument.  \nThis operation cannot be undone.":0}
+		}
+	},
+	"Effects":{
+		"environmental sound":{"You can set the ambient sound from ${tex.png,01} → ${tex.png,10} → ambient sound.  \nThe ambient sound must be played once for it to play.":0},
+		"Acoustics" :{"${tex.png,01} → ${tex.png,10} → Sound can be set from the reverb.  \nmix is the intensity of the sound and time is the duration of the sound.":0}
+	},
+	"build:2109050\nTranslated with <a href=\"https://miraitranslate.com/trial\">MiraiTranslate</a>":0
+}

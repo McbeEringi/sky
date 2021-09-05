@@ -44,6 +44,7 @@
 				<li><a href="?m=seq">sky_seq</a></li>
 				<li><a href="?m=seq_en">sky_seq(English)</a></li>
 				<li><a href="?m=instr">sky_instr</a></li>
+				<li><a href="?m=instr_en">sky_instr(English)</a></li>
 			</ul>
 		</details>
 		<div id="ctrp"><button onclick="dtopen(1);">openAll</button><br><button onclick="dtopen(0);">closeAll</button></div>
@@ -68,7 +69,7 @@
 					}).catch(x=>{
 						console.log(x);
 						document.querySelector('details').open=true;
-						wrap.insertAdjacentHTML('beforeend','<h1>Sky_manual</h1>↓下のメニューから選んでください');
+						wrap.insertAdjacentHTML('beforeend','<h1>Sky_manual</h1>↓下のメニューから選んでください\n↓Choose from the menu below');
 					});
 				};
 
