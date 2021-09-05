@@ -106,7 +106,7 @@
 			document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
 			bgcode.value=localStorage.sky_bgcode;disp();
 			if(urlq.pwa){
-				document.querySelectorAll('a[href]').forEach(e=>{e.href+='&pwa=1';e.target='';});
+				document.querySelectorAll('a[href]').forEach(e=>{e.href+='?pwa=1';e.target='';});
 				document.querySelectorAll('.nopwa').forEach(e=>e.style.display='none');
 			}else{
 				pwab.style.display='inline';
