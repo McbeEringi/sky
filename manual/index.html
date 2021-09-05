@@ -41,12 +41,12 @@
 		<details>
 			<summary>MENU</summary>
 			<ul>
-				<li><a href="?seq">sky_seq</a></li>
+				<li><a href="?m=seq">sky_seq</a></li>
 			</ul>
 		</details>
 		<div id="ctrp"><button onclick="dtopen(1);">openAll</button><br><button onclick="dtopen(0);">closeAll</button></div>
 		<p>
-			[sky_manual] build:2109044 <br>
+			[sky_manual] build:2109045 <br>
 			<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
 		</p>
 
@@ -56,16 +56,19 @@
 				rrg=/\$\{([\w\.]*),(\d{2}),?([^\}]*)\}/g,
 				rfx=(m,p1,p2,p3)=>`<p class="ico" style="background-image:url(../img/${p1});--bp:-${p2[0]}00% -${p2[1]}00%;${p3||''}"></p>`,
 				core=y=>Object.entries(y).map(z=>typeOf(z[1])=='object'?`<details><summary>${z[0].replace(rrg,rfx)}</summary>${core(z[1])}</details>`:z[0].replace(rrg,rfx)).join('');
-			fetch(`${location.search.slice(1)}.json`).then(x=>x.json()).then(x=>{
-				console.log(x);
-				wrap.insertAdjacentHTML('beforeend',core(x));
-				ctrp.style.display='block';
-				document.title=`sky_manual ${wrap.querySelector('h1').textContent}`;
-			}).catch(x=>{
-				console.log(x);
-				document.body.querySelector('details').open=true;
-				wrap.insertAdjacentHTML('beforeend','<h1>Sky_manual</h1>↓下のメニューから選んでください');
-			});
+			document.addEventListener('styexe',()=>{
+				if(urlq.pwa)document.body.querySelectorAll('a[href]').forEach(x=>x.href+='&pwa=1');
+				fetch(`${urlq.m}.json`).then(x=>x.json()).then(x=>{
+					console.log(x);
+					wrap.insertAdjacentHTML('beforeend',core(x));
+					ctrp.style.display='block';
+					document.title=`sky_manual ${wrap.querySelector('h1').textContent}`;
+				}).catch(x=>{
+					console.log(x);
+					document.body.querySelector('details').open=true;
+					wrap.insertAdjacentHTML('beforeend','<h1>Sky_manual</h1>↓下のメニューから選んでください');
+				});
+			})
 		</script>
 	</body>
 </html>

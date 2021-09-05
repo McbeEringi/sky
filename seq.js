@@ -479,8 +479,8 @@ infobtn.onclick=()=>{
 		<h1>sky_seq</h1>
 		<hr>
 		<h2>${texts.usg}</h2>
-		<a href="manual/index.html?seq" target="_blank">${texts.ntab}</a><br>
-		<iframe src="manual/index.html?seq"></iframe>
+		<a href="manual/index.html?m=seq${urlq.pwa=='1'?'&pwa=1':''}" target="_blank">${texts.ntab}</a><br>
+		<iframe src="manual/index.html?m=seq"></iframe>
 		<hr>
 		<h2>${texts.cfg}</h2>
 		<h3>${texts.sound}</h3>
