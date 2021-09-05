@@ -1,4 +1,4 @@
-<svg width="512px" height="512px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 128 128">
 	<desc>sky instr icon</desc>
 	<defs>
 		<linearGradient id="bg" x1="0" y1="1" x2="0" y2="0">

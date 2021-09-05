@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="256" viewBox="0 0 1024 256">
+	<desc>sky instr sprite</desc>
 	<defs>
 		<filter id="sh" x="-20%" width="140%" y="-20%" height="140%"><feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#f00"/></filter>
 	</defs>
@@ -21,5 +22,5 @@
 		<path d="M896,0m46,25a46,46,0,0,0,0,78m32,-78a46,46,0,0,0,0,78m32,-78a46,46,0,0,0,0,78m32,-78" stroke-dasharray="8.6"/>
 	</g>
 	<path d="M0,128m64,26a38,38,0,1,0,.001,0z"/><path d="M0,128m64,45a19,19,0,1,0,.001,0z" style="fill:#fea"/>
-	<text x="170" y="224" style="fill:#fea">?</text>
+	<text x="196" y="196" text-anchor="middle" dominant-baseline="central" style="fill:#fea">?</text>
 </svg>
