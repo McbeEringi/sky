@@ -102,20 +102,18 @@
 		};
 		caches.keys().then(x=>cachedisp.textContent=x[0]||texts.cemp);
 		let fx=()=>{
-			try{
-				document.querySelector(`select>option[value="${localStorage.sky_bgmode}"]`).selected=true;
-				document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
-				bgcode.value=localStorage.sky_bgcode;disp();
-				if(urlq.pwa){
-					document.querySelectorAll('a').forEach(e=>e.href=e.href+'?pwa=1');
-					document.querySelectorAll('.nopwa').forEach(e=>e.style.display='none');
-				}else{
-					pwab.style.display='inline';
-					pwab.src='img/pwab.png';
-				}
-			}catch(e){}
+			document.querySelector(`select>option[value="${localStorage.sky_bgmode}"]`).selected=true;
+			document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
+			bgcode.value=localStorage.sky_bgcode;disp();
+			if(urlq.pwa){
+				document.querySelectorAll('a[href]').forEach(e=>e.href+='?pwa=1');
+				document.querySelectorAll('.nopwa').forEach(e=>e.style.display='none');
+			}else{
+				pwab.style.display='inline';
+				pwab.src='img/pwab.png';
+			}
 		};
-		document.addEventListener('styexe',fx);fx();
+		if(typeof urlq=='undefined')document.addEventListener('styexe',fx,{once:true});else fx();
 	</script>
 </body>
 </html>
