@@ -279,7 +279,7 @@
 mix:<input type="range" value="${rev[0]}" min="0" max="1" step="0.0625">
 time:<input type="range" value="${rev[1]}" min="0" max="6" step="0.375">
 <hr>= ${texts.mrn} =
-<input type="checkbox" class="toggle">
+<input type="checkbox" class="toggle"${Tone.Transport.state=='started'?' checked':''}>
 bpm=<span>${Math.round(Tone.Transport.bpm.value)}</span>
 <input type="range" value="${Tone.Transport.bpm.value}" min="40" max="208" step="2">
 <hr>=<p class="grid tex a" style="--bp:0 -100%;--size:57px;cursor:unset;"></p>=
