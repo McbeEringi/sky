@@ -480,7 +480,7 @@ infobtn.onclick=()=>{
 		<hr>
 		<h2>${texts.usg}</h2>
 		<a href="manual/index.html?m=seq${window.navigator.language.slice(0,2)!='ja'?'_en':''}${urlq.pwa?'&pwa=1':''}"${urlq.pwa?'':' target="_blank"'}>${texts.ntab}</a><br>
-		<iframe src="manual/index.html?m=seq"></iframe>
+		<iframe src="manual/index.html?m=seq${window.navigator.language.slice(0,2)!='ja'?'_en':''}"></iframe>
 		<hr>
 		<h2>${texts.cfg}</h2>
 		<h3>${texts.sound}</h3>

@@ -1,3 +1,4 @@
+'use strict';
 const idbName='sky_idb',idbVer=3,idb=indexedDB.open(idbName,idbVer),urlq={},
 	bgd=document.createElement('div'),bgi=document.createElement('img'),hbb=document.createElement('div'),
 	bgset=(x,b=localStorage.sky_bgmode)=>{

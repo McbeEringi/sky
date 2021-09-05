@@ -76,17 +76,17 @@
 						<option value="2">${texts.bgsl[2]}</option>
 					</select>
 				</label>
-				<p id="cfg1">
-					<label>${texts.imgsl}<br><input type="file" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg').onsuccess=()=>bgset();"></label><br>
+				<div id="cfg1">
+					<span style="position:relative;"><button>${texts.imgsl}</button><input type="file" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg').onsuccess=()=>bgset();" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;mergin:0;box-sizing:border-box;"></span><br>
 					<button onclick="idb.result.transaction('stuff','readwrite').objectStore('stuff').delete('bgimg').onsuccess=()=>bgset();">${texts.ac}</button>
-				</p>
-				<p id="cfg2">
+				</div>
+				<div id="cfg2">
 					<a href="https://developer.mozilla.org/docs/Web/CSS/gradient">background-image</a><br>
 					<textarea id="bgcode" rows="2" cols="40" class="style"></textarea>
-				</p>
+				</div>
 				<hr>
 				<p>
-					[sky_menu] build:2108200 <br>
+					[sky_menu] build:2109050 <br>
 					<span id="cachedisp"></span><br>
 					<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense <br>
 					<button onclick="caches.keys().then(x=>caches.delete(x[0])).then(x=>{if(x)location.reload(true);})">${texts.re}</button>
