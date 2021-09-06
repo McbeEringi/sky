@@ -142,7 +142,7 @@
 		let synth,synth_,sc,rev,ci;
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const texts=Object.assign({
-			info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by Tone.js\n[sky_instr] build:2109060\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+			info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by Tone.js\n[sky_instr] build:2109061\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 			rev:'reverb',ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault'],
 			dft:'default',cin:'instrment label',fsel:'choose file',note:'note',mrn:'metronome'
 		},{
@@ -308,7 +308,7 @@ bpm=<span>${Math.round(Tone.Transport.bpm.value)}</span>
 			});
 		},
 		save=()=>{localStorage.instr_stat=JSON.stringify({sc,instr:menu.instr.value,reverb:rev,amb:amb.c,ci,bpm:Tone.Transport.bpm.value});console.log('saved');},
-		load=()=>({sc,instr:menu.instr.value,reverb:rev,amb:amb.c,ci,bpm:Tone.Transport.bpm.value}={sc:0,instr:'0',reverb:['0','0'],amb:1,ci:'',...JSON.parse(localStorage.instr_stat||'{}')}),
+		load=()=>({sc,instr:menu.instr.value,reverb:rev,amb:amb.c,ci,bpm:Tone.Transport.bpm.value}={sc:0,instr:'0',reverb:['0','3'],amb:1,ci:'',bpm:120,...JSON.parse(localStorage.instr_stat||'{}')}),
 		init=()=>ciset().catch(console.log).finally(()=>{set();scale();revset();ambset();});
 
 		document.body.addEventListener('pointerdown',Tone.start,{once:true});
