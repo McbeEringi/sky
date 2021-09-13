@@ -36,7 +36,7 @@
 			#ctrp{position:fixed;bottom:0;right:0;display:none;}
 		</style>
 
-		<div id="wrap"></div>
+		<div id="wrap">loading…</div>
 		<hr>
 		<details>
 			<summary>MENU</summary>
@@ -47,14 +47,14 @@
 				<li><a href="?m=instr_en">sky_instr(English)</a></li>
 			</ul>
 		</details>
-		<div id="ctrp"><button onclick="dtopen(1);">openAll</button><br><button onclick="dtopen(0);">closeAll</button></div>
+		<div id="ctrp"><button onclick="dtl(1);">openAll</button><br><button onclick="dtl(0);">closeAll</button></div>
 		<p>
-			[sky_manual] build:2109045 <br>
+			[sky_manual] build:2109140 <br>
 			<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
 		</p>
 
 		<script>
-			const dtopen=s=>document.querySelectorAll('#wrap details').forEach(x=>x.open=s),
+			const dtl=s=>document.querySelectorAll('#wrap details').forEach(x=>x.open=s),
 				typeOf=x=>Number.isNaN(x)?'nan':Object.prototype.toString.call(x).slice(8,-1).toLowerCase(),
 				rrg=/\$\{([\w\.]*),(\d{2}),?([^\}]*)\}/g,
 				rfx=(m,p1,p2,p3)=>`<p class="ico" style="background-image:url(../img/${p1});--bp:-${p2[0]}00% -${p2[1]}00%;${p3||''}"></p>`,
@@ -63,12 +63,14 @@
 					if(urlq.pwa)document.querySelectorAll('a[href]').forEach(e=>{e.href+='&pwa=1';e.target='';});
 					fetch(`${urlq.m}.json`).then(x=>x.json()).then(x=>{
 						console.log(x);
+						wrap.textContent='';
 						wrap.insertAdjacentHTML('beforeend',core(x));
 						ctrp.style.display='block';
 						document.title=`sky_manual ${wrap.querySelector('h1').textContent}`;
 					}).catch(x=>{
 						console.log(x);
 						document.querySelector('details').open=true;
+						wrap.textContent='';
 						wrap.insertAdjacentHTML('beforeend','<h1>Sky_manual</h1>↓下のメニューから選んでください\n↓Choose from the menu below');
 					});
 				};
