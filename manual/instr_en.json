@@ -15,5 +15,8 @@
 		"environmental sound":{"You can set the ambient sound from ${tex.png,01} → ${tex.png,10} → ambient sound.  \nThe ambient sound must be played once for it to play.":0},
 		"Acoustics" :{"${tex.png,01} → ${tex.png,10} → Sound can be set from the reverb.  \nmix is the intensity of the sound and time is the duration of the sound.":0}
 	},
-	"build:2109050\nTranslated with <a href=\"https://miraitranslate.com/trial\">MiraiTranslate</a>":0
+	"Recording":{
+		"On supported devices, you can record your performance from ${instr.svg,01}. \nPress again to finish recording. \nIt will be saved as webm or m4a.":0
+	},
+	"build:2109130\nTranslated with <a href=\"https://miraitranslate.com/trial\">MiraiTranslate</a>":0
 }
