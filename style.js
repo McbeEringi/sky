@@ -8,7 +8,7 @@ const idbName='sky_idb',idbVer=3,idb=indexedDB.open(idbName,idbVer),urlq={},
 				'#f08300,#f8b862',//dusk
 				'#192f60,#274a78',//night
 				'#fbfaf6,#ced980'//cloud
-			],url='https://mcbeeringi.github.io/sky/img/photo/dawn.jpg';
+			],url='https://mcbeeringi.github.io/sky/img/photo/flight.jpg';
 		switch(b){
 			case'1':
 				bgi.setAttribute('style','display:none;');
