@@ -18,7 +18,7 @@ const idbName='sky_idb',idbVer=3,idb=indexedDB.open(idbName,idbVer),urlq={},
 				});
 				break;
 			case'2':bgi.setAttribute('style','display:none;');bg.style.backgroundImage=localStorage.sky_bgcode;break;
-			default:bgi.setAttribute('style','');bg.style.backgroundImage=`linear-gradient(${bgcol[x]||bgcol[[3,3,3,3,3,0,0,0,0,1,1,1,1,1,1,1,4,2,2,2,2,3,3,3][new Date().getHours()]]})`;break;
+			default:bgi.setAttribute('style','');bg.style.backgroundImage=`linear-gradient(${bgcol[x]||bgcol[[3,3,3,3,3,0,0,0,0,4,1,1,1,1,1,1,4,2,2,2,2,3,3,3][new Date().getHours()]]})`;break;
 		}
 	},
 	bgset_=()=>{if(localStorage.sky_bgmode=='0'){console.log('_');bgset();}};
