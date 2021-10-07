@@ -117,6 +117,8 @@
 			</label><label><input type="radio" name="instr" value="15"><p class="grid tex" style="--bp:-700% -200%;"></p>
 			</label><label><input type="radio" name="instr" value="16"><p class="grid tex" style="--bp:-0%   -300%;"></p>
 			</label><label><input type="radio" name="instr" value="17"><p class="grid tex" style="--bp:-100% -300%;"></p>
+			</label><label><input type="radio" name="instr" value="18" disabled><p class="grid tex" style="--bp:-200% -300%;"></p>
+			</label><label><input type="radio" name="instr" value="19" disabled><p class="grid tex" style="--bp:-300% -300%;"></p>
 			</label>
 		</form>
 		<hr>
@@ -177,7 +179,9 @@
 			['audio/instr/handpan/',-1,stdli(3)],
 			['audio/instr/dundun/',-1,{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],
 			['audio/instr/pipa/',-1,stdli(3,5)],//210529
-			['audio/instr/bugle/',0,stdli(4,6)]//210529
+			['audio/instr/bugle/',0,stdli(4,6)],//210529
+				['audio/instr/ocarina/',0,stdli(4,6)],
+				['audio/instr/kalimba/',0,stdli(4,6)]
 		],
 		kbmode=(x=menu.instr.value)=>[0,0,1,0,0,0,2,2,0,0,0,0,0,0,3,1,0,0][Number(x)||0],
 		keymap=['QWERTASDFGZXCVB','QWERASDF','QWEASDZXC'].map(x=>Array.from(x,y=>`Key${y}`)),
