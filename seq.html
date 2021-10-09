@@ -32,6 +32,7 @@
 		<script src="https://mcbeeringi.github.io/src/requestIdleCallback.min.js" defer></script>
 		<script src="https://cdn.jsdelivr.net/npm/tone/build/Tone.js" defer></script>
 		<script src="seq.js" defer></script>
+		<link rel="stylesheet" href="https://mcbeeringi.github.io/src/toggle.css" media="print" onload="this.media='all'">
 		<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'img/tex.webp'});</script>
 		<style>
 			:root{user-select:none;-webkit-user-select:none;}[contenteditable],.usa{user-select:auto;-webkit-user-select:auto;}
@@ -83,12 +84,14 @@
 			#albox iframe{width:100%;max-width:640px;height:50%;border:0;border-radius:8px;}
 
 			#emode:checked~.kb,#emode:not(:checked)~#palette{display:none;}#emode:checked~* label[for=emode]{transform:rotateZ(90deg);}
+			#stw{display:none;}#stcb:checked~* #stw{display:unset;}
 			#kb>div::after,#alfcb:checked~label[for=alcb]::before,.bg{background-image:url(img/seq.svg);background-size:800%;background-position:var(--bp);}
 			.bg.tex{background-image:url(img/tex.webp);}.nowebp .bg.tex{background-image:url(img/tex.png);}
 		</style>
 		<input type="checkbox" tabindex="-1" id="emode">
 		<input type="checkbox" tabindex="-1" id="alcb">
 		<input type="checkbox" tabindex="-1" id="alfcb">
+		<input type="checkbox" tabindex="-1" id="stcb">
 		<div class="disp">
 			<span id="name_">Loading assets<br>Please wait…</span>
 			<canvas id="c"><br>JavaScript seems disabled</canvas>
@@ -119,7 +122,11 @@
 			</p><p id="filebtn" class="grid bg" style="--bp:0 -200%;">file
 			</p><p id="savebtn" class="grid bg" style="--bp:-500% -200%;">save
 			</p><p id="infobtn" class="grid bg icotxt">𝚒
-			</p>
+			</p><span id="stw"><p id="st0btn" class="grid bg showtxt" style="--bp:-100% -300%;">⬆︎
+			</p><p id="st1btn" class="grid bg showtxt" style="--bp:-100% -300%;">⬇︎
+			</p><p id="st2btn" class="grid bg showtxt" style="--bp:-100% -300%;">↑
+			</p><p id="st3btn" class="grid bg showtxt" style="--bp:-100% -300%;">↓
+			</p></span>
 		</div>
 		<div class="kb">
 			<div id="kb"><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div></div>

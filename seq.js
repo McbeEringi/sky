@@ -2,13 +2,13 @@
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg,isc,synth;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 const texts={
-	build:'2109042',
+	build:'2110090',
 	title:'Enter title',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
 	buiq:'All data will be over written.\nThis operation is irreversible.\nAre you sure you want to continue?',
 	fubu:'Backups made in future versions cannot be loaded.',invf:'invailed file.',
-	cfg:'config',sound:'sound',seq:'sequencer',kb:'keyboard',bhv:'behavior',udl:'undo & redo limit',res:'sheet resolution',chl:'clopboard his limit',bu:'backup',cbf:'create backup file',rff:'recover from file',
+	cfg:'config',sound:'sound',seq:'sequencer',kb:'keyboard',bhv:'behavior',udl:'undo & redo limit',res:'sheet resolution',chl:'clopboard his limit',bu:'backup',cbf:'create backup file',rff:'recover from file',adv:'advanced',st:'semitone editor',dbg:'show debug',
 	usg:'usage',ntab:'Open in New Tab',
 	...{
 		ja:{
@@ -17,7 +17,7 @@ const texts={
 			err:x=>`⚠️\nデータの${['読み出し','書き込み'][x]}に失敗しました\n\n`,saveq:'現在のデータを保存しますか？',delq:x=>`「${x}」を削除してよろしいですか？`,
 			buiq:'全てのデータは上書きされます。\nこの操作は元に戻せません。\n本当にこの操作を続けますか?',
 			fubu:'将来のバージョンで作成されたバックアップは読み込めません',invf:'このファイルは使用できません',
-			cfg:'設定',sound:'サウンド',seq:'シーケンサ',kb:'キーボード',bhv:'動作',udl:'取り消し上限',res:'譜面解像度',chl:'コピー履歴上限',bu:'バックアップ',cbf:'バックアップを作成',rff:'ファイルから復元',
+			cfg:'設定',sound:'サウンド',seq:'シーケンサ',kb:'キーボード',bhv:'動作',udl:'取り消し上限',res:'譜面解像度',chl:'コピー履歴上限',bu:'バックアップ',cbf:'バックアップを作成',rff:'ファイルから復元',adv:'高度な設定',st:'半音の編集',dbg:'デバッグの表示',
 			usg:'使い方',ntab:'新規タブで開く'
 		}
 	}[window.navigator.language.slice(0,2)]
@@ -212,13 +212,23 @@ bpmset=()=>{let x=Number(bpm_.value);if(x>0)Tone.Transport.bpm.value=main.bpm=x;
 scset=()=>{let x=Number(sc_.value);if(sc_.value&&Number.isInteger(x))main.sc=x;else sc_.value=main.sc;},
 arpset=()=>{let x=Number(arp_.value);if(arp_.value&&Number.isInteger(x))main.arp=x;else arp_.value=main.arp;},
 tstart=()=>{Tone.start();Tone.Transport.start();},
-tpause=()=>{Tone.Transport.pause();requestIdleCallback(()=>{pset();curset();kbset();});},
-tstop=e=>{Tone.Transport.stop();requestIdleCallback(()=>{curpos=0;curset();kbset();});},
+tpause=()=>{Tone.Transport.pause();setTimeout(()=>{pset();curset();kbset();});},
+tstop=e=>{Tone.Transport.stop();setTimeout(()=>{curpos=0;curset();kbset();});},
 tstep=x=>{
 	Tone.start();
 	curpos=mod(curpos+x,calced.note.length);
 	pset();tpause();kbset();
 	if(tstat())sytar(ind2n(calced.note[curpos].ind));
+},
+stfx=x=>{
+	if(!tstat())return;
+	let ind=calced.note[curpos].ind,
+		arr=ind2n(ind).split(',').filter(y=>y);
+	Tone.start();
+	arr=x(arr).join(',');
+	sytar(arr);
+	urset([`main.scores[${ind.join('][')}]=`, `'${arr}'`, `'${ind2n(ind)}'`]);
+	seqset();calc();curset();
 },
 browse=()=>{
 	tpause();
@@ -493,6 +503,9 @@ infobtn.onclick=()=>{
 		<h3>${texts.bu}</h3>
 		${texts.cbf}: <button onclick="tpause();dbfx.buo();">${texts.bu}</button><br>
 		${texts.rff}: <input type="file" onclick="tpause();" accept=".skyseq"><label><input type="hidden"><span style="white-space:pre-wrap;font-size:x-small;opacity:.7;"></span></label>
+		<h3>${texts.adv}</h3>
+		${texts.st}: <input type="checkbox" class="toggle"${stcb.checked?' checked':''}><br>
+		${texts.dbg}: <input type="checkbox" class="toggle"${cfg.debug?' checked':''}>
 		<hr>
 		<p>Powerd by Tone.js<br>[sky_seq] build:${texts.build}<br><a href="https://twitter.com/McbeEringi">@McbeEringi</a> MIT License</p>
 	`,1);
@@ -512,8 +525,13 @@ infobtn.onclick=()=>{
 			e[6].onclick=()=>dbfx.bui(x);
 			e[5].type='hidden';e[6].type='button';
 		}).catch(e=>alert(`${texts.err(0)}${e}`));
-}
-//
+	e[7].onchange=()=>{stcb.checked=cfg.st=e[7].checked;cfgsave();};
+	e[8].onchange=()=>{cfg.debug=e[8].checked;cfgsave();draw();};
+};
+st0btn.onclick=()=>stfx(x=>x.map(y=>+y+1));
+st1btn.onclick=()=>stfx(x=>x.map(y=>y-1));
+st2btn.onclick=()=>stfx(x=>{x[x.length-1]=+x[x.length-1]+1;return x;});
+st3btn.onclick=()=>stfx(x=>{x[x.length-1]=x[x.length-1]-1;return x;});
 
 emode.onchange=draw;//()=>{sel=null;[cxbtn,ccbtn].forEach(e=>e.classList.add('dis'));[cvbtn,icbtn,iwbtn,rmbtn].forEach(e=>e.classList.remove('dis'));slbtn.classList.remove('a');draw();};
 slbtn.onclick=()=>{
@@ -572,9 +590,9 @@ iwbtn.onclick=()=>selins([['','']]);
 {
 	alcb.checked=false;
 
-	cfg={pad:12,w:16,clipMax:8,urMax:128,res:window.devicePixelRatio||1,seqvol:1,kbvol:1,debug:false,...JSON.parse(localStorage.seq_cfg||'{}')};
+	cfg={pad:12,w:16,clipMax:8,urMax:128,res:window.devicePixelRatio||1,seqvol:1,kbvol:1,debug:false,st:false,...JSON.parse(localStorage.seq_cfg||'{}')};
 	if(!localStorage.seq_cfg){localStorage.seq_cfg=JSON.stringify(cfg);infobtn.onclick();}
-	cfg.pad2=cfg.pad/2;cfg.w2=cfg.w/2;
+	cfg.pad2=cfg.pad/2;cfg.w2=cfg.w/2;stcb.checked=cfg.st;
 	window.onresize();
 
 	from_url=Boolean(main=urlfx.i());
