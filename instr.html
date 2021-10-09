@@ -139,10 +139,10 @@
 	<script src="https://cdn.jsdelivr.net/npm/tone/build/Tone.js"></script>
 	<script>
 		'use strict';
-		let synth,synth_,sc,rev,ci,recorder;
+		let synth,synth_,sc,rev,ci,recorder,fret=[];
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const texts=Object.assign({
-			info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by Tone.js\n[sky_instr] build:2109130\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+			info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by Tone.js\n[sky_instr] build:2110090\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 			rev:'reverb',ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault'],
 			dft:'default',cin:'instrment label',fsel:'choose file',note:'note',mrn:'metronome'
 		},{
@@ -153,31 +153,31 @@
 		}[window.navigator.language.slice(0,2)]),
 		amb={c:-1,dat:{}},
 		reverb=new Tone.Reverb().toDestination(),
-		mrn=new Tone.Player("audio/metronome.mp3").connect(reverb),
+		mrn=new Tone.Player('audio/metronome.mp3').connect(reverb),
 		revset=(w=rev[0],d=rev[1])=>{rev=[w,d];reverb.wet.value=w;reverb.decay=Math.pow(2,d);},
 		stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
-		cidft=['audio/instr/musicbox/',1,stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],
+		cidft=['audio/instr/musicbox/',1,[stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})]],
 		instr_li=[//[baseurl, octave, map, (map2)]
 			cidft,
-			['audio/instr/harp/',-1,stdli(3,5)],//210503
-			['audio/instr/percussion/',-1,{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],
-			['audio/instr/contrabass/',-2,stdli(2)],
-			['audio/instr/horn/',-1,stdli(3)],
-				['audio/instr/piano/',0,stdli(4)],
-				['',0,{'d#5':'audio/instr/musicbox/ds6.mp3',a5:'audio/instr/musicbox/a6.mp3'},{'d#5':'audio/instr/glock/ds5.mp3',a5:'audio/instr/glock/a5.mp3'}],
-				['audio/instr/bell2/',1,{c4:'c4.mp3',d4:'d4.mp3',g4:'g4.mp3',a4:'a4.mp3'},{c4:'c4_.mp3',d4:'d4_.mp3',g4:'g4_.mp3',a4:'a4_.mp3'}],
-			['audio/instr/flute/',0,stdli(4,6)],//210419
-			['audio/instr/quena/',0,stdli(4,6)],//210419
-			['audio/instr/guitar/',-1,stdli(3,5)],//210503
-			['audio/instr/ukulele/',-1,stdli(3,5)],//210419
-				['audio/instr/piano/',1,stdli(5)],
-			['audio/instr/glock/',0,stdli(4,6)],//210529
-			['audio/instr/handpan/',-1,stdli(3)],
-			['audio/instr/dundun/',-1,{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],
-			['audio/instr/pipa/',-1,stdli(3,5)],//210529
-			['audio/instr/bugle/',0,stdli(4,6)],//210529
-				['audio/instr/ocarina/',0,stdli(4,6)],
-				['audio/instr/kalimba/',0,stdli(4,6)]
+			['audio/instr/harp/',-1,[stdli(3,5)]],//210503
+			['audio/instr/percussion/',-1,[{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}]],
+			['audio/instr/contrabass/',-2,[stdli(2)]],
+			['audio/instr/horn/',-1,[stdli(3)]],
+				['audio/instr/piano/',0,[stdli(4)]],
+				['',0,[{'d#5':'audio/instr/musicbox/ds6.mp3',a5:'audio/instr/musicbox/a6.mp3'},{'d#5':'audio/instr/glock/ds5.mp3',a5:'audio/instr/glock/a5.mp3'}]],
+				['audio/instr/bell2/',1,[{c4:'c4.mp3',d4:'d4.mp3',g4:'g4.mp3',a4:'a4.mp3'},{c4:'c4_.mp3',d4:'d4_.mp3',g4:'g4_.mp3',a4:'a4_.mp3'}]],
+			['audio/instr/flute/',0,[stdli(4,6)]],//210419
+			['audio/instr/quena/',0,[stdli(4,6)]],//210419
+			['audio/instr/guitar/',-1,[stdli(3,5)],4],//210503
+			['audio/instr/ukulele/',-1,[stdli(3,5)]],//210419
+				['audio/instr/piano/',1,[stdli(5)]],
+			['audio/instr/glock/',0,[stdli(4,6)]],//210529
+			['audio/instr/handpan/',-1,[stdli(3)]],
+			['audio/instr/dundun/',-1,[{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}]],
+			['audio/instr/pipa/',-1,[stdli(3,5)]],//210529
+			['audio/instr/bugle/',0,[stdli(4,6)]],//210529
+				['audio/instr/ocarina/',0,[stdli(4,6)]],
+				['audio/instr/kalimba/',0,[stdli(4,6)]]
 		],
 		kbmode=(x=menu.instr.value)=>[0,0,1,0,0,0,2,2,0,0,0,0,0,0,3,1,0,0][Number(x)||0],
 		keymap=['QWERTASDFGZXCVB','QWERASDF','QWEASDZXC'].map(x=>Array.from(x,y=>`Key${y}`)),
@@ -187,7 +187,7 @@
 			[-9,-7,-2,0,-9,-7,-2,0],
 			[-7,0,3,5,8,10,12,15]
 		][x][i],
-		setSynth=(fx=()=>{kb.style.opacity='1'; kb.style.pointerEvents='auto';})=>synth=new Tone.Sampler(instr_li[menu.instr.value][2],fx,instr_li[menu.instr.value][0]).connect(reverb),
+		setSynth=(fx=()=>{kb.style.opacity='1'; kb.style.pointerEvents='auto';})=>synth=new Tone.Sampler(instr_li[menu.instr.value][2][0],fx,instr_li[menu.instr.value][0]).connect(reverb),
 		set=()=>{
 			kb.style.opacity='.2';kb.style.pointerEvents='none';
 			scd.style.opacity='1';scd.style.pointerEvents='auto';
@@ -201,17 +201,22 @@
 					kb.classList.add('oct');
 					Promise.all([
 						new Promise(f=>setSynth(f)),
-						new Promise(f=>synth_=new Tone.Sampler(instr_li[menu.instr.value][3],f,instr_li[menu.instr.value][0]).connect(reverb))
+						new Promise(f=>synth_=new Tone.Sampler(instr_li[menu.instr.value][2][1],f,instr_li[menu.instr.value][0]).connect(reverb))
 					]).then(()=>{kb.style.opacity='1'; kb.style.pointerEvents='auto';});
 					break;
 				default:
 					setSynth();synth_=null;
 			}
+			if(instr_li[menu.instr.value][3]&&!fret[menu.instr.value])fret[menu.instr.value]=new Array(instr_li[menu.instr.value][3]).fill().map((_,i)=>new Tone.Player(`${instr_li[menu.instr.value][0]}fret${i}.mp3`).connect(reverb));
 			mico.setAttribute('style',`--bp:${[menu.instr.value%8,Math.floor(menu.instr.value*.125+1)].map(x=>(x*-100)+'%').join(' ')};`);
 		},
 		trigger=i=>{
 			const x=kbmode();
 			(x==2&&i>3?synth_:synth).triggerAttackRelease(440*Math.pow(2,(i2n(i,x)+(x==1?0:sc))/12+instr_li[menu.instr.value][1]));
+			if(fret[menu.instr.value]){
+				let r=Math.random()*10;
+				if(r<1)fret[menu.instr.value][Math.floor(r*fret[menu.instr.value].length)].start('+.85');
+			}
 		},
 		scale=s=>{
 			scd_.style.transform=`rotate(${sc*30+45}deg)`;
@@ -235,7 +240,7 @@
 				onsuccess:e=>{
 					if(!e.target.result){rj('invailed key');return;}
 					Promise.all(e.target.result.dat.map(y=>new Promise(f=>setTimeout(()=>f([y[0],URL.createObjectURL(y[1])]),0))))
-					.then(y=>{const s={};y.forEach(z=>s[z[0]]=z[1]);ff(instr_li[0]=['',0,s]);}).catch(rj);
+					.then(y=>{const s={};y.forEach(z=>s[z[0]]=z[1]);ff(instr_li[0]=['',0,[s]]);}).catch(rj);
 				},
 				onerror:rj
 			});
