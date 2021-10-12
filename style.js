@@ -35,9 +35,9 @@ document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="http
 <style>
 :root,.style{background:#222;font-family:"M PLUS Rounded 1c",sans-serif;color:#fff;text-shadow:0 0 4px #222;word-wrap:break-word;}
 *{-webkit-tap-highlight-color:#0000;}hr{border:1px solid #fff6;border-radius:1px;}
+a:link,a:visited{color:#aef;}a:hover{color:#8af;}a:active{color:#48f;}
 #bg{position:fixed;top:0;left:0;z-index:-16;width:100vw;height:100vh;transition:background 1s;pointer-events:none;background:center/cover;user-select:none;-webkit-user-select:none;}
 #bg>img{opacity:.2;width:100vmin;height:auto;float:right;transform:translateX(25%);background:none;}
-a:link,a:visited{color:#aef;}a:hover{color:#8af;}a:active{color:#48f;}
 #hisbackb{display:none;position:fixed;left:2px;bottom:2px;width:48px;height:48px;border-radius:12px;background:#2228 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='filter:drop-shadow(0 0 4px %23f00);'%3E%3Cpath d='M32,8L16,24L32,40' stroke='%23fea' stroke-width='2px' fill='%230000'/%3E%3C/svg%3E");}
 </style>`);
 if(!localStorage.sky_bgcode)localStorage.sky_bgcode='linear-gradient(60deg,#214,#415)';

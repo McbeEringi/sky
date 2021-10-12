@@ -33,8 +33,7 @@ const cacheName='cache211009_2',STATIC_DATA=[
 	'audio/instr/musicbox/ds7.mp3',
 	//seq
 	'seq.html?pwa=1',
-	'seq.js','img/seq.svg',
-	'https://mcbeeringi.github.io/src/requestIdleCallback.min.js'
+	'seq.js','img/seq.svg'
 ],
 noCache=[
 	'analytics',

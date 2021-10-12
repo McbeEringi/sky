@@ -1,8 +1,9 @@
 'use strict';
 let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg,isc,synth;
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
+if(!window.requestIdleCallback)window.requestIdleCallback=x=>setTimeout(x);
 const texts={
-	build:'2110090',
+	build:'2110120',
 	title:'Enter title',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
@@ -61,7 +62,7 @@ syset=()=>{
 	instrbtn.setAttribute('style',`--bp:-${mod(x,8)}00% -${Math.floor(x*.125)+1}00%;`);
 	x=instr_li[x];
 	if(synth)synth.dispose();
-	synth=new Tone.Sampler(x[2],null,`https://mcbeeringi.github.io/sky/audio/instr/${x[0]}/`).toDestination();
+	synth=new Tone.Sampler(x[2],null,`audio/instr/${x[0]}/`).toDestination();
 	isc=x[1];
 },
 sytar=(n,t=Tone.now())=>{
