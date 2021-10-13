@@ -105,6 +105,8 @@
 			<br>
 			<label><li><input type="checkbox">大樹 - 木</li></label>
 			<label><li><input type="checkbox">大樹 - 地下</li></label>
+			<br>
+			<label><li><input type="checkbox">風の街道</li></label>
 		</ul>
 
 		<h2>峡谷</h2>
@@ -194,7 +196,7 @@
 
 		<button id="btn">clear</button>
 		<p>
-			[sky_wings] build:2108290 <br>
+			[sky_wings] build:2110130 <br>
 			<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
 		</p>
 
@@ -202,7 +204,7 @@
 			const e=[...new Array(7).keys()].map(x=>[...document.querySelectorAll(`ul:nth-of-type(${x+1}) input`)]),
 			save=()=>localStorage.sky_wings=e.map(y=>y.map(z=>Number(z.checked)).join('')).join(',');
 			console.log(
-				(localStorage.sky_wings||'').split(',').map((x,i)=>Array.from(x,(y,j)=>e[i][j].checked=y>0))
+				(localStorage.sky_wings||'').split(',').map((x,i)=>Array.from(x,(y,j)=>e[i][j].checked=+y))
 			);
 			window.onload=()=>alert(`${((localStorage.sky_wings||'').match(/[1]/g)||[]).length}/${e.flat().length}`);
 			document.querySelectorAll(`input`).forEach(x=>x.onchange=save);
