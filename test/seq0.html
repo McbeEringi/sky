@@ -23,7 +23,7 @@
 	<link rel="manifest" href="skymf.json">
 	<meta name="theme-color" content="#214"/>
 	<script>
-		if('serviceWorker'in navigator&&location.protocol.includes('http')&&location.hostname!='localhost')window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});});
+		if('serviceWorker'in navigator&&location.protocol.includes('https'))window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});},{once:true});
 	</script>
 	<link rel="preload" href="https://cdn.jsdelivr.net/npm/tone/build/Tone.js" as="script">
 	<link rel="preload" href="https://cdn.jsdelivr.net/npm/sortablejs/Sortable.min.js" as="script">
