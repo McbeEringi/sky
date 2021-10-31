@@ -84,7 +84,7 @@
 		let sc=0;
 		const pa=new PetitAudio().filter('del',{type:'delay',delay:0}),
 			texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2110310\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111010\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault'],
 				dft:'default',cin:'instrment label',fsel:'choose file',note:'note',mrn:'metronome'
 			},{
@@ -134,6 +134,7 @@
 				].map(x=>Object.fromEntries(Array.from(x,(y,i)=>[`Key${y}`,i]))),
 			},
 			set=()=>{
+				kb.style.opacity='.5';kb.style.pointerEvents='none';
 				const pl=(n,i)=>new Promise(f=>{
 						if(pa.pl_[n])f();
 						else pa.player(n,{baseUrl:d.instr[menu.instr.value][0],notes:d.instr[menu.instr.value][2][i],filters:['del']},f);
