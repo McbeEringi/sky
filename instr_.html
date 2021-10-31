@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head prefix="og: http://ogp.me/ns#">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145066191-2"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-145066191-2');</script>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>sky_instruments</title>
+	<meta name="Description" content="Sky:CotL. PWA(offline) compatible.">
+	<link rel="shortcut icon" type="image/svg+xml" href="img/ico/instr.svg">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="sky_instruments">
+	<meta property="og:description" content="Skyの楽器練習ができるページです">
+	<meta property="og:url" content="https://mcbeeringi.github.io/sky/instr.html">
+	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/instr.jpg">
+	<!--iOS-->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="Sky Stuff">
+	<link rel="apple-touch-icon" href="img/sky.png">
+	<!--sw-->
+	<link rel="manifest" href="skymf.json">
+	<meta name="theme-color" content="#214"/>
+	<script>
+		if('serviceWorker'in navigator&&location.protocol.includes('https'))window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});},{once:true});
+	</script>
+	<link rel="preload" href="https://mcbeeringi.github.io/petitaudio/petitaudio.js" as="script">
+</head>
+<body>
+	<script src="style.js" async></script>
+	<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'img/tex.webp'});</script>
+	<link rel="stylesheet" href="https://mcbeeringi.github.io/src/toggle.css" media="print" onload="this.media='all'">
+	<style>
+		:root{--size:70px;--bp:0 0;}
+		html,body{height:100%;margin:0;}
+		@keyframes flip{0%{transform:rotateY(0deg)scale(.8);}100%{transform:rotateY(360deg)scale(1);}}
+
+		.grid{display:inline-block;width:var(--size);height:var(--size);margin:0;vertical-align:top;}
+		.grid::before{content:"";display:block;width:78.4%;height:78.4%;position:relative;top:10.8%;left:10.8%;border-radius:17%;background:var(--bp)/800% #3338 url(img/instr.svg);}
+		.grid.anm::before{animation:flip .4s linear;}
+		.grid.tex::before{background-image:url(img/tex.webp);}.nowebp .grid.tex::before{background-image:url(img/tex.png);}
+		*:checked+.grid::before,.grid.a::before{transform:rotateY(360deg);transition:.5s;}*:disabled+.grid,.grid.d{filter:grayscale(1)opacity(.7);}
+
+		#kb{--size:min(88px,20vw);width:calc(var(--size)*5);font-size:0;margin:calc(var(--size)*.5) auto 0;overflow:hidden;}
+		#kb .grid:nth-of-type(5n+1)::before{background-position:-200% 0;}#kb .grid:nth-of-type(5n+2)::before{background-position:-100% 0;}
+		#kb .grid:nth-of-type(5n+3)::before{background-position:-200% 0;}#kb .grid:nth-of-type(5n+4)::before{background-position:-100% 0;}
+		#kb .grid:nth-of-type(5n  )::before{background-position:-200% 0;}#kb .grid:nth-of-type(7n+1)::before{background-position:0 0;}
+		#kb.oct{--size:min(88px,25vw);width:calc(var(--size)*4);}#kb.oct .grid:nth-of-type(n+9){display:none;}
+		#kb.oct .grid:nth-of-type(2n+1)::before{background-position:-200% 0;}#kb.oct .grid:nth-of-type(2n  )::before{background-position:-100% 0;}
+		#kb.nov{--size:min(88px,33.33vw);width:calc(var(--size)*3);}#kb.nov .grid:nth-of-type(n+10){display:none;}
+		#kb.nov .grid:nth-of-type(3n+1)::before{background-position:-200% 0;}#kb.nov .grid:nth-of-type(3n+2)::before{background-position:-100% 0;}#kb.nov p:nth-of-type(3n  )::before{background-position:-200% 0;}
+
+		#menu input{display:none;}
+	</style>
+	<div id="kb">Please enable JavaScript to use this app.</div>
+	<div id="drawer">
+		<form id="menu"></form>
+	</div>
+	<button onclick="pa.filter('del',{delay:.2})">set delay to 0.2</button>
+	<button onclick="pa.filter('del',{delay:.1})">set delay to 0.1</button>
+	<button onclick="pa.filter('del',{delay:0})">set delay to 0</button><br>
+	<button onclick="sc--;">=*= - =*=</button><button onclick="sc++;">=*= + =*=</button>
+	<script src="https://mcbeeringi.github.io/petitaudio/petitaudio.js"></script>
+	<script>
+		let sc=0;
+		const pa=new PetitAudio().filter('del',{type:'delay',delay:0}),
+			texts=Object.assign({
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2110310\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				rev:'reverb',ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault'],
+				dft:'default',cin:'instrment label',fsel:'choose file',note:'note',mrn:'metronome'
+			},{
+				ja:{
+					rev:'リバーブ',ambs:'環境音',none:'なし',ambn:['温泉','ホーム','雨林','書庫'],
+					dft:'デフォルト',cin:'楽器名',fsel:'ファイルを選択',note:'音名',mrn:'メトロノーム'
+				}
+			}[window.navigator.language.slice(0,2)]),
+			bp=i=>`${i%8*-100}% ${Math.floor(i*.125+1)*-100}%`,
+			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
+			cidft=['audio/instr/musicbox/',1,[stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],0],
+			d={
+				instr:[
+					cidft,
+					['audio/instr/harp/',-1,[stdli(3,5)],0],//210503
+					['audio/instr/percussion/',-1,[{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],1],
+					['audio/instr/contrabass/',-2,[stdli(2,4)],0],//211009
+					['audio/instr/horn/',-1,[stdli(3,5)],0],//211009
+						['audio/instr/piano/',0,[stdli(4)],0],
+						['',0,[{'d#5':'audio/instr/musicbox/ds6.mp3',a5:'audio/instr/musicbox/a6.mp3'},{'d#5':'audio/instr/glock/ds5.mp3',a5:'audio/instr/glock/a5.mp3'}],2],
+						['audio/instr/bell2/',1,[{c4:'c4.mp3',d4:'d4.mp3',g4:'g4.mp3',a4:'a4.mp3'},{c4:'c4_.mp3',d4:'d4_.mp3',g4:'g4_.mp3',a4:'a4_.mp3'}],2],
+					['audio/instr/flute/',0,[stdli(4,6)],0],//211009
+					['audio/instr/quena/',0,[stdli(4,6)],0],//211009
+					['audio/instr/guitar/',-1,[stdli(3,5)],0,4],//main:210503 fret:211009
+					['audio/instr/ukulele/',-1,[stdli(3,5)],0],//211009
+						['audio/instr/piano/',1,[stdli(5)],0],
+					['audio/instr/glock/',0,[stdli(4,6)],0],//210529
+					['audio/instr/handpan/',-1,[stdli(3)],3],
+					['audio/instr/dundun/',-1,[{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],1],
+					['audio/instr/pipa/',-1,[stdli(3,5)],0],//210529
+					['audio/instr/bugle/',0,[stdli(4,6)],0],//210529
+						['audio/instr/ocarina/',0,[stdli(4,6)],0],
+					['audio/instr/kalimba/',0,[stdli(4,6)],0]//211025
+				],
+				i2n:[
+					[-9,-7,-5,-4,-2,0,2,3,5,7,8,10,12,14,15],
+					[0,1,2,3,12,13,14,15],//percussion
+					[-9,-7,-2,0,-9,-7,-2,0],//bell
+					[-7,0,3,5,8,10,12,15]//handpan
+				],
+				k:[0,1,1,1],
+				k2i:[
+					'QWERTASDFGZXCVB',
+					'QWERASDF',//oct
+					'QWEASDZXC'//nor
+				].map(x=>Object.fromEntries(Array.from(x,(y,i)=>[`Key${y}`,i]))),
+			},
+			set=()=>{
+				const pl=(n,i)=>new Promise(f=>{
+						if(pa.pl_[n])f();
+						else{
+							pa.player(n,{
+								baseUrl:d.instr[menu.instr.value][0],
+								notes:d.instr[menu.instr.value][2][i],
+								filters:['del']
+							},f);
+						}
+					});
+				kb.classList.remove('oct','nov');
+				kb.classList.add([,'oct','nov'][d.k[d.instr[menu.instr.value][3]]]);
+				[
+					()=>{return pl(menu.instr.value,0);},
+					()=>{return pl(menu.instr.value,0);/*scd.style.opacity='.5';scd.style.pointerEvents='none';scd_.style.transform='';*/},
+					()=>{return Promise.all([pl(menu.instr.value,0),pl(`${menu.instr.value}_`,1)]);}
+				][[0,1,2,0][d.instr[menu.instr.value][3]]]().then(()=>{kb.style.opacity='1';kb.style.pointerEvents='auto';});
+				//mico.setAttribute('style',`--bp:${bp(menu.instr.value)};`);
+			},
+			trigger=i=>{
+				const x=d.instr[menu.instr.value];
+				pa.start(menu.instr.value+(x[3]==2&&i>3?'_':''),[69+d.i2n[x[3]][i]+x[1]*12+sc]);
+			};
+
+		kb.textContent='';
+		for(let i=0;i<15;i++){
+			const x=document.createElement('p');
+			['touchstart','mousedown'].forEach(y=>x.addEventListener(y,e=>{e.preventDefault();trigger(i);x.classList.remove('anm');void x.offsetWidth;x.classList.add('anm');},{passive:false}));
+			x.addEventListener('animationend',()=>{x.classList.remove('anm');},{passive:true});
+			x.classList.add('grid');kb.appendChild(x);
+		}
+		menu.textContent='';
+		menu.insertAdjacentHTML('beforeend',d.instr.map((_,i)=>
+			`<label><input type="radio" name="instr" value="${i}" ${[7,18].includes(i)?'disabled':''} ${i==0?'checked':''}><p class="grid tex" style="--bp:${bp(i)};"></p></label>`
+		).join(''));
+
+		document.onkeydown=e=>{
+			if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
+			const x=d.k2i[d.k[d.instr[menu.instr.value][3]]];
+			if(x[e.code]>-1)kb.children[x[e.code]].dispatchEvent(new Event('mousedown'));
+		};
+		(menu.onchange=set)();
+	</script>
+</body>
+</html>
