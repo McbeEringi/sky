@@ -47,7 +47,7 @@
 		:disabled+.grid,.grid.d{filter:grayscale(1)opacity(.7);}
 
 		#kb{--size:min(88px,20vw);width:calc(var(--size)*5);font-size:0;margin:calc(var(--size)*.5) auto 0;touch-action:none;}
-		#kb .grid::after{content:none;}
+		#kb .grid::after{content:none;}#kb,#kb .grid{transition:width .2s,height .2s,margin .2s;}
 		#kb .grid:nth-of-type(5n+1)::before{background-position:-200% 0;}#kb .grid:nth-of-type(5n+2)::before{background-position:-100% 0;}
 		#kb .grid:nth-of-type(5n+3)::before{background-position:-200% 0;}#kb .grid:nth-of-type(5n+4)::before{background-position:-100% 0;}
 		#kb .grid:nth-of-type(5n  )::before{background-position:-200% 0;}#kb .grid:nth-of-type(7n+1)::before{background-position:0 0;}
@@ -55,17 +55,28 @@
 		#kb.oct .grid:nth-of-type(2n+1)::before{background-position:-200% 0;}#kb.oct .grid:nth-of-type(2n  )::before{background-position:-100% 0;}
 		#kb.nov{--size:min(88px,33.33vw);width:calc(var(--size)*3);}#kb.nov .grid:nth-of-type(n+10){display:none;}
 		#kb.nov .grid:nth-of-type(3n+1)::before{background-position:-200% 0;}#kb.nov .grid:nth-of-type(3n+2)::before{background-position:-100% 0;}#kb.nov p:nth-of-type(3n  )::before{background-position:-200% 0;}
+		#kbsize:checked~.btnw>[for=kbsize]::before{transform:rotateY(360deg);--bp:-600% 0;}#kbsize:checked~#kb{--size:min(110px,20vw);}
 
 		body>[for=drwcb]{display:none;pointer-events:none;}
 		#drawer{width:calc(var(--size)*3);height:100%;padding-top:48px;box-sizing:border-box;position:absolute;top:0;right:0;overflow-y:scroll;background-color:#3338;transform:translateX(100%);transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 		#drawer hr{border:none;}#drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
+		.btnw{position:absolute;top:0;right:0;--size:48px;}
+		.btnw>*::before{transition:transform .5s;}.btnw>[for=kbsize]{--bp:-500% 0;}.btnw>#mico{--bp:0 -100%;}
 		@media(max-width:700px){
 			body>[for=drwcb]{display:block;width:100%;height:100%;position:absolute;top:0;left:0;}
-			#drawer{padding-top:unset;padding-bottom:48px;}
+			.btnw{top:unset;bottom:0;transform-origin:bottom right;}#drawer{padding-top:unset;padding-bottom:48px;}
 		}
-		#drwcb:checked~#drawer{transform:translateX(0);}#drwcb:checked~[for=drwcb]{pointer-events:auto;}
+		#drwcb:checked~.btnw>#mico::before{transform:rotateY(360deg);background-image:url(img/instr.svg);--bp:-400% 0;}#drwcb:checked~#drawer{transform:translateX(0);}#drwcb:checked~[for=drwcb]{pointer-events:auto;}
+
+		label[for=alcb],#albox{position:fixed;pointer-events:none;opacity:0;transition:.2s;}
+		label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0008;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#0008;white-space:pre-wrap;overflow:scroll;overflow-x:hidden;}
+		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
+		#albox input{margin:0;border:0;padding:0;text-align:center;}
 	</style>
 	<input type="checkbox" id="drwcb">
+	<input type="checkbox" id="kbsize">
+	<input type="checkbox" id="alcb">
 	<div id="kb"></div>
 	<label for="drwcb"></label>
 	<div id="drawer">
@@ -79,10 +90,16 @@
 		</div>
 		<hr>
 	</div>
-	<button><label for="drwcb">menu</label></button>
+	<div class="btnw">
+		<label for="kbsize" class="grid"></label>
+		<label for="drwcb" id="mico" class="grid tex"></label>
+	</div>
+	<label for="alcb"></label><pre id="albox" class="style">(/ω＼*)</pre>
+
 	<script src="https://mcbeeringi.github.io/petitaudio/petitaudio.js"></script>
 	<script>
 		let sc=0;
+		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const pa=new PetitAudio().filter('del',{type:'delay',delay:0}),
 			texts=Object.assign({
 				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111010\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
@@ -146,8 +163,8 @@
 					()=>{return pl(menu.instr.value,0);},
 					()=>{return pl(menu.instr.value,0);},//scd.style.opacity='.5';scd.style.pointerEvents='none';scd_.style.transform='';
 					()=>{return Promise.all([pl(menu.instr.value,0),pl(`${menu.instr.value}_`,1)]);}
-				][[0,1,2,0][d.instr[menu.instr.value][3]]]().then(()=>{kb.style.opacity='1';kb.style.pointerEvents='auto';});
-				//mico.setAttribute('style',`--bp:${bp(menu.instr.value)};`);
+				][[0,1,2,0,0][d.instr[menu.instr.value][3]]]().then(()=>{kb.style.opacity='1';kb.style.pointerEvents='auto';});
+				mico.setAttribute('style',`--bp:${bp(menu.instr.value)};`);
 			},
 			trigger=i=>{
 				const x=d.instr[menu.instr.value];
@@ -172,6 +189,17 @@
 		};
 		load();
 		(menu.onchange=set)();
+		if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
+			{
+				let img=new Image();
+				img.onload=()=>{
+					let c=document.createElement('canvas'),ctx=c.getContext('2d');
+					c.width=img.naturalWidth;c.height=img.naturalHeight;
+					ctx.drawImage(img,0,0);
+					document.body.insertAdjacentHTML('beforeend',`<style>.grid::before{background-image:url(${c.toDataURL()});}</style>`);
+				};
+				img.src='img/instr.svg';
+			}
 		drawer.insertAdjacentHTML('beforeend',texts.info);
 	</script>
 </body>
