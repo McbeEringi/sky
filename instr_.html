@@ -77,6 +77,7 @@
 			<button onclick="pa.filter('del',{delay:0})">set delay to 0</button><br>
 			<button onclick="sc--;">=*= - =*=</button><button onclick="sc++;">=*= + =*=</button>
 		</div>
+		<hr>
 	</div>
 	<button><label for="drwcb">menu</label></button>
 	<script src="https://mcbeeringi.github.io/petitaudio/petitaudio.js"></script>
@@ -169,8 +170,9 @@
 			const x=d.k2i[d.k[d.instr[menu.instr.value][3]]];
 			if(x[e.code]>-1)kb.children[x[e.code]].dispatchEvent(new Event('mousedown'));
 		};
-		(menu.onchange=set)();
 		load();
+		(menu.onchange=set)();
+		drawer.insertAdjacentHTML('beforeend',texts.info);
 	</script>
 </body>
 </html>
