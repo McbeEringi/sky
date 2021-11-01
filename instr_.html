@@ -144,6 +144,7 @@
 					[-7,0,3,5,8,10,12,15],//handpan
 					[2,5,12,-10,-7,0,-18,-15,-12]
 				],
+				p:[0,1,2,0,0],
 				k:[0,1,1,1,2],
 				k2i:[
 					'QWERTASDFGZXCVB',
@@ -163,7 +164,7 @@
 					()=>{return pl(menu.instr.value,0);},
 					()=>{return pl(menu.instr.value,0);},//scd.style.opacity='.5';scd.style.pointerEvents='none';scd_.style.transform='';
 					()=>{return Promise.all([pl(menu.instr.value,0),pl(`${menu.instr.value}_`,1)]);}
-				][[0,1,2,0,0][d.instr[menu.instr.value][3]]]().then(()=>{kb.style.opacity='1';kb.style.pointerEvents='auto';});
+				][d.p[d.instr[menu.instr.value][3]]]().then(()=>{kb.style.opacity='1';kb.style.pointerEvents='auto';});
 				mico.setAttribute('style',`--bp:${bp(menu.instr.value)};`);
 			},
 			trigger=i=>{
