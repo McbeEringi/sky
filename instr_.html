@@ -50,8 +50,10 @@
 		.grid.anm::before{animation:flip .4s linear;}
 		.grid.tex::before{background-image:url(img/tex.webp);}.nowebp .grid.tex::before{background-image:url(img/tex.png);}
 		:checked+.grid::after,.grid.a::after{content:"";box-sizing:border-box;border:calc(var(--size)*.13328) solid #fff;border-image:url(img/sel.svg) 33.333%;}:checked+.grid,.grid.a{transform:rotateY(360deg);transition:.5s;}
-		:disabled+.grid,.grid.d{filter:grayscale(1)opacity(.7);}
+		:disabled+.grid,.grid.d,.d .grid{filter:grayscale(1)opacity(.7);pointer-events:none;}
 		.btn:active{transform:scale(.85);}.btn:not(:active){transition:.2s;}
+		.clock{--bp:-200% -0%;filter:saturate(.3);}.grid.clock::after{content:"";transition:.2s;transform:rotate(var(--rot,45deg));filter:drop-shadow(0 0 2px #aef);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M6 6h1v1h-1z' fill='%23caf0f6'/%3E%3C/svg%3E");}
+		.clock.d::after,.d .clock::after{--rot:initial;}
 
 		#kb{--clm:5;--row:3;--size:min(88px,calc(100vw/var(--clm)));font-size:0;width:calc(var(--size)*var(--clm));height:calc(var(--size)*var(--row));margin:calc(var(--size)*.5) auto 0;overflow:hidden;touch-action:none;}
 		#kb>div{width:calc(var(--size)*5);}
@@ -67,7 +69,7 @@
 		#drawer hr{border:none;}#drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		.btnw{position:absolute;top:0;right:0;--size:48px;will-change:transform;}
 		.btnw>*::before{transition:transform .5s;}.btnw>[for=kbsize]{--bp:-500% 0;}.btnw>#mico{--bp:0 -100%;}
-		#scd,#scd_{transition:.2s;}#scd_{transform:rotate(45deg);filter:drop-shadow(0 0 2px #aef);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M6 6h1v1h-1z' fill='%23caf0f6'/%3E%3C/svg%3E");}
+		#scd{transition:.2s;}
 		@media(max-width:700px){
 			body>[for=drwcb]{display:block;width:100%;height:100%;position:absolute;top:0;left:0;}
 			.btnw{top:unset;bottom:0;transform-origin:bottom right;}#drawer{padding-top:unset;padding-bottom:48px;}
@@ -90,7 +92,13 @@
 		<hr>
 		<div id="scd">
 				<div class="grid btn" style="--bp:-600% -0%;">
-			</div><div class="grid btn" style="--bp:-200% -0%;filter:saturate(.3);"><div id="scd_"></div>
+			</div><div class="grid btn clock" id="scd_">
+			</div><div class="grid btn" style="--bp:-500% -0%;"></div>
+		</div>
+		<hr>
+		<div id="rvd">
+				<div class="grid btn" style="--bp:-600% -0%;">
+			</div><div class="grid btn clock" id="rvd_">
 			</div><div class="grid btn" style="--bp:-500% -0%;"></div>
 		</div>
 		<hr>
@@ -99,8 +107,6 @@
 			</a><div id="infobtn" class="grid btn tex" style="--bp:0 0;"></div>
 		</div>
 		<hr>
-		reverb
-		<input id="revrng" type="range" min="0" max="1" step="0.0625" list="hex" style="width:80%;">
 		<div>
 			<button onclick="pa.filter('del',{delay:.2})">set delay to 0.2</button>
 			<button onclick="pa.filter('del',{delay:.1})">set delay to 0.1</button>
@@ -130,7 +136,6 @@
 				}
 			}[window.navigator.language.slice(0,2)]),
 			bp=i=>`${i%8*-100}% ${Math.floor(i*.125+1)*-100}%`,
-			revset=()=>pa.filter('rev',{wet:+revrng.value}),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			cidft=['audio/instr/musicbox/',1,[stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],0],
 			d={
@@ -175,12 +180,12 @@
 							pa.player(n,{baseUrl:d.instr[menu.instr.value][0],notes:d.instr[menu.instr.value][2][i],filters:['del','rev']},f);
 						}
 					});
-				scd.style.opacity='';scd.style.pointerEvents='';scale();
+				scd.classList.remove('d');scale();
 				kb.classList.remove('c','oct','nov');
 				kb.classList.add(['c','oct','nov'][d.k[d.instr[menu.instr.value][3]]]);
 				[
 					()=>{return pl(menu.instr.value,0);},
-					()=>{scd.style.opacity='.5';scd.style.pointerEvents='none';scd_.style.transform='';return pl(menu.instr.value,0);},
+					()=>{scd.classList.add('d');return pl(menu.instr.value,0);},
 					()=>{return Promise.all([pl(menu.instr.value,0),pl(`${menu.instr.value}_`,1)]);}
 				][d.p[d.instr[menu.instr.value][3]]]().then(()=>{kb.style.opacity='';kb.style.pointerEvents='';});
 				mico.setAttribute('style',`--bp:${bp(menu.instr.value)};`);
@@ -190,16 +195,22 @@
 				if(typeof d.i2n[x[3]][i]=='number')pa.start(menu.instr.value+(x[3]==2&&i>3?'_':''),[69+d.i2n[x[3]][i]+x[1]*12+(d.p[x[3]]==1?0:sc)]);
 			},
 			scale=s=>{
-				scd_.style.transform=`rotate(${sc*30+45}deg)`;
+				scd_.setAttribute('style',`--rot:${sc*30+45}deg;`);
 				if(s){
-					const x=d.instr[menu.instr.value][1]*12+sc,t=pa.now();
-					pa.start(menu.instr.value,[72+x],t+.05);
-					pa.start(menu.instr.value,[76+x],t+.1);
-					pa.start(menu.instr.value,[79+x],t+.15);
+					const x=d.instr[menu.instr.value][1]*12+sc,t=pa.now()+.05;
+					[72,76,79].forEach((y,i)=>pa.start(menu.instr.value,[y+x],t+i*.05));
 				}
 			},
-			save=()=>localStorage.instr_stat=JSON.stringify({sc,instr:+menu.instr.value,rev:+revrng.value,kb:+kbsize.checked}),
-			load=()=>({sc,instr:menu.instr.value,rev:revrng.value,kb:kbsize.checked}={sc:0,instr:0,rev:0,kb:0,...JSON.parse(localStorage.instr_stat||'{}')});
+			reverb=s=>{
+				pa.filter('rev',{wet:rev});
+				rvd_.setAttribute('style',`--rot:${(rev*2-1)*135+45}deg;`);
+				if(s){
+					const x=d.instr[menu.instr.value][1]*12+sc,t=pa.now()+.05;
+					[72,74,76,79,84].forEach((y,i)=>pa.start(menu.instr.value,[y+x],t+i*.05));
+				}
+			},
+			save=()=>localStorage.instr_stat=JSON.stringify({sc,instr:+menu.instr.value,rev,kb:+kbsize.checked}),
+			load=()=>({sc,instr:menu.instr.value,rev,kb:kbsize.checked}={sc:0,instr:0,rev:0,kb:0,...JSON.parse(localStorage.instr_stat||'{}')});
 
 		kb.textContent='';
 		const div=document.createElement('div');
@@ -217,13 +228,15 @@
 			if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
 			if(d.k2i[e.code]>-1)kb.firstChild.children[d.k2i[e.code]].dispatchEvent(new Event('mousedown'));
 		};
-		load();set();revset();
+		load();set();reverb();
 		kbsize.onchange=save;
 		scd.children[0].onclick=()=>{sc--;scale(1);save();};
-		scd.children[1].onclick=()=>{sc=0;scale(1);save();};
+		scd_.onclick=()=>{sc=0;scale(1);save();};
 		scd.children[2].onclick=()=>{sc++;scale(1);save();};
+		rvd.children[0].onclick=()=>{rev=Math.max(0,rev-.125);reverb(1);save();};
+		rvd_.onclick=()=>{rev=0;reverb(1);save();};
+		rvd.children[2].onclick=()=>{rev=Math.min(1,rev+.125);reverb(1);save();};
 		infobtn.onclick=()=>alert(`${texts.info}`);
-		revrng.onchange=()=>{revset();save();};
 		menu.onchange=()=>{set();save();};
 		if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
 			{
