@@ -31,6 +31,13 @@
 	<script src="style.js" async></script>
 	<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'img/tex.webp'});</script>
 	<link rel="stylesheet" href="https://mcbeeringi.github.io/src/toggle.css" media="print" onload="this.media='all'">
+	<datalist id="hex">
+		<option value="0"><option value="0.0625"><option value="0.125"><option value="0.1875">
+		<option value="0.25"><option value="0.3125"><option value="0.375"><option value="0.4375">
+		<option value="0.5"><option value="0.5625"><option value="0.625"><option value="0.6875">
+		<option value="0.75"><option value="0.8125"><option value="0.875"><option value="0.9375">
+		<option value="1">
+	</datalist>
 	<style>
 		:root{--size:84px;--bp:0 0;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
 		html,body{height:100%;margin:0;position:relative;overflow:hidden;}
@@ -42,24 +49,23 @@
 		.grid::before{background:var(--bp)/800% #3338 url(img/instr.svg);}.grid::after{content:none;}
 		.grid.anm::before{animation:flip .4s linear;}
 		.grid.tex::before{background-image:url(img/tex.webp);}.nowebp .grid.tex::before{background-image:url(img/tex.png);}
-		:checked+.grid::after,.grid.a::after{content:"";box-sizing:border-box;border:calc(var(--size)*.13328) solid #fff;-webkit-border-image:url(img/sel.svg) 33.333%;}:checked+.grid,.grid.a{transform:rotateY(360deg);transition:.5s;}
+		:checked+.grid::after,.grid.a::after{content:"";box-sizing:border-box;border:calc(var(--size)*.13328) solid #fff;border-image:url(img/sel.svg) 33.333%;}:checked+.grid,.grid.a{transform:rotateY(360deg);transition:.5s;}
 		:disabled+.grid,.grid.d{filter:grayscale(1)opacity(.7);}
 		.btn:active{transform:scale(.85);}.btn:not(:active){transition:.2s;}
 
 		#kb{--clm:5;--row:3;--size:min(88px,calc(100vw/var(--clm)));font-size:0;width:calc(var(--size)*var(--clm));height:calc(var(--size)*var(--row));margin:calc(var(--size)*.5) auto 0;overflow:hidden;touch-action:none;}
 		#kb>div{width:calc(var(--size)*5);}
-		#kb .grid::after{content:none;}#kb,#kb *{transition:width .2s,height .2s,margin .2s;}
-		#kb .grid:nth-of-type(5n+1)::before{background-position:-200% 0;}#kb .grid:nth-of-type(5n+2)::before{background-position:-100% 0;}
-		#kb .grid:nth-of-type(5n+3)::before{background-position:-200% 0;}#kb .grid:nth-of-type(5n+4)::before{background-position:-100% 0;}
-		#kb .grid:nth-of-type(5n  )::before{background-position:-200% 0;}
+		#kb .grid,#kb .grid::before{will-change:transform;}#kb .grid::after{content:none;}#kb,#kb *{transition:width .2s,height .2s,margin .2s;}
+		#kb .grid:nth-of-type(5n+1)::before,#kb .grid:nth-of-type(5n+3)::before,#kb .grid:nth-of-type(5n+5)::before{background-position:-200% 0;}
+		#kb .grid:nth-of-type(5n+2)::before,#kb .grid:nth-of-type(5n+4)::before{background-position:-100% 0;}		
 		#kb.c .grid:nth-of-type(7n+1)::before{background-position:0 0;}
 		#kb.oct{--clm:4;--row:2;}#kb.nov{--clm:3;--row:3;}
 		#kbsize:checked~.btnw>[for=kbsize]::before{transform:rotateY(360deg);--bp:-600% 0;}#kbsize:checked~#kb{--size:min(110px,calc(100vw/var(--clm)));}
 
 		body>[for=drwcb]{display:none;pointer-events:none;}
-		#drawer{width:calc(var(--size)*3);height:100%;padding-top:48px;box-sizing:border-box;position:absolute;top:0;right:0;overflow-y:scroll;background-color:#3338;transform:translateX(100%);transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+		#drawer{width:calc(var(--size)*3);height:100%;padding-top:48px;box-sizing:border-box;text-align:center;position:absolute;top:0;right:0;overflow-y:scroll;background-color:#3338;transform:translateX(100%);transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 		#drawer hr{border:none;}#drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
-		.btnw{position:absolute;top:0;right:0;--size:48px;}
+		.btnw{position:absolute;top:0;right:0;--size:48px;will-change:transform;}
 		.btnw>*::before{transition:transform .5s;}.btnw>[for=kbsize]{--bp:-500% 0;}.btnw>#mico{--bp:0 -100%;}
 		#scd,#scd_{transition:.2s;}#scd_{transform:rotate(45deg);filter:drop-shadow(0 0 2px #aef);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M6 6h1v1h-1z' fill='%23caf0f6'/%3E%3C/svg%3E");}
 		@media(max-width:700px){
@@ -86,7 +92,15 @@
 				<div class="grid btn" style="--bp:-600% -0%;">
 			</div><div class="grid btn" style="--bp:-200% -0%;filter:saturate(.3);"><div id="scd_"></div>
 			</div><div class="grid btn" style="--bp:-500% -0%;"></div>
-			</div>
+		</div>
+		<hr>
+		<div>
+				<a class="grid btn" style="--bp:-100% -100%;" href="manual/index.html?m=instr" target="_blank">
+			</a><div id="infobtn" class="grid btn tex" style="--bp:0 0;"></div>
+		</div>
+		<hr>
+		reverb
+		<input id="revrng" type="range" min="0" max="1" step="0.0625" list="hex" style="width:80%;">
 		<div>
 			<button onclick="pa.filter('del',{delay:.2})">set delay to 0.2</button>
 			<button onclick="pa.filter('del',{delay:.1})">set delay to 0.1</button>
@@ -102,9 +116,9 @@
 
 	<script src="https://mcbeeringi.github.io/petitaudio/petitaudio.js"></script>
 	<script>
-		let sc=0;
+		let sc,rev;
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
-		const pa=new PetitAudio().filter('del',{type:'delay',delay:0}),
+		const pa=new PetitAudio().filter('del',{type:'delay',delay:0}).filter('rev',{type:'reverb',fadeIn:.1,decay:2.5,freq:10000,wet:0}),
 			texts=Object.assign({
 				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111010\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault'],
@@ -116,6 +130,7 @@
 				}
 			}[window.navigator.language.slice(0,2)]),
 			bp=i=>`${i%8*-100}% ${Math.floor(i*.125+1)*-100}%`,
+			revset=()=>pa.filter('rev',{wet:+revrng.value}),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			cidft=['audio/instr/musicbox/',1,[stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],0],
 			d={
@@ -157,7 +172,7 @@
 						if(pa.pl_[n])f();
 						else{
 							kb.style.opacity='.5';kb.style.pointerEvents='none';
-							pa.player(n,{baseUrl:d.instr[menu.instr.value][0],notes:d.instr[menu.instr.value][2][i],filters:['del']},f);
+							pa.player(n,{baseUrl:d.instr[menu.instr.value][0],notes:d.instr[menu.instr.value][2][i],filters:['del','rev']},f);
 						}
 					});
 				scd.style.opacity='';scd.style.pointerEvents='';scale();
@@ -183,7 +198,8 @@
 					pa.start(menu.instr.value,[79+x],t+.15);
 				}
 			},
-			load=()=>({sc,instr:menu.instr.value}={sc:0,instr:'0',reverb:['0','3'],amb:1,ci:'',bpm:120,...JSON.parse(localStorage.instr_stat||'{}')});
+			save=()=>localStorage.instr_stat=JSON.stringify({sc,instr:+menu.instr.value,rev:+revrng.value,kb:+kbsize.checked}),
+			load=()=>({sc,instr:menu.instr.value,rev:revrng.value,kb:kbsize.checked}={sc:0,instr:0,rev:0,kb:0,...JSON.parse(localStorage.instr_stat||'{}')});
 
 		kb.textContent='';
 		const div=document.createElement('div');
@@ -201,11 +217,14 @@
 			if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
 			if(d.k2i[e.code]>-1)kb.firstChild.children[d.k2i[e.code]].dispatchEvent(new Event('mousedown'));
 		};
-		scd.children[0].onclick=()=>{sc--;scale(1);};
-		scd.children[1].onclick=()=>{sc=0;scale(1);};
-		scd.children[2].onclick=()=>{sc++;scale(1);};
-		load();
-		(menu.onchange=set)();
+		load();set();revset();
+		kbsize.onchange=save;
+		scd.children[0].onclick=()=>{sc--;scale(1);save();};
+		scd.children[1].onclick=()=>{sc=0;scale(1);save();};
+		scd.children[2].onclick=()=>{sc++;scale(1);save();};
+		infobtn.onclick=()=>alert(`${texts.info}`);
+		revrng.onchange=()=>{revset();save();};
+		menu.onchange=()=>{set();save();};
 		if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
 			{
 				let img=new Image();
@@ -217,7 +236,6 @@
 				};
 				img.src='img/instr.svg';
 			}
-		drawer.insertAdjacentHTML('beforeend',texts.info);
 	</script>
 </body>
 </html>
