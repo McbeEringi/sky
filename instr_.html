@@ -38,13 +38,13 @@
 		@keyframes flip{0%{transform:rotateY(0deg)scale(.8);}100%{transform:rotateY(360deg)scale(1);}}
 
 		.grid{display:inline-block;width:var(--size);height:var(--size);margin:0;vertical-align:top;position:relative;overflow:hidden;}
-		.grid::before,.grid::after{content:"";display:block;width:78.4%;height:78.4%;position:absolute;margin:10.8%;border-radius:17%;}
-		.grid::before{background:var(--bp)/800% #3338 url(img/instr.svg);}
-		.grid::after{box-sizing:border-box;opacity:0;border:calc(var(--size)*.13328) solid #fff;-webkit-border-image:url(img/sel.svg) 33.333%;}
+		.grid::before,.grid::after,.grid *{content:"";display:block;width:78.4%;height:78.4%;position:absolute;margin:10.8%;border-radius:17%;}
+		.grid::before{background:var(--bp)/800% #3338 url(img/instr.svg);}.grid::after{content:none;}
 		.grid.anm::before{animation:flip .4s linear;}
 		.grid.tex::before{background-image:url(img/tex.webp);}.nowebp .grid.tex::before{background-image:url(img/tex.png);}
-		:checked+.grid::after,.grid.a::after{opacity:1;}:checked+.grid,.grid.a{transform:rotateY(360deg);transition:.5s;}
+		:checked+.grid::after,.grid.a::after{content:"";box-sizing:border-box;border:calc(var(--size)*.13328) solid #fff;-webkit-border-image:url(img/sel.svg) 33.333%;}:checked+.grid,.grid.a{transform:rotateY(360deg);transition:.5s;}
 		:disabled+.grid,.grid.d{filter:grayscale(1)opacity(.7);}
+		.btn:active{transform:scale(.85);}.btn:not(:active){transition:.2s;}
 
 		#kb{--clm:5;--row:3;--size:min(88px,calc(100vw/var(--clm)));font-size:0;width:calc(var(--size)*var(--clm));height:calc(var(--size)*var(--row));margin:calc(var(--size)*.5) auto 0;overflow:hidden;touch-action:none;}
 		#kb>div{width:calc(var(--size)*5);}
@@ -61,6 +61,7 @@
 		#drawer hr{border:none;}#drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		.btnw{position:absolute;top:0;right:0;--size:48px;}
 		.btnw>*::before{transition:transform .5s;}.btnw>[for=kbsize]{--bp:-500% 0;}.btnw>#mico{--bp:0 -100%;}
+		#scd,#scd_{transition:.2s;}#scd_{transform:rotate(45deg);filter:drop-shadow(0 0 2px #aef);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M6 6h1v1h-1z' fill='%23caf0f6'/%3E%3C/svg%3E");}
 		@media(max-width:700px){
 			body>[for=drwcb]{display:block;width:100%;height:100%;position:absolute;top:0;left:0;}
 			.btnw{top:unset;bottom:0;transform-origin:bottom right;}#drawer{padding-top:unset;padding-bottom:48px;}
@@ -81,11 +82,15 @@
 	<div id="drawer">
 		<form id="menu"></form>
 		<hr>
+		<div id="scd">
+				<div class="grid btn" style="--bp:-600% -0%;">
+			</div><div class="grid btn" style="--bp:-200% -0%;filter:saturate(.3);"><div id="scd_"></div>
+			</div><div class="grid btn" style="--bp:-500% -0%;"></div>
+			</div>
 		<div>
 			<button onclick="pa.filter('del',{delay:.2})">set delay to 0.2</button>
 			<button onclick="pa.filter('del',{delay:.1})">set delay to 0.1</button>
 			<button onclick="pa.filter('del',{delay:0})">set delay to 0</button><br>
-			<button onclick="sc--;">=*= - =*=</button><button onclick="sc++;">=*= + =*=</button>
 		</div>
 		<hr>
 	</div>
@@ -134,7 +139,7 @@
 					['audio/instr/pipa/',-1,[stdli(3,5)],0],//210529
 					['audio/instr/bugle/',0,[stdli(4,6)],0],//210529
 						['audio/instr/ocarina/',0,[stdli(4,6)],0],
-					['audio/instr/kalimba/',0,[stdli(4,6)],4]//211025
+					['audio/instr/kalimba/',0,[stdli(4,6)],0]//211025
 				],
 				i2n:[
 					[-9,-7,-5,-4,-2,0,2,3,5,7,8,10,12,14,15],
@@ -143,26 +148,40 @@
 					[-7,0,3,5,,8,10,12,15],//handpan
 					[2,5,12,,,-10,-7,0,,,-18,-15,-12]
 				],
+				p:[0,1,2,0,0],
+				k:[0,1,1,1,2],
 				k2i:Object.fromEntries(Array.from('QWERTASDFGZXCVB',(y,i)=>[`Key${y}`,i]))
 			},
 			set=()=>{
-				kb.style.opacity='.5';kb.style.pointerEvents='none';
 				const pl=(n,i)=>new Promise(f=>{
 						if(pa.pl_[n])f();
-						else pa.player(n,{baseUrl:d.instr[menu.instr.value][0],notes:d.instr[menu.instr.value][2][i],filters:['del']},f);
+						else{
+							kb.style.opacity='.5';kb.style.pointerEvents='none';
+							pa.player(n,{baseUrl:d.instr[menu.instr.value][0],notes:d.instr[menu.instr.value][2][i],filters:['del']},f);
+						}
 					});
+				scd.style.opacity='';scd.style.pointerEvents='';scale();
 				kb.classList.remove('c','oct','nov');
-				kb.classList.add(['c','oct','nov'][[0,1,1,1,2][d.instr[menu.instr.value][3]]]);
+				kb.classList.add(['c','oct','nov'][d.k[d.instr[menu.instr.value][3]]]);
 				[
 					()=>{return pl(menu.instr.value,0);},
-					()=>{return pl(menu.instr.value,0);},//scd.style.opacity='.5';scd.style.pointerEvents='none';scd_.style.transform='';
+					()=>{scd.style.opacity='.5';scd.style.pointerEvents='none';scd_.style.transform='';return pl(menu.instr.value,0);},
 					()=>{return Promise.all([pl(menu.instr.value,0),pl(`${menu.instr.value}_`,1)]);}
-				][[0,1,2,0,0][d.instr[menu.instr.value][3]]]().then(()=>{kb.style.opacity='1';kb.style.pointerEvents='auto';});
+				][d.p[d.instr[menu.instr.value][3]]]().then(()=>{kb.style.opacity='';kb.style.pointerEvents='';});
 				mico.setAttribute('style',`--bp:${bp(menu.instr.value)};`);
 			},
 			trigger=i=>{
 				const x=d.instr[menu.instr.value];
-				if(d.i2n[x[3]][i]==+d.i2n[x[3]][i])pa.start(menu.instr.value+(x[3]==2&&i>3?'_':''),[69+d.i2n[x[3]][i]+x[1]*12+sc]);
+				if(typeof d.i2n[x[3]][i]=='number')pa.start(menu.instr.value+(x[3]==2&&i>3?'_':''),[69+d.i2n[x[3]][i]+x[1]*12+(d.p[x[3]]==1?0:sc)]);
+			},
+			scale=s=>{
+				scd_.style.transform=`rotate(${sc*30+45}deg)`;
+				if(s){
+					const x=d.instr[menu.instr.value][1]*12+sc,t=pa.now();
+					pa.start(menu.instr.value,[72+x],t+.05);
+					pa.start(menu.instr.value,[76+x],t+.1);
+					pa.start(menu.instr.value,[79+x],t+.15);
+				}
 			},
 			load=()=>({sc,instr:menu.instr.value}={sc:0,instr:'0',reverb:['0','3'],amb:1,ci:'',bpm:120,...JSON.parse(localStorage.instr_stat||'{}')});
 
@@ -182,6 +201,9 @@
 			if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
 			if(d.k2i[e.code]>-1)kb.firstChild.children[d.k2i[e.code]].dispatchEvent(new Event('mousedown'));
 		};
+		scd.children[0].onclick=()=>{sc--;scale(1);};
+		scd.children[1].onclick=()=>{sc=0;scale(1);};
+		scd.children[2].onclick=()=>{sc++;scale(1);};
 		load();
 		(menu.onchange=set)();
 		if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
