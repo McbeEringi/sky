@@ -57,7 +57,7 @@
 		<span id="ogal"></span> (<a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area#The_Spirits_of_the_Office">Sky Wiki</a>)<br>
 		大キャンドル参考元: <a href="https://twitter.com/sky_tea11">ティー</a>様 <br><!--/status/1356572540437635073-->
 		<p>
-			[sky_info] build:2108200 <br>
+			[sky_info] build:2111020 <br>
 			<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
 		</p>
 
@@ -148,9 +148,14 @@
 				window[`_${i}t`].textContent+=`\n${texts.o}: ${o_dic[(t.getDate()-1)%7]}`;
 			},
 			main=()=>{
-				let local=new Date(),server=new Date(local.getTime()-3600000*17),dst=server.getMonth()*40+server.getDate();//summertime(3/14~11/7) ? 16 : 17
-				if(dst=>94&&dst<=407){server=new Date(local.getTime()-3600000*16);dst=texts.dst;}else dst='';
-				time.textContent=`${texts.ct}: ${local.toLocaleString()}\n${texts.st}: ${server.toLocaleString()} ${dst}`;
+				let local=new Date();
+				const year=local.getFullYear(),dt=local.getTimezoneOffset()*6e4;
+				let server=new Date(Date.now()+dt-8*36e5),
+					from=new Date(year,2,15-new Date(year,2,1).getDay(),2,0),//3月第二日曜2時~11月第一日曜2時
+					to=new Date(year,10,8-new Date(year,10,1).getDay(),2,0),
+					dst=from.getTime()<=server&&server<to.getTime();
+				if(dst)server=new Date(Date.now()+dt-7*36e5);
+				time.textContent=`${texts.ct}: ${local.toLocaleString()}\n${texts.st}: ${server.toLocaleString()} ${dst?texts.dst:''}`;
 				if(hbuf!=server.getHours()){
 					hbuf=server.getHours();
 					console.log('exe');
