@@ -65,7 +65,7 @@
 		#kbsize:checked~.btnw>[for=kbsize]::before{transform:rotateY(360deg);--bp:-600% 0;}#kbsize:checked~#kb{--size:min(110px,calc(100vw/var(--clm)));}
 
 		body>[for=drwcb]{display:none;pointer-events:none;}
-		#drawer{width:calc(var(--size)*3);height:100%;padding-top:48px;box-sizing:border-box;text-align:center;position:absolute;top:0;right:0;overflow-y:scroll;background-color:#3338;transform:translateX(100%);transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+		#drawer{width:calc(var(--size)*3.2);height:100%;padding-top:48px;box-sizing:border-box;text-align:center;position:absolute;top:0;right:0;overflow-y:scroll;background-color:#3338;transform:translateX(100%);transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 		#drawer hr{border:none;}#drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		.btnw{position:absolute;top:0;right:0;--size:48px;will-change:transform;}
 		.btnw>*::before{transition:transform .5s;}.btnw>[for=kbsize]{--bp:-500% 0;}.btnw>#mico{--bp:0 -100%;}
@@ -125,7 +125,7 @@
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const pa=new PetitAudio().filter('del',{type:'delay',delay:0}).filter('rev',{type:'reverb',fadeIn:.1,decay:2.5,freq:10000,wet:0}),
 			texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111010\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111040\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault'],
 				dft:'default',cin:'instrment label',fsel:'choose file',note:'note',mrn:'metronome'
 			},{
@@ -141,7 +141,7 @@
 				instr:[
 					cidft,
 					['audio/instr/harp/',-1,[stdli(3,5)],0],//210503
-					['audio/instr/percussion/',-1,[{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],1],
+					['audio/instr/percussion/',0,[{a4:'0.mp3','a#4':'1.mp3',b4:'2.mp3',c5:'3.mp3',a5:'4.mp3','a#5':'5.mp3',b5:'6.mp3',c6:'7.mp3'}],1],
 					['audio/instr/contrabass/',-2,[stdli(2,4)],0],//211009
 					['audio/instr/horn/',-1,[stdli(3,5)],0],//211009
 						['audio/instr/piano/',0,[stdli(4)],0],
@@ -154,7 +154,7 @@
 						['audio/instr/piano/',1,[stdli(5)],0],
 					['audio/instr/glock/',0,[stdli(4,6)],0],//210529
 					['audio/instr/handpan/',-1,[stdli(3)],3],
-					['audio/instr/dundun/',-1,[{a3:'0.mp3','a#3':'1.mp3',b3:'2.mp3',c4:'3.mp3',a4:'4.mp3','a#4':'5.mp3',b4:'6.mp3',c5:'7.mp3'}],1],
+					['audio/instr/dundun/',0,[{a4:'0.mp3','a#4':'1.mp3',b4:'2.mp3',c5:'3.mp3',a5:'4.mp3','a#5':'5.mp3',b5:'6.mp3',c6:'7.mp3'}],1],
 					['audio/instr/pipa/',-1,[stdli(3,5)],0],//210529
 					['audio/instr/bugle/',0,[stdli(4,6)],0],//210529
 						['audio/instr/ocarina/',0,[stdli(4,6)],0],
@@ -204,8 +204,9 @@
 				pa.filter('rev',{wet:rev});
 				rvd_.setAttribute('style',`--rot:${(rev*2-1)*135+45}deg;`);
 				if(s){
-					const x=d.instr[menu.instr.value][1]*12+sc,t=pa.now()+.05;
-					[72,74,76,79,84].forEach((y,i)=>pa.start(menu.instr.value,[y+x],t+i*.05));
+					const x=d.instr[menu.instr.value],t=pa.now()+.05;
+					if(d.p[x[3]]==1)pa.start(menu.instr.value,[69+x[1]*12],t);
+					else[72,74,76,79,84].forEach((y,i)=>pa.start(menu.instr.value,[y+x[1]*12+sc],t+i*.05));
 				}
 			},
 			save=()=>localStorage.instr_stat=JSON.stringify({sc,instr:+menu.instr.value,rev,kb:+kbsize.checked}),
