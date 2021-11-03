@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Document</title>
+</head>
+<body>
+	<pre id="log"></pre>
+	<script>
+		const main=()=>{
+			let t=new Date();
+			const year=t.getFullYear(),dt=t.getTimezoneOffset()*6e4;
+			t=new Date(Date.now()+dt-8*36e5);
+			let from=new Date(year,2,15-new Date(year,2,1).getDay(),2,0),//3月第二日曜2時~11月第一日曜2時
+				to=new Date(year,10,8-new Date(year,10,1).getDay(),2,0);
+			if(from.getTime()<=t&&t<to.getTime())t=new Date(Date.now()+dt-7*36e5);
+			log.textContent=t.toLocaleString();
+		};
+		setInterval(main,200)
+	</script>
+</body>
+</html>
