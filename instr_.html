@@ -41,7 +41,7 @@
 	<style>
 		:root{--size:84px;--bp:0 0;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
 		html,body{height:100%;margin:0;position:relative;overflow:hidden;}
-		#menu input,body>input{display:none;}
+		#menu input,body>input{display:none;}input{vertical-align:middle;}
 		@keyframes flip{0%{transform:rotateY(0deg)scale(.8);}100%{transform:rotateY(360deg)scale(1);}}
 
 		.grid{display:inline-block;width:var(--size);height:var(--size);margin:0;vertical-align:top;position:relative;overflow:hidden;}
@@ -100,13 +100,6 @@
 			</div><a class="grid btn" style="--bp:-100% -100%;" href="manual/index.html?m=instr" target="_blank">
 			</a><div id="infobtn" class="grid btn tex" style="--bp:0 0;"></div>
 		</div>
-		<hr>
-		<div>
-			<button onclick="pa.filter('del',{delay:.2})">set delay to 0.2</button>
-			<button onclick="pa.filter('del',{delay:.1})">set delay to 0.1</button>
-			<button onclick="pa.filter('del',{delay:0})">set delay to 0</button><br>
-		</div>
-		<hr>
 	</div>
 	<div class="btnw">
 		<label for="kbsize" class="grid"></label>
@@ -116,7 +109,7 @@
 
 	<script src="https://mcbeeringi.github.io/petitaudio/petitaudio.js"></script>
 	<script>
-		let sc,rev;
+		let sc,rev,del;
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const pa=new PetitAudio().filter('del',{type:'delay',delay:0}).filter('rev',{type:'reverb',fadeIn:.1,decay:2.5,freq:10000,wet:0}),
 			texts=Object.assign({
@@ -203,17 +196,27 @@
 					else[72,74,76,79,84].forEach((y,i)=>pa.start(menu.instr.value,[y+x[1]*12+sc],t+i*.05));
 				}
 			},
-			cfg=()=>{
-				alert(`bg:<hr
->reverb:<input type="range" list="hexdl" min="0" max="1" step="0.0625" value="${rev}"><hr
->delay:WIP<input type="range" list="hexdl" min="0" max="1" step="0.0625" value="${0}"><hr
->metronome:<hr
->custom:`);
-				const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=range]');
-				rng[0].onchange=()=>{rev=+rng[0].value;reverb(1);save();}
+			delay=s=>{
+				pa.filter('del',{delay:del});
+				if(s){
+					const x=d.instr[menu.instr.value],t=pa.now()+.05;
+					if(d.p[x[3]]==1)[69,81].forEach((y,i)=>pa.start(menu.instr.value,[y+x[1]*12],t+i*del));
+					else[72,79].forEach((y,i)=>pa.start(menu.instr.value,[y+x[1]*12+sc],t+i*del));
+				}
 			},
-			save=()=>localStorage.instr_stat=JSON.stringify({sc,instr:+menu.instr.value,rev,kb:+kbsize.checked}),
-			load=()=>({sc,instr:menu.instr.value,rev,kb:kbsize.checked}={sc:0,instr:0,rev:0,kb:0,...JSON.parse(localStorage.instr_stat||'{}')});
+			cfg=()=>{
+				alert(`ambient
+WIP<hr>reverb
+<input type="range" class="style" list="hexdl" min="0" max="1" step="0.0625" value="${rev}"><hr>delay
+<input type="range" class="style" list="hexdl" min="0" max="1" step="0.0625" value="${del/.2}"><hr>metronome
+WIP<hr>custom
+WIP`);
+				const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=range]');
+				rng[0].onchange=()=>{rev=+rng[0].value;reverb(1);save();};
+				rng[1].onchange=()=>{del=+rng[1].value*.2;delay(1);save();};
+			},
+			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc,rev,del,kb:+kbsize.checked}),
+			load=()=>({instr:menu.instr.value,sc,rev,del,kb:kbsize.checked}={instr:0,sc:0,rev:0,del:.1,kb:0,...JSON.parse(localStorage.instr_stat||'{}')});
 
 		kb.textContent='';
 		const div=document.createElement('div');
@@ -231,7 +234,7 @@
 			if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
 			if(d.k2i[e.code]>-1)kb.firstChild.children[d.k2i[e.code]].dispatchEvent(new Event('mousedown'));
 		};
-		load();set();reverb();
+		load();set();reverb();delay();
 		kbsize.onchange=save;
 		scd.children[0].onclick=()=>{sc--;scale(1);save();};
 		scd_.onclick=()=>{sc=0;scale(1);save();};
