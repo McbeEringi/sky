@@ -96,6 +96,8 @@
 		<hr>
 		<div>
 				<div id="cfgbtn" class="grid btn tex" style="--bp:-100% 0;">
+			</div><div id="cicfgbtn" class="grid btn tex" style="--bp:0 -100%;">
+			</div><div id="recbtn" class="grid btn d" style="--bp:0 -100%;">
 			</div><a class="grid btn" style="--bp:-100% -100%;" href="manual/index.html?m=instr" target="_blank">
 			</a><div id="infobtn" class="grid btn tex" style="--bp:0 0;"></div>
 		</div>
@@ -112,7 +114,7 @@
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const pa=new PetitAudio().filter('del',{type:'delay',delay:0}).filter('rev',{type:'reverb',fadeIn:.1,decay:2.5,freq:10000,wet:0}),
 			texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111050\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111051\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault'],
 				dft:'default',cin:'instrment label',fsel:'choose file',note:'note',mrn:'metronome'
 			},{
@@ -204,16 +206,18 @@
 				}
 			},
 			cfg=()=>{
-				alert(`ambient
-WIP<hr>reverb
+				alert(`ambient WIP
+<select>${['none','hotspring','home','forest','vault'].map((x,i)=>'<option value="'+(i-1)+'">'+x+'</option>').join('')}
+</select><hr>reverb
 <input type="range" class="style" list="hexdl" min="0" max="1" step="0.0625" value="${rev}"><hr>delay
-<input type="range" class="style" list="hexdl" min="0" max="1" step="0.0625" value="${del/.2}"><hr>metronome
-WIP<hr>custom
-WIP`);
+<input type="range" class="style" list="hexdl" min="0" max="1" step="0.0625" value="${del/.2}"><hr>metronome WIP
+<input type="checkbox" class="toggle">
+<input type="range" min="40" max="208">`);
 				const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=range]');
 				rng[0].onchange=()=>{rev=+rng[0].value;reverb(1);save();};
 				rng[1].onchange=()=>{del=+rng[1].value*.2;delay(1);save();};
 			},
+			cicfg=()=>{alert('WIP')},
 			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc,rev,del,kb:+kbsize.checked}),
 			load=()=>({instr:menu.instr.value,sc,rev,del,kb:kbsize.checked}={instr:0,sc:0,rev:0,del:.1,kb:0,...JSON.parse(localStorage.instr_stat||'{}')});
 
@@ -239,6 +243,7 @@ WIP`);
 		scd_.onclick=()=>{sc=0;scale(1);save();};
 		scd.children[2].onclick=()=>{sc++;scale(1);save();};
 		cfgbtn.onclick=cfg;
+		cicfgbtn.onclick=cicfg;
 		infobtn.onclick=()=>alert(`${texts.info}`);
 		menu.onchange=()=>{set();save();};
 		if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
