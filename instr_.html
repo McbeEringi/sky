@@ -114,7 +114,7 @@
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const pa=new PetitAudio().filter('del',{type:'delay',delay:0}).filter('rev',{type:'reverb',fadeIn:.1,decay:2.5,freq:10000,wet:0}),
 			texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111051\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111070\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',ambs:'ambient sound',none:'none',ambn:['hotspring','home','forest','vault'],
 				dft:'default',cin:'instrment label',fsel:'choose file',note:'note',mrn:'metronome'
 			},{
@@ -201,8 +201,12 @@
 				pa.filter('del',{delay:del});
 				if(s){
 					const x=d.instr[menu.instr.value],t=pa.now()+.05;
-					if(d.p[x[3]]==1)[69,81].forEach((y,i)=>pa.start(menu.instr.value,[y+x[1]*12],t+i*del));
-					else[72,79].forEach((y,i)=>pa.start(menu.instr.value,[y+x[1]*12+sc],t+i*del));
+					if(d.p[x[3]]==1)
+						pa.start(menu.instr.value,[69+x[1]*12],t)
+						.start(menu.instr.value,[81+x[1]*12],t+del+pa.ctx.outputLatency);
+					else
+						pa.start(menu.instr.value,[72+x[1]*12+sc],t)
+							.start(menu.instr.value,[79+x[1]*12+sc],t+del+pa.ctx.outputLatency);
 				}
 			},
 			cfg=()=>{
