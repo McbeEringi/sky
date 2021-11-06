@@ -200,13 +200,13 @@
 			delay=s=>{
 				pa.filter('del',{delay:del});
 				if(s){
-					const x=d.instr[menu.instr.value],t=pa.now()+.05;
+					const x=d.instr[menu.instr.value],t=pa.now()+.05,l=pa.ctx.outputLatency||pa.ctx.outputLatency||0;
 					if(d.p[x[3]]==1)
 						pa.start(menu.instr.value,[69+x[1]*12],t)
-						.start(menu.instr.value,[81+x[1]*12],t+del+pa.ctx.outputLatency);
+						.start(menu.instr.value,[81+x[1]*12],t+del+l);
 					else
 						pa.start(menu.instr.value,[72+x[1]*12+sc],t)
-							.start(menu.instr.value,[79+x[1]*12+sc],t+del+pa.ctx.outputLatency);
+							.start(menu.instr.value,[79+x[1]*12+sc],t+del+l);
 				}
 			},
 			cfg=()=>{
