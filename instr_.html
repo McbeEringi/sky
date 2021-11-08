@@ -110,6 +110,7 @@
 
 	<script src="https://mcbeeringi.github.io/petitaudio/petitaudio.js"></script>
 	<script>
+		'use strict';
 		let sc,rev,del;
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const pa=new PetitAudio().filter('del',{type:'delay',delay:0}).filter('rev',{type:'reverb',fadeIn:.1,decay:2.5,freq:10000,wet:0}),
@@ -223,7 +224,8 @@
 			},
 			cicfg=()=>{alert('WIP')},
 			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc,rev,del,kb:+kbsize.checked}),
-			load=()=>({instr:menu.instr.value,sc,rev,del,kb:kbsize.checked}={instr:0,sc:0,rev:0,del:.1,kb:0,...JSON.parse(localStorage.instr_stat||'{}')});
+			load=()=>({instr:menu.instr.value,sc,rev,del,kb:kbsize.checked}={instr:0,sc:0,rev:0,del:.1,kb:0,...JSON.parse(localStorage.instr_stat||'{}')}),
+			init=()=>{set();reverb();delay();};
 
 		kb.textContent='';
 		const div=document.createElement('div');
@@ -241,7 +243,6 @@
 			if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
 			if(d.k2i[e.code]>-1)kb.firstChild.children[d.k2i[e.code]].dispatchEvent(new Event('mousedown'));
 		};
-		load();set();reverb();delay();
 		kbsize.onchange=save;
 		scd.children[0].onclick=()=>{sc--;scale(1);save();};
 		scd_.onclick=()=>{sc=0;scale(1);save();};
@@ -250,6 +251,11 @@
 		cicfgbtn.onclick=cicfg;
 		infobtn.onclick=()=>alert(`${texts.info}`);
 		menu.onchange=()=>{set();save();};
+
+		{
+			load();
+			if(typeof idb=='undefined')window.addEventListener('idbready',init,{once:true});else init();
+		}
 		if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
 			{
 				let img=new Image();
