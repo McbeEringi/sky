@@ -113,7 +113,9 @@
 		'use strict';
 		let sc,rev,del,amb;
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
-		const pa=new PetitAudio().filter('del',{type:'delay',delay:0}).filter('rev',{type:'reverb',fadeIn:.1,decay:2.5,freq:10000,wet:0}),
+		const pa=new PetitAudio()
+				.filter('del',{type:'delay',delay:0})
+				.filter('rev',{type:'reverb',fadeIn:.1,decay:2.5,freq:10000,wet:0}),
 			texts=Object.assign({
 				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111090\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				amb:'環境音',rev:'reverb',delay:'delay',mrn:'metrnome',
@@ -215,15 +217,15 @@
 				}
 			},
 			cfg=()=>{
+				const opt=(x,i)=>`<option value="${i-1}"${i-1==amb?' selected':''}>${x}</option>`;
 				alert(`${texts.amb}
-<select>${texts.ambl.map((x,i)=>'<option value="'+(i-1)+'">'+x+'</option>').join('')}
+<select>${texts.ambl.map(opt).join('')}
 </select><hr>${texts.rev}
 <input type="range" class="style" list="hexdl" min="0" max="1" step="0.0625" value="${rev}"><hr>${texts.delay}
 <input type="range" class="style" list="hexdl" min="0" max="1" step="0.0625" value="${del/.2}"><hr>${texts.mrn} WIP
 <input type="checkbox" class="toggle">
 <input type="range" min="40" max="208">`);
 				const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=range]');
-				sel.value=amb;
 				sel.onchange=()=>{amb=+sel.value;ambset();save();};
 				rng[0].onchange=()=>{rev=+rng[0].value;reverb(1);save();};
 				rng[1].onchange=()=>{del=+rng[1].value*.2;delay(1);save();};
@@ -257,7 +259,7 @@
 		cicfgbtn.onclick=cicfg;
 		infobtn.onclick=()=>alert(`${texts.info}`);
 		menu.onchange=()=>{set();save();};
-		pa.player('amb',{baseUrl:'audio/',notes:{0:'env0.mp3',1:'env1.mp3',2:'env2.mp3',3:'env3.mp3'},filters:['rev'],loop:true,fade:5},()=>{
+		pa.player('amb',{baseUrl:'audio/',notes:{0:'env0.mp3',1:'env1.mp3',2:'env2.mp3',3:'env3.mp3'},filters:[],loop:true,fade:5},()=>{
 			console.log('amb loaded');
 			document.body.addEventListener('pointerdown',ambset,{once:true});
 		});
