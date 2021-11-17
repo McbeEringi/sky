@@ -113,11 +113,12 @@
 		'use strict';
 		let sc,rev,del,amb;
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
-		const pa=new PetitAudio()
-				.filter('del',{type:'delay',delay:0})
-				.filter('rev',{type:'reverb',fadeIn:.1,decay:2.5,freq:10000,wet:0}),
+		const pa=new PetitAudio(),
+			revn=pa.ctx.createConvolver(),
+			deln=pa.ctx.createDelay(1),
+			gn0=pa.ctx.createGain(),gn1=pa.ctx.createGain(),
 			texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111090\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111170\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				amb:'環境音',rev:'reverb',delay:'delay',mrn:'metrnome',
 				ambl:['none','hotspring','home','forest','vault']
 			},{
@@ -168,7 +169,7 @@
 						if(pa.pl_[n])f();
 						else{
 							kb.style.opacity='.5';kb.style.pointerEvents='none';
-							pa.player(n,{baseUrl:d.instr[menu.instr.value][0],notes:d.instr[menu.instr.value][2][i],filters:['del','rev']},f);
+							pa.player(n,{baseUrl:d.instr[menu.instr.value][0],notes:d.instr[menu.instr.value][2][i],node:[deln]},f);
 						}
 					});
 				scd.classList.remove('d');scale();
@@ -197,7 +198,8 @@
 				}
 			},
 			reverb=s=>{
-				pa.filter('rev',{wet:rev});
+				gn0.gain.setValueAtTime(rev,pa.now());
+				gn1.gain.setValueAtTime(1-rev,pa.now());
 				if(s){
 					const x=d.instr[menu.instr.value],t=pa.now()+.05;
 					if(d.p[x[3]]==1)pa.start(menu.instr.value,[69+x[1]*12],t);
@@ -205,7 +207,7 @@
 				}
 			},
 			delay=s=>{
-				pa.filter('del',{delay:del});
+				deln.delayTime.setValueAtTime(del,pa.now());
 				if(s){
 					const x=d.instr[menu.instr.value],t=pa.now()+.05,l=pa.ctx.outputLatency||pa.ctx.outputLatency||0;
 					if(d.p[x[3]]==1)
@@ -246,6 +248,10 @@
 		kb.appendChild(div);
 		menu.textContent='';
 		menu.insertAdjacentHTML('beforeend',d.instr.map((_,i)=>`<label><input type="radio" name="instr" value="${i}" ${[7,18].includes(i)?'disabled':''} ${i==0?'checked':''}><p class="grid tex" style="--bp:${bp(i)};"></p></label>`).join(''));
+		deln.connect(revn).connect(gn0).connect(pa.ctx.destination);
+		deln.connect(gn1).connect(pa.ctx.destination);
+		gn1.gain.setValueAtTime(0,pa.now());
+		pa.irgen().then(x=>revn.buffer=x);
 
 		document.onkeydown=e=>{
 			if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
@@ -259,7 +265,7 @@
 		cicfgbtn.onclick=cicfg;
 		infobtn.onclick=()=>alert(`${texts.info}`);
 		menu.onchange=()=>{set();save();};
-		pa.player('amb',{baseUrl:'audio/',notes:{0:'env0.mp3',1:'env1.mp3',2:'env2.mp3',3:'env3.mp3'},filters:[],loop:true,fade:5},()=>{
+		pa.player('amb',{baseUrl:'audio/',notes:{0:'env0.mp3',1:'env1.mp3',2:'env2.mp3',3:'env3.mp3'},node:[deln],loop:true,fade:5},()=>{
 			console.log('amb loaded');
 			document.body.addEventListener('pointerdown',ambset,{once:true});
 		});
