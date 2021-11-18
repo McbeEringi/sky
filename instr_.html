@@ -32,10 +32,8 @@
 	<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'img/tex.webp'});</script>
 	<link rel="stylesheet" href="https://mcbeeringi.github.io/src/toggle.css" media="print" onload="this.media='all'">
 	<datalist id="hexdl">
-		<option value="0"><option value="0.0625"><option value="0.125"><option value="0.1875">
-		<option value="0.25"><option value="0.3125"><option value="0.375"><option value="0.4375">
-		<option value="0.5"><option value="0.5625"><option value="0.625"><option value="0.6875">
-		<option value="0.75"><option value="0.8125"><option value="0.875"><option value="0.9375">
+		<option value="0"><option value="0.0625"><option value="0.125"><option value="0.1875"><option value="0.25"><option value="0.3125"><option value="0.375"><option value="0.4375">
+		<option value="0.5"><option value="0.5625"><option value="0.625"><option value="0.6875"><option value="0.75"><option value="0.8125"><option value="0.875"><option value="0.9375">
 		<option value="1">
 	</datalist>
 	<style>
@@ -111,7 +109,7 @@
 	<script src="https://mcbeeringi.github.io/petitaudio/petitaudio.js"></script>
 	<script>
 		'use strict';
-		let sc,rev,del,amb;
+		let sc,rev,del,amb,ci;
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		const pa=new PetitAudio(),
 			revn=pa.ctx.createConvolver(),
@@ -120,11 +118,13 @@
 			texts=Object.assign({
 				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111180\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				amb:'ambient',rev:'reverb',delay:'delay',mrn:'metrnome',
-				ambl:['none','hotspring','home','forest','vault']
+				ambl:['none','hotspring','home','forest','vault'],
+				loading:'loading…',default:'default',cnew:'create new…'
 			},{
 				ja:{
 					amb:'環境音',rev:'リバーブ',delay:'遅延',mrn:'メトロノーム',
-					ambl:['なし','温泉','ホーム','雨林','書庫']
+					ambl:['なし','温泉','ホーム','雨林','書庫'],
+					loading:'読み込み中…',default:'デフォルト',cnew:'新規作成…'
 				}
 			}[window.navigator.language.slice(0,2)]),
 			bp=i=>`${i%8*-100}% ${Math.floor(i*.125+1)*-100}%`,
@@ -166,7 +166,7 @@
 			},
 			set=()=>{
 				const pl=(n,i)=>new Promise(f=>{
-						if(pa.pl_[n])f();
+						if(+n&&pa.pl_[n])f();
 						else{
 							kb.style.opacity='.5';kb.style.pointerEvents='none';
 							pa.player(n,{baseUrl:d.instr[menu.instr.value][0],notes:d.instr[menu.instr.value][2][i],node:[deln]},f);
@@ -232,10 +232,23 @@
 				rng[0].onchange=()=>{rev=+rng[0].value;reverb(1);save();};
 				rng[1].onchange=()=>{del=+rng[1].value*.2;delay(1);save();};
 			},
-			cicfg=()=>{alert('WIP')},
-			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc,rev,del,amb,kb:+kbsize.checked}),
-			load=()=>({instr:menu.instr.value,sc,rev,del,amb,kb:kbsize.checked}={instr:0,sc:0,rev:0,del:.1,amb:0,kb:0,...JSON.parse(localStorage.instr_stat||'{}')}),
-			init=()=>{set();reverb();delay();};
+			cicfg=()=>{
+				alert(texts.loading);
+				new Promise((f,r)=>Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').getAllKeys(),{onsuccess:f,onerror:r})).then(e=>{
+					albox.textContent=e.target.result.join();
+				}).catch(console.warn);
+			},
+			ciset=()=>{
+				if(ci)
+					new Promise((f,r)=>Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').get(ci),{onsuccess:f,onerror:r})).then(e=>{
+						d.instr[0]=['',0,[Object.fromEntries(e.target.result.dat)],0];
+						set();
+					}).catch(console.warn);
+				else{d.instr[0]=cidft;set();}
+			},
+			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc,rev,del,amb,ci,kb:+kbsize.checked}),
+			load=()=>({instr:menu.instr.value,sc,rev,del,amb,ci,kb:kbsize.checked}={instr:0,sc:0,rev:0,del:.1,amb:0,kb:0,ci:'',...JSON.parse(localStorage.instr_stat||'{}')}),
+			init=()=>{ciset();reverb();delay();};
 
 		kb.textContent='';
 		const div=document.createElement('div');
