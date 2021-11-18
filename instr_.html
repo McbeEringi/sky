@@ -277,9 +277,10 @@
 		scd.children[2].onclick=()=>{sc++;scale(1);save();};
 		cfgbtn.onclick=cfg;
 		cicfgbtn.onclick=cicfg;
+		if(MediaRecorder)recbtn.classList.remove('d');
 		infobtn.onclick=()=>alert(`${texts.info}`);
 		menu.onchange=()=>{set();save();};
-		pa.player('amb',{baseUrl:'audio/',notes:{0:'env0.mp3',1:'env1.mp3',2:'env2.mp3',3:'env3.mp3'},node:[deln],loop:true,fade:5},()=>{
+		pa.player('amb',{baseUrl:'audio/',notes:{0:'env0.mp3',1:'env1.mp3',2:'env2.mp3',3:'env3.mp3'},node:[pa.ctx.destination],loop:true,fade:5},()=>{
 			console.log('amb loaded');
 			document.body.addEventListener('pointerdown',ambset,{once:true});
 		});
