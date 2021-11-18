@@ -116,15 +116,15 @@
 			deln=pa.ctx.createDelay(1),
 			gn0=pa.ctx.createGain(),gn1=pa.ctx.createGain(),
 			texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111180\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111190\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				amb:'ambient',rev:'reverb',delay:'delay',mrn:'metrnome',
 				ambl:['none','hotspring','home','forest','vault'],
-				loading:'loading…',default:'default',cnew:'create new…'
+				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…'
 			},{
 				ja:{
 					amb:'環境音',rev:'リバーブ',delay:'遅延',mrn:'メトロノーム',
 					ambl:['なし','温泉','ホーム','雨林','書庫'],
-					loading:'読み込み中…',default:'デフォルト',cnew:'新規作成…'
+					ci:'楽器のカスタム',loading:'読み込み中…',default:'デフォルト',cnew:'新規作成…'
 				}
 			}[window.navigator.language.slice(0,2)]),
 			bp=i=>`${i%8*-100}% ${Math.floor(i*.125+1)*-100}%`,
@@ -241,8 +241,7 @@
 			ciset=()=>{
 				if(ci)
 					new Promise((f,r)=>Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').get(ci),{onsuccess:f,onerror:r})).then(e=>{
-						d.instr[0]=['',0,[Object.fromEntries(e.target.result.dat)],0];
-						set();
+						d.instr[0]=['',0,[Object.fromEntries(e.target.result.dat)],0];set();
 					}).catch(console.warn);
 				else{d.instr[0]=cidft;set();}
 			},
@@ -261,10 +260,6 @@
 		kb.appendChild(div);
 		menu.textContent='';
 		menu.insertAdjacentHTML('beforeend',d.instr.map((_,i)=>`<label><input type="radio" name="instr" value="${i}" ${[7,18].includes(i)?'disabled':''} ${i==0?'checked':''}><p class="grid tex" style="--bp:${bp(i)};"></p></label>`).join(''));
-		deln.connect(revn).connect(gn0).connect(pa.ctx.destination);
-		deln.connect(gn1).connect(pa.ctx.destination);
-		gn1.gain.setValueAtTime(0,pa.now());
-		pa.irgen().then(x=>revn.buffer=x);
 
 		document.onkeydown=e=>{
 			if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
@@ -277,13 +272,29 @@
 		scd.children[2].onclick=()=>{sc++;scale(1);save();};
 		cfgbtn.onclick=cfg;
 		cicfgbtn.onclick=cicfg;
-		if(MediaRecorder)recbtn.classList.remove('d');
 		infobtn.onclick=()=>alert(`${texts.info}`);
 		menu.onchange=()=>{set();save();};
+
 		pa.player('amb',{baseUrl:'audio/',notes:{0:'env0.mp3',1:'env1.mp3',2:'env2.mp3',3:'env3.mp3'},node:[pa.ctx.destination],loop:true,fade:5},()=>{
 			console.log('amb loaded');
 			document.body.addEventListener('pointerdown',ambset,{once:true});
 		});
+		deln.connect(revn).connect(gn0).connect(pa.ctx.destination);
+		deln.connect(gn1).connect(pa.ctx.destination);
+		gn1.gain.setValueAtTime(0,pa.now());
+		pa.irgen().then(x=>revn.buffer=x);
+		if(MediaRecorder){
+			const recn=pa.ctx.createMediaStreamDestination(),rec=new MediaRecorder(recn.stream,{mimeType:'audio/webm'});
+			rec.ondataavailable=e=>{
+				const a=document.createElement('a');
+				a.download=`sky_instr${new Date().toLocaleString()}.webm`;a.href=URL.createObjectURL(e.data);
+				a.click();setTimeout(URL.revokeObjectURL,0,a.href);
+			};
+			pa.player('amb',{node:[pa.ctx.destination,recn]});gn0.connect(recn);gn1.connect(recn);
+			recbtn.onclick=()=>{if(recbtn.classList.toggle('a'))rec.start();else rec.stop();};
+			recbtn.classList.remove('d');
+		}
+
 
 		{
 			load();
