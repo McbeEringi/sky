@@ -26,6 +26,7 @@
 		if('serviceWorker'in navigator&&location.protocol.includes('https'))window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});},{once:true});
 	</script>
 	<link rel="preload" href="https://mcbeeringi.github.io/petitaudio/petitaudio.js" as="script">
+	<link rel="preload" href="https://mcbeeringi.github.io/src/wav.js" as="script">
 </head>
 <body>
 	<script src="style.js" async></script>
@@ -63,7 +64,7 @@
 		#kbsize:checked~.btnw>[for=kbsize]::before{transform:rotateY(360deg);--bp:-600% 0;}#kbsize:checked~#kb{--size:min(110px,calc(100vw/var(--clm)));}
 
 		body>[for=drwcb]{display:none;pointer-events:none;}
-		#drawer{width:calc(var(--size)*3.2);height:100%;padding-top:48px;box-sizing:border-box;text-align:center;position:absolute;top:0;right:0;overflow-y:scroll;background-color:#3338;transform:translateX(100%);transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+		#drawer{width:calc(var(--size)*3.2);height:100%;padding-top:48px;box-sizing:border-box;text-align:center;position:absolute;top:0;right:0;overflow-y:scroll;background-color:#3338;transform:translateX(100%);visibility:hidden;transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 		#drawer hr{border:none;}#drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		.btnw{position:absolute;top:0;right:0;--size:48px;will-change:transform;}
 		.btnw>*::before{transition:transform .5s;}.btnw>[for=kbsize]{--bp:-500% 0;}.btnw>#mico{--bp:0 -100%;}
@@ -71,7 +72,7 @@
 			body>[for=drwcb]{display:block;width:100%;height:100%;position:absolute;top:0;left:0;}
 			.btnw{top:unset;bottom:0;transform-origin:bottom right;}#drawer{padding-top:unset;padding-bottom:48px;}
 		}
-		#drwcb:checked~.btnw>#mico::before{transform:rotateY(360deg);background-image:url(img/instr.svg);--bp:-400% 0;}#drwcb:checked~#drawer{transform:translateX(0);}#drwcb:checked~[for=drwcb]{pointer-events:auto;}
+		#drwcb:checked~.btnw>#mico::before{transform:rotateY(360deg);background-image:url(img/instr.svg);--bp:-400% 0;}#drwcb:checked~#drawer{transform:translateX(0);visibility:unset;}#drwcb:checked~[for=drwcb]{pointer-events:auto;}
 
 		label[for=alcb],#albox{position:fixed;pointer-events:none;opacity:0;transition:.2s;}
 		label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0008;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
@@ -107,6 +108,7 @@
 	<label for="alcb"></label><pre id="albox" class="style">(/ω＼*)</pre>
 
 	<script src="https://mcbeeringi.github.io/petitaudio/petitaudio.js"></script>
+	<script src="https://mcbeeringi.github.io/src/wav.js"></script>
 	<script>
 		'use strict';
 		let sc,rev,del,amb,ci;
@@ -116,7 +118,7 @@
 			deln=pa.ctx.createDelay(1),
 			gn0=pa.ctx.createGain(),gn1=pa.ctx.createGain(),
 			texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111190\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111191\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				amb:'ambient',rev:'reverb',delay:'delay',mrn:'metrnome',
 				ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…'
@@ -284,11 +286,12 @@
 		gn1.gain.setValueAtTime(0,pa.now());
 		pa.irgen().then(x=>revn.buffer=x);
 		if(MediaRecorder){
-			const recn=pa.ctx.createMediaStreamDestination(),rec=new MediaRecorder(recn.stream,{mimeType:'audio/webm'});
+			const recn=pa.ctx.createMediaStreamDestination(),rec=new MediaRecorder(recn.stream);
 			rec.ondataavailable=e=>{
-				const a=document.createElement('a');
-				a.download=`sky_instr${new Date().toLocaleString()}.webm`;a.href=URL.createObjectURL(e.data);
-				a.click();setTimeout(URL.revokeObjectURL,0,a.href);
+				new Response(e.data).arrayBuffer().then(x=>new Promise((f,r)=>pa.ctx.decodeAudioData(x,f,r))).then(x=>{
+					const a=document.createElement('a');a.download=`sky_instr${new Date().toLocaleString()}.wav`;
+					a.href=URL.createObjectURL(new Blob([toWav(x)],{type:'audio/wav'}));a.click();setTimeout(URL.revokeObjectURL,0,a.href);
+				}).catch(console.warn);
 			};
 			pa.player('amb',{node:[pa.ctx.destination,recn]});gn0.connect(recn);gn1.connect(recn);
 			recbtn.onclick=()=>{if(recbtn.classList.toggle('a'))rec.start();else rec.stop();};
