@@ -26,7 +26,6 @@
 		if('serviceWorker'in navigator&&location.protocol.includes('https'))window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});},{once:true});
 	</script>
 	<link rel="preload" href="https://mcbeeringi.github.io/petitaudio/petitaudio.js" as="script">
-	<link rel="preload" href="https://mcbeeringi.github.io/src/wav.js" as="script">
 </head>
 <body>
 	<script src="style.js" async></script>
@@ -108,7 +107,6 @@
 	<label for="alcb"></label><pre id="albox" class="style">(/ω＼*)</pre>
 
 	<script src="https://mcbeeringi.github.io/petitaudio/petitaudio.js"></script>
-	<script src="https://mcbeeringi.github.io/src/wav.js"></script>
 	<script>
 		'use strict';
 		let sc,rev,del,amb,ci;
@@ -118,7 +116,7 @@
 			deln=pa.ctx.createDelay(1),
 			gn0=pa.ctx.createGain(),gn1=pa.ctx.createGain(),
 			texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111191\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111250\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				amb:'ambient',rev:'reverb',delay:'delay',mrn:'metrnome',
 				ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…'
@@ -290,7 +288,7 @@
 			rec.ondataavailable=e=>{
 				new Response(e.data).arrayBuffer().then(x=>new Promise((f,r)=>pa.ctx.decodeAudioData(x,f,r))).then(x=>{
 					const a=document.createElement('a');a.download=`sky_instr${new Date().toLocaleString()}.wav`;
-					a.href=URL.createObjectURL(new Blob([toWav(x)],{type:'audio/wav'}));a.click();setTimeout(URL.revokeObjectURL,0,a.href);
+					a.href=URL.createObjectURL(toWav(x));a.click();setTimeout(URL.revokeObjectURL,0,a.href);
 				}).catch(console.warn);
 			};
 			pa.player('amb',{node:[pa.ctx.destination,recn]});gn0.connect(recn);gn1.connect(recn);
