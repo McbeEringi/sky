@@ -77,6 +77,10 @@
 		label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0008;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
 		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#0008;white-space:pre-wrap;overflow:scroll;overflow-x:hidden;}
 		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
+
+		.flex{display:flex;align-items:center;background-color:#3338;border-radius:4px;margin:4px 0;overflow:hidden;--size:40px;}
+		.flex>*{cursor:pointer;line-height:var(--size);}.flex.a{background-color:#fea8;}
+		.flex>:not(.grid){flex-grow:1;padding:0 1.5ex;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}.flex>.grid{flex-shrink:0;}
 	</style>
 	<input type="checkbox" id="drwcb">
 	<input type="checkbox" id="kbsize">
@@ -116,7 +120,7 @@
 			deln=pa.ctx.createDelay(1),
 			gn0=pa.ctx.createGain(),gn1=pa.ctx.createGain(),
 			texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2111250\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2112040\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				amb:'ambient',rev:'reverb',delay:'delay',mrn:'metrnome',
 				ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…'
@@ -221,12 +225,10 @@
 			cfg=()=>{
 				const opt=(x,i)=>`<option value="${i-1}"${i-1==amb?' selected':''}>${x}</option>`;
 				alert(`${texts.amb}
-<select>${texts.ambl.map(opt).join('')}
-</select><hr>${texts.rev}
+<select>${texts.ambl.map(opt).join('')}</select><hr>${texts.rev}
 <input type="range" class="style" list="hexdl" min="0" max="1" step="0.0625" value="${rev}"><hr>${texts.delay}
-<input type="range" class="style" list="hexdl" min="0" max="1" step="0.0625" value="${del/.2}"><hr>${texts.mrn} WIP
-<input type="checkbox" class="toggle">
-<input type="range" min="40" max="208">`);
+<input type="range" class="style" list="hexdl" min="0" max="1" step="0.0625" value="${del/.2}"><!--<hr>${texts.mrn} WIP
+<input type="checkbox" class="toggle"><input type="range" min="40" max="208">-->`);
 				const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=range]');
 				sel.onchange=()=>{amb=+sel.value;ambset();save();};
 				rng[0].onchange=()=>{rev=+rng[0].value;reverb(1);save();};
@@ -235,9 +237,37 @@
 			cicfg=()=>{
 				alert(texts.loading);
 				new Promise((f,r)=>Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').getAllKeys(),{onsuccess:f,onerror:r})).then(e=>{
-					albox.textContent=e.target.result.join();
+					albox.textContent=texts.ci;
+					const ctn=document.createElement('div');
+					e.target.result.forEach(x=>{
+						const w=document.createElement('div'),
+							n=document.createElement('div'),
+							c=document.createElement('p'),
+							d=document.createElement('p');
+						w.classList.add('flex');if(ci==x)w.classList.add('a');
+						n.textContent=x;n.onclick=()=>{ci=x;ciset();save();cicfg();};
+						c.classList.add('grid','tex');c.setAttribute('style','--bp:-100% 0;');c.onclick=()=>{ciedt();}
+						d.classList.add('grid');d.setAttribute('style','--bp:-400% 0;');d.onclick=()=>Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').delete(x),{onsuccess:()=>{if(ci==x){ci='';ciset();save();}cicfg();},onerror:console.log});
+						[n,c,d].forEach(y=>w.appendChild(y));
+						w.classList.add('flex');
+						ctn.appendChild(w);
+					});
+					{
+						const w=document.createElement('div');w.classList.add('flex');if(!ci)w.classList.add('a');
+						w.insertAdjacentHTML('beforeend',`<div>${texts.default}</div>`);
+						w.onclick=()=>{ci='';ciset();save();cicfg();};
+						ctn.appendChild(w);
+					}
+					{
+						const w=document.createElement('div');w.classList.add('flex');
+						w.insertAdjacentHTML('beforeend',`<div>${texts.cnew}</div>`);
+						w.onclick=()=>{ciedt();};
+						ctn.appendChild(w);
+					}
+					albox.appendChild(ctn);
 				}).catch(console.warn);
 			},
+			ciedt=()=>{alert('WIP')},
 			ciset=()=>{
 				if(ci)
 					new Promise((f,r)=>Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').get(ci),{onsuccess:f,onerror:r})).then(e=>{
