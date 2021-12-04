@@ -126,7 +126,7 @@
 			deln=pa.ctx.createDelay(1),
 			gn0=pa.ctx.createGain(),gn1=pa.ctx.createGain(),
 			texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2112041\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:2112042\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				amb:'ambient',rev:'reverb',delay:'delay',mrn:'metrnome',
 				ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…',note:'note',cin:'instr name',fsel:'choose file',
@@ -180,6 +180,8 @@
 						else{
 							kb.style.opacity='.5';kb.style.pointerEvents='none';
 							pa.player(n,{baseUrl:d.instr[menu.instr.value][0],notes:d.instr[menu.instr.value][2][i],node:[deln]},f);
+							if(d.instr[menu.instr.value][4])
+								pa.player(n+'fret',{baseUrl:d.instr[menu.instr.value][0],notes:Object.fromEntries(new Array(d.instr[menu.instr.value][4]).fill().map((_,i)=>[i,`fret${i}.mp3`])),node:[deln]});
 						}
 					});
 				scd.classList.remove('d');scale();
@@ -199,6 +201,10 @@
 			trigger=i=>{
 				const x=d.instr[menu.instr.value];
 				if(typeof d.i2n[x[3]][i]=='number')pa.start(menu.instr.value+(x[3]==2&&i>3?'_':''),[69+d.i2n[x[3]][i]+x[1]*12+(d.p[x[3]]==1?0:sc)]);
+				if(x[4]){
+					const r=Math.random()*10;
+					if(r<1)pa.start(menu.instr.value+'fret',[Math.floor(r*x[4])],pa.now()+.85);
+				}
 			},
 			scale=s=>{
 				scd_.setAttribute('style',`--rot:${sc*30+45}deg;`);

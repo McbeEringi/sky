@@ -20,6 +20,7 @@ const cacheName='cache211118_0',STATIC_DATA=[
 	//instr
 	'instr.html?pwa=1','img/instr.svg',
 	'https://cdn.jsdelivr.net/npm/tone/build/Tone.js',
+	'https://mcbeeringi.github.io/petitaudio/petitaudio.js',
 	'https://mcbeeringi.github.io/src/toggle.css',
 	//'img/photo/hotsprv.mp4','audio/open.mp3','audio/close.mp3','audio/choose.mp3',
 	'audio/metronome.mp3',
@@ -39,8 +40,7 @@ noCache=[
 	'analytics',
 	'seq_',
 	'instr_',
-	'test',
-	'petit'
+	'test'
 ];
 
 self.addEventListener('install',(e)=>{
