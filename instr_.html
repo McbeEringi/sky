@@ -39,7 +39,7 @@
 	<style>
 		:root{--size:84px;--bp:0 0;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
 		html,body{height:100%;margin:0;position:relative;overflow:hidden;}
-		#menu input,body>input{display:none;}input{vertical-align:middle;}
+		#menu input,body>input{display:none;}input{vertical-align:middle;border:0;outline:0;box-sizing:border-box;max-width:100%;}
 		@keyframes flip{0%{transform:rotateY(0deg)scale(.8);}100%{transform:rotateY(360deg)scale(1);}}
 
 		.grid{display:inline-block;width:var(--size);height:var(--size);margin:0;vertical-align:top;position:relative;overflow:hidden;}
@@ -75,12 +75,18 @@
 
 		label[for=alcb],#albox{position:fixed;pointer-events:none;opacity:0;transition:.2s;}
 		label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0008;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
-		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#0008;white-space:pre-wrap;overflow:scroll;overflow-x:hidden;}
+		#albox{--size:48px;top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#0008;white-space:pre-wrap;overflow:scroll;overflow-x:hidden;}
 		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
+		#albox>input{border-radius:4px;background-color:#3338;padding:8px;}
 
 		.flex{display:flex;align-items:center;background-color:#3338;border-radius:4px;margin:4px 0;overflow:hidden;--size:40px;}
-		.flex>*{cursor:pointer;line-height:var(--size);}.flex.a{background-color:#fea8;}
-		.flex>:not(.grid){flex-grow:1;padding:0 1.5ex;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}.flex>.grid{flex-shrink:0;}
+		.flex *{cursor:pointer;line-height:var(--size);text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}.flex.a{background-color:#fea8;}
+		.flex>:not(.grid){flex-grow:1;padding:0 1.5ex;background-color:#0000;}.flex>.grid{flex-shrink:0;}
+
+		.file{position:relative;overflow:hidden;height:100%;flex-shrink:.5;padding:0 !important;}
+		.file>*{display:block;height:100%;width:100%;margin:0;box-sizing:border-box;}
+		.file>p{position:absolute;padding:0 1.5ex;}
+		.file>input{opacity:0;padding:0;}
 	</style>
 	<input type="checkbox" id="drwcb">
 	<input type="checkbox" id="kbsize">
@@ -120,15 +126,15 @@
 			deln=pa.ctx.createDelay(1),
 			gn0=pa.ctx.createGain(),gn1=pa.ctx.createGain(),
 			texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2112040\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><ul><li>Tone.js Salamander\n(cc-by Alexander Holm)</li><li>In game sounds\n(recorded by @McbeEringi)</li></ul><hr><p>Powerd by PetitAudio.js\n[sky_instr] build:β2112041\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				amb:'ambient',rev:'reverb',delay:'delay',mrn:'metrnome',
 				ambl:['none','hotspring','home','forest','vault'],
-				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…'
+				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…',note:'note',cin:'instr name',fsel:'choose file',
 			},{
 				ja:{
 					amb:'環境音',rev:'リバーブ',delay:'遅延',mrn:'メトロノーム',
 					ambl:['なし','温泉','ホーム','雨林','書庫'],
-					ci:'楽器のカスタム',loading:'読み込み中…',default:'デフォルト',cnew:'新規作成…'
+					ci:'楽器のカスタム',loading:'読み込み中…',default:'デフォルト',cnew:'新規作成…',note:'音名',cin:'楽器名',fsel:'ファイルを選択',
 				}
 			}[window.navigator.language.slice(0,2)]),
 			bp=i=>`${i%8*-100}% ${Math.floor(i*.125+1)*-100}%`,
@@ -246,8 +252,8 @@
 							d=document.createElement('p');
 						w.classList.add('flex');if(ci==x)w.classList.add('a');
 						n.textContent=x;n.onclick=()=>{ci=x;ciset();save();cicfg();};
-						c.classList.add('grid','tex');c.setAttribute('style','--bp:-100% 0;');c.onclick=()=>{ciedt();}
-						d.classList.add('grid');d.setAttribute('style','--bp:-400% 0;');d.onclick=()=>Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').delete(x),{onsuccess:()=>{if(ci==x){ci='';ciset();save();}cicfg();},onerror:console.log});
+						c.classList.add('grid','btn','tex');c.setAttribute('style','--bp:-100% 0;');c.onclick=()=>{ciedt(x);}
+						d.classList.add('grid','btn');d.setAttribute('style','--bp:-400% 0;');d.onclick=()=>Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').delete(x),{onsuccess:()=>{if(ci==x){ci='';ciset();save();}cicfg();},onerror:console.log});
 						[n,c,d].forEach(y=>w.appendChild(y));
 						w.classList.add('flex');
 						ctn.appendChild(w);
@@ -260,14 +266,38 @@
 					}
 					{
 						const w=document.createElement('div');w.classList.add('flex');
-						w.insertAdjacentHTML('beforeend',`<div>${texts.cnew}</div>`);
+						w.insertAdjacentHTML('beforeend',`<p class="grid" style="--bp:-500% 0;"></p><div>${texts.cnew}</div>`);
 						w.onclick=()=>{ciedt();};
 						ctn.appendChild(w);
 					}
 					albox.appendChild(ctn);
 				}).catch(console.warn);
 			},
-			ciedt=()=>{alert('WIP')},
+			ciedt=x=>{
+				let dat,row=(n='',f={name:texts.fsel},i='')=>cie.insertAdjacentHTML('beforeend',`<div class="flex"><input class="style" placeholder="${texts.note}" value="${n}"><div class="file btn"><p>${f.name}</p><input type="file" data-i="${i}" accept=".mp3,.ogg,.m4a,.wav,.flac" onchange="this.previousElementSibling.textContent=this.files[0].name;"></div><p class="grid btn" style="--bp:-400% 0;" onclick="this.parentElement.remove();"></p></div>`);
+				new Promise((f,r)=>{
+					alcb.disabled=true;
+					alert(`<input class="style" placeholder="${texts.cin}" value="${x||''}"><hr><div id="cie"></div>`);
+					const plus=document.createElement('div'),p=document.createElement('p'),b=document.createElement('p');
+					plus.onclick=()=>row();plus.classList.add('btn');plus.insertAdjacentHTML('beforeend','<div class="flex"><div></div><p class="grid" style="--bp:-500% 0;"></p><div></div></div>');albox.appendChild(plus);
+					albox.insertAdjacentHTML('beforeend','<hr>');p.setAttribute('style','--bp:-400% 0;');b.setAttribute('style','--bp:-300% 0;');
+					[p,b].forEach((x,i)=>{x.onclick=()=>f(i);x.classList.add('grid','btn');albox.appendChild(x);});
+					if(x)Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').get(x),{onsuccess:e=>dat=e.target.result.dat.map((y,i)=>{row(...y,i);return y[1]}),onerror:r});
+					else row('A#4');
+				})
+				.then(y=>{
+					if(y){
+						const s={
+								name:albox.children[0].value||x||new Date().toLocaleString(),
+								dat:Array.from(cie.children,z=>{z=z.children;z=[z[0],z[1].children[1]];return[z[0].value,z[1].files[0]||dat[z[1].dataset.i]];}).filter(z=>z[0]&&z[1])
+							},
+							tmp=idb.result.transaction('instr','readwrite').objectStore('instr'),
+							post=()=>Object.assign(tmp.put(s),{onsuccess:()=>{if(ci==x){ci=s.name;ciset();save();}cicfg();},onerror:console.log});
+						if(x&&s.name!=x)Object.assign(tmp.delete(x),{onsuccess:post,onerror:console.log});
+						else post();
+					}else cicfg();
+				}).catch(console.log).finally(()=>alcb.disabled=false);
+			},
 			ciset=()=>{
 				if(ci)
 					new Promise((f,r)=>Object.assign(idb.result.transaction('instr','readwrite').objectStore('instr').get(ci),{onsuccess:f,onerror:r})).then(e=>{
