@@ -13,9 +13,12 @@
 	<pre id="log"></pre>
 	<script>
 		'use strict';
-		let dflag=[];
+		let dflag=[],cs;
 		const ctx=c.getContext('2d'),
-			csset=(x=[5,3],a=128)=>Object.assign(c.style,{maxWidth:(c.width=a*x[0])/devicePixelRatio+'px',maxHeight:(c.height=a*x[1])/devicePixelRatio+'px'}),
+			csset=(x=[5,3],a=128)=>{
+				Object.assign(c.style,{maxWidth:a*x[0]+'px',maxHeight:a*x[1]+'px'});
+				cs=a*devicePixelRatio;c.width=x[0]*cs;c.height=x[1]*cs;
+			},
 			fire=e=>{
 				e.preventDefault();
 				const bcr=c.getBoundingClientRect();
