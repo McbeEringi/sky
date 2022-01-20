@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Document</title>
+</head>
+<body>
+	<style>
+		#c{display:block;margin:8px auto;width:100%;max-height:auto;touch-action:none;}
+	</style>
+	<canvas id="c"></canvas>
+	<pre id="log"></pre>
+	<script>
+		'use strict';
+		let dflag=[];
+		const ctx=c.getContext('2d'),
+			csset=(x=[5,3],a=128)=>Object.assign(c.style,{maxWidth:(c.width=a*x[0])/devicePixelRatio+'px',maxHeight:(c.height=a*x[1])/devicePixelRatio+'px'}),
+			fire=e=>{
+				e.preventDefault();
+				const bcr=c.getBoundingClientRect();
+				log.textContent='';
+				// ctx.fillStyle='#000';
+				// ctx.fillRect(0,0,c.width,c.height);
+				(e.changedTouches?[...e.changedTouches]:[e]).forEach(x=>{
+					const p=[(x.clientX-bcr.x)/bcr.width,(x.clientY-bcr.y)/bcr.height];
+					log.textContent+=`x:${p[0]}\ny:${p[1]}\n\n`;
+
+					ctx.fillStyle='#'+Math.floor(Math.random()*4096).toString('16').padStart(3,'0');
+					ctx.fillRect(p[0]*c.width,p[1]*c.height,4,4);
+				});
+			},
+			draw=()=>{};
+		['touchstart','mousedown'].forEach(x=>c.addEventListener(x,fire));
+
+		// document.addEventListener('keydown',e=>{
+		// 	{preventDefault:()=>{}}
+		// });
+
+
+		csset();
+		ctx.fillStyle='#222';
+		ctx.fillRect(0,0,c.width,c.height);
+	</script>
+</body>
+</html>
