@@ -12,10 +12,11 @@
 		html,body{height:100%;margin:0;position:relative;overflow:hidden;}
 		#c{display:block;margin:0 auto;width:100%;max-height:auto;touch-action:none;}
 	</style>
-	<canvas id="c"></canvas>build:2201211
+	<canvas id="c"></canvas>build:2201212
 	<script>
 		'use strict';
-		let tex=new Image();
+		let tex=new Image(),
+			k2i=Object.fromEntries(Array.from('QWERTASDFGZXCVB',(x,i)=>[`Key${x}`,i]));
 		const ctx=c.getContext('2d'),
 			ccfg={
 				grid:[5,3],
@@ -31,7 +32,7 @@
 				e.preventDefault();
 				const bcr=c.getBoundingClientRect();
 				(e.changedTouches?[...e.changedTouches]:[e]).forEach(x=>{
-					const p=[(x.clientX-bcr.x)/bcr.width,(x.clientY-bcr.y)/bcr.height],
+					const p=x.p||[(x.clientX-bcr.x)/bcr.width,(x.clientY-bcr.y)/bcr.height],
 						i=Math.floor(p[0]*ccfg.grid[0])+Math.floor(p[1]*ccfg.grid[1])*ccfg.grid[0],
 						trg=!ccfg.gflag.some(x=>x);
 						ccfg.gflag[i]=24;
@@ -69,16 +70,18 @@
 		['touchstart','mousedown'].forEach(x=>c.addEventListener(x,fire));
 		onresize=()=>{csset();draw();};
 
-		// document.addEventListener('keydown',e=>{
-		// 	{preventDefault:()=>{}}
-		// });
+		document.addEventListener('keydown',e=>{
+			if(['input','textarea'].some(x=>document.activeElement.matches(x)))return;
+			e=k2i[e.code];
+			if(e>-1)
+				fire({preventDefault:()=>{},p:[e%ccfg.grid[0]/ccfg.grid[0],Math.floor(e/ccfg.grid[0])/ccfg.grid[1]]});
+		});
 
 
 		csset();draw();
 		tex.onload=()=>{
-			const c=document.createElement('canvas'),ctx=c.getContext('2d');
-			c.width=tex.naturalWidth;c.height=tex.naturalHeight;ctx.drawImage(tex,0,0);
-			tex=c;draw();
+			const c=document.createElement('canvas');c.width=tex.naturalWidth;c.height=tex.naturalHeight;
+			c.getContext('2d').drawImage(tex,0,0);tex=c;draw();
 		};
 		tex.src='img/instr.svg';
 	</script>
