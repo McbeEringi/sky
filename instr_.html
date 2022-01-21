@@ -42,24 +42,25 @@
 			},
 			draw=()=>{
 				ctx.clearRect(0,0,c.width,c.height);
-				const r=12*devicePixelRatio,a=ccfg.size*.784,ai=(ccfg.size-a)/2,ar=a-r-r,
-					rs=(x=0,y=0,ct=1)=>{
-						const arct=ar*ct,rct=r*ct,sct=+(Math.sign(ct)<0);
-						return new Path2D(`M${x+ccfg.size/2} ${y+ccfg.size/2}m${-arct/2-rct} ${-ar/2}
-							v${ ar}a${rct} ${r} 0 0 ${sct} ${ rct} ${ r}
-							h${ arct}a${rct} ${r} 0 0 ${sct} ${ rct} ${-r}
-							v${-ar}a${rct} ${r} 0 0 ${sct} ${-rct} ${-r}
-							h${-arct}a${rct} ${r} 0 0 ${sct} ${-rct} ${ r}
+				const mix=(x,y,a)=>x*(1-a)+y*a,
+					r=12*devicePixelRatio,a=ccfg.size*.784,ar=a-r-r,
+					rs=(x=0,y=0,c=1,s=1)=>{
+						const rs=r*s,as=a*s,ars=ar*s,arc=ars*c,rc=rs*c,sign=+(Math.sign(c)<0);
+						return new Path2D(`M${x} ${y}m${-arc/2-rc} ${-ars/2}
+							v${ ars}a${rc} ${rs} 0 0 ${sign} ${ rc} ${ rs}
+							h${ arc}a${rc} ${rs} 0 0 ${sign} ${ rc} ${-rs}
+							v${-ars}a${rc} ${rs} 0 0 ${sign} ${-rc} ${-rs}
+							h${-arc}a${rc} ${rs} 0 0 ${sign} ${-rc} ${ rs}
 						`);
 					};
 				ctx.fillStyle='#3338';
 				ccfg.gflag=ccfg.gflag.map((x,i)=>{
 					i=[i%ccfg.grid[0],Math.floor(i/ccfg.grid[0])];
-					const p=i.map(y=>y*ccfg.size),ct=Math.cos(x/12*Math.PI);
-					ctx.fill(rs(...p,ct));
+					const p=i.map(y=>(y+.5)*ccfg.size),c=Math.cos(x/12*Math.PI),s=mix(1,.8,x/24);
+					ctx.fill(rs(...p,c,s));
 					ctx.drawImage(img,
 						ccfg.c&&i[0]==i[1]*2?0:128*(2-i[0]%2),0,128,128,
-						(i[0]+.5)*ccfg.size-a/2*ct,p[1]+ai,a*ct,a);
+						p[0]-a/2*c*s,p[1]-a/2*s,a*c*s,a*s);
 					return Math.max(x-1,0);
 				});
 				if(ccfg.gflag.some(x=>x))requestAnimationFrame(draw);
