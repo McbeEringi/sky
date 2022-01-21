@@ -12,7 +12,7 @@
 		html,body{height:100%;margin:0;position:relative;overflow:hidden;}
 		#c{display:block;margin:0 auto;width:100%;max-height:auto;touch-action:none;}
 	</style>
-	<canvas id="c"></canvas>
+	<canvas id="c"></canvas>build:2201210
 	<script>
 		'use strict';
 		let img=new Image();
@@ -74,7 +74,12 @@
 
 
 		csset();draw();
-		img.onload=draw;img.src='img/instr.svg'
+		img.onload=()=>{
+			const c=document.createElement('canvas'),ctx=c.getContext('2d');
+			c.width=img.naturalWidth;c.height=img.naturalHeight;ctx.drawImage(img,0,0);
+			img.onload=draw;img.src=c.toDataURL();
+		};
+		img.src='img/instr.svg';
 	</script>
 </body>
 </html>
