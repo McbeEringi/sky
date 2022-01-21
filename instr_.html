@@ -12,7 +12,7 @@
 		html,body{height:100%;margin:0;position:relative;overflow:hidden;}
 		#c{display:block;margin:0 auto;width:100%;max-height:auto;touch-action:none;}
 	</style>
-	<canvas id="c"></canvas>build:2201212
+	<canvas id="c"></canvas>build:2201213
 	<script>
 		'use strict';
 		let tex=new Image(),
@@ -26,7 +26,7 @@
 			},
 			csset=()=>{
 				Object.assign(c.style,{maxWidth:ccfg.gsize*ccfg.grid[0]+'px',maxHeight:ccfg.gsize*ccfg.grid[1]+'px',marginTop:`min(${ccfg.gsize/2}px,${50/ccfg.grid[0]}%)`});
-				c.width=Math.min(innerWidth,ccfg.gsize*ccfg.grid[0])*devicePixelRatio;ccfg.size=c.width/ccfg.grid[0];c.height=ccfg.size*ccfg.grid[1];
+				c.width=Math.min(document.body.clientWidth,ccfg.gsize*ccfg.grid[0])*devicePixelRatio;ccfg.size=c.width/ccfg.grid[0];c.height=ccfg.size*ccfg.grid[1];
 			},
 			fire=e=>{
 				e.preventDefault();
