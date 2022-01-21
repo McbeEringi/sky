@@ -20,7 +20,7 @@
 		const stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			n2nn=x=>({c:12,d:14,e:16,f:17,g:19,a:21,b:23})[x[0].toLowerCase()]+(({'#':1,s:1})[x[1]]?x.slice(2)*12+1:x.slice(1)*12);
 		const ctx=c.getContext('2d'),
-			actx=new(AudioContext||webkitAudioContext)(),
+			actx=new(window.AudioContext||webkitAudioContext)(),
 			k2i=Object.fromEntries(Array.from('QWERTASDFGZXCVB',(x,i)=>[`Key${x}`,[i%5,Math.floor(i/5)]])),
 			ccfg={
 				frame:24,grid:[5,3],c:true,gsize:88,
