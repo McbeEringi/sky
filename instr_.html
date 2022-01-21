@@ -55,13 +55,14 @@
 					};
 				ctx.fillStyle='#3338';
 				ccfg.gflag=ccfg.gflag.map((x,i)=>{
+					x=Math.max(x-1,0);
 					i=[i%ccfg.grid[0],Math.floor(i/ccfg.grid[0])];
 					const p=i.map(y=>(y+.5)*ccfg.size),c=Math.cos(x/12*Math.PI),s=mix(1,.8,x/24);
 					ctx.fill(rs(...p,c,s));
 					ctx.drawImage(tex,
 						ccfg.c&&i[0]==i[1]*2?0:128*(2-i[0]%2),0,128,128,
 						p[0]-a/2*c*s,p[1]-a/2*s,a*c*s,a*s);
-					return Math.max(x-1,0);
+					return x;
 				});
 				if(ccfg.gflag.some(x=>x))requestAnimationFrame(draw);
 			};
