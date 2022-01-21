@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Document</title>
+	<title>sky_instruments beta</title>
 </head>
 <body>
 	<script src="style.js" async></script>
@@ -12,10 +12,10 @@
 		html,body{height:100%;margin:0;position:relative;overflow:hidden;}
 		#c{display:block;margin:0 auto;width:100%;max-height:auto;touch-action:none;}
 	</style>
-	<canvas id="c"></canvas>build:2201210
+	<canvas id="c"></canvas>build:2201211
 	<script>
 		'use strict';
-		let img=new Image();
+		let tex=new Image();
 		const ctx=c.getContext('2d'),
 			ccfg={
 				grid:[5,3],
@@ -58,7 +58,7 @@
 					i=[i%ccfg.grid[0],Math.floor(i/ccfg.grid[0])];
 					const p=i.map(y=>(y+.5)*ccfg.size),c=Math.cos(x/12*Math.PI),s=mix(1,.8,x/24);
 					ctx.fill(rs(...p,c,s));
-					ctx.drawImage(img,
+					ctx.drawImage(tex,
 						ccfg.c&&i[0]==i[1]*2?0:128*(2-i[0]%2),0,128,128,
 						p[0]-a/2*c*s,p[1]-a/2*s,a*c*s,a*s);
 					return Math.max(x-1,0);
@@ -74,12 +74,12 @@
 
 
 		csset();draw();
-		img.onload=()=>{
+		tex.onload=()=>{
 			const c=document.createElement('canvas'),ctx=c.getContext('2d');
-			c.width=img.naturalWidth;c.height=img.naturalHeight;ctx.drawImage(img,0,0);
-			img.onload=draw;img.src=c.toDataURL();
+			c.width=tex.naturalWidth;c.height=tex.naturalHeight;ctx.drawImage(tex,0,0);
+			tex=c;draw();
 		};
-		img.src='img/instr.svg';
+		tex.src='img/instr.svg';
 	</script>
 </body>
 </html>
