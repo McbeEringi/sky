@@ -29,7 +29,7 @@
 	<hr>
 	<label>scale:<input type="number" id="sc" value="0"></label>
 	<form id="menu"></form>
-	build:2201220 <button onclick="document.body.requestFullscreen()">fullscr</button>
+	build:2201220 <button onclick="fullscr()">fullscr</button>
 	<script>
 		'use strict';
 		let tex=new Image(),abuff;
@@ -148,6 +148,10 @@
 					s=abuff.reduce((a,x)=>{const d=Math.abs(n-x[0]);return a[0]<d?a:[d,x];},[Infinity])[1];
 				abs.playbackRate.value=Math.pow(2,(n-s[0])/12);abs.buffer=s[1];
 				abs.connect(actx.destination);abs.start();
+			},
+			fullscr=(x=document.body)=>{
+				x.requestFullscreen=x.requestFullscreen||x.webkitRequestFullscreen;
+				x.requestFullscreen();
 			};
 
 
