@@ -7,54 +7,121 @@
 </head>
 <body>
 	<script src="style.js" async></script>
+	<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'img/tex.webp'});</script>
 	<style>
-		:root{user-select:none;-webkit-user-select:none;touch-action:manipulation;}
+		:root{--size:84px;--bp:0 0;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
 		html,body{height:100%;margin:0;position:relative;overflow:hidden;}
 		#c{display:block;margin:0 auto;width:100%;max-height:auto;touch-action:none;opacity:.5;transition:opacity .2s;}
-	</style>
-	<canvas id="c"></canvas><input type="number" id="sc" value="0"><br>
-	build:2201214
+
+		#menu input,body>input{display:none;}
+		.grid{display:inline-block;width:var(--size);height:var(--size);margin:0;vertical-align:top;position:relative;overflow:hidden;}
+		.grid::before,.grid::after,.grid *{content:"";display:block;width:78.4%;height:78.4%;position:absolute;margin:10.8%;border-radius:17%;}
+		.grid::before{background:var(--bp)/800% #3338 url(img/instr.svg);}.grid::after{content:none;}
+		.grid.anm::before{animation:flip .4s linear;}
+		.grid.tex::before{background-image:url(img/tex.webp);}.nowebp .grid.tex::before{background-image:url(img/tex.png);}
+		:checked+.grid::after,.grid.a::after{content:"";box-sizing:border-box;border:calc(var(--size)*.13328) solid #fff;border-image:url(img/sel.svg) 33.333%;}:checked+.grid,.grid.a{transform:rotateY(360deg);transition:.5s;}
+		:disabled+.grid,.grid.d,.d .grid{filter:grayscale(1)opacity(.7);pointer-events:none;}
+		.btn:active{transform:scale(.85);}.btn:not(:active){transition:.2s;}
+		.clock::before{--bp:-200% -0%;filter:saturate(.3);}.clock::after{content:"";transition:.2s;transform:rotate(var(--rot,45deg));filter:drop-shadow(0 0 2px #aef);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M6 6h1v1h-1z' fill='%23caf0f6'/%3E%3C/svg%3E");}
+		.clock.d::after,.d .clock::after{--rot:initial;}
+</style>
+	<canvas id="c"></canvas>
+	<hr>
+	<label>scale:<input type="number" id="sc" value="0"></label>
+	<form id="menu"></form>
+	build:2201220 <button onclick="document.body.requestFullscreen()">fullscr</button>
 	<script>
 		'use strict';
-		let tex=new Image(),audio;
-		const stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
-			n2nn=x=>({c:12,d:14,e:16,f:17,g:19,a:21,b:23})[x[0].toLowerCase()]+(({'#':1,s:1})[x[1]]?x.slice(2)*12+1:x.slice(1)*12);
-		const ctx=c.getContext('2d'),
-			actx=new(AudioContext||webkitAudioContext)(),
-			k2i=Object.fromEntries(Array.from('QWERTASDFGZXCVB',(x,i)=>[`Key${x}`,[i%5,Math.floor(i/5)]])),
-			ccfg={
-				frame:24,grid:[5,3],c:true,gsize:88,
-				gflag:new Array(15).fill(0)
+		let tex=new Image(),abuff;
+		const n2nn=x=>({c:12,d:14,e:16,f:17,g:19,a:21,b:23})[x[0].toLowerCase()]+(({'#':1,s:1})[x[1]]?x.slice(2)*12+1:x.slice(1)*12),
+			bp=i=>`${i%8*-100}% ${Math.floor(i*.125+1)*-100}%`,
+			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
+			cidft=['audio/instr/musicbox/',1,[stdli(4,6,{a3:'a3.mp3',ds7:'ds7.mp3'})],0],
+			d={
+				instr:[
+					cidft,
+					['audio/instr/harp/',-1,[stdli(3,5)],0],//210503
+					['audio/instr/percussion/',0,[{a4:'0.mp3',as4:'1.mp3',b4:'2.mp3',c5:'3.mp3',a5:'4.mp3',as5:'5.mp3',b5:'6.mp3',c6:'7.mp3'}],1],
+					['audio/instr/contrabass/',-2,[stdli(2,4)],0],//211009
+					['audio/instr/horn/',-1,[stdli(3,5)],0],//211009
+						['audio/instr/piano/',0,[stdli(4)],0],
+						['',0,[{ds5:'audio/instr/musicbox/ds6.mp3',a5:'audio/instr/musicbox/a6.mp3'},{ds5:'audio/instr/glock/ds5.mp3',a5:'audio/instr/glock/a5.mp3'}],2],
+						['audio/instr/bell2/',1,[{c4:'c4.mp3',d4:'d4.mp3',g4:'g4.mp3',a4:'a4.mp3'},{c4:'c4_.mp3',d4:'d4_.mp3',g4:'g4_.mp3',a4:'a4_.mp3'}],2],
+					['audio/instr/flute/',0,[stdli(4,6)],0],//211009
+					['audio/instr/quena/',0,[stdli(4,6)],0],//211009
+					['audio/instr/guitar/',-1,[stdli(3,5)],0,4],//main:210503 fret:211009
+					['audio/instr/ukulele/',-1,[stdli(3,5)],0],//211009
+						['audio/instr/piano/',1,[stdli(5)],0],
+					['audio/instr/glock/',0,[stdli(4,6)],0],//210529
+					['audio/instr/handpan/',-1,[stdli(3)],3],
+					['audio/instr/dundun/',0,[{a4:'0.mp3',as4:'1.mp3',b4:'2.mp3',c5:'3.mp3',a5:'4.mp3',as5:'5.mp3',b5:'6.mp3',c6:'7.mp3'}],1],
+					['audio/instr/pipa/',-1,[stdli(3,5)],0],//210529
+					['audio/instr/bugle/',0,[stdli(4,6)],0],//210529
+						['audio/instr/ocarina/',0,[stdli(4,6)],0],
+					['audio/instr/kalimba/',0,[stdli(4,6)],0]//211025
+				],
+				i2n:[
+					[-9,-7,-5,-4,-2,0,2,3,5,7,8,10,12,14,15],
+					[0,1,2,3,12,13,14,15],//percussion
+					[-9,-7,-2,0,-9,-7,-2,0],//bell
+					[-7,0,3,5,8,10,12,15],//handpan
+					[2,5,12,-10,-7,0,-18,-15,-12]//nov
+				],
+				k2g:[
+					[5,3],
+					[4,2],
+					[3,3]
+				],
+				p:[0,1,2,0,0],
+				k:[0,1,1,1,2]
 			},
+			cfg={
+				frame:24,gsize:88,
+				k2i:Object.fromEntries(Array.from('QWERTASDFGZXCVB',(x,i)=>[`Key${x}`,[i%5,Math.floor(i/5)]]))
+			},
+			ctx=c.getContext('2d'),
+			actx=new(window.AudioContext||webkitAudioContext)(),
 			cset=()=>{
-				Object.assign(c.style,{maxWidth:ccfg.gsize*ccfg.grid[0]+'px',maxHeight:ccfg.gsize*ccfg.grid[1]+'px',marginTop:`min(${ccfg.gsize/2}px,${50/ccfg.grid[0]}%)`});
-				c.width=Math.min(c.parentNode.clientWidth,ccfg.gsize*ccfg.grid[0])*devicePixelRatio;ccfg.size=c.width/ccfg.grid[0];c.height=ccfg.size*ccfg.grid[1];
+				Object.assign(c.style,{maxWidth:cfg.gsize*cfg.grid[0]+'px',maxHeight:cfg.gsize*cfg.grid[1]+'px',marginTop:`min(${cfg.gsize/2}px,${50/cfg.grid[0]}%)`});
+				c.width=Math.min(c.parentNode.clientWidth,cfg.gsize*cfg.grid[0])*devicePixelRatio;cfg.size=c.width/cfg.grid[0];c.height=cfg.size*cfg.grid[1];
+				draw(true);
+			},
+			set=(i=+menu.instr.value)=>{
+				c.style.opacity='';
+				Object.assign(cfg,{
+					url:d.instr[i][0],
+					octave:d.instr[i][1],
+					n:d.instr[i][2][0],
+					i2n:d.i2n[d.instr[i][3]],
+					gflag:new Array(d.i2n[d.instr[i][3]].length).fill(0),
+					grid:d.k2g[d.k[d.instr[i][3]]],
+					c:d.k[d.instr[i][3]]==0,
+					sc:d.p[d.instr[i][3]]!=1
+				})
+				cset();
+				Promise.all(Object.entries(cfg.n).map(async x=>{
+					x[1]=await(await fetch(cfg.url+x[1])).arrayBuffer();
+					x[1]=await new Promise((f,r)=>actx.decodeAudioData(x[1],f,r));
+					x[0]=n2nn(x[0]);
+					return x;
+				})).then(x=>{abuff=x;c.style.opacity=1;});
 			},
 			fire=e=>{
+				if(!abuff)return;
 				e.preventDefault();
 				const bcr=c.getBoundingClientRect();
 				(e.changedTouches?[...e.changedTouches]:[e]).forEach(x=>{
-					const p=x.p||[(x.clientX-bcr.x)/bcr.width,(x.clientY-bcr.y)/bcr.height],
-						i=Math.floor(p[0]*ccfg.grid[0])+Math.floor(p[1]*ccfg.grid[1])*ccfg.grid[0],
-						trg=!ccfg.gflag.some(x=>x);
-
-					if(audio){
-						const nn=69+[-9,-7,-5,-4,-2,0,2,3,5,7,8,10,12,14,15][i]+12+(+sc.value),
-							abs=actx.createBufferSource(),
-							s=audio.reduce((a,y)=>{const d=Math.abs(nn-y[0]);return a[0]<d?a:[d,y];},[Infinity])[1];
-						abs.playbackRate.value=Math.pow(2,(nn-s[0])/12);abs.buffer=s[1];
-						abs.connect(actx.destination);abs.start();
-					}
-
-					ccfg.gflag[i]=ccfg.frame;
+					const p=x.p||[(x.clientX-bcr.x)/bcr.width*cfg.grid[0],(x.clientY-bcr.y)/bcr.height*cfg.grid[1]],
+						i=Math.floor(p[0])+Math.floor(p[1])*cfg.grid[0],
+						trg=!cfg.gflag.some(x=>x);
+					trigger(69+cfg.i2n[i]+cfg.octave*12+sc.value*cfg.sc);
+					cfg.gflag[i]=cfg.frame;
 					if(trg)draw();
 				});
 			},
-			draw=()=>{
-				//ctx.clearRect(0,0,c.width,c.height);
+			draw=all=>{
 				const mix=(x,y,a)=>x*(1-a)+y*a,
-					init=ccfg.gflag.every(x=>!x),
-					r=12*devicePixelRatio,a=ccfg.size*.784,ar=a-r-r,ah=a/2,
+					r=12*devicePixelRatio,a=cfg.size*.784,ar=a-r-r,ah=a/2,
 					rs=(x=0,y=0,c=1,s=1)=>{
 						const rs=r*s,as=a*s,ars=ar*s,arc=ars*c,rc=rs*c,sign=+(Math.sign(c)<0);
 						return new Path2D(`M${x} ${y}m${-arc/2-rc} ${-ars/2}
@@ -63,40 +130,40 @@
 						`);
 					};
 				ctx.fillStyle='#3338';
-				ccfg.gflag=ccfg.gflag.map((x,i)=>{
-					if(init||x){
+				cfg.gflag=cfg.gflag.map((x,i)=>{
+					if(all||x){
 						x=Math.max(x-1,0);
-						i=[i%ccfg.grid[0],Math.floor(i/ccfg.grid[0])];
-						const p=i.map(y=>(y+.5)*ccfg.size),c=Math.cos(x/ccfg.frame*2*Math.PI),s=mix(1,.8,x/ccfg.frame);
+						i=[i%cfg.grid[0],Math.floor(i/cfg.grid[0])];
+						const p=i.map(y=>(y+.5)*cfg.size),c=Math.cos(x/cfg.frame*2*Math.PI),s=mix(1,.8,x/cfg.frame);
 						ctx.clearRect(p[0]-ah,p[1]-ah,a,a);
 						ctx.fill(rs(...p,c,s));
-						ctx.drawImage(tex, ccfg.c&&i[0]==i[1]*2?0:128*(2-i[0]%2),0,128,128, p[0]-ah*c*s,p[1]-ah*s,a*c*s,a*s);
+						ctx.drawImage(tex, cfg.c&&i[0]==i[1]*2?0:128*(2-i[0]%2),0,128,128, p[0]-ah*c*s,p[1]-ah*s,a*c*s,a*s);
 					}
 					return x;
 				});
-				if(ccfg.gflag.some(x=>x))requestAnimationFrame(draw);
+				if(cfg.gflag.some(x=>x))requestAnimationFrame(()=>draw());
+			},
+			trigger=(n=69)=>{
+				const abs=actx.createBufferSource(),
+					s=abuff.reduce((a,x)=>{const d=Math.abs(n-x[0]);return a[0]<d?a:[d,x];},[Infinity])[1];
+				abs.playbackRate.value=Math.pow(2,(n-s[0])/12);abs.buffer=s[1];
+				abs.connect(actx.destination);abs.start();
 			};
 
-		Promise.all(Object.entries(stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})).map(async x=>{
-			x[0]=n2nn(x[0]);
-			x[1]=await(await fetch('audio/instr/musicbox/'+x[1])).arrayBuffer();
-			x[1]=await new Promise((f,r)=>actx.decodeAudioData(x[1],f,r));
-			return x;
-		})).then(x=>{audio=x;c.style.opacity=1;});
 
 		['touchstart','mousedown'].forEach(x=>c.addEventListener(x,fire));
 		document.addEventListener('keydown',e=>{
 			if(['input','textarea'].some(x=>document.activeElement.matches(x))||e.repeat)return;
-			e=k2i[e.code];
-			if(e&&e.every((x,i)=>x<ccfg.grid[i]))
-				fire({preventDefault:()=>{},p:[e[0]/ccfg.grid[0],e[1]/ccfg.grid[1]]});
+			if((e=cfg.k2i[e.code])&&e.every((x,i)=>x<cfg.grid[i]))fire({preventDefault:()=>{},p:e});
 		});
-		onresize=()=>{cset();draw();};
+		menu.onchange=()=>{set();};
+		onresize=cset;
 
-		onresize();
+		menu.insertAdjacentHTML('beforeend',d.instr.map((_,i)=>`<label><input type="radio" name="instr" value="${i}" ${[7,18].includes(i)?'disabled':''} ${i==0?'checked':''}><p class="grid tex" style="--bp:${bp(i)};"></p></label>`).join(''));
+		set();
 		tex.onload=()=>{
 			const c=document.createElement('canvas');c.width=tex.naturalWidth;c.height=tex.naturalHeight;
-			c.getContext('2d').drawImage(tex,0,0);tex=c;draw();
+			c.getContext('2d').drawImage(tex,0,0);tex=c;draw(true);
 		};
 		tex.src='img/instr.svg';
 	</script>
