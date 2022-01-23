@@ -45,27 +45,21 @@
 			</p><p class="grid btn clock">
 			</p><p class="grid btn" style="--bp:-500% -0%;"></p>
 		</div>
-		<hr><p class="grid btn tex" id="infobtn"></p>
-
-		<hr>
-		<label>size:<input type="number" id="tmp_kbs"></label><br>
-		<label>reverb:<input type="number" id="tmp_rev"></label><br>
-		<label>delay:<input type="number" id="tmp_del"></label><br>
-		</div>
+		<hr><p class="grid btn tex" style="--bp:-100% 0;" id="stgbtn"></p><p class="grid btn tex" id="infobtn"></p>
+	</div>
 	<label for="drwcb" id="mico" class="grid tex"></label>
 	<label for="alcb"></label><pre id="albox" class="style"></pre>
 
 	<script>
 		'use strict';
-		let tex=new Image(),abuff,sc,rev,del;
 		const texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><h3>Piano</h3>Tone.js Salamander\n<small>cc-by Alexander Holm</small><h3>Others</h3>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201230\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
-				amb:'ambient',rev:'reverb',delay:'delay',mrn:'metrnome',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><h3>Piano</h3>Tone.js Salamander\n<small>cc-by Alexander Holm</small><h3>Others</h3>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201231\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				amb:'ambient',rev:'reverb',delay:'delay',kbs:'key size',
 				ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…',note:'note',cin:'instr name',fsel:'choose file',
 			},{
 				ja:{
-					amb:'環境音',rev:'リバーブ',delay:'遅延',mrn:'メトロノーム',
+					amb:'環境音',rev:'リバーブ',delay:'遅延',kbs:'キーのサイズ',
 					ambl:['なし','温泉','ホーム','雨林','書庫'],
 					ci:'楽器のカスタム',loading:'読み込み中…',default:'デフォルト',cnew:'新規作成…',note:'音名',cin:'楽器名',fsel:'ファイルを選択',
 				}
@@ -115,7 +109,7 @@
 				]
 			},
 			cfg={
-				frame:24,gsize:88,
+				frame:24,tex:new Image(),
 				k2i:Object.fromEntries(Array.from('QWERTASDFGZXCVB',(x,i)=>[`Key${x}`,[i%5,Math.floor(i/5)]]))
 			},
 			ctx=c.getContext('2d'),
@@ -123,8 +117,8 @@
 			revn=actx.createConvolver(),gn0=actx.createGain(),gn1=actx.createGain(),
 			deln=actx.createDelay(1),
 			cset=()=>{
-				Object.assign(c.style,{maxWidth:cfg.gsize*cfg.grid[0]+'px',maxHeight:cfg.gsize*cfg.grid[1]+'px',marginTop:`min(${cfg.gsize/2}px,${50/cfg.grid[0]}%)`});
-				c.width=Math.min(c.parentNode.clientWidth,cfg.gsize*cfg.grid[0])*devicePixelRatio;cfg.size=c.width/cfg.grid[0];c.height=cfg.size*cfg.grid[1];
+				Object.assign(c.style,{maxWidth:cfg.kbs*cfg.grid[0]+'px',maxHeight:cfg.kbs*cfg.grid[1]+'px',marginTop:`min(${cfg.kbs/2}px,${50/cfg.grid[0]}%)`});
+				c.width=Math.min(c.parentNode.clientWidth,cfg.kbs*cfg.grid[0])*devicePixelRatio;cfg.size=c.width/cfg.grid[0];c.height=cfg.size*cfg.grid[1];
 				draw(true);
 			},
 			set=(i=+menu.instr.value)=>{
@@ -150,17 +144,17 @@
 						y[0]=n2nn(y[0]);
 						return y;
 					}))
-				)).then(x=>{abuff=x;c.style.opacity=1;});
+				)).then(x=>{cfg.abuff=x;c.style.opacity=1;});
 			},
 			fire=e=>{
-				if(!abuff)return;
+				if(!cfg.abuff)return;
 				e.preventDefault();
 				const bcr=c.getBoundingClientRect();
 				(e.changedTouches?[...e.changedTouches]:[e]).forEach(x=>{
 					const p=x.p||[(x.clientX-bcr.x)/bcr.width*cfg.grid[0],(x.clientY-bcr.y)/bcr.height*cfg.grid[1]],
 						i=Math.floor(p[0])+Math.floor(p[1])*cfg.grid[0],
 						trg=!cfg.gflag.some(x=>x);
-					trigger(69+cfg.i2n[i]+cfg.octave+sc*cfg.scf,cfg.i2p[i]);
+					trigger(69+cfg.i2n[i]+cfg.octave+cfg.sc*cfg.scf,cfg.i2p[i]);
 					cfg.gflag[i]=cfg.frame;
 					if(trg)draw();
 				});
@@ -183,7 +177,7 @@
 						const p=i.map(y=>(y+.5)*cfg.size),c=Math.cos(x/cfg.frame*2*Math.PI),s=mix(1,.8,x/cfg.frame);
 						ctx.clearRect(p[0]-ah,p[1]-ah,a,a);
 						ctx.fill(rs(...p,c,s));
-						ctx.drawImage(tex, cfg.c&&i[0]==i[1]*2?0:128*(2-i[0]%2),0,128,128, p[0]-ah*c*s,p[1]-ah*s,a*c*s,a*s);
+						ctx.drawImage(cfg.tex, cfg.c&&i[0]==i[1]*2?0:128*(2-i[0]%2),0,128,128, p[0]-ah*c*s,p[1]-ah*s,a*c*s,a*s);
 					}
 					return x;
 				});
@@ -191,7 +185,7 @@
 			},
 			trigger=(n=69,abi=0,t)=>{
 				const abs=actx.createBufferSource(),
-					s=abuff[abi].reduce((a,x)=>{const d=Math.abs(n-x[0]);return a[0]<d?a:[d,x];},[Infinity])[1];
+					s=cfg.abuff[abi].reduce((a,x)=>{const d=Math.abs(n-x[0]);return a[0]<d?a:[d,x];},[Infinity])[1];
 				abs.playbackRate.value=Math.pow(2,(n-s[0])/12);abs.buffer=s[1];
 				abs.connect(deln);abs.start(t);
 			},
@@ -208,19 +202,31 @@
 				oac.startRendering();oac.oncomplete=e=>f(e.renderedBuffer);
 			}),
 			scale=s=>{
-				scd.children[1].setAttribute('style',`--rot:${sc*30+45}deg;`);
-				if(s){const t=actx.currentTime+.05;[72,76,79].forEach((y,i)=>trigger(y+cfg.octave+sc,0,t+i*.05));}
+				scd.children[1].setAttribute('style',`--rot:${cfg.sc*30+45}deg;`);
+				if(s){const t=actx.currentTime+.05;[72,76,79].forEach((y,i)=>trigger(y+cfg.octave+cfg.sc,0,t+i*.05));}
 			},
 			reverb=s=>{
-				gn0.gain.value=rev;gn1.gain.value=1-rev;
-				if(s){const t=actx.currentTime+.05;(cfg.scf?[72,74,76,79,84]:[69,81]).forEach((x,i)=>trigger(x+cfg.octave+sc*cfg.scf,0,t+i*.05));}
+				gn0.gain.value=cfg.rev;gn1.gain.value=1-cfg.rev;
+				if(s){const t=actx.currentTime+.05;(cfg.scf?[72,74,76,79,84]:[69,81]).forEach((x,i)=>trigger(x+cfg.octave+cfg.sc*cfg.scf,0,t+i*.05));}
 			},
 			delay=s=>{
-				deln.delayTime.value=del;
-				if(s){const t=actx.currentTime+.05,l=actx.outputLatency||0;(cfg.scf?[72,79]:[69,81]).forEach((x,i)=>trigger(x+cfg.octave+sc*cfg.scf,0,t+(del+l)*i));}
+				deln.delayTime.value=cfg.del;
+				if(s){const t=actx.currentTime+.05,l=actx.outputLatency||0;(cfg.scf?[72,79]:[69,81]).forEach((x,i)=>trigger(x+cfg.octave+cfg.sc*cfg.scf,0,t+(cfg.del+l)*i));}
 			},
-			load=()=>({instr:menu.instr.value=0,sc=0,rev=0,del=.1}=JSON.parse(localStorage.instr_stat||'{}')),
-			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc,rev,del});
+			stg=()=>{
+				//const opt=(x,i)=>`<option value="${i-1}"${i-1==amb?' selected':''}>${x}</option>`;
+				alert(`${texts.kbs}…<span>${cfg.kbs}</span>px
+<input type="range" class="style" min="64" max="128" step="2" value="${cfg.kbs}"><hr>${texts.rev}
+<input type="range" class="style" min="0" max="1" step="0.0625" value="${cfg.rev}"><hr>${texts.delay}
+<input type="range" class="style" min="0" max=".2" step="0.0125" value="${cfg.del}">`);
+const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=range]'),span=albox.querySelector('span');
+				//sel.onchange=()=>{amb=+sel.value;ambset();save();};
+				rng[0].oninput=()=>{span.textContent=cfg.kbs=+rng[0].value;cset();save();};
+				rng[1].onchange=()=>{cfg.rev=+rng[1].value;reverb(true);save();};
+				rng[2].onchange=()=>{cfg.del=+rng[2].value;delay(true);save();};
+			},
+			load=()=>({instr:menu.instr.value=0,sc:cfg.sc=0,rev:cfg.rev=0,del:cfg.del=.1,kbs:cfg.kbs=88}=JSON.parse(localStorage.instr_stat||'{}')),
+			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc:cfg.sc,rev:cfg.rev,del:cfg.del,kbs:cfg.kbs});
 			//const fullscr=(x=document.body)=>{x.requestFullscreen=x.requestFullscreen||x.webkitRequestFullscreen;x.requestFullscreen();};
 
 		['touchstart','mousedown'].forEach(x=>c.addEventListener(x,fire));
@@ -229,9 +235,10 @@
 			if((e=cfg.k2i[e.code])&&e.every((x,i)=>x<cfg.grid[i]))fire({preventDefault:()=>{},p:e});
 		});
 		menu.onchange=()=>{set();save();};
-		scd.children[0].onclick=()=>{sc--;scale(true);save();};
-		scd.children[1].onclick=()=>{sc=0;scale(true);save();};
-		scd.children[2].onclick=()=>{sc++;scale(true);save();};
+		scd.children[0].onclick=()=>{cfg.sc--;scale(true);save();};
+		scd.children[1].onclick=()=>{cfg.sc=0;scale(true);save();};
+		scd.children[2].onclick=()=>{cfg.sc++;scale(true);save();};
+		stgbtn.onclick=stg;
 		infobtn.onclick=()=>alert(texts.info);
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		alcb.checked=false;
@@ -243,16 +250,14 @@
 		irgen().then(x=>revn.buffer=x);
 
 		load();set();scale();reverb();delay();
-		tex.onload=()=>{
-			const c=document.createElement('canvas');c.width=tex.naturalWidth;c.height=tex.naturalHeight;
-			c.getContext('2d').drawImage(tex,0,0);tex=c;draw(true);
+		cfg.tex.onload=()=>{
+			const c=document.createElement('canvas');c.width=cfg.tex.naturalWidth;c.height=cfg.tex.naturalHeight;
+			c.getContext('2d').drawImage(cfg.tex,0,0);cfg.tex=c;draw(true);
 			document.body.insertAdjacentHTML('beforeend',`<style>.grid::before{background-image:url(${c.toDataURL()});}</style>`);
 		};
-		tex.src='img/instr.svg';
+		cfg.tex.src='img/instr.svg';
 
-		tmp_kbs.value=cfg.gsize;tmp_kbs.onchange=()=>{cfg.gsize=+tmp_kbs.value;cset();};
-		tmp_rev.value=rev;tmp_rev.onchange=()=>{rev=+tmp_rev.value;reverb(true);save();};
-		tmp_del.value=del;tmp_del.onchange=()=>{del=+tmp_del.value;delay(true);save();};
+		//alert('<h1>今日も紅茶さんが可愛いね</h1>');
 	</script>
 </body>
 </html>
