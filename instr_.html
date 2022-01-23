@@ -29,10 +29,10 @@
 		#drawer hr{border:0;}#drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		#drwcb:checked~#drawer{transform:translateX(0);visibility:unset;}
 
-		label[for=alcb],#albox{position:fixed;pointer-events:none;opacity:0;background-color:#0008;transition:.2s;}
+		label[for=alcb],#albox{position:fixed;pointer-events:none;visibility:hidden;opacity:0;background-color:#0008;transition:.2s;}
 		label[for=alcb]{top:0;left:0;width:100%;height:100%;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
 		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);white-space:pre-wrap;overflow:auto;overflow-x:hidden;}
-		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
+		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;visibility:visible;opacity:1;}
 	</style>
 	<input type="checkbox" id="drwcb">
 	<input type="checkbox" id="alcb">
@@ -53,7 +53,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><h3>Piano</h3>Tone.js Salamander\n<small>cc-by Alexander Holm</small><h3>Others</h3>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201231\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><h3>Piano</h3>Tone.js Salamander\n<small>cc-by Alexander Holm</small><h3>Others</h3>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201232\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				amb:'ambient',rev:'reverb',delay:'delay',kbs:'key size',
 				ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…',note:'note',cin:'instr name',fsel:'choose file',
@@ -215,13 +215,13 @@
 			},
 			stg=()=>{
 				//const opt=(x,i)=>`<option value="${i-1}"${i-1==amb?' selected':''}>${x}</option>`;
-				alert(`${texts.kbs}…<span>${cfg.kbs}</span>px
-<input type="range" class="style" min="64" max="128" step="2" value="${cfg.kbs}"><hr>${texts.rev}
+				alert(`${texts.kbs}
+<input type="range" class="style" min="64" max="128" step="4" value="${cfg.kbs}"><hr>${texts.rev}
 <input type="range" class="style" min="0" max="1" step="0.0625" value="${cfg.rev}"><hr>${texts.delay}
 <input type="range" class="style" min="0" max=".2" step="0.0125" value="${cfg.del}">`);
-const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=range]'),span=albox.querySelector('span');
+const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=range]');
 				//sel.onchange=()=>{amb=+sel.value;ambset();save();};
-				rng[0].oninput=()=>{span.textContent=cfg.kbs=+rng[0].value;cset();save();};
+				rng[0].oninput =()=>{cfg.kbs=+rng[0].value;cset();save();};
 				rng[1].onchange=()=>{cfg.rev=+rng[1].value;reverb(true);save();};
 				rng[2].onchange=()=>{cfg.del=+rng[2].value;delay(true);save();};
 			},
