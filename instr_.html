@@ -53,7 +53,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><h3>Piano</h3>Tone.js Salamander\n<small>cc-by Alexander Holm</small><h3>Others</h3>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201232\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><h3>Piano</h3>Tone.js Salamander\n<small>cc-by Alexander Holm</small><h3>Others</h3>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201250\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				amb:'ambient',rev:'reverb',delay:'delay',kbs:'key size',
 				ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…',note:'note',cin:'instr name',fsel:'choose file',
@@ -197,7 +197,7 @@
 				for(let i=0,view;i<ch;i++){view=ab.getChannelData(i);for(let j=0;j<fr;j++)view[j]=Math.random()*2-1;}
 				lpf.type='lowpass';lpf.frequency.value=cut;lpf.Q.value=0;
 				g0.gain.setTargetAtTime(0,0,d*.2);
-				g1.gain.setValueAtTime(0,0).linearRampToValueAtTime(1,fi).setValueAtTime(1,d*.9).linearRampToValueAtTime(0,d);
+				g1.gain.setValueAtTime(0,0);g1.gain.linearRampToValueAtTime(1,fi);g1.gain.setValueAtTime(1,d*.9);g1.gain.linearRampToValueAtTime(0,d);
 				bs.buffer=ab;[bs,lpf,g0,g1,oac.destination].reduce((a,x)=>a.connect(x));bs.start();
 				oac.startRendering();oac.oncomplete=e=>f(e.renderedBuffer);
 			}),
