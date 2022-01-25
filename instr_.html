@@ -45,7 +45,12 @@
 			</p><p class="grid btn clock">
 			</p><p class="grid btn" style="--bp:-500% -0%;"></p>
 		</div>
-		<hr><p class="grid btn tex" style="--bp:-100% 0;" id="stgbtn"></p><p class="grid btn tex" id="infobtn"></p>
+		<hr>
+		<p class="grid btn tex" style="--bp:-100% 0;" id="stgbtn">
+		</p><p id="recbtn" class="grid btn d" style="--bp:0 -100%;">
+		</p><a class="grid btn" style="--bp:-100% -100%;" href="manual/index.html?m=instr" target="_blank">
+		</a><p class="grid btn tex" id="infobtn">
+		</p>
 	</div>
 	<label for="drwcb" id="mico" class="grid tex"></label>
 	<label for="alcb"></label><pre id="albox" class="style"></pre>
@@ -53,17 +58,17 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><h3>Piano</h3>Tone.js Salamander\n<small>cc-by Alexander Holm</small><h3>Others</h3>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201250\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
-				amb:'ambient',rev:'reverb',delay:'delay',kbs:'key size',
-				ambl:['none','hotspring','home','forest','vault'],
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><h3>Piano</h3>Tone.js Salamander\n<small>cc-by Alexander Holm</small><h3>Others</h3>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201260\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				rev:'reverb',delay:'delay',kbs:'key size',
+				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…',note:'note',cin:'instr name',fsel:'choose file',
 			},{
 				ja:{
-					amb:'環境音',rev:'リバーブ',delay:'遅延',kbs:'キーのサイズ',
-					ambl:['なし','温泉','ホーム','雨林','書庫'],
+					rev:'リバーブ',delay:'遅延',kbs:'キーのサイズ',
+					amb:'環境音',ambl:['なし','温泉','ホーム','雨林','書庫'],
 					ci:'楽器のカスタム',loading:'読み込み中…',default:'デフォルト',cnew:'新規作成…',note:'音名',cin:'楽器名',fsel:'ファイルを選択',
 				}
-			}[window.navigator.language.slice(0,2)]),
+			}[navigator.language.slice(0,2)]),
 			n2nn=x=>({c:12,d:14,e:16,f:17,g:19,a:21,b:23})[x[0].toLowerCase()]+(({'#':1,s:1})[x[1]]?x.slice(2)*12+1:x.slice(1)*12),
 			bp=i=>`${i%8*-100}% ${Math.floor(i*.125+1)*-100}%`,
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['ds'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
@@ -228,7 +233,7 @@ const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=r
 			load=()=>({instr:menu.instr.value=0,sc:cfg.sc=0,rev:cfg.rev=0,del:cfg.del=.1,kbs:cfg.kbs=88}=JSON.parse(localStorage.instr_stat||'{}')),
 			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc:cfg.sc,rev:cfg.rev,del:cfg.del,kbs:cfg.kbs});
 			//const fullscr=(x=document.body)=>{x.requestFullscreen=x.requestFullscreen||x.webkitRequestFullscreen;x.requestFullscreen();};
-
+			
 		['touchstart','mousedown'].forEach(x=>c.addEventListener(x,fire));
 		document.addEventListener('keydown',e=>{
 			if(['input','textarea'].some(x=>document.activeElement.matches(x))||e.repeat)return;
@@ -248,6 +253,25 @@ const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=r
 		deln.connect(revn).connect(gn0).connect(actx.destination);
 		deln.connect(gn1).connect(actx.destination);
 		irgen().then(x=>revn.buffer=x);
+		if(window.MediaRecorder){
+			const recn=actx.createMediaStreamDestination(),rec=new MediaRecorder(recn.stream),
+				toWav=x=>{//https://github.com/Jam3/audiobuffer-to-wav
+					let ch=x.numberOfChannels,rate=x.sampleRate;
+					if(ch==1)x=x.getChannelData(0);else{const l=x.getChannelData(0),r=x.getChannelData(1);x=new Float32Array(l.length+r.length);for(let i=0;i<x.length;i++){x[i*2]=l[i];x[i*2+1]=r[i];}};
+					const b=new ArrayBuffer(44+x.length*2),v=new DataView(b),str=(c,s)=>{for(let i=0;i<s.length;i++)v.setUint8(c+i,s.charCodeAt(i))};
+					str(0,'RIFF');v.setUint32(4,36+x.length*2,true);str(8,'WAVE');
+					str(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,ch,true);v.setUint32(24,rate,true);ch*=2;v.setUint32(28,rate*ch,true);v.setUint16(32,ch,true);v.setUint16(34,16,true);
+					str(36,'data');v.setUint32(40,x.length*2,true);for(let i=0;i<x.length;i++){const s=Math.max(-1,Math.min(1,x[i]));v.setInt16(44+i*2,s<0?s*0x8000:s*0x7FFF,true);}
+					return new Blob([b]);
+				};
+			rec.ondataavailable=e=>new Response(e.data).arrayBuffer().then(x=>new Promise((f,r)=>actx.decodeAudioData(x,f,r))).then(x=>{
+				const a=document.createElement('a');a.download=`sky_instr${new Date().toLocaleString()}.wav`;
+				a.href=URL.createObjectURL(toWav(x));a.click();setTimeout(URL.revokeObjectURL,0,a.href);
+			}).catch(console.warn);
+			gn0.connect(recn);gn1.connect(recn);
+			recbtn.onclick=()=>{if(recbtn.classList.toggle('a'))rec.start();else rec.stop();};
+			recbtn.classList.remove('d');
+		}
 
 		load();set();scale();reverb();delay();
 		cfg.tex.onload=()=>{
