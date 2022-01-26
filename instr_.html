@@ -46,7 +46,7 @@
 			</p><p class="grid btn" style="--bp:-500% -0%;"></p>
 		</div>
 		<hr>
-		<p class="grid btn tex" style="--bp:-100% 0;" id="stgbtn">
+		<p class="grid btn tex" style="--bp:-100% 0;" id="cfgbtn">
 		</p><p id="recbtn" class="grid btn d" style="--bp:0 -100%;">
 		</p><a class="grid btn" style="--bp:-100% -100%;" href="manual/index.html?m=instr" target="_blank">
 		</a><p class="grid btn tex" id="infobtn">
@@ -113,7 +113,7 @@
 					[0,0,0,0,1,1,1,1]
 				]
 			},
-			cfg={
+			q={
 				frame:24,tex:new Image(),
 				k2i:Object.fromEntries(Array.from('QWERTASDFGZXCVB',(x,i)=>[`Key${x}`,[i%5,Math.floor(i/5)]]))
 			},
@@ -122,13 +122,13 @@
 			revn=actx.createConvolver(),gn0=actx.createGain(),gn1=actx.createGain(),
 			deln=actx.createDelay(1),
 			cset=()=>{
-				Object.assign(c.style,{maxWidth:cfg.kbs*cfg.grid[0]+'px',maxHeight:cfg.kbs*cfg.grid[1]+'px',marginTop:`min(${cfg.kbs/2}px,${50/cfg.grid[0]}%)`});
-				c.width=Math.min(c.parentNode.clientWidth,cfg.kbs*cfg.grid[0])*devicePixelRatio;cfg.size=c.width/cfg.grid[0];c.height=cfg.size*cfg.grid[1];
+				Object.assign(c.style,{maxWidth:q.kbs*q.grid[0]+'px',maxHeight:q.kbs*q.grid[1]+'px',marginTop:`min(${q.kbs/2}px,${50/q.grid[0]}%)`});
+				c.width=Math.min(c.parentNode.clientWidth,q.kbs*q.grid[0])*devicePixelRatio;q.size=c.width/q.grid[0];c.height=q.size*q.grid[1];
 				draw(true);
 			},
 			set=(i=+menu.instr.value)=>{
 				c.style.opacity='';
-				Object.assign(cfg,{
+				Object.assign(q,{
 					url:d.instr[i][0],
 					octave:d.instr[i][1]*12,
 					n:d.instr[i][2],
@@ -141,32 +141,32 @@
 				});
 				mico.setAttribute('style',`--bp:${bp(i)};`);
 				cset();
-				if(!cfg.scf)scd.classList.add('d');else scd.classList.remove('d');
-				Promise.all(cfg.n.map(x=>
+				if(!q.scf)scd.classList.add('d');else scd.classList.remove('d');
+				Promise.all(q.n.map(x=>
 					Promise.all(Object.entries(x).map(async y=>{
-						y[1]=await(await fetch(cfg.url+y[1])).arrayBuffer();
+						y[1]=await(await fetch(q.url+y[1])).arrayBuffer();
 						y[1]=await new Promise((f,r)=>actx.decodeAudioData(y[1],f,r));
 						y[0]=n2nn(y[0]);
 						return y;
 					}))
-				)).then(x=>{cfg.abuff=x;c.style.opacity=1;});
+				)).then(x=>{q.abuff=x;c.style.opacity=1;});
 			},
 			fire=e=>{
-				if(!cfg.abuff)return;
+				if(!q.abuff)return;
 				e.preventDefault();
 				const bcr=c.getBoundingClientRect();
 				(e.changedTouches?[...e.changedTouches]:[e]).forEach(x=>{
-					const p=x.p||[(x.clientX-bcr.x)/bcr.width*cfg.grid[0],(x.clientY-bcr.y)/bcr.height*cfg.grid[1]],
-						i=Math.floor(p[0])+Math.floor(p[1])*cfg.grid[0],
-						trg=!cfg.gflag.some(x=>x);
-					trigger(69+cfg.i2n[i]+cfg.octave+cfg.sc*cfg.scf,cfg.i2p[i]);
-					cfg.gflag[i]=cfg.frame;
+					const p=x.p||[(x.clientX-bcr.x)/bcr.width*q.grid[0],(x.clientY-bcr.y)/bcr.height*q.grid[1]],
+						i=Math.floor(p[0])+Math.floor(p[1])*q.grid[0],
+						trg=!q.gflag.some(x=>x);
+					trigger(69+q.i2n[i]+q.octave+q.sc*q.scf,q.i2p[i]);
+					q.gflag[i]=q.frame;
 					if(trg)draw();
 				});
 			},
 			draw=all=>{
 				const mix=(x,y,a)=>x*(1-a)+y*a,
-					r=12*devicePixelRatio,a=cfg.size*.784,ar=a-r-r,ah=a/2,
+					r=12*devicePixelRatio,a=q.size*.784,ar=a-r-r,ah=a/2,
 					rs=(x=0,y=0,c=1,s=1)=>{
 						const rs=r*s,as=a*s,ars=ar*s,arc=ars*c,rc=rs*c,sign=+(Math.sign(c)<0);
 						return new Path2D(`M${x} ${y}m${-arc/2-rc} ${-ars/2}
@@ -175,22 +175,22 @@
 						`);
 					};
 				ctx.fillStyle='#3338';
-				cfg.gflag=cfg.gflag.map((x,i)=>{
+				q.gflag=q.gflag.map((x,i)=>{
 					if(all||x){
 						x=Math.max(x-1,0);
-						i=[i%cfg.grid[0],Math.floor(i/cfg.grid[0])];
-						const p=i.map(y=>(y+.5)*cfg.size),c=Math.cos(x/cfg.frame*2*Math.PI),s=mix(1,.8,x/cfg.frame);
+						i=[i%q.grid[0],Math.floor(i/q.grid[0])];
+						const p=i.map(y=>(y+.5)*q.size),c=Math.cos(x/q.frame*2*Math.PI),s=mix(1,.8,x/q.frame);
 						ctx.clearRect(p[0]-ah,p[1]-ah,a,a);
 						ctx.fill(rs(...p,c,s));
-						ctx.drawImage(cfg.tex, cfg.c&&i[0]==i[1]*2?0:128*(2-i[0]%2),0,128,128, p[0]-ah*c*s,p[1]-ah*s,a*c*s,a*s);
+						ctx.drawImage(q.tex, q.c&&i[0]==i[1]*2?0:128*(2-i[0]%2),0,128,128, p[0]-ah*c*s,p[1]-ah*s,a*c*s,a*s);
 					}
 					return x;
 				});
-				if(cfg.gflag.some(x=>x))requestAnimationFrame(()=>draw());
+				if(q.gflag.some(x=>x))requestAnimationFrame(()=>draw());
 			},
 			trigger=(n=69,abi=0,t)=>{
 				const abs=actx.createBufferSource(),
-					s=cfg.abuff[abi].reduce((a,x)=>{const d=Math.abs(n-x[0]);return a[0]<d?a:[d,x];},[Infinity])[1];
+					s=q.abuff[abi].reduce((a,x)=>{const d=Math.abs(n-x[0]);return a[0]<d?a:[d,x];},[Infinity])[1];
 				abs.playbackRate.value=Math.pow(2,(n-s[0])/12);abs.buffer=s[1];
 				abs.connect(deln);abs.start(t);
 			},
@@ -207,43 +207,43 @@
 				oac.startRendering();oac.oncomplete=e=>f(e.renderedBuffer);
 			}),
 			scale=s=>{
-				scd.children[1].setAttribute('style',`--rot:${cfg.sc*30+45}deg;`);
-				if(s){const t=actx.currentTime+.05;[72,76,79].forEach((y,i)=>trigger(y+cfg.octave+cfg.sc,0,t+i*.05));}
+				scd.children[1].setAttribute('style',`--rot:${q.sc*30+45}deg;`);
+				if(s){const t=actx.currentTime+.05;[72,76,79].forEach((y,i)=>trigger(y+q.octave+q.sc,0,t+i*.05));}
 			},
 			reverb=s=>{
-				gn0.gain.value=cfg.rev;gn1.gain.value=1-cfg.rev;
-				if(s){const t=actx.currentTime+.05;(cfg.scf?[72,74,76,79,84]:[69,81]).forEach((x,i)=>trigger(x+cfg.octave+cfg.sc*cfg.scf,0,t+i*.05));}
+				gn0.gain.value=q.rev;gn1.gain.value=1-q.rev;
+				if(s){const t=actx.currentTime+.05;(q.scf?[72,74,76,79,84]:[69,81]).forEach((x,i)=>trigger(x+q.octave+q.sc*q.scf,0,t+i*.05));}
 			},
 			delay=s=>{
-				deln.delayTime.value=cfg.del;
-				if(s){const t=actx.currentTime+.05,l=actx.outputLatency||0;(cfg.scf?[72,79]:[69,81]).forEach((x,i)=>trigger(x+cfg.octave+cfg.sc*cfg.scf,0,t+(cfg.del+l)*i));}
+				deln.delayTime.value=q.del;
+				if(s){const t=actx.currentTime+.05,l=actx.outputLatency||0;(q.scf?[72,79]:[69,81]).forEach((x,i)=>trigger(x+q.octave+q.sc*q.scf,0,t+(q.del+l)*i));}
 			},
-			stg=()=>{
+			cfg=()=>{
 				//const opt=(x,i)=>`<option value="${i-1}"${i-1==amb?' selected':''}>${x}</option>`;
 				alert(`${texts.kbs}
-<input type="range" class="style" min="64" max="128" step="4" value="${cfg.kbs}"><hr>${texts.rev}
-<input type="range" class="style" min="0" max="1" step="0.0625" value="${cfg.rev}"><hr>${texts.delay}
-<input type="range" class="style" min="0" max=".2" step="0.0125" value="${cfg.del}">`);
+<input type="range" class="style" min="64" max="128" step="4" value="${q.kbs}"><hr>${texts.rev}
+<input type="range" class="style" min="0" max="1" step="0.0625" value="${q.rev}"><hr>${texts.delay}
+<input type="range" class="style" min="0" max=".2" step="0.0125" value="${q.del}">`);
 const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=range]');
 				//sel.onchange=()=>{amb=+sel.value;ambset();save();};
-				rng[0].oninput =()=>{cfg.kbs=+rng[0].value;cset();save();};
-				rng[1].onchange=()=>{cfg.rev=+rng[1].value;reverb(true);save();};
-				rng[2].onchange=()=>{cfg.del=+rng[2].value;delay(true);save();};
+				rng[0].oninput =()=>{q.kbs=+rng[0].value;cset();save();};
+				rng[1].onchange=()=>{q.rev=+rng[1].value;reverb(true);save();};
+				rng[2].onchange=()=>{q.del=+rng[2].value;delay(true);save();};
 			},
-			load=()=>({instr:menu.instr.value=0,sc:cfg.sc=0,rev:cfg.rev=0,del:cfg.del=.1,kbs:cfg.kbs=88}=JSON.parse(localStorage.instr_stat||'{}')),
-			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc:cfg.sc,rev:cfg.rev,del:cfg.del,kbs:cfg.kbs});
+			load=()=>({instr:menu.instr.value=0,sc:q.sc=0,rev:q.rev=0,del:q.del=.1,kbs:q.kbs=88}=JSON.parse(localStorage.instr_stat||'{}')),
+			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc:q.sc,rev:q.rev,del:q.del,kbs:q.kbs});
 			//const fullscr=(x=document.body)=>{x.requestFullscreen=x.requestFullscreen||x.webkitRequestFullscreen;x.requestFullscreen();};
 			
 		['touchstart','mousedown'].forEach(x=>c.addEventListener(x,fire));
 		document.addEventListener('keydown',e=>{
 			if(['input','textarea'].some(x=>document.activeElement.matches(x))||e.repeat)return;
-			if((e=cfg.k2i[e.code])&&e.every((x,i)=>x<cfg.grid[i]))fire({preventDefault:()=>{},p:e});
+			if((e=q.k2i[e.code])&&e.every((x,i)=>x<q.grid[i]))fire({preventDefault:()=>{},p:e});
 		});
 		menu.onchange=()=>{set();save();};
-		scd.children[0].onclick=()=>{cfg.sc--;scale(true);save();};
-		scd.children[1].onclick=()=>{cfg.sc=0;scale(true);save();};
-		scd.children[2].onclick=()=>{cfg.sc++;scale(true);save();};
-		stgbtn.onclick=stg;
+		scd.children[0].onclick=()=>{q.sc--;scale(true);save();};
+		scd.children[1].onclick=()=>{q.sc=0;scale(true);save();};
+		scd.children[2].onclick=()=>{q.sc++;scale(true);save();};
+		cfgbtn.onclick=cfg;
 		infobtn.onclick=()=>alert(texts.info);
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		alcb.checked=false;
@@ -265,21 +265,21 @@ const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=r
 					return new Blob([b]);
 				};
 			rec.ondataavailable=e=>new Response(e.data).arrayBuffer().then(x=>new Promise((f,r)=>actx.decodeAudioData(x,f,r))).then(x=>{
-				const a=document.createElement('a');a.download=`sky_instr${new Date().toLocaleString()}.wav`;
+				const a=document.createElement('a');a.download=`sky_instr ${new Date().toLocaleString().replace(/[^\w\d\s]/g,'_')}.wav`;
 				a.href=URL.createObjectURL(toWav(x));a.click();setTimeout(URL.revokeObjectURL,0,a.href);
 			}).catch(console.warn);
 			gn0.connect(recn);gn1.connect(recn);
-			recbtn.onclick=()=>{if(recbtn.classList.toggle('a'))rec.start();else rec.stop();};
+			recbtn.onclick=()=>rec[recbtn.classList.toggle('a')?'start':'stop']();
 			recbtn.classList.remove('d');
 		}
 
 		load();set();scale();reverb();delay();
-		cfg.tex.onload=()=>{
-			const c=document.createElement('canvas');c.width=cfg.tex.naturalWidth;c.height=cfg.tex.naturalHeight;
-			c.getContext('2d').drawImage(cfg.tex,0,0);cfg.tex=c;draw(true);
+		q.tex.onload=()=>{
+			const c=document.createElement('canvas');c.width=q.tex.naturalWidth;c.height=q.tex.naturalHeight;
+			c.getContext('2d').drawImage(q.tex,0,0);q.tex=c;draw(true);
 			document.body.insertAdjacentHTML('beforeend',`<style>.grid::before{background-image:url(${c.toDataURL()});}</style>`);
 		};
-		cfg.tex.src='img/instr.svg';
+		q.tex.src='img/instr.svg';
 
 		//alert('<h1>今日も紅茶さんが可愛いね</h1>');
 	</script>
