@@ -58,7 +58,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><h3>Piano</h3>Tone.js Salamander\n<small>cc-by Alexander Holm</small><h3>Others</h3>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201261\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><h3>Piano</h3>Tone.js Salamander\n<small>cc-by Alexander Holm</small><h3>Others</h3>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201262\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…',note:'note',cin:'instr name',fsel:'choose file',
@@ -114,7 +114,7 @@
 				]
 			},
 			q={
-				frame:24,tex:new Image(),
+				flip:400,tex:new Image(),
 				k2i:Object.fromEntries(Array.from('QWERTASDFGZXCVB',(x,i)=>[`Key${x}`,[i%5,Math.floor(i/5)]]))
 			},
 			ctx=c.getContext('2d'),
@@ -160,11 +160,12 @@
 						i=Math.floor(p[0])+Math.floor(p[1])*q.grid[0],
 						trg=!q.gflag.some(x=>x);
 					trigger(69+q.i2n[i]+q.octave+q.sc*q.scf,q.i2p[i]);
-					q.gflag[i]=q.frame;
+					q.gflag[i]=q.flip;
 					if(trg)draw();
 				});
 			},
-			draw=all=>{
+			draw=(all,t)=>{
+				if(t)t=Date.now()-t;
 				const mix=(x,y,a)=>x*(1-a)+y*a,
 					r=12*devicePixelRatio,a=q.size*.784,ar=a-r-r,ah=a/2,
 					rs=(x=0,y=0,c=1,s=1)=>{
@@ -177,16 +178,16 @@
 				ctx.fillStyle='#3338';
 				q.gflag=q.gflag.map((x,i)=>{
 					if(all||x){
-						x=Math.max(x-1,0);
+						if(t)x=Math.max(x-t,0);
 						i=[i%q.grid[0],Math.floor(i/q.grid[0])];
-						const p=i.map(y=>(y+.5)*q.size),c=Math.cos(x/q.frame*2*Math.PI),s=mix(1,.8,x/q.frame);
+						const p=i.map(y=>(y+.5)*q.size),c=Math.cos(x/q.flip*2*Math.PI),s=mix(1,.8,x/q.flip);
 						ctx.clearRect(p[0]-ah,p[1]-ah,a,a);
 						ctx.fill(rs(...p,c,s));
 						ctx.drawImage(q.tex, q.c&&i[0]==i[1]*2?0:128*(2-i[0]%2),0,128,128, p[0]-ah*c*s,p[1]-ah*s,a*c*s,a*s);
 					}
 					return x;
 				});
-				if(q.gflag.some(x=>x))requestAnimationFrame(()=>draw());
+				if(q.gflag.some(x=>x)){t=Date.now();requestAnimationFrame(()=>draw(false,t));}
 			},
 			trigger=(n=69,abi=0,t)=>{
 				const abs=actx.createBufferSource(),
@@ -258,6 +259,7 @@ const rng=albox.querySelectorAll('input[type=range]'),sel=albox.querySelector('s
 		infobtn.onclick=()=>alert(texts.info);
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 		onresize=cset;
+		document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='visible'&&actx.state=='suspended')actx.resume();});
 
 		alcb.checked=false;
 		menu.insertAdjacentHTML('beforeend',d.instr.map((_,i)=>`<label><input type="radio" name="instr" value="${i}" ${[7,18].includes(i)?'disabled':''} ${i==0?'checked':''}><p class="grid tex" style="--bp:${bp(i)};"></p></label>`).join(''));
