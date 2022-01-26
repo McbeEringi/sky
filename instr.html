@@ -85,13 +85,13 @@
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…',note:'note',cin:'instr name',fsel:'choose file',
-				cimsg:'Custom instruments are temporarily unavailable.\nPlease <a href="test/instr3.html">go to the old page to use them</a>.\nThank you for your time.'
+				cimsg:`Custom instruments are temporarily unavailable.\nPlease <a href="test/instr3.html${location.search}">go to the old page to use them</a>.\nThank you for your time.`
 			},{
 				ja:{
 					rev:'リバーブ',delay:'遅延',kbs:'キーのサイズ',
 					amb:'環境音',ambl:['なし','温泉','ホーム','雨林','書庫'],
 					ci:'楽器のカスタム',loading:'読み込み中…',default:'デフォルト',cnew:'新規作成…',note:'音名',cin:'楽器名',fsel:'ファイルを選択',
-					cimsg:'カスタム楽器は一時的に利用できません。\n利用するには<a href="test/instr3.html">旧ページに移動</a>してください。\nお手数おかけします。'
+					cimsg:`カスタム楽器は一時的に利用できません。\n利用するには<a href="test/instr3.html${location.search}">旧ページに移動</a>してください。\nお手数おかけします。`
 				}
 			}[navigator.language.slice(0,2)]),
 			n2nn=x=>({c:12,d:14,e:16,f:17,g:19,a:21,b:23})[x[0].toLowerCase()]+(({'#':1,s:1})[x[1]]?x.slice(2)*12+1:x.slice(1)*12),
@@ -319,8 +319,7 @@ const rng=albox.querySelectorAll('input[type=range]'),sel=albox.querySelector('s
 			document.body.insertAdjacentHTML('beforeend',`<style>.grid::before{background-image:url(${c.toDataURL()});}</style>`);
 		};
 		q.tex.src='img/instr.svg';
-
-		//alert('<h1>今日も紅茶さんが可愛いね</h1>');
+		if(urlq.pwa=='1')drawer.querySelector('a').href+='&pwa=1';
 	</script>
 </body>
 </html>
