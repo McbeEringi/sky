@@ -58,7 +58,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><h3>Piano</h3>Tone.js Salamander\n<small>cc-by Alexander Holm</small><h3>Others</h3>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201260\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><h3>Piano</h3>Tone.js Salamander\n<small>cc-by Alexander Holm</small><h3>Others</h3>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201261\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…',note:'note',cin:'instr name',fsel:'choose file',
@@ -206,6 +206,16 @@
 				bs.buffer=ab;[bs,lpf,g0,g1,oac.destination].reduce((a,x)=>a.connect(x));bs.start();
 				oac.startRendering();oac.oncomplete=e=>f(e.renderedBuffer);
 			}),
+			amb=async()=>{
+				if(q.ambn){q.ambn[1].gain.linearRampToValueAtTime(0,actx.currentTime+3);q.ambn[0].stop(actx.currentTime+3);}
+				if(~q.amb){
+					const x=await(await fetch(`audio/env${q.amb}.mp3`)).arrayBuffer();
+					q.ambn=[actx.createBufferSource(),actx.createGain()];
+					q.ambn[0].buffer=await new Promise((f,r)=>actx.decodeAudioData(x,f,r));q.ambn[0].loop=true;
+					q.ambn[1].gain.value=0;q.ambn[1].gain.linearRampToValueAtTime(1,actx.currentTime+3);
+					q.ambn[0].connect(q.ambn[1]).connect(deln);q.ambn[0].start();
+				}else q.ambn=null;
+			},
 			scale=s=>{
 				scd.children[1].setAttribute('style',`--rot:${q.sc*30+45}deg;`);
 				if(s){const t=actx.currentTime+.05;[72,76,79].forEach((y,i)=>trigger(y+q.octave+q.sc,0,t+i*.05));}
@@ -219,19 +229,20 @@
 				if(s){const t=actx.currentTime+.05,l=actx.outputLatency||0;(q.scf?[72,79]:[69,81]).forEach((x,i)=>trigger(x+q.octave+q.sc*q.scf,0,t+(q.del+l)*i));}
 			},
 			cfg=()=>{
-				//const opt=(x,i)=>`<option value="${i-1}"${i-1==amb?' selected':''}>${x}</option>`;
+				const opt=(x,i)=>`<option value="${i-1}"${i-1==q.amb?' selected':''}>${x}</option>`;
 				alert(`${texts.kbs}
-<input type="range" class="style" min="64" max="128" step="4" value="${q.kbs}"><hr>${texts.rev}
+<input type="range" class="style" min="64" max="128" step="4" value="${q.kbs}"><hr>${texts.amb}
+<select>${texts.ambl.map(opt).join('')}</select><hr>${texts.rev}
 <input type="range" class="style" min="0" max="1" step="0.0625" value="${q.rev}"><hr>${texts.delay}
 <input type="range" class="style" min="0" max=".2" step="0.0125" value="${q.del}">`);
-const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=range]');
-				//sel.onchange=()=>{amb=+sel.value;ambset();save();};
+const rng=albox.querySelectorAll('input[type=range]'),sel=albox.querySelector('select');
 				rng[0].oninput =()=>{q.kbs=+rng[0].value;cset();save();};
+				sel.onchange=()=>{q.amb=+sel.value;sel.disabled=true;amb().then(()=>sel.disabled=false);save();};
 				rng[1].onchange=()=>{q.rev=+rng[1].value;reverb(true);save();};
 				rng[2].onchange=()=>{q.del=+rng[2].value;delay(true);save();};
 			},
-			load=()=>({instr:menu.instr.value=0,sc:q.sc=0,rev:q.rev=0,del:q.del=.1,kbs:q.kbs=88}=JSON.parse(localStorage.instr_stat||'{}')),
-			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc:q.sc,rev:q.rev,del:q.del,kbs:q.kbs});
+			load=()=>({instr:menu.instr.value=0,sc:q.sc=0,rev:q.rev=0,del:q.del=.1,kbs:q.kbs=88,amb:q.amb=-1}=JSON.parse(localStorage.instr_stat||'{}')),
+			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc:q.sc,rev:q.rev,del:q.del,kbs:q.kbs,amb:q.amb});
 			//const fullscr=(x=document.body)=>{x.requestFullscreen=x.requestFullscreen||x.webkitRequestFullscreen;x.requestFullscreen();};
 			
 		['touchstart','mousedown'].forEach(x=>c.addEventListener(x,fire));
@@ -246,9 +257,9 @@ const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=r
 		cfgbtn.onclick=cfg;
 		infobtn.onclick=()=>alert(texts.info);
 		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
-		alcb.checked=false;
 		onresize=cset;
 
+		alcb.checked=false;
 		menu.insertAdjacentHTML('beforeend',d.instr.map((_,i)=>`<label><input type="radio" name="instr" value="${i}" ${[7,18].includes(i)?'disabled':''} ${i==0?'checked':''}><p class="grid tex" style="--bp:${bp(i)};"></p></label>`).join(''));
 		deln.connect(revn).connect(gn0).connect(actx.destination);
 		deln.connect(gn1).connect(actx.destination);
@@ -273,7 +284,7 @@ const sel=albox.querySelector('select'),rng=albox.querySelectorAll('input[type=r
 			recbtn.classList.remove('d');
 		}
 
-		load();set();scale();reverb();delay();
+		load();set();scale();reverb();delay();amb();
 		q.tex.onload=()=>{
 			const c=document.createElement('canvas');c.width=q.tex.naturalWidth;c.height=q.tex.naturalHeight;
 			c.getContext('2d').drawImage(q.tex,0,0);q.tex=c;draw(true);
