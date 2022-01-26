@@ -235,7 +235,7 @@ browse=()=>{
 	tpause();
 	alert(texts.load);
 	let s=`<button onclick="main=null;init();alcb.checked=false;" class="grid bg" style="--bp:-100% -200%;">new</button><button onclick="dbfx.imp();" class="grid bg" style="--bp:-600% -200%;">import</button><hr>`;
-	Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').getAllKeys(),{
+	Object.assign(idb.transaction('seq','readwrite').objectStore('seq').getAllKeys(),{
 		onsuccess:e=>{
 			let tmp=e.target.result;
 			// TODO: sort
@@ -266,9 +266,9 @@ dbfx={
 	},
 	sav_:fx=>{
 		from_url=false;
-		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(main),{
+		Object.assign(idb.transaction('seq','readwrite').objectStore('seq').add(main),{
 			onsuccess:fx||(()=>alert(`✅\n${texts.save}`)),
-			onerror:()=>Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').put(main),{
+			onerror:()=>Object.assign(idb.transaction('seq','readwrite').objectStore('seq').put(main),{
 				onsuccess:fx||(()=>alert(`✅\n${texts.osave}`)),
 				onerror:e=>alert(`${texts.err(1)}${e.target.error}`)
 			})
@@ -276,7 +276,7 @@ dbfx={
 	},
 	get:(i,fx)=>{
 		console.log(dbfx.tmp[i]);
-		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').get(dbfx.tmp[i]),{
+		Object.assign(idb.transaction('seq','readwrite').objectStore('seq').get(dbfx.tmp[i]),{
 			onsuccess:fx,
 			onerror:e=>alert(`${texts.err(0)}${e.target.error}`)
 		});
@@ -291,7 +291,7 @@ dbfx={
 		if(!x||dbfx.tmp[i]==x){browse();return;}
 		dbfx.get(i,e=>{
 			let dat=e.target.result;dat.name=x;
-			Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(dat),{
+			Object.assign(idb.transaction('seq','readwrite').objectStore('seq').add(dat),{
 				onsuccess:()=>dbfx.del_(i),
 				onerror:e=>alert(`${texts.err(1)}${e.target.error}`)
 			});
@@ -299,7 +299,7 @@ dbfx={
 	},
 	dup:i=>dbfx.get(i,e=>{
 		let dat=e.target.result;dat.name+=texts.copy;
-		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(dat),{
+		Object.assign(idb.transaction('seq','readwrite').objectStore('seq').add(dat),{
 			onsuccess:browse,
 			onerror:e=>alert(`${texts.err(1)}${e.target.error}`)
 		});
@@ -308,7 +308,7 @@ dbfx={
 		alert(`${texts.delq(dbfx.tmp[i])}\n<button onclick="dbfx.del_(${i});" class="grid bg" style="--bp:-400% -100%;background-color:#f448;">delete</button>	<button onclick="browse();" class="grid bg" style="--bp:-500% -100%;">cancel</button>`);
 		albox.lastElementChild.focus();
 	},
-	del_:i=>{Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').delete(dbfx.tmp[i]),{onsuccess:browse,onerror:e=>alert(`${texts.err(1)}${e.target.error}`)});},
+	del_:i=>{Object.assign(idb.transaction('seq','readwrite').objectStore('seq').delete(dbfx.tmp[i]),{onsuccess:browse,onerror:e=>alert(`${texts.err(1)}${e.target.error}`)});},
 	imp:()=>{
 		alert(`${texts.imp}\n<input class="style input" placeholder="...sky/seq.html#...">\n<button class="grid bg" style="--bp:-600% -200%;">import</button>`);
 		albox.querySelector('input').focus();
@@ -316,7 +316,7 @@ dbfx={
 			let tmp=urlfx.i(albox.querySelector('input').value.split('#',2)[1]);
 			if(tmp){
 				main=tmp;alcb.checked=false;from_url=true;init();
-				//idb.result.transaction('seq','readwrite').objectStore('seq').add(tmp);
+				//idb.transaction('seq','readwrite').objectStore('seq').add(tmp);
 			}else albox.querySelector('input').focus();
 		};
 		//requestIdleCallback(()=>navigator.clipboard.readText().then(x=>albox.querySelector('input').value=x).catch(console.log));
@@ -333,15 +333,15 @@ dbfx={
 	},
 	sam:fx=>fetch('sample.json').then(x=>x.json()).then(x=>
 		Promise.allSettled(x.map(y=>new Promise((t,c)=>
-			Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').add(y),{
+			Object.assign(idb.transaction('seq','readwrite').objectStore('seq').add(y),{
 				onsuccess:()=>{console.log(y.name);t(y.name);},
 				onerror:c
 			})
 		))).then(fx||(()=>{}))
 	),
-	delAll:fx=>idb.result.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>{console.log('delall done');if(fx)fx();},
+	delAll:fx=>idb.transaction('seq','readwrite').objectStore('seq').clear().onsuccess=()=>{console.log('delall done');if(fx)fx();},
 	buo:()=>{
-		Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').getAll(),{
+		Object.assign(idb.transaction('seq','readwrite').objectStore('seq').getAll(),{
 			onsuccess:e=>{
 				let a=document.createElement('a'),
 					x={
@@ -366,7 +366,7 @@ dbfx={
 		e[0].onclick=()=>
 			Promise.allSettled(x.data.map(y=>new Promise((t,c)=>{
 				y.scores=urlfx.unzip(y.scores);
-				Object.assign(idb.result.transaction('seq','readwrite').objectStore('seq').put(y),{
+				Object.assign(idb.transaction('seq','readwrite').objectStore('seq').put(y),{
 					onsuccess:()=>{console.log('recovered',y.name);t(y.name);},
 					onerror:c
 				});

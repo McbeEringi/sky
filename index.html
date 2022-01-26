@@ -27,7 +27,7 @@
 	</script>
 </head>
 <body>
-	<script src="style.js" async></script>
+	<script src="style.js"></script>
 	<style>
 		details,summary{display:inline-block;vertical-align:top;}details *{max-width:100%;}
 		details{background-color:#0004;padding:8px;border-radius:8px;box-sizing:border-box;max-width:100%;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
@@ -76,8 +76,8 @@
 					</select>
 				</label>
 				<div id="cfg1">
-					<span style="position:relative;"><button>${texts.imgsl}</button><input type="file" accept="image/*" onchange="idb.result.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg').onsuccess=()=>bgset();" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;mergin:0;box-sizing:border-box;"></span><br>
-					<button onclick="idb.result.transaction('stuff','readwrite').objectStore('stuff').delete('bgimg').onsuccess=()=>bgset();">${texts.ac}</button>
+					<span style="position:relative;"><button>${texts.imgsl}</button><input type="file" accept="image/*" onchange="idb.transaction('stuff','readwrite').objectStore('stuff').put(this.files[0],'bgimg').onsuccess=()=>bgset();" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;mergin:0;box-sizing:border-box;"></span><br>
+					<button onclick="idb.transaction('stuff','readwrite').objectStore('stuff').delete('bgimg').onsuccess=()=>bgset();">${texts.ac}</button>
 				</div>
 				<div id="cfg2">
 					<a href="https://developer.mozilla.org/docs/Web/CSS/gradient">background-image</a><br>
@@ -102,19 +102,16 @@
 			bgset();
 		};
 		caches.keys().then(x=>cachedisp.textContent=x[0]||texts.cemp);
-		let fx=()=>{
-			document.querySelector(`select>option[value="${localStorage.sky_bgmode}"]`).selected=true;
-			document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
-			bgcode.value=localStorage.sky_bgcode;disp();
-			if(urlq.pwa){
-				document.querySelectorAll('a[href]').forEach(e=>e.href+='?pwa=1');
-				document.querySelectorAll('.nopwa').forEach(e=>e.style.display='none');
-			}else{
-				pwab.style.display='inline';
-				pwab.src='img/pwab.png';
-			}
-		};
-		if(typeof urlq=='undefined')document.addEventListener('styexe',fx,{once:true});else fx();
+		document.querySelector(`select>option[value="${localStorage.sky_bgmode}"]`).selected=true;
+		document.querySelectorAll('a').forEach(e=>e.addEventListener('touchstart',()=>{},{passive:true}));
+		bgcode.value=localStorage.sky_bgcode;disp();
+		if(urlq.pwa){
+			document.querySelectorAll('a[href]').forEach(e=>e.href+='?pwa=1');
+			document.querySelectorAll('.nopwa').forEach(e=>e.style.display='none');
+		}else{
+			pwab.style.display='inline';
+			pwab.src='img/pwab.png';
+		}
 	</script>
 </body>
 </html>

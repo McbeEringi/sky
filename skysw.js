@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache211210_0',STATIC_DATA=[
+const cacheName='cache220126_0',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg','img/sky_.svg','img/sky.png','img/sky_192.png',
 	'img/tex.webp',
@@ -18,8 +18,7 @@ const cacheName='cache211210_0',STATIC_DATA=[
 	//wings
 	'wings.html?pwa=0',
 	//instr
-	'instr.html?pwa=1','img/instr.svg',
-	'https://mcbeeringi.github.io/petitaudio/petitaudio.js',
+	'instr.html?pwa=1','img/instr.svg','img/sel.svg',
 	'https://mcbeeringi.github.io/src/toggle.css',
 	//'audio/metronome.mp3',
 	'audio/instr/musicbox/a3.mp3',

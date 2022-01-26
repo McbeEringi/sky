@@ -1,56 +1,23 @@
 'use strict';
-const idbName='sky_idb',idbVer=3,idb=indexedDB.open(idbName,idbVer),urlq={},
-	bgd=document.createElement('div'),bgi=document.createElement('img'),hbb=document.createElement('div'),
-	bgset=(x,b=localStorage.sky_bgmode)=>{
-		const bgcol=[
-				'#fff1cf,#ced980',//morn
-				'#cce5f0,#ced980',//day
-				'#f08300,#f8b862',//dusk
-				'#192f60,#274a78',//night
-				'#fbfaf6,#ced980'//cloud
-			],url='https://mcbeeringi.github.io/sky/img/photo/flight.jpg';
-		switch(b){
-			case'1':
-				bgi.setAttribute('style','display:none;');
-				Object.assign(idb.result.transaction('stuff','readwrite').objectStore('stuff').get('bgimg'),{
-					onsuccess:e=>bg.style.backgroundImage=`url(${e.target.result?URL.createObjectURL(e.target.result):url})`,
-					onerror:e=>bg.style.backgroundImage=`url(${url})`
-				});
-				break;
-			case'2':bgi.setAttribute('style','display:none;');bg.style.backgroundImage=localStorage.sky_bgcode;break;
-			default:bgi.setAttribute('style','');bg.style.backgroundImage=`linear-gradient(${bgcol[x]||bgcol[[3,3,3,3,3,0,0,0,0,4,1,1,1,1,1,1,4,2,2,2,2,3,3,3][new Date().getHours()]]})`;break;
-		}
+let idb=indexedDB.open('sky_idb',3);
+idb.onupgradeneeded=e=>{console.log('IDB UPG',e=idb.result);[['stuff'],['seq',{keyPath:'name'}],['instr',{keyPath:'name'}]].forEach(x=>{if(!e.objectStoreNames.includes(x[0]))e.createObjectStore(...x);});};
+idb.onsuccess=e=>{console.log('IDB OK',idb=idb.result);dispatchEvent(new Event('idbready'));bgset();};
+idb.onerror=e=>{console.log('IDB ERR',e);idb=null;bgset();};
+const urlq=Object.fromEntries(location.search.slice(1).split('&').filter(y=>y).map(x=>x.split('=',2))),
+	bgset=x=>{
+		const bgcol=['#fff1cf,#ced980','#cce5f0,#ced980','#f08300,#f8b862','#192f60,#274a78','#fbfaf6,#ced980'],//morn day dusk night cloud
+			url='https://mcbeeringi.github.io/sky/img/photo/flight.jpg';
+		(({
+			1:()=>{bgi.style.display='';Object.assign(idb.transaction('stuff','readwrite').objectStore('stuff').get('bgimg'),{onsuccess:e=>bg.style.backgroundImage=`url(${e.target.result?URL.createObjectURL(e.target.result):url})`,onerror:e=>bg.style.backgroundImage=`url(${url})`});},
+			2:()=>{bgi.style.display='';bg.style.backgroundImage=localStorage.sky_bgcode;}
+		})[x==undefined?localStorage.sky_bgmode:0]||
+		(()=>{bgi.style.display='unset';bg.style.backgroundImage=`linear-gradient(${bgcol[x]||bgcol[[3,3,3,3,3,0,0,0,0,4,1,1,1,1,1,1,4,2,2,2,2,3,3,3][new Date().getHours()]]})`;}))();
 	},
 	bgset_=()=>{if(localStorage.sky_bgmode=='0'){console.log('_');bgset();}};
-idb.onupgradeneeded=e=>{
-	console.log('idb upgrade');
-	try{idb.result.createObjectStore('stuff');}catch(e){}
-	try{idb.result.createObjectStore('seq',{keyPath:'name'});}catch(e){}
-	try{idb.result.createObjectStore('instr',{keyPath:'name'});}catch(e){}
-}
-idb.onsuccess=e=>{console.log('idb open success');window.dispatchEvent(new Event('idbready'));bgset();};
-idb.onerror=e=>{console.log('idb open error',e);bgset();};
-
-document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c&display=swap" media="print" onload="this.media='all'">
-<style>
-:root,.style{background:#222;font-family:"M PLUS Rounded 1c",sans-serif;color:#fff;text-shadow:0 0 4px #222;word-wrap:break-word;}
-*{-webkit-tap-highlight-color:#0000;}hr{border:1px solid #fff6;border-radius:1px;}
-a:link,a:visited{color:#aef;}a:hover{color:#8af;}a:active{color:#48f;}
-#bg{position:fixed;top:0;left:0;z-index:-16;width:100vw;height:100vh;transition:background 1s;pointer-events:none;background:center/cover;user-select:none;-webkit-user-select:none;}
-#bg>img{opacity:.2;width:100vmin;height:auto;float:right;transform:translateX(25%);background:none;}
-#hisbackb{display:none;position:fixed;left:2px;bottom:2px;width:48px;height:48px;border-radius:12px;background:#2228 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='filter:drop-shadow(0 0 4px %23f00);'%3E%3Cpath d='M32,8L16,24L32,40' stroke='%23fea' stroke-width='2px' fill='%230000'/%3E%3C/svg%3E");}
-</style>`);
-if(!localStorage.sky_bgcode)localStorage.sky_bgcode='linear-gradient(60deg,#214,#415)';
-if(!localStorage.sky_bgmode)localStorage.sky_bgmode='0';
-
-bgd.setAttribute('id','bg');document.body.appendChild(bgd);
-bgi.setAttribute('src','https://mcbeeringi.github.io/sky/img/sky_.svg');bgi.setAttribute('style','display:none;');
-bgi.setAttribute('alt','background');bgi.setAttribute('width','1');bgi.setAttribute('height','1');bgd.appendChild(bgi);
-hbb.setAttribute('id','hisbackb');hbb.onclick=()=>history.back();document.body.appendChild(hbb);
-
-location.search.substr(1).split('&').map(x=>x.split('=')).forEach(x=>urlq[x[0]]=x[1]||'');console.log(urlq);
-if(urlq.pwa=='1')hbb.setAttribute('style','display:block;');
-
-setTimeout(()=>{bgset_();setInterval(bgset_,3600000);},3600000-(new Date().getTime()%3600000));bgset_();
-document.addEventListener('visiblitychange',bgset_);
-document.dispatchEvent(new Event('styexe'));
+if(!localStorage.sky_bgcode)localStorage.sky_bgcode='linear-gradient(60deg,#214,#415)';if(!localStorage.sky_bgmode)localStorage.sky_bgmode='0';
+document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=M+PLUS+Rounded+1c&display=swap" media="print" onload="this.media='all'"><style>
+:root,.style{background-color:#222;font-family:"M PLUS Rounded 1c",sans-serif;color:#fff;text-shadow:0 0 4px #222;}*{-webkit-tap-highlight-color:#0000;}hr{border:1px solid #fff6;border-radius:1px;}a:link,a:visited{color:#aef;}a:hover{color:#8af;}a:active{color:#48f;}
+#bg{position:fixed;top:0;left:0;z-index:-16;width:100vw;height:100vh;transition:background 1s;pointer-events:none;background:center/cover;user-select:none;-webkit-user-select:none;}#bgi{display:none;opacity:.2;width:100vmin;height:auto;float:right;transform:translateX(25%);}
+</style><div id="bg"><img id="bgi" src="https://mcbeeringi.github.io/sky/img/sky_.svg"></div>`);
+setTimeout(()=>{bgset_();setInterval(bgset_,36e5);},36e5-(Date.now()%36e5));bgset_();document.addEventListener('visiblitychange',bgset_);
+if(urlq.pwa=='1')addEventListener('DOMContentLoaded',()=>document.body.insertAdjacentHTML('beforeend','<div onclick="history.back();" style="position:fixed;left:4px;bottom:4px;width:40px;height:40px;border-radius:50%;font-size:30px;line-height:29px;transform:rotateZ(-45deg);user-select:none;-webkit-user-select:none;background-color:#3338;color:#fea;text-shadow:0 0 1px #f00;">┌</div>'));
