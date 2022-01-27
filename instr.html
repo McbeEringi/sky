@@ -80,7 +80,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr><h2>Audio</h2><h3>Piano</h3>Tone.js Salamander\n<small>cc-by Alexander Holm</small><h3>Others</h3>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201263\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201270\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…',note:'note',cin:'instr name',fsel:'choose file',
@@ -103,14 +103,14 @@
 					['audio/instr/percussion/',0,[{a4:'0.mp3',as4:'1.mp3',b4:'2.mp3',c5:'3.mp3',a5:'4.mp3',as5:'5.mp3',b5:'6.mp3',c6:'7.mp3'}],1],
 					['audio/instr/contrabass/',-2,[stdli(2,4)],0],//211009
 					['audio/instr/horn/',-1,[stdli(3,5)],0],//211009
-						['audio/instr/piano/',0,[stdli(4)],0],
+					['audio/instr/piano/',0,[stdli(4,6)],0],//220127 +10db
 						['',0,[{ds5:'audio/instr/musicbox/ds6.mp3',a5:'audio/instr/musicbox/a6.mp3'},{ds5:'audio/instr/glock/ds5.mp3',a5:'audio/instr/glock/a5.mp3'}],2],
 						['audio/instr/bell2/',1,[{c4:'c4.mp3',d4:'d4.mp3',g4:'g4.mp3',a4:'a4.mp3'},{c4:'c4_.mp3',d4:'d4_.mp3',g4:'g4_.mp3',a4:'a4_.mp3'}],2],
 					['audio/instr/flute/',0,[stdli(4,6)],0],//211009
 					['audio/instr/quena/',0,[stdli(4,6)],0],//211009
 					['audio/instr/guitar/',-1,[stdli(3,5)],0,4],//main:210503 fret:211009
 					['audio/instr/ukulele/',-1,[stdli(3,5)],0],//211009
-						['audio/instr/piano/',1,[stdli(5)],0],
+					['audio/instr/piano/',1,[stdli(5,7)],0],//220127 +10db
 					['audio/instr/glock/',0,[stdli(4,6)],0],//210529
 					['audio/instr/handpan/',-1,[stdli(3)],3],
 					['audio/instr/dundun/',0,[{a4:'0.mp3',as4:'1.mp3',b4:'2.mp3',c5:'3.mp3',a5:'4.mp3',as5:'5.mp3',b5:'6.mp3',c6:'7.mp3'}],1],

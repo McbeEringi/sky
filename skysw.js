@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache220127_0',STATIC_DATA=[
+const cacheName='cache220127_1',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg','img/sky_.svg','img/sky.png','img/sky_192.png',
 	'img/tex.webp',
