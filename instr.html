@@ -318,7 +318,7 @@ const rng=albox.querySelectorAll('input[type=range]'),sel=albox.querySelector('s
 			document.body.insertAdjacentHTML('beforeend',`<style>.grid::before{background-image:url(${c.toDataURL()});}</style>`);
 		};
 		q.tex.src='img/instr.svg';
-		if(urlq.pwa=='1')drawer.querySelector('a').href+='&pwa=1';
+		if(urlq.pwa=='1'){const a=drawer.querySelector('a');a.href+='&pwa=1';a.target='';}
 	</script>
 </body>
 </html>

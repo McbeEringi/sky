@@ -365,7 +365,7 @@
 		{
 			load();
 			if(typeof idb=='undefined')window.addEventListener('idbready',init,{once:true});else init();
-			if(urlq.pwa=='1')drawer.querySelector('a').href+='&pwa=1';
+			if(urlq.pwa=='1'){const a=drawer.querySelector('a');a.href+='&pwa=1';a.target='';}
 		}
 		if(['Chrome','Safari'].findIndex(x=>window.navigator.userAgent.includes(x))==1)
 			{
