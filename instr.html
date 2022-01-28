@@ -80,16 +80,18 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201270\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201280\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…',note:'note',cin:'instr name',fsel:'choose file',
+				reci:'Use video recording function(experimental)',
 				cimsg:`Custom instruments are temporarily unavailable.\nPlease <a href="test/instr3.html${location.search}">go to the old page to use them</a>.\nThank you for your time.`
 			},{
 				ja:{
 					rev:'リバーブ',delay:'遅延',kbs:'キーのサイズ',
 					amb:'環境音',ambl:['なし','温泉','ホーム','雨林','書庫'],
 					ci:'楽器のカスタム',loading:'読み込み中…',default:'デフォルト',cnew:'新規作成…',note:'音名',cin:'楽器名',fsel:'ファイルを選択',
+					reci:'録画機能の使用(試験的)',
 					cimsg:`カスタム楽器は一時的に利用できません。\n利用するには<a href="test/instr3.html${location.search}">旧ページに移動</a>してください。\nお手数おかけします。`
 				}
 			}[navigator.language.slice(0,2)]),
@@ -259,15 +261,17 @@
 <input type="range" class="style" min="64" max="128" step="4" value="${q.kbs}"><hr>${texts.amb}
 <select>${texts.ambl.map(opt).join('')}</select><hr>${texts.rev}
 <input type="range" class="style" min="0" max="1" step="0.0625" value="${q.rev}"><hr>${texts.delay}
-<input type="range" class="style" min="0" max=".2" step="0.0125" value="${q.del}">`);
-const rng=albox.querySelectorAll('input[type=range]'),sel=albox.querySelector('select');
-				rng[0].oninput =()=>{q.kbs=+rng[0].value;cset();save();};
+<input type="range" class="style" min="0" max=".2" step="0.0125" value="${q.del}"><hr><label>${texts.reci}
+<input type="checkbox"${q.reci?' checked':''}></label>`);
+const inp=albox.querySelectorAll('input'),sel=albox.querySelector('select');
+				inp[0].oninput =()=>{q.kbs=+inp[0].value;cset();save();};
 				sel.onchange=()=>{q.amb=+sel.value;sel.disabled=true;amb().then(()=>sel.disabled=false);save();};
-				rng[1].onchange=()=>{q.rev=+rng[1].value;reverb(true);save();};
-				rng[2].onchange=()=>{q.del=+rng[2].value;delay(true);save();};
+				inp[1].onchange=()=>{q.rev=+inp[1].value;reverb(true);save();};
+				inp[2].onchange=()=>{q.del=+inp[2].value;delay(true);save();};
+				inp[3].onchange=()=>{q.reci=+inp[3].checked;save();};
 			},
-			load=()=>({instr:menu.instr.value=0,sc:q.sc=0,rev:q.rev=0,del:q.del=.1,kbs:q.kbs=88,amb:q.amb=-1}=JSON.parse(localStorage.instr_stat||'{}')),
-			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc:q.sc,rev:q.rev,del:q.del,kbs:q.kbs,amb:q.amb});
+			load=()=>({instr:menu.instr.value=0,sc:q.sc=0,rev:q.rev=0,del:q.del=.1,kbs:q.kbs=88,amb:q.amb=-1,reci:q.reci=0}=JSON.parse(localStorage.instr_stat||'{}')),
+			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc:q.sc,rev:q.rev,del:q.del,kbs:q.kbs,amb:q.amb,reci:q.reci});
 			//const fullscr=(x=document.body)=>{x.requestFullscreen=x.requestFullscreen||x.webkitRequestFullscreen;x.requestFullscreen();};
 			
 		['touchstart','mousedown'].forEach(x=>c.addEventListener(x,fire));
@@ -292,7 +296,8 @@ const rng=albox.querySelectorAll('input[type=range]'),sel=albox.querySelector('s
 		deln.connect(gn1).connect(actx.destination);
 		irgen().then(x=>revn.buffer=x);
 		if(window.MediaRecorder){
-			const recn=actx.createMediaStreamDestination(),rec=new MediaRecorder(recn.stream),
+			const recn=actx.createMediaStreamDestination(),mime=MediaRecorder.isTypeSupported('video/mp4')?'mp4':'webm',
+				rec=[new MediaRecorder(recn.stream),new MediaRecorder(new MediaStream([...c.captureStream().getTracks(),...recn.stream.getTracks()]),{mimeType:`video/${mime}`})],
 				toWav=x=>{//https://github.com/Jam3/audiobuffer-to-wav
 					let ch=x.numberOfChannels,rate=x.sampleRate;
 					if(ch==1)x=x.getChannelData(0);else{const l=x.getChannelData(0),r=x.getChannelData(1);x=new Float32Array(l.length+r.length);for(let i=0;i<x.length;i++){x[i*2]=l[i];x[i*2+1]=r[i];}};
@@ -301,13 +306,12 @@ const rng=albox.querySelectorAll('input[type=range]'),sel=albox.querySelector('s
 					str(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,ch,true);v.setUint32(24,rate,true);ch*=2;v.setUint32(28,rate*ch,true);v.setUint16(32,ch,true);v.setUint16(34,16,true);
 					str(36,'data');v.setUint32(40,x.length*2,true);for(let i=0;i<x.length;i++){const s=Math.max(-1,Math.min(1,x[i]));v.setInt16(44+i*2,s<0?s*0x8000:s*0x7FFF,true);}
 					return new Blob([b]);
-				};
-			rec.ondataavailable=e=>new Response(e.data).arrayBuffer().then(x=>new Promise((f,r)=>actx.decodeAudioData(x,f,r))).then(x=>{
-				const a=document.createElement('a');a.download=`sky_instr ${new Date().toLocaleString().replace(/[^\w\d\s]/g,'_')}.wav`;
-				a.href=URL.createObjectURL(toWav(x));a.click();setTimeout(URL.revokeObjectURL,0,a.href);
-			}).catch(console.warn);
+				},
+				dl=(x,n)=>{const a=document.createElement('a');a.download=`sky_instr ${new Date().toLocaleString().replace(/[^\w\d\s]/g,'_')}.${n}`;a.href=URL.createObjectURL(x);a.click();setTimeout(URL.revokeObjectURL,0,a.href);};
 			gn0.connect(recn);gn1.connect(recn);
-			recbtn.onclick=()=>rec[recbtn.classList.toggle('a')?'start':'stop']();
+			rec[0].ondataavailable=e=>new Response(e.data).arrayBuffer().then(x=>new Promise((f,r)=>actx.decodeAudioData(x,f,r))).then(x=>dl(toWav(x),'wav')).catch(console.warn);
+			rec[1].ondataavailable=e=>dl(e.data,mime);
+			recbtn.onclick=()=>rec[q.reci][recbtn.classList.toggle('a')?'start':'stop']();
 			recbtn.classList.remove('d');
 		}
 
