@@ -80,7 +80,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201280\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201281\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',loading:'loading…',default:'default',cnew:'create new…',note:'note',cin:'instr name',fsel:'choose file',
@@ -262,7 +262,7 @@
 <select>${texts.ambl.map(opt).join('')}</select><hr>${texts.rev}
 <input type="range" class="style" min="0" max="1" step="0.0625" value="${q.rev}"><hr>${texts.delay}
 <input type="range" class="style" min="0" max=".2" step="0.0125" value="${q.del}"><hr><label>${texts.reci}
-<input type="checkbox"${q.reci?' checked':''}></label>`);
+<input type="checkbox"${q.reci?' checked':''}${recbtn.classList.contains('a')?' disabled':''}></label>`);
 const inp=albox.querySelectorAll('input'),sel=albox.querySelector('select');
 				inp[0].oninput =()=>{q.kbs=+inp[0].value;cset();save();};
 				sel.onchange=()=>{q.amb=+sel.value;sel.disabled=true;amb().then(()=>sel.disabled=false);save();};
@@ -297,7 +297,7 @@ const inp=albox.querySelectorAll('input'),sel=albox.querySelector('select');
 		irgen().then(x=>revn.buffer=x);
 		if(window.MediaRecorder){
 			const recn=actx.createMediaStreamDestination(),mime=MediaRecorder.isTypeSupported('video/mp4')?'mp4':'webm',
-				rec=[new MediaRecorder(recn.stream),new MediaRecorder(new MediaStream([...c.captureStream(30).getTracks(),...recn.stream.getTracks()]),{mimeType:`video/${mime}`})],
+				rec=[new MediaRecorder(recn.stream),new MediaRecorder(new MediaStream([...c.captureStream(60).getTracks(),...recn.stream.getTracks()]),{mimeType:`video/${mime}`})],
 				toWav=x=>{//https://github.com/Jam3/audiobuffer-to-wav
 					let ch=x.numberOfChannels,rate=x.sampleRate;
 					if(ch==1)x=x.getChannelData(0);else{const l=x.getChannelData(0),r=x.getChannelData(1);x=new Float32Array(l.length+r.length);for(let i=0;i<x.length;i++){x[i*2]=l[i];x[i*2+1]=r[i];}};
