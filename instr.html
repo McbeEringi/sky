@@ -297,7 +297,7 @@ const inp=albox.querySelectorAll('input'),sel=albox.querySelector('select');
 		irgen().then(x=>revn.buffer=x);
 		if(window.MediaRecorder){
 			const recn=actx.createMediaStreamDestination(),mime=MediaRecorder.isTypeSupported('video/mp4')?'mp4':'webm',
-				rec=[new MediaRecorder(recn.stream),new MediaRecorder(new MediaStream([...c.captureStream().getTracks(),...recn.stream.getTracks()]),{mimeType:`video/${mime}`})],
+				rec=[new MediaRecorder(recn.stream),new MediaRecorder(new MediaStream([...c.captureStream(30).getTracks(),...recn.stream.getTracks()]),{mimeType:`video/${mime}`})],
 				toWav=x=>{//https://github.com/Jam3/audiobuffer-to-wav
 					let ch=x.numberOfChannels,rate=x.sampleRate;
 					if(ch==1)x=x.getChannelData(0);else{const l=x.getChannelData(0),r=x.getChannelData(1);x=new Float32Array(l.length+r.length);for(let i=0;i<x.length;i++){x[i*2]=l[i];x[i*2+1]=r[i];}};
