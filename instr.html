@@ -60,7 +60,7 @@
 
 		label[for=alcb],#albox{position:fixed;pointer-events:none;visibility:hidden;opacity:0;background-color:#0008;transition:.2s;}
 		label[for=alcb]{top:0;left:0;width:100%;height:100%;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
-		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);white-space:pre-wrap;overflow:auto;overflow-x:hidden;}
+		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);white-space:pre-wrap;overflow:auto;overflow-x:hidden;overflow-wrap:break-word;}
 		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;visibility:visible;opacity:1;}
 	</style>
 	<input type="checkbox" id="drwcb">
@@ -300,7 +300,7 @@
 				alert('<progress></progress>');
 				e2p(osi().getAllKeys()).then(e=>{
 					const fx=(x,y=[3,false,true])=>`<div class="ss"><p class="grid ${x==q.ci||(y[1]&&!q.ci)?'a d':'btn'}" style="--bp:-${y[0]}00% 0;--size:48px;"></p>${x}${y[2]?'\n\t<p class="grid tex btn" style="--bp:-100% 0;"></p><p class="grid btn" style="--bp:-400% 0;"></p>':''}</div>`
-					alert(e.target.result.map(x=>fx(x)).join('')+fx(texts.default,[3,true])+fx(texts.cnew,[5]));
+					alert(`${texts.ci}<hr>`+e.target.result.map(x=>fx(x)).join('')+fx(texts.default,[3,true])+fx(texts.cnew,[5]));
 					albox.querySelectorAll('.ss').forEach((x,i)=>{
 						const j=i-e.target.result.length;
 						if(j<0){
@@ -313,7 +313,7 @@
 			},
 			ciedt=x=>{
 				const selfx=(y,z='')=>`<option value="${y}"${z}>${y}</option>`,
-					row=(y=['C5',{name:texts.fsel}],i='')=>`<div class="ss"><p class="grid btn" style="--bp:-400% 0;" onclick="this.parentNode.remove();"></p><select>${new Array(61).fill().map((_,i)=>{i+=36;return selfx(nn2n(i),i==n2nn(y[0])?'selected':'');})}</select><div class="file btn" data-name="${y[1].name}"><input type="file" data-i="${i}" onchange="this.parentNode.dataset.name=this.files[0].name;"></div></div>`,
+					row=(y=['C5',{name:texts.fsel}],i='')=>`<div class="ss"><p class="grid btn" style="--bp:-400% 0;" onclick="this.parentNode.remove();"></p><select>${new Array(61).fill().map((_,i)=>{i+=36;return selfx(nn2n(i),i==n2nn(y[0])?'selected':'');})}</select><div class="file btn" data-name="${y[1].name}"><input type="file" data-i="${i}" accept=".mp3,.ogg,.m4a,.wav,.flac" onchange="this.parentNode.dataset.name=this.files[0].name;"></div></div>`,
 					main=(y={name:'',dat:[]})=>{
 						const p=yn(`<input class="style input" value="${y.name}" placeholder="${texts.cin}"><hr>${y.dat.map(row).join('')}<p class="grid btn ss" style="--bp:-500% 0;"></p><hr>`,i=>i?{
 								name:albox.firstChild.value||y.name||new Date().toLocaleString(),

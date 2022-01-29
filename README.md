@@ -9,6 +9,7 @@ PWA, Offline support
 	- custom
 		- key
 		- reverb effect
+		- delay
 		- instruments
 	- ambient sounds
 	- inpage recording
