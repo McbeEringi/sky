@@ -88,7 +88,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201300\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201301\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',default:'default',cnew:'create new…',cin:'instr name',fsel:'choose file',
@@ -104,7 +104,7 @@
 				}
 			}[navigator.language.slice(0,2)]),
 			errfx=(e={})=>{alert(`⚠️${e.name||'Error'}\n<small>${e.message||'Something went wrong :('}</small>`);console.error(e);},
-			yn=(x,fx=y=>y)=>new Promise(f=>{alert(`${x}<div class="yn"><p class="grid btn" style="--bp:-400% 0;"></p><p class="grid btn" style="--bp:-300% 0;"></p></div>`);[...albox.lastChild.children].forEach((e,i)=>e.onclick=()=>f(fx(i)));}),
+			yn=x=>new Promise(f=>{alert(`${x}<div class="yn"><p class="grid btn" style="--bp:-400% 0;"></p><p class="grid btn" style="--bp:-300% 0;"></p></div>`);[...albox.lastChild.children].forEach((e,i)=>e.onclick=()=>f(i));}),
 			n2nn=x=>({c:12,d:14,e:16,f:17,g:19,a:21,b:23})[x[0].toLowerCase()]+(({'#':1,s:1})[x[1]]?x.slice(2)*12+1:x.slice(1)*12),
 			nn2n=x=>['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'][x%12]+Math.floor(x/12-1),
 			bp=i=>`${i%8*-100}% ${Math.floor(i*.125+1)*-100}%`,
@@ -315,7 +315,7 @@
 				const selfx=(y,z='')=>`<option value="${y}"${z}>${y}</option>`,
 					row=(y=['C5',{name:texts.fsel}],i='')=>`<div class="ss"><p class="grid btn" style="--bp:-400% 0;" onclick="this.parentNode.remove();"></p><select>${new Array(61).fill().map((_,i)=>{i+=36;return selfx(nn2n(i),i==n2nn(y[0])?'selected':'');})}</select><div class="file btn" data-name="${y[1].name}"><input type="file" data-i="${i}" accept=".mp3,.ogg,.m4a,.wav,.flac" onchange="this.parentNode.dataset.name=this.files[0].name;"></div></div>`,
 					main=(y={name:'',dat:[]})=>{
-						const p=yn(`<input class="style input" value="${y.name}" placeholder="${texts.cin}"><hr>${y.dat.map(row).join('')}<p class="grid btn ss" style="--bp:-500% 0;"></p><hr>`,i=>i?{
+						const p=yn(`<input class="style input" value="${y.name}" placeholder="${texts.cin}"><hr>${y.dat.map(row).join('')}<p class="grid btn ss" style="--bp:-500% 0;"></p><hr>`).then(i=>i?{
 								name:albox.firstChild.value||y.name||new Date().toLocaleString(),
 								dat:[...albox.querySelectorAll('div.ss')].reduce((a,z)=>{
 									const f=z.children[2].firstChild.files[0]||(z.children[2].firstChild.dataset.i?y.dat[+z.children[2].firstChild.dataset.i][1]:null);
