@@ -88,7 +88,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201291\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2201300\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',default:'default',cnew:'create new…',cin:'instr name',fsel:'choose file',
@@ -103,7 +103,7 @@
 					reci:'録画機能の使用(試験的)'
 				}
 			}[navigator.language.slice(0,2)]),
-			errfx=(e=new Error())=>alert(`⚠️${e.name}\n<small>${e.message}</small>`),
+			errfx=(e={})=>{alert(`⚠️${e.name||'Error'}\n<small>${e.message||'Something went wrong :('}</small>`);console.error(e);},
 			yn=(x,fx=y=>y)=>new Promise(f=>{alert(`${x}<div class="yn"><p class="grid btn" style="--bp:-400% 0;"></p><p class="grid btn" style="--bp:-300% 0;"></p></div>`);[...albox.lastChild.children].forEach((e,i)=>e.onclick=()=>f(fx(i)));}),
 			n2nn=x=>({c:12,d:14,e:16,f:17,g:19,a:21,b:23})[x[0].toLowerCase()]+(({'#':1,s:1})[x[1]]?x.slice(2)*12+1:x.slice(1)*12),
 			nn2n=x=>['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'][x%12]+Math.floor(x/12-1),
@@ -299,8 +299,8 @@
 			cicfg=()=>{
 				alert('<progress></progress>');
 				e2p(osi().getAllKeys()).then(e=>{
-					const fx=(x,b)=>`<div class="ss"><p class="grid ${x==q.ci||(!~b&&!q.ci&&x==texts.default)?'a d':'btn'}" style="--bp:-300% 0;--size:48px;"></p>${x}${~b?'\n\t<p class="grid tex btn" style="--bp:-100% 0;"></p><p class="grid btn" style="--bp:-400% 0;"></p>':''}</div>`
-					alert(e.target.result.map(fx).join('')+fx(texts.default,-1)+fx(texts.cnew,-1));
+					const fx=(x,y=[3,false,true])=>`<div class="ss"><p class="grid ${x==q.ci||(y[1]&&!q.ci)?'a d':'btn'}" style="--bp:-${y[0]}00% 0;--size:48px;"></p>${x}${y[2]?'\n\t<p class="grid tex btn" style="--bp:-100% 0;"></p><p class="grid btn" style="--bp:-400% 0;"></p>':''}</div>`
+					alert(e.target.result.map(x=>fx(x)).join('')+fx(texts.default,[3,true])+fx(texts.cnew,[5]));
 					albox.querySelectorAll('.ss').forEach((x,i)=>{
 						const j=i-e.target.result.length;
 						if(j<0){
@@ -314,8 +314,8 @@
 			ciedt=x=>{
 				const selfx=(y,z='')=>`<option value="${y}"${z}>${y}</option>`,
 					row=(y=['C5',{name:texts.fsel}],i='')=>`<div class="ss"><p class="grid btn" style="--bp:-400% 0;" onclick="this.parentNode.remove();"></p><select>${new Array(61).fill().map((_,i)=>{i+=36;return selfx(nn2n(i),i==n2nn(y[0])?'selected':'');})}</select><div class="file btn" data-name="${y[1].name}"><input type="file" data-i="${i}" onchange="this.parentNode.dataset.name=this.files[0].name;"></div></div>`,
-					main=(y={name:'',dat:[]})=>{y.dat.map(console.log);
-						const p=yn(`<input class="style input" value="${y.name}" placeholder="${texts.cin}"><hr>${y.dat.map(row)}<p class="grid btn ss" style="--bp:-500% 0;"></p><hr>`,i=>i?{
+					main=(y={name:'',dat:[]})=>{
+						const p=yn(`<input class="style input" value="${y.name}" placeholder="${texts.cin}"><hr>${y.dat.map(row).join('')}<p class="grid btn ss" style="--bp:-500% 0;"></p><hr>`,i=>i?{
 								name:albox.firstChild.value||y.name||new Date().toLocaleString(),
 								dat:[...albox.querySelectorAll('div.ss')].reduce((a,z)=>{
 									const f=z.children[2].firstChild.files[0]||(z.children[2].firstChild.dataset.i?y.dat[+z.children[2].firstChild.dataset.i][1]:null);
@@ -330,7 +330,7 @@
 				return(
 					x==undefined?
 					main().then(y=>y&&y.dat.length?e2p(osi().add(y)).then(()=>{q.ci=y.name;save();set();}):0):
-					e2p(osi().get(x)).then(y=>main(y.target.result)).then(y=>y&&y.dat.length?e2p(osi().delete(x)).then(()=>e2p(osi().add(y))).then(()=>{if(q.ci==x){q.ci=y.name;save();}set();}):0)
+					e2p(osi().get(x)).then(y=>main(y.target.result)).then(y=>y&&y.dat.length?(x==y.name?e2p(osi().put(y)):e2p(osi().add(y)).then(()=>e2p(osi().delete(x)))).then(()=>{if(q.ci==x){q.ci=y.name;save();}set();}):0)
 				);
 			},
 			load=()=>({instr:menu.instr.value=0,sc:q.sc=0,rev:q.rev=0,del:q.del=.1,kbs:q.kbs=88,amb:q.amb=-1,reci:q.reci=0,ci:q.ci=''}=JSON.parse(localStorage.instr_stat||'{}')),
@@ -380,13 +380,12 @@
 			recbtn.classList.remove('d');
 		}
 
-		load();addEventListener('idbready',()=>{set();scale();reverb();delay();amb();});
 		q.tex.onload=()=>{
 			const c=document.createElement('canvas');c.width=q.tex.naturalWidth;c.height=q.tex.naturalHeight;
 			c.getContext('2d').drawImage(q.tex,0,0);q.tex=c;draw(true);
 			document.body.insertAdjacentHTML('beforeend',`<style>.grid::before{background-image:url(${c.toDataURL()});}</style>`);
 		};
-		q.tex.src='img/instr.svg';
+		load();addEventListener('idbready',()=>{q.tex.src='img/instr.svg';set();scale();reverb();delay();amb();});
 		if(urlq.pwa=='1'){const a=drawer.querySelector('a');a.href+='&pwa=1';a.target='';}
 	</script>
 </body>
