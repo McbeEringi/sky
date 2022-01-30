@@ -1,8 +1,8 @@
 'use strict';
-let idb=indexedDB.open('sky_idb',3);
-idb.onupgradeneeded=e=>{console.log('IDB UPG',e=idb.result);[['stuff'],['seq',{keyPath:'name'}],['instr',{keyPath:'name'}]].forEach(x=>{if(!e.objectStoreNames.includes(x[0]))e.createObjectStore(...x);});};
+let idb=indexedDB.open('sky_idb',4);
+idb.onupgradeneeded=e=>{console.log('IDB UPG',e=idb.result);[['stuff'],['seq',{keyPath:'name'}],['instr',{keyPath:'name'}]].forEach(x=>{if(!e.objectStoreNames.contains(x[0]))e.createObjectStore(...x);});};
 idb.onsuccess=e=>{console.log('IDB OK',idb=idb.result);dispatchEvent(new Event('idbready'));bgset();};
-idb.onerror=e=>{console.log('IDB ERR',e);idb=null;bgset();};
+idb.onerror=e=>{console.log('IDB ERR',idb,e);idb=null;bgset();};
 const urlq=Object.fromEntries(location.search.slice(1).split('&').filter(y=>y).map(x=>x.split('=',2))),
 	bgset=x=>{
 		const bgcol=['#fff1cf,#ced980','#cce5f0,#ced980','#f08300,#f8b862','#192f60,#274a78','#fbfaf6,#ced980'],//morn day dusk night cloud
