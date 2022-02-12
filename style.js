@@ -1,7 +1,7 @@
 'use strict';
 let idb=indexedDB.open('sky_idb',4);
 idb.onupgradeneeded=e=>{console.log('IDB UPG',e=idb.result);[['stuff'],['seq',{keyPath:'name'}],['instr',{keyPath:'name'}]].forEach(x=>{if(!e.objectStoreNames.contains(x[0]))e.createObjectStore(...x);});};
-idb.onsuccess=e=>{console.log('IDB OK',idb=idb.result,document.readyState);if(document.readyState=='loading')document.addEventListener('DOMContentLoaded',()=>dispatchEvent(new Event('idbready')));else dispatchEvent(new Event('idbready'));bgset();};
+idb.onsuccess=e=>{console.log('IDB OK',idb=idb.result);e=()=>dispatchEvent(new Event('idbready'));if(document.readyState=='loading')addEventListener('DOMContentLoaded',e);else e();bgset();};
 idb.onerror=e=>{console.log('IDB ERR',idb,e);idb=null;bgset();};
 const urlq=Object.fromEntries(location.search.slice(1).split('&').filter(y=>y).map(x=>x.split('=',2))),
 	bgset=x=>{
@@ -20,4 +20,4 @@ document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="http
 #bg{position:fixed;top:0;left:0;z-index:-16;width:100vw;height:100vh;transition:background 1s;pointer-events:none;background:center/cover;user-select:none;-webkit-user-select:none;}#bgi{display:none;opacity:.2;width:100vmin;height:auto;float:right;transform:translateX(25%);}
 </style><div id="bg"><img id="bgi" src="https://mcbeeringi.github.io/sky/img/sky_.svg"></div>`);
 setTimeout(()=>{bgset_();setInterval(bgset_,36e5);},36e5-(Date.now()%36e5));bgset_();document.addEventListener('visiblitychange',bgset_);
-if(urlq.pwa=='1')document.addEventListener('DOMContentLoaded',()=>document.body.insertAdjacentHTML('beforeend','<div onclick="history.back();" style="position:fixed;left:4px;bottom:4px;width:40px;height:40px;border-radius:50%;font-size:30px;line-height:29px;transform:rotateZ(-45deg);user-select:none;-webkit-user-select:none;background-color:#3338;color:#fea;text-shadow:0 0 1px #f00;">┌</div>'));
+if(urlq.pwa=='1')addEventListener('DOMContentLoaded',()=>document.body.insertAdjacentHTML('beforeend','<div onclick="history.back();" style="position:fixed;left:4px;bottom:4px;width:40px;height:40px;border-radius:50%;font-size:30px;line-height:29px;transform:rotateZ(-45deg);user-select:none;-webkit-user-select:none;background-color:#3338;color:#fea;text-shadow:0 0 1px #f00;">┌</div>'));
