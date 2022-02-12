@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache220130_2',STATIC_DATA=[
+const cacheName='cache2202120',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg','img/sky_.svg','img/sky.png','img/sky_192.png',
 	'img/tex.webp',
@@ -16,11 +16,11 @@ const cacheName='cache220130_2',STATIC_DATA=[
 	'img/candle/30.webp','img/candle/31.webp','img/candle/32.webp',
 	'img/candle/40.webp','img/candle/41.webp',
 	//wings
-	'wings.html?pwa=0',
+	'wings.html?pwa=1',
 	//instr
-	'instr.html?pwa=1','img/instr.svg','img/sel.svg',
+	'instr.html?pwa=1','com.css','com.js',
+	'img/instr.svg','img/sel.svg',
 	'https://mcbeeringi.github.io/src/toggle.css',
-	//'audio/metronome.mp3',
 	'audio/instr/musicbox/a3.mp3',
 	'audio/instr/musicbox/a4.mp3',
 	'audio/instr/musicbox/a5.mp3',
@@ -41,7 +41,7 @@ noCache=[
 	'stuff'
 ];
 
-self.addEventListener('install',(e)=>{
+self.addEventListener('install',e=>{
 	e.waitUntil(
 		caches.open(cacheName).then((cache)=>{
 			return cache.addAll(STATIC_DATA);
@@ -49,8 +49,8 @@ self.addEventListener('install',(e)=>{
 	);
 	console.log('skysw Install');
 });
-self.addEventListener('activate',(e)=>{
-	console.log('skysw Activate')
+self.addEventListener('activate',e=>{
+	console.log('skysw Activate');
 	e.waitUntil(
 		caches.keys().then((keyList)=>{
 			return Promise.all(keyList.map((key)=>{
@@ -60,7 +60,7 @@ self.addEventListener('activate',(e)=>{
 	);
 });
 
-self.addEventListener('fetch',(e)=>{
+self.addEventListener('fetch',e=>{
 	if(noCache.find(x=>e.request.url.includes(x))){console.log('skysw Cache canceled: '+e.request.url);return;}
 	const cacheNew=()=>fetch(e.request.url).then(r=>caches.open(cacheName).then(cache=>{
 		console.log('skysw Cache: '+e.request.url);
@@ -92,9 +92,9 @@ self.addEventListener('fetch',(e)=>{
 	}
 	else
 	e.respondWith(
-		caches.match(e.request.url).then((r)=>{
+		caches.match(e.request.url).then(r=>{
 			if(r)console.log('skysw Fetch: '+e.request.url);
-			return r || cacheNew();
+			return r||cacheNew();
 		})
 	);
 });

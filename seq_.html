@@ -25,9 +25,40 @@
 	<script>
 		if('serviceWorker'in navigator&&location.protocol.includes('https'))window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});},{once:true});
 	</script>
+	<link rel="preload" href="com.css" as="style">
+	<link rel="preload" href="com.js" as="script">
 </head>
 <body>
 	<script src="style.js"></script>
+	<link rel="stylesheet" href="com.css">
+	<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'img/tex.webp'});</script>
+	<input type="checkbox" id="alcb">
+	<canvas id="dc"></canvas>
+	<canvas id="kc"></canvas>
+	<label for="alcb"></label><pre id="albox" class="style"><p class="grid tex spin"></p></pre>
 
+	<script src="com.js"></script>
+	<script>
+		'use strict';
+		const texts=Object.assign({
+				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2202120\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>'
+			},{
+				ja:{
+				}
+			}[navigator.language.slice(0,2)]),
+			osi=()=>idb.transaction('seq','readwrite').objectStore('instr'),
+			dctx=dc.getContext('2d'),
+			kctx=kc.getContext('2d'),
+			actx=new(window.AudioContext||webkitAudioContext)();
+
+		q.tex.onload=()=>{
+			const c=document.createElement('canvas');c.width=q.tex.naturalWidth;c.height=q.tex.naturalHeight;
+			c.getContext('2d').drawImage(q.tex,0,0);q.tex=c;
+			document.body.insertAdjacentHTML('beforeend',`<style>.grid::before{background-image:url(${c.toDataURL()});}</style>`);
+		};
+		addEventListener('idbready',()=>{q.tex.src='img/seq.svg';});
+
+		onload=alert(texts.info);
+	</script>
 </body>
 </html>
