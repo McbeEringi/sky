@@ -6,7 +6,7 @@ idb.onerror=e=>{console.log('IDB ERR',idb,e);idb=null;bgset();};
 const urlq=Object.fromEntries(location.search.slice(1).split('&').filter(y=>y).map(x=>x.split('=',2))),
 	bgset=x=>{
 		const bgcol=['#fff1cf,#ced980','#cce5f0,#ced980','#f08300,#f8b862','#192f60,#274a78','#fbfaf6,#ced980'],//morn day dusk night cloud
-			url='https://mcbeeringi.github.io/sky/img/photo/flight.jpg';
+			url='https://mcbeeringi.github.io/sky/img/photo/abyss.jpg';
 		(({
 			1:()=>{bgi.style.display='';Object.assign(idb.transaction('stuff','readwrite').objectStore('stuff').get('bgimg'),{onsuccess:e=>bg.style.backgroundImage=`url(${e.target.result?URL.createObjectURL(e.target.result):url})`,onerror:e=>bg.style.backgroundImage=`url(${url})`});},
 			2:()=>{bgi.style.display='';bg.style.backgroundImage=localStorage.sky_bgcode;}
