@@ -206,12 +206,13 @@
 		<script>
 			const e=[...new Array(7).keys()].map(x=>[...document.querySelectorAll(`ul:nth-of-type(${x+1}) input`)]),
 			save=()=>localStorage.sky_wings=e.map(y=>y.map(z=>Number(z.checked)).join('')).join(','),
-			clear=()=>e.flat().forEach(x=>x.checked=false);
+			clear=()=>e.flat().forEach(x=>x.checked=false),
+			log=()=>alert(`${((localStorage.sky_wings||'').match(/[1]/g)||[]).length}/${e.flat().length}`);
 			clear();
 			console.log(
 				(localStorage.sky_wings||'').split(',').map((x,i)=>Array.from(x,(y,j)=>e[i][j].checked=+y))
 			);
-			window.onload=()=>alert(`${((localStorage.sky_wings||'').match(/[1]/g)||[]).length}/${e.flat().length}`);
+			window.onload=log;
 			e.flat().forEach(x=>x.onchange=save);
 			btn.onclick=()=>{clear();save();};
 		</script>
