@@ -152,7 +152,7 @@
 			},
 			draw=(all,t)=>{
 				if(!q.gflag)return;
-				if(t)t=Date.now()-t;
+				if(t)t=performance.now()-t;
 				const mix=(x,y,a)=>x*(1-a)+y*a,
 					r=12*devicePixelRatio,a=q.size*.784,ar=a-r-r,ah=a/2,
 					rs=(x=0,y=0,c=1,s=1)=>{
@@ -174,7 +174,7 @@
 					}
 					return x;
 				});
-				if(q.gflag.some(x=>x)){t=Date.now();requestAnimationFrame(()=>draw(false,t));}
+				if(q.gflag.some(x=>x)){t=performance.now();requestAnimationFrame(()=>draw(false,t));}
 			},
 			trigger=(n=69,abi=0,t)=>{
 				const abs=actx.createBufferSource(),
