@@ -197,9 +197,9 @@
 			<label><li><input type="checkbox">通路 - 9</li></label>
 		</ul>
 
-		<button id="btn">clear</button>
+		<button onclick="clear();save();">clear</button><button onclick="log();">check</button>
 		<p>
-			[sky_wings] build:2102120 <br>
+			[sky_wings] build:2102130 <br>
 			<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
 		</p>
 
@@ -214,7 +214,6 @@
 			);
 			window.onload=log;
 			e.flat().forEach(x=>x.onchange=save);
-			btn.onclick=()=>{clear();save();};
 		</script>
 	</body>
 </html>
