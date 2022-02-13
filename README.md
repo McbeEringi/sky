@@ -28,9 +28,5 @@ PWA, Offline support
 	- treasure candles
 	- office spirits
 
-- some stuffs
-	- musics
-	- chat wrapper
-
 under MIT License  
 [twitter](https://twitter.com/mcbeeringi)  
