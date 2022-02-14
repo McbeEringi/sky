@@ -1,77 +1,75 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-	<head prefix="og: http://ogp.me/ns#">
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145066191-2"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-145066191-2');</script>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<title>sky_manual</title>
-		<meta name="Description" content="Sky Stuffs' manual">
-		<link rel="shortcut icon" type="image/svg+xml" href="../img/ico/manual.svg">
-		<meta property="og:type" content="website">
-		<meta property="og:title" content="sky_manual">
-		<meta property="og:description" content="取説だよ!">
-		<meta property="og:url" content="https://mcbeeringi.github.io/sky/manual/index.html">
-		<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/manual.jpg">
-		<!--iOS-->
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="default">
-		<meta name="apple-mobile-web-app-title" content="Sky Stuff">
-		<link rel="apple-touch-icon" href="../img/sky.png">
-		<!--sw-->
-		<link rel="manifest" href="../skymf.json">
-		<meta name="theme-color" content="#214"/>
-		<script>
-			if('serviceWorker'in navigator&&location.protocol.includes('http')&&location.hostname!='localhost')window.addEventListener('load',()=>{navigator.serviceWorker.register('../skysw.js').then((reg)=>{console.log('skysw Registered',reg);});});
-		</script>
-	</head>
-	<body>
-		<script src="../style.js"></script>
-		<style>
-			#wrap{backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);background-color:#0006;padding:4px;white-space:pre-wrap;border-radius:8px;}
-			#wrap details{border:0;border-image:linear-gradient(#fea,#f66) 1;border-left:4px solid;padding:4px 4px 4px 16px;margin:8px 0;background-color:#0006;}
-			#wrap summary{border:0;border-image:linear-gradient(90deg,#aefc,#aef0) 1;border-bottom:2px solid;}
-			.ico{display:inline-block;margin:4px;--bp:0 0;background:#0008 var(--bp)/800%;width:40px;height:40px;border-radius:25%;vertical-align:middle;}
-			#ctrp{position:fixed;bottom:0;right:0;display:none;}
-		</style>
+<head prefix="og: http://ogp.me/ns#">
+	<!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-145066191-2"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','UA-145066191-2');</script>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>sky_manual</title>
+	<meta name="Description" content="Sky Stuffs' manual">
+	<link rel="shortcut icon" type="image/svg+xml" href="../img/ico/manual.svg">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="sky_manual">
+	<meta property="og:description" content="取説だよ!">
+	<meta property="og:url" content="https://mcbeeringi.github.io/sky/manual/index.html">
+	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/manual.jpg">
+	<!--iOS-->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="Sky Stuff">
+	<link rel="apple-touch-icon" href="../img/sky.png">
+	<!--sw-->
+	<link rel="manifest" href="../skymf.json">
+	<meta name="theme-color" content="#214"/>
+	<script>
+		if('serviceWorker'in navigator&&location.protocol.includes('http')&&location.hostname!='localhost')window.addEventListener('load',()=>{navigator.serviceWorker.register('../skysw.js').then((reg)=>{console.log('skysw Registered',reg);});});
+	</script>
+</head>
+<body>
+	<script src="../style.js"></script>
+	<style>
+		#wrap{backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);background-color:#0006;padding:4px;white-space:pre-wrap;border-radius:8px;}
+		#wrap details{border:0;border-image:linear-gradient(#fea,#f66) 1;border-left:4px solid;padding:4px 4px 4px 16px;margin:8px 0;background-color:#0006;}
+		#wrap summary{border:0;border-image:linear-gradient(90deg,#aefc,#aef0) 1;border-bottom:2px solid;}
+		.ico{display:inline-block;margin:4px;--bp:0 0;background:#0008 var(--bp)/800%;width:40px;height:40px;border-radius:25%;vertical-align:middle;}
+		#ctrp{position:fixed;bottom:0;right:0;display:none;}
+	</style>
 
-		<div id="wrap">loading…</div>
-		<hr>
-		<details>
-			<summary>MENU</summary>
-			<ul>
-				<li><a href="?m=seq">sky_seq</a></li>
-				<li><a href="?m=seq_en">sky_seq(English)</a></li>
-				<li><a href="?m=instr">sky_instr</a></li>
-				<li><a href="?m=instr_en">sky_instr(English)</a></li>
-			</ul>
-		</details>
-		<div id="ctrp"><button onclick="dtl(1);">openAll</button><br><button onclick="dtl(0);">closeAll</button></div>
-		<p>
-			[sky_manual] build:2109140 <br>
-			<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
-		</p>
+	<div id="wrap">loading…</div>
+	<hr>
+	<details>
+		<summary>MENU</summary>
+		<ul>
+			<li><a href="?m=seq">sky_seq</a></li>
+			<li><a href="?m=seq_en">sky_seq(English)</a></li>
+			<li><a href="?m=instr">sky_instr</a></li>
+			<li><a href="?m=instr_en">sky_instr(English)</a></li>
+		</ul>
+	</details>
+	<div id="ctrp"><button onclick="dtl(1);">openAll</button><br><button onclick="dtl(0);">closeAll</button></div>
+	<p>
+		[sky_manual] build:2109140 <br>
+		<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
+	</p>
 
-		<script>
-			const dtl=s=>document.querySelectorAll('#wrap details').forEach(x=>x.open=s),
-				typeOf=x=>Number.isNaN(x)?'nan':Object.prototype.toString.call(x).slice(8,-1).toLowerCase(),
-				rrg=/\$\{([\w\.]*),(\d{2}),?([^\}]*)\}/g,
-				rfx=(m,p1,p2,p3)=>`<p class="ico" style="background-image:url(../img/${p1});--bp:-${p2[0]}00% -${p2[1]}00%;${p3||''}"></p>`,
-				core=y=>Object.entries(y).map(z=>typeOf(z[1])=='object'?`<details><summary>${z[0].replace(rrg,rfx)}</summary>${core(z[1])}</details>`:z[0].replace(rrg,rfx)).join('');
-			if(urlq.pwa)document.querySelectorAll('a[href]').forEach(e=>{e.href+='&pwa=1';e.target='';});
-			fetch(`${urlq.m}.json`).then(x=>x.json()).then(x=>{
-				console.log(x);
-				wrap.textContent='';
-				wrap.insertAdjacentHTML('beforeend',core(x));
-				ctrp.style.display='block';
-				document.title=`sky_manual ${wrap.querySelector('h1').textContent}`;
-			}).catch(x=>{
-				console.log(x);
-				document.querySelector('details').open=true;
-				wrap.textContent='';
-				wrap.insertAdjacentHTML('beforeend','<h1>Sky_manual</h1>↓下のメニューから選んでください\n↓Choose from the menu below');
-			});
-		</script>
-	</body>
+	<script>
+		const dtl=s=>document.querySelectorAll('#wrap details').forEach(x=>x.open=s),
+			typeOf=x=>Number.isNaN(x)?'nan':Object.prototype.toString.call(x).slice(8,-1).toLowerCase(),
+			rrg=/\$\{([\w\.]*),(\d{2}),?([^\}]*)\}/g,
+			rfx=(m,p1,p2,p3)=>`<p class="ico" style="background-image:url(../img/${p1});--bp:-${p2[0]}00% -${p2[1]}00%;${p3||''}"></p>`,
+			core=y=>Object.entries(y).map(z=>typeOf(z[1])=='object'?`<details><summary>${z[0].replace(rrg,rfx)}</summary>${core(z[1])}</details>`:z[0].replace(rrg,rfx)).join('');
+		if(urlq.pwa)document.querySelectorAll('a[href]').forEach(e=>{e.href+='&pwa=1';e.target='';});
+		fetch(`${urlq.m}.json`).then(x=>x.json()).then(x=>{
+			console.log(x);
+			wrap.textContent='';
+			wrap.insertAdjacentHTML('beforeend',core(x));
+			ctrp.style.display='block';
+			document.title=`sky_manual ${wrap.querySelector('h1').textContent}`;
+		}).catch(x=>{
+			console.log(x);
+			document.querySelector('details').open=true;
+			wrap.textContent='';
+			wrap.insertAdjacentHTML('beforeend','<h1>Sky_manual</h1>↓下のメニューから選んでください\n↓Choose from the menu below');
+		});
+	</script>
+</body>
 </html>

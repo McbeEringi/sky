@@ -1,184 +1,182 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-	<head prefix="og: http://ogp.me/ns#">
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145066191-2"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-145066191-2');</script>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<title>sky_info</title>
-		<meta name="Description" content="Sky treasure candle">
-		<link rel="shortcut icon" type="image/svg+xml" href="img/ico/info.svg">
-		<meta property="og:type" content="website">
-		<meta property="og:title" content="sky_info">
-		<meta property="og:description" content="Skyの大キャン予報です">
-		<meta property="og:url" content="https://mcbeeringi.github.io/sky/info.html">
-		<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/info.jpg">
-		<!--iOS-->
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="default">
-		<meta name="apple-mobile-web-app-title" content="Sky Stuff">
-		<link rel="apple-touch-icon" href="img/sky.png">
-		<!--sw-->
-		<link rel="manifest" href="skymf.json">
-		<meta name="theme-color" content="#214"/>
-		<script>
-			if('serviceWorker'in navigator&&location.protocol.includes('https'))window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});},{once:true});
-		</script>
-	</head>
-	<body>
-		<script src="style.js"></script>
-		<style>
-			:root{tab-size:4em;font-size:16px;}img{width:100%;height:auto;}
-			pre{white-space:pre-wrap;font-family:'M PLUS Rounded 1c',sans-serif;}
-			br+img{max-width:512px;background:#8888;}
-			input[type=checkbox]{display:none;}input[type=checkbox]+div{background:#8888;}input[type=checkbox]:not(:checked)+div{display:none;}label{display:block;margin:8px 0;}input[type=checkbox]+div>div{display:inline-block;}.clear_fix::after{content:"";clear:both;display:block;}
-			.ib>*{display:inline-block;max-width:512px;min-width:256px;width:100%;vertical-align:top;}
-		</style>
+<head prefix="og: http://ogp.me/ns#">
+<!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-145066191-2"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','UA-145066191-2');</script>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>sky_info</title>
+	<meta name="Description" content="Sky treasure candle">
+	<link rel="shortcut icon" type="image/svg+xml" href="img/ico/info.svg">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="sky_info">
+	<meta property="og:description" content="Skyの大キャン予報です">
+	<meta property="og:url" content="https://mcbeeringi.github.io/sky/info.html">
+	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/info.jpg">
+	<!--iOS-->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="Sky Stuff">
+	<link rel="apple-touch-icon" href="img/sky.png">
+	<!--sw-->
+	<link rel="manifest" href="skymf.json">
+	<meta name="theme-color" content="#214"/>
+	<script>
+		if('serviceWorker'in navigator&&location.protocol.includes('https'))window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});},{once:true});
+	</script>
+</head>
+<body>
+	<script src="style.js"></script>
+	<style>
+		:root{tab-size:4em;font-size:16px;}img{width:100%;height:auto;}
+		pre{white-space:pre-wrap;font-family:'M PLUS Rounded 1c',sans-serif;}
+		br+img{max-width:512px;background:#8888;}
+		input[type=checkbox]{display:none;}input[type=checkbox]+div{background:#8888;}input[type=checkbox]:not(:checked)+div{display:none;}label{display:block;margin:8px 0;}input[type=checkbox]+div>div{display:inline-block;}.clear_fix::after{content:"";clear:both;display:block;}
+		.ib>*{display:inline-block;max-width:512px;min-width:256px;width:100%;vertical-align:top;}
+	</style>
 
-		<h1>Sky_info</h1>
-		<pre id="time">Please enable JavaScript to use this app.</pre>
-		<hr>
-		<div class="ib">
-			<div>
-				<h2>today</h2>
-				<pre id="_0t"></pre>
-				<img id="_0i" width="4" height="3" alt="today"><img id="_0i_" width="4" height="3" style="display:none;">
-			</div>
-			<div>
-				<h2>tomorrow</h2>
-				<pre id="_1t"></pre>
-				<img id="_1i" width="4" height="3" alt="tomorrow"><img id="_1i_" width="4" height="3" style="display:none;">
-			</div>
+	<h1>Sky_info</h1>
+	<pre id="time">Please enable JavaScript to use this app.</pre>
+	<hr>
+	<div class="ib">
+		<div>
+			<h2>today</h2>
+			<pre id="_0t"></pre>
+			<img id="_0i" width="4" height="3" alt="today"><img id="_0i_" width="4" height="3" style="display:none;">
 		</div>
-		<hr>
-		<div style="user-select:none;-webkit-user-select:none;" id="gallery">
+		<div>
+			<h2>tomorrow</h2>
+			<pre id="_1t"></pre>
+			<img id="_1i" width="4" height="3" alt="tomorrow"><img id="_1i_" width="4" height="3" style="display:none;">
 		</div>
-		<span id="ogal"></span> (<a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area#The_Spirits_of_the_Office">Sky Wiki</a>)<br>
-		大キャンドル参考元: <a href="https://twitter.com/sky_tea11">ティー</a>様 <br><!--/status/1356572540437635073-->
-		<p>
-			[sky_info] build:2111020 <br>
-			<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
-		</p>
+	</div>
+	<hr>
+	<div style="user-select:none;-webkit-user-select:none;" id="gallery">
+	</div>
+	<span id="ogal"></span> (<a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area#The_Spirits_of_the_Office">Sky Wiki</a>)<br>
+	大キャンドル参考元: <a href="https://twitter.com/sky_tea11">ティー</a>様 <br><!--/status/1356572540437635073-->
+	<p>
+		[sky_info] build:2111020 <br>
+		<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
+	</p>
 
-		<script>
-			'use strict';
-			let imgf=new Image();imgf.onerror=()=>imgf='JPG';imgf.onload=()=>imgf=null;imgf.src='img/candle/00.webp';
-			const jpgfall=()=>{if(typeof imgf=='string')document.querySelectorAll('img[src$="webp"]').forEach(e=>{if(e.src)e.src=e.src.replace('webp',imgf);});};
+	<script>
+		'use strict';
+		let imgf=new Image();imgf.onerror=()=>imgf='JPG';imgf.onload=()=>imgf=null;imgf.src='img/candle/00.webp';
+		const jpgfall=()=>{if(typeof imgf=='string')document.querySelectorAll('img[src$="webp"]').forEach(e=>{if(e.src)e.src=e.src.replace('webp',imgf);});};
 
-			const o_dic={
-				ja:['無念','社畜','ピザ','つぼ','ネコ','宇宙','散歩']
-			}[window.navigator.language.slice(0,2)]||['Doom','Worker','Pizza','Vase','Cat','Space','Stroll'],
-			//https://twitter.com/sky_tea11/status/1234038235149426689/photo/1
-			//https://twitter.com/i/events/1176090791342567424
-			c_dic ={
-				ja:[
-					['~草原~',['入口左手前','丸石奥','鳥の塔右奥','洞窟入口'],['入口右奥','丸石右','4島中央','神殿内'],['入口左奥','鳥の塔中央','洞窟内','鯉池']],
-					['~雨林~',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
-					['~峡谷~',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
-					['~捨て地~',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
-					['~書庫~',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
-				]
-			}[window.navigator.language.slice(0,2)]||[
-				['~Daylight Prairie~',['social space left front','beyond the rock','birdnest right beyond','cave entrance'],['social space right beyond','right of the rock','center of village','in the shrine'],['social space left beyond','birdnest center','in cave','koi pond']],
-				['~Hidden Forest~',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
-				['~Valley of Triumph~',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
-				['~Golden Wasteland~',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
-				['~Vault of Knowledge~',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
-			],
-			texts=Object.assign({
-				ct:'current time',st:'  server time',dst:'(Daylight Saving Time)',
-				dtc:'DOUBLE TREASURE CANDLES ~Jan 3rd\n\n',
-				o:'Office Spirit'
-			},{
-				ja:{
-					ct:'　　現在時刻',st:'サーバー時刻',dst:'(サマータイム)',
-					dtc:'大キャン2倍 ~1/3\n\n',
-					o:'オフィス精霊'
-				}
-			}[window.navigator.language.slice(0,2)]),
-			calendar={
-				2020:{
-					12:{
-						21:[2,0,1],
-						22:[3,1,2],
-						23:[4,0,1],
-						24:[0,1,2],
-						25:[1,1,2],
-						26:[2,0,1],
-						27:[3,0,2],
-						28:[4,0,1],
-						29:[0,0,2],
-						30:[1,0,2],
-						31:[2,0,1]
-					}
-				},
-				2021:{
-					1:{
-						1 :[3,0,1],2 :[4,0,1],3 :[0,0,1],
-						6 :[3,1],  7 :[4,1],  8 :[0,1],
-						11:[3,2],  12:[4,0],  13:[0,2],
-						16:[3,0],  17:[4,1],  18:[0,0],
-						21:[3,1],  22:[4,0],  23:[0,1],
-						26:[3,2],  27:[4,1],  28:[0,2],
-						31:[3,0]
-					}
+		const o_dic={
+			ja:['無念','社畜','ピザ','つぼ','ネコ','宇宙','散歩']
+		}[window.navigator.language.slice(0,2)]||['Doom','Worker','Pizza','Vase','Cat','Space','Stroll'],
+		//https://twitter.com/sky_tea11/status/1234038235149426689/photo/1
+		//https://twitter.com/i/events/1176090791342567424
+		c_dic ={
+			ja:[
+				['~草原~',['入口左手前','丸石奥','鳥の塔右奥','洞窟入口'],['入口右奥','丸石右','4島中央','神殿内'],['入口左奥','鳥の塔中央','洞窟内','鯉池']],
+				['~雨林~',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
+				['~峡谷~',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
+				['~捨て地~',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
+				['~書庫~',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
+			]
+		}[window.navigator.language.slice(0,2)]||[
+			['~Daylight Prairie~',['social space left front','beyond the rock','birdnest right beyond','cave entrance'],['social space right beyond','right of the rock','center of village','in the shrine'],['social space left beyond','birdnest center','in cave','koi pond']],
+			['~Hidden Forest~',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
+			['~Valley of Triumph~',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
+			['~Golden Wasteland~',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
+			['~Vault of Knowledge~',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
+		],
+		texts=Object.assign({
+			ct:'current time',st:'  server time',dst:'(Daylight Saving Time)',
+			dtc:'DOUBLE TREASURE CANDLES ~Jan 3rd\n\n',
+			o:'Office Spirit'
+		},{
+			ja:{
+				ct:'　　現在時刻',st:'サーバー時刻',dst:'(サマータイム)',
+				dtc:'大キャン2倍 ~1/3\n\n',
+				o:'オフィス精霊'
+			}
+		}[window.navigator.language.slice(0,2)]),
+		calendar={
+			2020:{
+				12:{
+					21:[2,0,1],
+					22:[3,1,2],
+					23:[4,0,1],
+					24:[0,1,2],
+					25:[1,1,2],
+					26:[2,0,1],
+					27:[3,0,2],
+					28:[4,0,1],
+					29:[0,0,2],
+					30:[1,0,2],
+					31:[2,0,1]
 				}
 			},
-			limited=(x,i)=>{
-				let cal;
-				try{cal=calendar[x.getFullYear()][x.getMonth()+1][x.getDate()];}catch(e){return 1;}
-				window[`_${i}t`].textContent=`${cal[2]+1?texts.dtc:''}${c_dic[cal[0]][0]}\n${c_dic[cal[0]][cal[1]+1]}\n${c_dic[cal[0]][cal[2]+1]||''}`;
-				window[`_${i}i`].src=`img/candle/${cal[0]}${cal[1]}.webp`;
-				if(cal[2]!=undefined){window[`_${i}i_`].style.display='inline';window[`_${i}i_`].src=`img/candle/${cal[0]}${cal[2]}.webp`;}
-			};
+			2021:{
+				1:{
+					1 :[3,0,1],2 :[4,0,1],3 :[0,0,1],
+					6 :[3,1],  7 :[4,1],  8 :[0,1],
+					11:[3,2],  12:[4,0],  13:[0,2],
+					16:[3,0],  17:[4,1],  18:[0,0],
+					21:[3,1],  22:[4,0],  23:[0,1],
+					26:[3,2],  27:[4,1],  28:[0,2],
+					31:[3,0]
+				}
+			}
+		},
+		limited=(x,i)=>{
+			let cal;
+			try{cal=calendar[x.getFullYear()][x.getMonth()+1][x.getDate()];}catch(e){return 1;}
+			window[`_${i}t`].textContent=`${cal[2]+1?texts.dtc:''}${c_dic[cal[0]][0]}\n${c_dic[cal[0]][cal[1]+1]}\n${c_dic[cal[0]][cal[2]+1]||''}`;
+			window[`_${i}i`].src=`img/candle/${cal[0]}${cal[1]}.webp`;
+			if(cal[2]!=undefined){window[`_${i}i_`].style.display='inline';window[`_${i}i_`].src=`img/candle/${cal[0]}${cal[2]}.webp`;}
+		};
 
-			gallery.insertAdjacentHTML('beforeend',c_dic.map((x,i)=>`<label><input type="checkbox">${x[0]}(${x.length-1})▶︎<div>${x.slice(1).map((y,j)=>`<div>${JSON.stringify(y)}<br><img src="img/candle/${i}${j}.webp" width="4" height="3"></div>`).join('')}</div></label>`).join(''));
+		gallery.insertAdjacentHTML('beforeend',c_dic.map((x,i)=>`<label><input type="checkbox">${x[0]}(${x.length-1})▶︎<div>${x.slice(1).map((y,j)=>`<div>${JSON.stringify(y)}<br><img src="img/candle/${i}${j}.webp" width="4" height="3"></div>`).join('')}</div></label>`).join(''));
+		jpgfall();
+		ogal.textContent=`${texts.o}: ${JSON.stringify(o_dic)}`
+
+		let hbuf;
+		const c_fx=t=>{let s=[Math.floor((t.getTime()-new Date('2020/11/4 00:00').getTime())/86400000)%5];s[1]=Math.floor((t.getDate()-1)/5)%[3,3,2,3,2][s[0]];return s;},
+		core=(t,i)=>{
+			if(limited(t,i)){
+				let x = c_fx(t);
+				window[`_${i}t`].textContent=`${c_dic[x[0]][0]}\n${c_dic[x[0]][x[1]+1]}`;
+				window[`_${i}i`].src=`img/candle/${x.join('')}.webp`;
+			}
+			window[`_${i}t`].textContent+=`\n${texts.o}: ${o_dic[(t.getDate()-1)%7]}`;
+		},
+		main=()=>{
+			let local=new Date();
+			const year=local.getFullYear(),dt=local.getTimezoneOffset()*6e4;
+			let server=new Date(Date.now()+dt-8*36e5),
+				from=new Date(year,2,15-new Date(year,2,1).getDay(),2,0),//3月第二日曜2時~11月第一日曜2時
+				to=new Date(year,10,8-new Date(year,10,1).getDay(),2,0),
+				dst=from.getTime()<=server&&server<to.getTime();
+			if(dst)server=new Date(Date.now()+dt-7*36e5);
+			time.textContent=`${texts.ct}: ${local.toLocaleString()}\n${texts.st}: ${server.toLocaleString()} ${dst?texts.dst:''}`;
+			if(hbuf!=server.getHours()){
+				hbuf=server.getHours();
+				console.log('exe');
+				core(server,0);
+				server.setDate(server.getDate()+1);
+				core(server,1);
+			}
 			jpgfall();
-			ogal.textContent=`${texts.o}: ${JSON.stringify(o_dic)}`
+		};main();
+		setTimeout(()=>setInterval(main,1000),1000-new Date().getMilliseconds());
 
-			let hbuf;
-			const c_fx=t=>{let s=[Math.floor((t.getTime()-new Date('2020/11/4 00:00').getTime())/86400000)%5];s[1]=Math.floor((t.getDate()-1)/5)%[3,3,2,3,2][s[0]];return s;},
-			core=(t,i)=>{
-				if(limited(t,i)){
-					let x = c_fx(t);
-					window[`_${i}t`].textContent=`${c_dic[x[0]][0]}\n${c_dic[x[0]][x[1]+1]}`;
-					window[`_${i}i`].src=`img/candle/${x.join('')}.webp`;
-				}
-				window[`_${i}t`].textContent+=`\n${texts.o}: ${o_dic[(t.getDate()-1)%7]}`;
-			},
-			main=()=>{
-				let local=new Date();
-				const year=local.getFullYear(),dt=local.getTimezoneOffset()*6e4;
-				let server=new Date(Date.now()+dt-8*36e5),
-					from=new Date(year,2,15-new Date(year,2,1).getDay(),2,0),//3月第二日曜2時~11月第一日曜2時
-					to=new Date(year,10,8-new Date(year,10,1).getDay(),2,0),
-					dst=from.getTime()<=server&&server<to.getTime();
-				if(dst)server=new Date(Date.now()+dt-7*36e5);
-				time.textContent=`${texts.ct}: ${local.toLocaleString()}\n${texts.st}: ${server.toLocaleString()} ${dst?texts.dst:''}`;
-				if(hbuf!=server.getHours()){
-					hbuf=server.getHours();
-					console.log('exe');
-					core(server,0);
-					server.setDate(server.getDate()+1);
-					core(server,1);
-				}
-				jpgfall();
-			};main();
-			setTimeout(()=>setInterval(main,1000),1000-new Date().getMilliseconds());
-
-			/*
-			const main=()=>{
-				let t=new Date();
-				const year=t.getFullYear(),dt=t.getTimezoneOffset()*6e4;
-				t=new Date(Date.now()+dt-8*36e5);
-				let from=new Date(year,2,15-new Date(year,2,1).getDay(),2,0),//3月第二日曜2時~11月第一日曜2時
-					to=new Date(year,10,8-new Date(year,10,1).getDay(),2,0);
-				if(from.getTime()<=t&&t<to.getTime())t=new Date(Date.now()+dt-7*36e5);
-				log.textContent=t.toLocaleString();
-			};
-			setInterval(main,200);
-			*/
-		</script>
-	</body>
+		/*
+		const main=()=>{
+			let t=new Date();
+			const year=t.getFullYear(),dt=t.getTimezoneOffset()*6e4;
+			t=new Date(Date.now()+dt-8*36e5);
+			let from=new Date(year,2,15-new Date(year,2,1).getDay(),2,0),//3月第二日曜2時~11月第一日曜2時
+				to=new Date(year,10,8-new Date(year,10,1).getDay(),2,0);
+			if(from.getTime()<=t&&t<to.getTime())t=new Date(Date.now()+dt-7*36e5);
+			log.textContent=t.toLocaleString();
+		};
+		setInterval(main,200);
+		*/
+	</script>
+</body>
 </html>
