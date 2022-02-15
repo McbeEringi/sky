@@ -29,11 +29,11 @@
 	<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'img/tex.webp'});</script>
 	<style>
 		:root{--size:80px;--bp:0 0;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
-		body>input{display:none;}
+		html,body{height:100%;margin:0;overflow:hidden;}
+		body>input,.contents>div>input{display:none;}
+		.contents{height:100%;display:flex;overflow:auto;scroll-snap-type:x mandatory;}
+		.contents>div{width:100%;height:100%;overflow:hidden;flex-shrink:0;scroll-snap-align:center;position:relative;}
 		@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
-		html,body{height:100%;margin:0;position:relative;overflow:hidden;}
-		#kc{display:block;margin:0 auto;width:100%;max-height:auto;touch-action:none;opacity:.5;transition:opacity .2s;cursor:pointer;}
-		#menu input{position:absolute;opacity:0;}#menu label{display:inline-block;}
 
 		.grid{display:inline-block;width:var(--size);height:var(--size);margin:0;vertical-align:middle;position:relative;overflow:hidden;touch-action:manipulation;cursor:pointer;outline:0;}
 		.grid::before,.grid::after,.grid *{content:"";display:block;width:78.4%;height:78.4%;position:absolute;margin:10.8%;border-radius:17%;}
@@ -48,10 +48,6 @@
 		.clock::before{--bp:-200% -0%;filter:saturate(.3);}.clock::after{content:"";transition:.2s;transform:rotate(var(--rot,45deg));filter:drop-shadow(0 0 2px #aef);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M6 6h1v1h-1z' fill='%23caf0f6'/%3E%3C/svg%3E");}
 		.clock.d::after,.d .clock::after{--rot:initial;}
 
-		#mico{position:fixed;right:0;bottom:0;--size:48px;}#mico::before{transition:transform .5s;}#drwcb:checked~#mico::before{transform:rotateY(360deg);background-image:url(img/seq_.svg);--bp:-400% 0;}
-		#drawer{width:calc(var(--size)*3.3);height:100%;padding-bottom:56px;box-sizing:border-box;text-align:center;position:absolute;top:0;right:0;overflow-y:auto;background-color:#3338;transform:translateX(100%);visibility:hidden;transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
-		#drawer hr{border:0;}#drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
-		#drwcb:checked~#drawer{transform:translateX(0);visibility:unset;}
 		.file{display:inline-block;overflow:hidden;position:relative;vertical-align:middle;height:var(--size);}
 		.file>input{position:absolute;opacity:0;cursor:pointer;width:100%;height:100%;}
 		.file::after{content:attr(data-name);pointer-events:none;line-height:var(--size);padding:0 1ex;}
@@ -61,27 +57,43 @@
 		label[for=alcb]{top:0;left:0;width:100%;height:100%;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
 		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);white-space:pre-wrap;overflow:auto;overflow-x:hidden;overflow-wrap:break-word;}
 		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;visibility:visible;opacity:1;}
+
+		/*instr*/
+		#kc{display:block;margin:0 auto;width:100%;max-height:auto;touch-action:none;opacity:.5;transition:opacity .2s;cursor:pointer;}
+		#menu input{position:absolute;opacity:0;}#menu label{display:inline-block;}
+		#mico{position:absolute;right:0;bottom:0;--size:48px;}#mico::before{transition:transform .5s;}#drwcb:checked~#mico::before{transform:rotateY(360deg);background-image:url(img/seq_.svg);--bp:-400% 0;}
+		#drawer{width:calc(var(--size)*3.3);height:100%;padding-bottom:56px;box-sizing:border-box;text-align:center;position:absolute;top:0;right:0;overflow-y:auto;background-color:#3338;transform:translateX(100%);visibility:hidden;transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+		#drawer hr{border:0;}#drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
+		#drwcb:checked~#drawer{transform:translateX(0);visibility:unset;}
 	</style>
-	<input type="checkbox" id="drwcb">
 	<input type="checkbox" id="alcb">
-	<canvas id="kc"></canvas>
-	<div id="drawer" tabindex="">
-		<form id="menu"></form>
-		<hr>
-		<div id="scd">
-			<p class="grid btn" style="--bp:-600% -0%;">
-			</p><p class="grid btn clock">
-			</p><p class="grid btn" style="--bp:-500% -0%;"></p>
+	<div class="contents">
+		<div id="instrw">
+			<input type="checkbox" id="drwcb">
+			<canvas id="kc"></canvas>
+			<div id="drawer" tabindex="">
+				<form id="menu"></form>
+				<hr>
+				<div id="scd">
+					<p class="grid btn" style="--bp:-600% -0%;">
+					</p><p class="grid btn clock">
+					</p><p class="grid btn" style="--bp:-500% -0%;"></p>
+				</div>
+				<hr>
+				<p class="grid btn tex" style="--bp:-100% 0;" id="cfgbtn">
+				</p><p class="grid btn tex" style="--bp:0% -100%;" id="cibtn">
+				</p><p id="recbtn" class="grid btn d" style="--bp:0 -100%;">
+				</p><a class="grid btn" style="--bp:-100% -100%;" href="manual/index.html?m=instr" target="_blank">
+				</a><p class="grid btn tex" id="infobtn">
+				</p>
+			</div>
+			<label for="drwcb" id="mico" class="grid tex"></label>
 		</div>
 		<hr>
-		<p class="grid btn tex" style="--bp:-100% 0;" id="cfgbtn">
-		</p><p class="grid btn tex" style="--bp:0% -100%;" id="cibtn">
-		</p><p id="recbtn" class="grid btn d" style="--bp:0 -100%;">
-		</p><a class="grid btn" style="--bp:-100% -100%;" href="manual/index.html?m=instr" target="_blank">
-		</a><p class="grid btn tex" id="infobtn">
-		</p>
+		<div id="seqw">
+			<p></p>
+		</div>
 	</div>
-	<label for="drwcb" id="mico" class="grid tex"></label>
 	<label for="alcb"></label><pre id="albox" class="style"><p class="grid tex spin"></p></pre>
 
 	<script>
