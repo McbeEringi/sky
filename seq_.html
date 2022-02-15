@@ -31,7 +31,7 @@
 		:root{--size:80px;--bp:0 0;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
 		html,body{height:100%;margin:0;overflow:hidden;}
 		body>input,.contents>div>input{display:none;}
-		.contents{height:100%;display:flex;overflow:auto;scroll-snap-type:x mandatory;}
+		.contents{height:100%;overflow:auto;scroll-snap-type:y mandatory;}
 		.contents>div{width:100%;height:100%;overflow:hidden;flex-shrink:0;scroll-snap-align:center;position:relative;}
 		@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
 
@@ -53,6 +53,11 @@
 		.file::after{content:attr(data-name);pointer-events:none;line-height:var(--size);padding:0 1ex;}
 		.input{border-radius:4px;border:0;background-color:#3338;font-size:medium;margin:4px 0;padding:4px 1ex;max-width:100%;box-sizing:border-box;}
 
+		label[for=drwcb]{position:absolute;right:0;bottom:0;--size:48px;}label[for=drwcb]::before{transition:transform .5s;}#drwcb:checked~label[for=drwcb]::before{transform:rotateY(360deg);--bp:-400% 0;}
+		.drawer{width:calc(var(--size)*3.3);height:100%;padding-bottom:56px;box-sizing:border-box;text-align:center;position:absolute;top:0;right:0;overflow-y:auto;background-color:#3338;transform:translateX(100%);visibility:hidden;transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+		.drawer hr{border:0;}.drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
+		#drwcb:checked~* .drawer{transform:translateX(0);visibility:unset;}
+
 		label[for=alcb],#albox{position:fixed;pointer-events:none;visibility:hidden;opacity:0;background-color:#0008;transition:.2s;}
 		label[for=alcb]{top:0;left:0;width:100%;height:100%;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
 		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);white-space:pre-wrap;overflow:auto;overflow-x:hidden;overflow-wrap:break-word;}
@@ -60,19 +65,22 @@
 
 		/*instr*/
 		#kc{display:block;margin:0 auto;width:100%;max-height:auto;touch-action:none;opacity:.5;transition:opacity .2s;cursor:pointer;}
-		#menu input{position:absolute;opacity:0;}#menu label{display:inline-block;}
-		#mico{position:absolute;right:0;bottom:0;--size:48px;}#mico::before{transition:transform .5s;}#drwcb:checked~#mico::before{transform:rotateY(360deg);background-image:url(img/seq_.svg);--bp:-400% 0;}
-		#drawer{width:calc(var(--size)*3.3);height:100%;padding-bottom:56px;box-sizing:border-box;text-align:center;position:absolute;top:0;right:0;overflow-y:auto;background-color:#3338;transform:translateX(100%);visibility:hidden;transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
-		#drawer hr{border:0;}#drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
-		#drwcb:checked~#drawer{transform:translateX(0);visibility:unset;}
+		#imenu input{position:absolute;opacity:0;}#imenu label{display:inline-block;}
+
+		/*seq*/
+		.disp{
+			height:100%;max-height:512px;position:relative;
+			background:#888c repeating-linear-gradient(#fff,#fff 6.25%,#0000 6.25%,#0000 18.75%, #888 18.75%,#888 25%,#0000 25%,#0000 31.25%, #888 31.25%,#888 37.5%,#0000 37.5%,#0000 43.75%);
+		}.disp>*{position:absolute;display:block;width:100%;height:100%;margin:0;}
+		#scr{overflow:auto;}
 	</style>
 	<input type="checkbox" id="alcb">
+	<input type="checkbox" id="drwcb">
 	<div class="contents">
-		<div id="instrw">
-			<input type="checkbox" id="drwcb">
+		<div>
 			<canvas id="kc"></canvas>
-			<div id="drawer" tabindex="">
-				<form id="menu"></form>
+			<div class="drawer">
+				<form id="imenu"></form>
 				<hr>
 				<div id="scd">
 					<p class="grid btn" style="--bp:-600% -0%;">
@@ -87,19 +95,27 @@
 				</a><p class="grid btn tex" id="infobtn">
 				</p>
 			</div>
-			<label for="drwcb" id="mico" class="grid tex"></label>
 		</div>
 		<hr>
-		<div id="seqw">
-			<p></p>
+		<div>
+			<div class="disp">
+				<canvas id="dc"></canvas>
+				<div id="scr"><div id="scri">0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789</div></div>
+			</div>
+			<div class="drawer">
+				<p class="grid btn tex" onclick="alert(texts.info);">
+				</p>
+			</div>
 		</div>
 	</div>
+
+	<label for="drwcb" class="grid"></label>
 	<label for="alcb"></label><pre id="albox" class="style"><p class="grid tex spin"></p></pre>
 
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2202140\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2202150\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',default:'default',cnew:'create new…',cin:'instr name',fsel:'choose file',
@@ -176,12 +192,11 @@
 				kc.width=Math.min(kc.parentNode.clientWidth,q.kbs*q.grid[0])*devicePixelRatio;q.size=kc.width/q.grid[0];kc.height=q.size*q.grid[1];
 				draw(true);
 			},
-			set=(i=+menu.instr.value)=>{
+			set=(i=+imenu.instr.value)=>{
 				kc.style.opacity='';
 				if(i==0&&q.ci){
 					e2p(osi().get(q.ci)).then(e=>{
 						Object.assign(q,{octave:0,i2n:d.i2n[0],i2p:d.i2p[d.p[0]],gflag:new Array(d.i2n[0].length).fill(0),grid:d.k2g[d.g[0]],c:true,scf:true});
-						mico.setAttribute('style',`--bp:${bp(i)};`);
 						cset();
 						scd.classList.remove('d');
 						return Promise.all(e.target.result.dat.map(async y=>{
@@ -201,7 +216,6 @@
 						c:d.g[d.instr[i][3]]==0,
 						scf:d.instr[i][3]!=1
 					});
-					mico.setAttribute('style',`--bp:${bp(i)};`);
 					cset();
 					if(!q.scf)scd.classList.add('d');else scd.classList.remove('d');
 					Promise.all(d.instr[i][2].map(x=>
@@ -345,8 +359,8 @@
 					e2p(osi().get(x)).then(y=>main(y.target.result)).then(y=>y&&y.dat.length?(x==y.name?e2p(osi().put(y)):e2p(osi().add(y)).then(()=>e2p(osi().delete(x)))).then(()=>{if(q.ci==x){q.ci=y.name;save();}set();}):0)
 				);
 			},
-			load=()=>({instr:menu.instr.value=0,sc:q.sc=0,rev:q.rev=0,del:q.del=.1,kbs:q.kbs=88,amb:q.amb=-1,reci:q.reci=0,ci:q.ci=''}=JSON.parse(localStorage.instr_stat||'{}')),
-			save=()=>localStorage.instr_stat=JSON.stringify({instr:+menu.instr.value,sc:q.sc,rev:q.rev,del:q.del,kbs:q.kbs,amb:q.amb,reci:q.reci,ci:q.ci});
+			load=()=>({instr:imenu.instr.value=0,sc:q.sc=0,rev:q.rev=0,del:q.del=.1,kbs:q.kbs=88,amb:q.amb=-1,reci:q.reci=0,ci:q.ci=''}=JSON.parse(localStorage.instr_stat||'{}')),
+			save=()=>localStorage.instr_stat=JSON.stringify({instr:+imenu.instr.value,sc:q.sc,rev:q.rev,del:q.del,kbs:q.kbs,amb:q.amb,reci:q.reci,ci:q.ci});
 			//const fullscr=(x=document.body)=>{x.requestFullscreen=x.requestFullscreen||x.webkitRequestFullscreen;x.requestFullscreen();};
 			
 		['touchstart','mousedown'].forEach(x=>kc.addEventListener(x,fire));
@@ -355,7 +369,7 @@
 			if(e.code=='Escape'){if(alcb.checked)alcb.checked=false;else if(drwcb.checked)drwcb.checked=false;}
 			if((e=q.k2i[e.code])&&e.every((x,i)=>x<q.grid[i]))fire({preventDefault:()=>{},p:e});
 		});
-		menu.onchange=()=>{set();save();};
+		imenu.onchange=()=>{set();save();};
 		scd.children[0].onclick=()=>{q.sc--;scale(true);save();};
 		scd.children[1].onclick=()=>{q.sc=0;scale(true);save();};
 		scd.children[2].onclick=()=>{q.sc++;scale(true);save();};
@@ -366,7 +380,7 @@
 		onresize=cset;
 		document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='visible'&&actx.state=='suspended')actx.resume();});
 
-		menu.insertAdjacentHTML('beforeend',d.instr.map((_,i)=>`<label><input type="radio" name="instr" value="${i}" ${[7,18].includes(i)?'disabled':''} ${i==0?'checked':''}><p class="grid tex" style="--bp:${bp(i)};"></p></label>`).join(''));
+		imenu.insertAdjacentHTML('beforeend',d.instr.map((_,i)=>`<label><input type="radio" name="instr" value="${i}" ${[7,18].includes(i)?'disabled':''} ${i==0?'checked':''}><p class="grid tex" style="--bp:${bp(i)};"></p></label>`).join(''));
 		deln.connect(revn).connect(gn0).connect(actx.destination);
 		deln.connect(gn1).connect(actx.destination);
 		irgen().then(x=>revn.buffer=x);
@@ -394,10 +408,10 @@
 		q.tex.onload=()=>{
 			const c=document.createElement('canvas');c.width=q.tex.naturalWidth;c.height=q.tex.naturalHeight;
 			c.getContext('2d').drawImage(q.tex,0,0);q.tex=c;draw(true);
-			document.body.insertAdjacentHTML('beforeend',`<style>.grid::before,#drwcb:checked~#mico::before{background-image:url(${c.toDataURL()});}</style>`);
+			document.body.insertAdjacentHTML('beforeend',`<style>.grid::before{background-image:url(${c.toDataURL()});}</style>`);
 		};
 		load();addEventListener('idbready',()=>{q.tex.src='img/seq_.svg';set();scale();reverb();delay();amb();});
-		if(urlq.pwa=='1'){const a=drawer.querySelector('a');a.href+='&pwa=1';a.target='';}
+		if(urlq.pwa=='1'){const a=document.body.querySelector('a');a.href+='&pwa=1';a.target='';}
 	</script>
 </body>
 </html>
