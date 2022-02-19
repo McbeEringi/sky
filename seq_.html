@@ -130,7 +130,7 @@
 					reci:'録画機能の使用(試験的)'
 				}
 			}[navigator.language.slice(0,2)]),
-			alc=()=>albox.querySelector('#albox>:not(.fade):last-of-type'),
+			alc=()=>[...albox.querySelectorAll('#albox>:not(.fade)')].pop(),
 			alcp=(x=alc())=>x.lastElementChild,
 			alr=(x=alc())=>{x.classList.add('fade');setTimeout(()=>x.remove(),500);},
 			e2p=x=>new Promise((f,r)=>Object.assign(x,{onsuccess:f,onerror:r})),
