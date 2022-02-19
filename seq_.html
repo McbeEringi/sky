@@ -58,10 +58,10 @@
 		.drawer hr{border:0;}.drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		#drwcb:checked~* .drawer{transform:translateX(0);visibility:unset;}
 
-		label[for=alcb],#albox{position:fixed;pointer-events:none;visibility:hidden;opacity:0;background-color:#0008;transition:.2s;}
-		label[for=alcb]{top:0;left:0;width:100%;height:100%;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
-		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);white-space:pre-wrap;overflow:auto;overflow-x:hidden;overflow-wrap:break-word;}
-		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;visibility:visible;opacity:1;}
+		#albox>div{position:fixed;top:0;left:0;width:100%;height:100%;opacity:1;pointer-events:inherit;transition:.2s;background-color:#0004;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+		#albox>div>p{width:100%;height:100%;margin:0;}
+		#albox>div>pre{position:absolute;background-color:#000c;top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);margin:0;padding:16px;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);white-space:pre-wrap;overflow:auto;overflow-x:hidden;overflow-wrap:break-word;}
+		#albox>div.fade{opacity:0;pointer-events:none;}
 
 		/*instr*/
 		#kc{display:block;margin:0 auto;width:100%;max-height:auto;touch-action:none;opacity:.5;transition:opacity .2s;cursor:pointer;}
@@ -75,7 +75,6 @@
 		}.disp>*{position:absolute;display:block;width:100%;height:100%;margin:0;}
 		#scr{overflow:auto;}
 	</style>
-	<input type="checkbox" id="alcb">
 	<input type="checkbox" id="drwcb">
 	<div class="contents">
 		<div>
@@ -111,7 +110,7 @@
 	</div>
 
 	<label for="drwcb" class="grid"></label>
-	<label for="alcb"></label><pre id="albox" class="style"><p class="grid tex spin"></p></pre>
+	<div id="albox"></div>
 
 	<script>
 		'use strict';
@@ -131,10 +130,12 @@
 					reci:'録画機能の使用(試験的)'
 				}
 			}[navigator.language.slice(0,2)]),
+			alc=()=>albox.lastElementChild.lastElementChild,
+			alr=()=>albox.lastElementChild.remove(),
 			e2p=x=>new Promise((f,r)=>Object.assign(x,{onsuccess:f,onerror:r})),
 			osi=()=>idb.transaction('instr','readwrite').objectStore('instr'),
 			errfx=(e={})=>{alert(`⚠️${e.name||'Error'}\n<small>${e.message||'Something went wrong :('}</small>`);console.error(e);},
-			yn=x=>new Promise(f=>{alert(`${x}<div class="yn"><p class="grid btn" style="--bp:-400% 0;"></p><p class="grid btn" style="--bp:-300% 0;"></p></div>`);[...albox.lastChild.children].forEach((e,i)=>e.onclick=()=>f(i));}),
+			yn=x=>new Promise(f=>{alert(`${x}<div class="yn"><p class="grid btn" style="--bp:-400% 0;"></p><p class="grid btn" style="--bp:-300% 0;"></p></div>`);[...alc().lastChild.children].forEach((e,i)=>e.onclick=()=>f(i));}),
 			n2nn=x=>({c:12,d:14,e:16,f:17,g:19,a:21,b:23})[x[0].toLowerCase()]+(({'#':1,s:1})[x[1]]?x.slice(2)*12+1:x.slice(1)*12),
 			nn2n=x=>['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'][x%12]+Math.floor(x/12-1),
 			bp=i=>`${i%8*-100}% ${Math.floor(i*.125+1)*-100}%`,
@@ -316,7 +317,7 @@
 <input type="range" class="style" min="0" max="1" step="0.0625" value="${q.rev}"><hr>${texts.delay}
 <input type="range" class="style" min="0" max=".2" step="0.0125" value="${q.del}"><hr><label>${texts.reci}
 <input type="checkbox"${q.reci?' checked':''}${recbtn.classList.contains('a')?' disabled':''}></label>`);
-				const inp=albox.querySelectorAll('input'),sel=albox.querySelector('select');
+				const inp=alc().querySelectorAll('input'),sel=alc().querySelector('select');
 				inp[0].oninput =()=>{q.kbs=+inp[0].value;cset();save();};
 				sel.onchange=()=>{q.amb=+sel.value;sel.disabled=true;amb().then(()=>sel.disabled=false);save();};
 				inp[1].onchange=()=>{q.rev=+inp[1].value;reverb(true);save();};
@@ -326,15 +327,16 @@
 			cicfg=()=>{
 				alert('<p class="grid tex spin"></p>');
 				e2p(osi().getAllKeys()).then(e=>{
+					alr();
 					const fx=(x,y=[3,false,true])=>`<div class="ss"><p class="grid ${x==q.ci||(y[1]&&!q.ci)?'a d':'btn'}" style="--bp:-${y[0]}00% 0;--size:48px;"></p>${x}${y[2]?'\n\t<p class="grid tex btn" style="--bp:-100% 0;"></p><p class="grid btn" style="--bp:-400% 0;"></p>':''}</div>`
 					alert(`${texts.ci}<hr>`+e.target.result.map(x=>fx(x)).join('')+fx(texts.default,[3,true])+fx(texts.cnew,[5]));
-					albox.querySelectorAll('.ss').forEach((x,i)=>{
+					alc().querySelectorAll('.ss').forEach((x,i)=>{
 						const j=i-e.target.result.length;
 						if(j<0){
-							x.children[0].onclick=()=>{q.ci=e.target.result[i];save();set();cicfg();};
-							x.children[1].onclick=()=>ciedt(e.target.result[i]).then(cicfg).catch(errfx);//e2p(osi().get(e.target.result[i])).then(y=>ciedt(y.target.result));
-							x.children[2].onclick=()=>yn(texts.delask+'\n').then(x=>{if(x)e2p(osi().delete(e.target.result[i])).then(()=>{if(q.ci==e.target.result[i]){q.ci='';save();set();}cicfg();});else cicfg();});
-						}else x.children[0].onclick=[()=>{q.ci='';save();set();cicfg();},()=>ciedt().then(cicfg).catch(errfx)][j];
+							x.children[0].onclick=()=>{q.ci=e.target.result[i];save();set();alr();cicfg();};
+							x.children[1].onclick=()=>ciedt(e.target.result[i]).then(()=>{alr();cicfg();}).catch(errfx);//e2p(osi().get(e.target.result[i])).then(y=>ciedt(y.target.result));
+							x.children[2].onclick=()=>yn(texts.delask+'\n').then(x=>{if(x)e2p(osi().delete(e.target.result[i])).then(()=>{if(q.ci==e.target.result[i]){q.ci='';save();set();}alr();alr();cicfg();});else{alr();alr();cicfg();}});
+						}else x.children[0].onclick=[()=>{q.ci='';save();set();alr();cicfg();},()=>ciedt().then(()=>{alr();cicfg();}).catch(errfx)][j];
 					});
 				}).catch(errfx);
 			},
@@ -343,13 +345,13 @@
 					row=(y=['C5',{name:texts.fsel}],i='')=>`<div class="ss"><p class="grid btn" style="--bp:-400% 0;" onclick="this.parentNode.remove();"></p><select>${new Array(61).fill().map((_,i)=>{i+=36;return selfx(nn2n(i),i==n2nn(y[0])?'selected':'');})}</select><div class="file btn" data-name="${y[1].name}"><input type="file" data-i="${i}" accept=".mp3,.ogg,.m4a,.wav,.flac" onchange="this.parentNode.dataset.name=this.files[0].name;"></div></div>`,
 					main=(y={name:'',dat:[]})=>{
 						const p=yn(`<input class="style input" value="${y.name}" placeholder="${texts.cin}"><hr>${y.dat.map(row).join('')}<p class="grid btn ss" style="--bp:-500% 0;"></p><hr>`).then(i=>i?{
-								name:albox.firstChild.value||y.name||new Date().toLocaleString(),
-								dat:[...albox.querySelectorAll('div.ss')].reduce((a,z)=>{
+								name:alc().firstChild.value||y.name||new Date().toLocaleString(),
+								dat:[...alc().querySelectorAll('div.ss')].reduce((a,z)=>{
 									const f=z.children[2].firstChild.files[0]||(z.children[2].firstChild.dataset.i?y.dat[+z.children[2].firstChild.dataset.i][1]:null);
 									if(f)a.push([z.children[1].value,f]);return a;
 								},[])
-							}:0),
-							btn=albox.querySelectorAll('hr')[1].previousElementSibling;
+							}:0).then(z=>{alr();return z;}),
+							btn=alc().querySelectorAll('hr')[1].previousElementSibling;
 						btn.onclick=()=>btn.insertAdjacentHTML('beforebegin',row());
 						if(y.dat.length==0)btn.onclick();
 						return p;
@@ -367,7 +369,7 @@
 		['touchstart','mousedown'].forEach(x=>kc.addEventListener(x,fire));
 		document.addEventListener('keydown',e=>{
 			if(['input','textarea'].some(x=>document.activeElement.matches(x))||e.repeat)return;
-			if(e.code=='Escape'){if(alcb.checked)alcb.checked=false;else if(drwcb.checked)drwcb.checked=false;}
+			if(e.code=='Escape'){if(albox.children.length)alr();else if(drwcb.checked)drwcb.checked=false;}
 			if((e=q.k2i[e.code])&&e.every((x,i)=>x<q.grid[i]))fire({preventDefault:()=>{},p:e});
 		});
 		imenu.onchange=()=>{set();save();};
@@ -377,7 +379,7 @@
 		cibtn.onclick=cicfg;
 		cfgbtn.onclick=cfg;
 		infobtn.onclick=()=>alert(texts.info);
-		alert=x=>{alcb.checked=true;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
+		alert=x=>{albox.insertAdjacentHTML('beforeend',`<div class="fade"><p onclick="const p=this.parentElement;p.classList.add('fade');p.ontransitionend=p.remove;"></p><pre class="style">${x}</pre></div>`);albox.lastElementChild.offsetWidth;albox.lastElementChild.classList.remove('fade');};
 		onresize=cset;
 		document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='visible'&&actx.state=='suspended')actx.resume();});
 
