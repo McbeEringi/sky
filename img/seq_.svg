@@ -22,6 +22,11 @@
 	<g>
 		<path d="M  0,128m64,26a38,38,0,1,0,.0001,0z"/><path d="M0,128m64,45a19,19,0,1,0,.0001,0z" style="fill:#fea"/>
 		<text x="196" y="196" text-anchor="middle" dominant-baseline="central" style="fill:#fea">?</text>
+		<text x="272" y="232" style="font-size:60px;opacity:.6;">♭</text><text x="304" y="200" style="font-size:60px;opacity:.6;">♯</text>
+		<text x="386" y="220" style="opacity:.6;">♩</text><text x="442" y="220" style="opacity:.6;">=</text>
+		<path d="M512,128m36,32v64l56,-32z" style="fill:#fea"/>
+		<path d="M640,128m44,32h64v64h-64l-24,-32zm16,16l32,32m0,-32l-32,32"/>
+		<path d="M768,128m21,21h86v86h-86zm43,15v56m-28,-28h56"/>
 		<path d="M896,128m48,32v52l12,-11l11,25l9,-4l-11,-25h17z"/>
 	</g>
 	<g>
@@ -43,11 +48,5 @@
 		<path d="M640,384m56,24h-20v80h56v-60l-20,-20h-8v52l-16,-18m32,0l-16,18"/>
 		<path d="M768,384m36,76v28h56v-28 m-92,-76m64,32v48l-16,-18m32,0l-16,18"/>
 		<path d="M896,384m36,76v28h56v-28 m-92,-76m64,80v-48l-16,18m32,0l-16,-18"/>
-	</g>
-	<g>
-		<text x="272" y="232" style="font-size:60px;opacity:.6;">♭</text><text x="304" y="200" style="font-size:60px;opacity:.6;">♯</text>
-		<text x="386" y="220" style="opacity:.6;">♩</text><text x="442" y="220" style="opacity:.6;">=</text>
-		<path d="M640,128m44,32h64v64h-64l-24,-32zm16,16l32,32m0,-32l-32,32"/>
-		<path d="M768,128m21,21h86v86h-86zm43,15v56m-28,-28h56"/>
 	</g>
 </svg>

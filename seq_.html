@@ -63,11 +63,12 @@
 		#albox>div>pre{position:absolute;background-color:#000c;top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);margin:0;padding:16px;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);white-space:pre-wrap;overflow:auto;overflow-x:hidden;overflow-wrap:break-word;}
 		#albox>div.fade{opacity:0;pointer-events:none;visibility:hidden;}
 
-		.items{display:grid;max-width:100%;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));grid-auto-rows:1fr;grid-gap:8px;}
-		.items.fsc{width:100vw;}
+		.items{display:grid;max-width:100%;width:100vw;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));grid-auto-rows:1fr;grid-gap:8px;}
+		.items::after{content:"";grid-column:1/-1;}
 		.items>*{box-sizing:border-box;padding:4px;}
-		.items>*>*{display:inline-block;vertical-align:middle;max-width:100%;--size:40px;}
-		.items>*>.grid{--size:56px;}
+		.items>div{display:flex;justify-content:center;align-items:center;}
+		.items>div>:not(.grid){--size:40px;}
+		.items>div>.grid{--size:56px;flex-shrink:0;align-self:start;}
 
 		/*instr*/
 		#kc{display:block;margin:0 auto;width:100%;max-height:auto;touch-action:none;opacity:.5;transition:opacity .2s;cursor:pointer;}
@@ -124,19 +125,23 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2202210\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2202211\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',default:'default',cnew:'create new…',cin:'instr name',fsel:'choose file',
-				delask:`Are you sure to delete it?`,wip:'WIP',
-				reci:'Use video recorder\n(experimental)'
+				delask:`Are you sure to delete it?`,wip:'WIP',cfg:'setting',
+				reci:'Use video recorder\n(experimental)',
+
+				sheets:'sheets'
 			},{
 				ja:{
 					rev:'リバーブ',delay:'遅延',kbs:'キーのサイズ',
 					amb:'環境音',ambl:['なし','温泉','ホーム','雨林','書庫'],
 					ci:'カスタム楽器',default:'デフォルト',cnew:'新規作成…',cin:'楽器名',fsel:'ファイルを選択',
-					delask:`本当に削除してよろしいですか?`,wip:'工事中…',
-					reci:'録画機能の使用(試験的)'
+					delask:`本当に削除してよろしいですか?`,wip:'工事中…',cfg:'設定',
+					reci:'録画機能の使用(試験的)',
+
+					sheets:'楽譜一覧'
 				}
 			}[navigator.language.slice(0,2)]),
 			alc=()=>[...albox.querySelectorAll('#albox>:not(.fade)')].pop(),
@@ -324,12 +329,13 @@
 				loading(x){alert('<p class="grid tex spin"></p>');const e=alc().firstChild,fx=e.onclick;return new Promise(f=>e.onclick=()=>f(fx()));},
 				cfg(){
 					const opt=(x,i)=>`<option value="${i-1}"${i-1==q.amb?' selected':''}>${x}</option>`;
-					alert(`${texts.kbs}
-<input type="range" class="style" min="64" max="128" step="4" value="${q.kbs}"><hr>${texts.amb}
-<select>${texts.ambl.map(opt).join('')}</select><hr>${texts.rev}
-<input type="range" class="style" min="0" max="1" step="0.0625" value="${q.rev}"><hr>${texts.delay}
-<input type="range" class="style" min="0" max=".2" step="0.0125" value="${q.del}"><hr><label>${texts.reci}
-<input type="checkbox"${q.reci?' checked':''}${recbtn.classList.contains('a')?' disabled':''}></label>`);
+					alert(`${texts.cfg}<hr><div class="items">
+						<label>${texts.kbs}\n<input type="range" class="style" min="64" max="128" step="4" value="${q.kbs}"></label>
+						<label>${texts.amb}\n<select>${texts.ambl.map(opt).join('')}</select></label>
+						<label>${texts.rev}\n<input type="range" class="style" min="0" max="1" step="0.0625" value="${q.rev}"></label>
+						<label>${texts.delay}\n<input type="range" class="style" min="0" max=".2" step="0.0125" value="${q.del}"></label>
+						<label>${texts.reci}\n<input type="checkbox"${q.reci?' checked':''}${recbtn.classList.contains('a')?' disabled':''}></label>
+					</div>`);
 					const inp=alcp().querySelectorAll('input'),sel=alcp().querySelector('select');
 					inp[0].oninput =()=>{q.kbs=+inp[0].value;cset();save();};
 					sel.onchange=()=>{q.amb=+sel.value;sel.disabled=true;amb().then(()=>sel.disabled=false);save();};
@@ -383,8 +389,8 @@
 				files(){
 					let main=e=>{
 						alr();e=e.target.result;
-						const fx=(x)=>`<div><p class="grid btn" style="--bp:-300% 0;"></p><div>${x}\n<p class="grid btn" style="--bp:-400% -300%;"></p><p class="grid btn" style="--bp:-300% -300%;"></p><p class="grid btn" style="--bp:-700% -300%;"></p><p class="grid btn" style="--bp:-200% -300%;"></p></div></div>`;
-						alert(`<div class="items fsc">${e.map(fx).join('')}</div>`);
+						const fx=(x)=>`<div><p class="grid btn" style="--bp:-400% -100%;"></p><div>${x}\n<p class="grid btn" style="--bp:-400% -300%;"></p><p class="grid btn" style="--bp:-300% -300%;"></p><p class="grid btn" style="--bp:-700% -300%;"></p><p class="grid btn" style="--bp:-200% -300%;"></p></div></div>`;
+						alert(`${texts.sheets}<hr><div class="items">${e.map(fx).join('')}</div>`);
 						alcp().querySelectorAll('.ss').forEach((x,i)=>{});
 					};
 					ui.loading().then(()=>main=()=>{});
