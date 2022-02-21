@@ -392,7 +392,7 @@
 				}
 			},
 			load=()=>({instr:imenu.instr.value=0,sc:q.sc=0,rev:q.rev=0,del:q.del=.1,kbs:q.kbs=88,amb:q.amb=-1,reci:q.reci=0,ci:q.ci=''}=JSON.parse(localStorage.instr_stat||'{}')),
-			save=()=>localStorage.instr_stat=JSON.stringify({instr:+imenu.instr.value,sc:q.sc,hrev:q.rev,del:q.del,kbs:q.kbs,amb:q.amb,reci:q.reci,ci:q.ci}),
+			save=()=>localStorage.instr_stat=JSON.stringify({instr:+imenu.instr.value,sc:q.sc,rev:q.rev,del:q.del,kbs:q.kbs,amb:q.amb,reci:q.reci,ci:q.ci}),
 			conv=x=>{
 				const a2r=Object.fromEntries(d.i2n[0].map(Array)),
 					fx01=(y,n=0,d=1)=>y.map((z,i)=>typeof z=='string'?z.split(',').filter(w=>w in a2r).map(w=>[a2r[w],n+i,d]):fx01(z,(n+i)*z.length,d*z.length)).flat();
