@@ -391,7 +391,10 @@
 						alr();e=e.target.result;
 						const fx=(x)=>`<div><p class="grid btn" style="--bp:-400% -100%;"></p><div>${x}\n<p class="grid btn" style="--bp:-400% -300%;"></p><p class="grid btn" style="--bp:-300% -300%;"></p><p class="grid btn" style="--bp:-700% -300%;"></p><p class="grid btn" style="--bp:-200% -300%;"></p></div></div>`;
 						alert(`${texts.sheets}<hr><div class="items">${e.map(fx).join('')}</div>`);
-						alcp().querySelectorAll('.ss').forEach((x,i)=>{});
+						alcp().querySelectorAll('.items>*').forEach((x,i)=>{
+							/*templrary*/const play=x=>{x.sc+=69+q.octave+q.sc;x.bpm=60/x.bpm;const fx=(y,n=0,d=1)=>y.forEach((z,i)=>typeof z=='string'?z.split(',').forEach(w=>{if(w)trigger(+w+x.sc,0,actx.currentTime+x.bpm*(n+i)/d)}):setTimeout(()=>fx(z,(n+i)*z.length,d*z.length)));fx(x.scores);};
+							x.children[0].onclick=()=>e2p(oss().get(e[i])).then(f=>/*conv templrary*/play(f.target.result));
+						});
 					};
 					ui.loading().then(()=>main=()=>{});
 					e2p(oss().getAllKeys()).then(main).catch(errfx);
