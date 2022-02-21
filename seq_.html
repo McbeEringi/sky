@@ -54,7 +54,7 @@
 		.input{border-radius:4px;border:0;background-color:#3338;font-size:medium;margin:4px 0;padding:4px 1ex;max-width:100%;box-sizing:border-box;}
 
 		label[for=drwcb]{position:absolute;right:0;bottom:0;--size:48px;}label[for=drwcb]::before{transition:transform .5s;}#drwcb:checked~label[for=drwcb]::before{transform:rotateY(360deg);--bp:-400% 0;}
-		.drawer{width:calc(var(--size)*3.3);height:100%;padding-bottom:56px;box-sizing:border-box;text-align:center;position:absolute;top:0;right:0;overflow-y:auto;background-color:#3338;transform:translateX(100%);visibility:hidden;transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+		.drawer{width:calc(var(--size)*3.3);max-width:100%;height:100%;padding-bottom:56px;box-sizing:border-box;text-align:center;position:absolute;top:0;right:0;overflow-y:auto;background-color:#3338;transform:translateX(100%);visibility:hidden;transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 		.drawer hr{border:0;}.drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		#drwcb:checked~* .drawer{transform:translateX(0);visibility:unset;}
 
@@ -62,6 +62,12 @@
 		#albox>div>p{width:100%;height:100%;margin:0;}
 		#albox>div>pre{position:absolute;background-color:#000c;top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);margin:0;padding:16px;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);white-space:pre-wrap;overflow:auto;overflow-x:hidden;overflow-wrap:break-word;}
 		#albox>div.fade{opacity:0;pointer-events:none;visibility:hidden;}
+
+		.items{display:grid;max-width:100%;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));grid-auto-rows:1fr;grid-gap:8px;}
+		.items.fsc{width:100vw;}
+		.items>*{box-sizing:border-box;padding:4px;}
+		.items>*>*{display:inline-block;vertical-align:middle;max-width:100%;--size:40px;}
+		.items>*>.grid{--size:56px;}
 
 		/*instr*/
 		#kc{display:block;margin:0 auto;width:100%;max-height:auto;touch-action:none;opacity:.5;transition:opacity .2s;cursor:pointer;}
@@ -103,6 +109,9 @@
 				<div id="scr"><div id="scri">0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789</div></div>
 			</div>
 			<div class="drawer">
+				<p class="grid btn" style="--bp:0 -300%;" onclick="ui.files();">
+				</p>
+				<hr>
 				<p class="grid btn tex" onclick="alert(texts.info);">
 				</p>
 			</div>
@@ -115,7 +124,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2202190\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2202210\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',default:'default',cnew:'create new…',cin:'instr name',fsel:'choose file',
@@ -132,9 +141,10 @@
 			}[navigator.language.slice(0,2)]),
 			alc=()=>[...albox.querySelectorAll('#albox>:not(.fade)')].pop(),
 			alcp=(x=alc())=>x.lastElementChild,
-			alr=(x=alc())=>{x.classList.add('fade');setTimeout(()=>x.remove(),500);},
+			alr=(x=alc())=>{x.classList.add('fade');setTimeout(()=>x.remove(),250);},
 			e2p=x=>new Promise((f,r)=>Object.assign(x,{onsuccess:f,onerror:r})),
 			osi=()=>idb.transaction('instr','readwrite').objectStore('instr'),
+			oss=()=>idb.transaction('seq','readwrite').objectStore('seq'),
 			errfx=(e={})=>{alert(`⚠️${e.name||'Error'}\n<small>${e.message||'Something went wrong :('}</small>`);console.error(e);},
 			yn=x=>new Promise(f=>{alert(`${x}<div class="yn"><p class="grid btn" style="--bp:-400% 0;"></p><p class="grid btn" style="--bp:-300% 0;"></p></div>`);x=[...alcp().lastChild.children];x[0].onclick=()=>alr();x[1].onclick=()=>f();}),
 			n2nn=x=>({c:12,d:14,e:16,f:17,g:19,a:21,b:23})[x[0].toLowerCase()]+(({'#':1,s:1})[x[1]]?x.slice(2)*12+1:x.slice(1)*12),
@@ -310,66 +320,79 @@
 				deln.delayTime.value=q.del;
 				if(s){const t=actx.currentTime+.05,l=actx.outputLatency||0;(q.scf?[72,79]:[69,81]).forEach((x,i)=>trigger(x+q.octave+q.sc*q.scf,0,t+(q.del+l)*i));}
 			},
-			cfg=()=>{
-				const opt=(x,i)=>`<option value="${i-1}"${i-1==q.amb?' selected':''}>${x}</option>`;
-				alert(`${texts.kbs}
+			ui={
+				loading(x){alert('<p class="grid tex spin"></p>');const e=alc().firstChild,fx=e.onclick;return new Promise(f=>e.onclick=()=>f(fx()));},
+				cfg(){
+					const opt=(x,i)=>`<option value="${i-1}"${i-1==q.amb?' selected':''}>${x}</option>`;
+					alert(`${texts.kbs}
 <input type="range" class="style" min="64" max="128" step="4" value="${q.kbs}"><hr>${texts.amb}
 <select>${texts.ambl.map(opt).join('')}</select><hr>${texts.rev}
 <input type="range" class="style" min="0" max="1" step="0.0625" value="${q.rev}"><hr>${texts.delay}
 <input type="range" class="style" min="0" max=".2" step="0.0125" value="${q.del}"><hr><label>${texts.reci}
 <input type="checkbox"${q.reci?' checked':''}${recbtn.classList.contains('a')?' disabled':''}></label>`);
-				const inp=alcp().querySelectorAll('input'),sel=alcp().querySelector('select');
-				inp[0].oninput =()=>{q.kbs=+inp[0].value;cset();save();};
-				sel.onchange=()=>{q.amb=+sel.value;sel.disabled=true;amb().then(()=>sel.disabled=false);save();};
-				inp[1].onchange=()=>{q.rev=+inp[1].value;reverb(true);save();};
-				inp[2].onchange=()=>{q.del=+inp[2].value;delay(true);save();};
-				inp[3].onchange=()=>{q.reci=+inp[3].checked;save();};
-			},
-			cicfg=()=>{
-				alert('<p class="grid tex spin"></p>');
-				//await new Promise(f=>setTimeout(f,1000));
-				e2p(osi().getAllKeys()).then(e=>{
-					alr();
-					const fx=(x,y=[3,false,true])=>`<div class="ss"><p class="grid ${x==q.ci||(y[1]&&!q.ci)?'a d':'btn'}" style="--bp:-${y[0]}00% 0;--size:48px;"></p>${x}${y[2]?'\n\t<p class="grid tex btn" style="--bp:-100% 0;"></p><p class="grid btn" style="--bp:-400% 0;"></p>':''}</div>`
-					alert(`${texts.ci}<hr>`+e.target.result.map(x=>fx(x)).join('')+fx(texts.default,[3,true])+fx(texts.cnew,[5]));
-					alcp().querySelectorAll('.ss').forEach((x,i)=>{
-						const j=i-e.target.result.length;
-						if(j<0){
-							x.children[0].onclick=()=>{q.ci=e.target.result[i];save();set();alr();cicfg();};
-							x.children[1].onclick=()=>ciedt(e.target.result[i]).then(()=>{alr();cicfg();}).catch(errfx);//e2p(osi().get(e.target.result[i])).then(y=>ciedt(y.target.result));
-							x.children[2].onclick=()=>yn(texts.delask+'\n').then(()=>e2p(osi().delete(e.target.result[i]))).then(()=>{if(q.ci==e.target.result[i]){q.ci='';save();set();}alr();alr();cicfg();});
-						}else x.children[0].onclick=[()=>{q.ci='';save();set();alr();cicfg();},()=>ciedt().then(()=>{alr();cicfg();}).catch(errfx)][j];
-					});
-				}).catch(errfx);
-			},
-			ciedt=x=>{
-				const selfx=(y,z='')=>`<option value="${y}"${z}>${y}</option>`,
-					row=(y=['C5',{name:texts.fsel}],i='')=>`<div class="ss"><p class="grid btn" style="--bp:-400% 0;" onclick="this.parentNode.remove();"></p><select>${new Array(61).fill().map((_,i)=>{i+=36;return selfx(nn2n(i),i==n2nn(y[0])?'selected':'');})}</select><div class="file btn" data-name="${y[1].name}"><input type="file" data-i="${i}" accept=".mp3,.ogg,.m4a,.wav,.flac" onchange="this.parentNode.dataset.name=this.files[0].name;"></div></div>`,
-					main=(y={name:'',dat:[]})=>{
-						const p=yn(`<input class="style input" value="${y.name}" placeholder="${texts.cin}"><hr>${y.dat.map(row).join('')}<p class="grid btn ss" style="--bp:-500% 0;"></p><hr>`)
-							.then(z=>{
-								z={
-									name:alcp().firstChild.value||y.name||new Date().toLocaleString(),
-									dat:[...alcp().querySelectorAll('div.ss')].reduce((a,z)=>{
-										const f=z.children[2].firstChild.files[0]||(z.children[2].firstChild.dataset.i?y.dat[+z.children[2].firstChild.dataset.i][1]:null);
-										if(f)a.push([z.children[1].value,f]);return a;
-									},[])
-								};
-								alr();return z;
-							}),
-							btn=alcp().querySelectorAll('hr')[1].previousElementSibling;
-						btn.onclick=()=>btn.insertAdjacentHTML('beforebegin',row());
-						if(y.dat.length==0)btn.onclick();
-						return p;
+					const inp=alcp().querySelectorAll('input'),sel=alcp().querySelector('select');
+					inp[0].oninput =()=>{q.kbs=+inp[0].value;cset();save();};
+					sel.onchange=()=>{q.amb=+sel.value;sel.disabled=true;amb().then(()=>sel.disabled=false);save();};
+					inp[1].onchange=()=>{q.rev=+inp[1].value;reverb(true);save();};
+					inp[2].onchange=()=>{q.del=+inp[2].value;delay(true);save();};
+					inp[3].onchange=()=>{q.reci=+inp[3].checked;save();};
+				},
+				cicfg(){
+					let main=e=>{
+						alr();e=e.target.result;
+						const fx=(x,y=[3,false,true])=>`<div><p class="grid ${x==q.ci||(y[1]&&!q.ci)?'a d':'btn'}" style="--bp:-${y[0]}00% 0;"></p><div>${x}${y[2]?'\n<p class="grid tex btn" style="--bp:-100% 0;"></p><p class="grid btn" style="--bp:-400% 0;"></p>':''}</div></div>`
+						alert(`${texts.ci}<hr><div class="items">`+e.map(x=>fx(x)).join('')+fx(texts.default,[3,true])+fx(texts.cnew,[5])+'</div>');
+						alcp().querySelectorAll('.items>*').forEach((x,i)=>{
+							const j=i-e.length;
+							if(j<0){
+								x.children[0].onclick=()=>{q.ci=e[i];save();set();alr();ui.cicfg();};
+								x.children[1].children[0].onclick=()=>ui.ciedt(e[i]);
+								x.children[1].children[1].onclick=()=>yn(texts.delask+'\n').then(()=>e2p(osi().delete(e[i]))).then(()=>{if(q.ci==e[i]){q.ci='';save();set();}alr();alr();ui.cicfg();});
+							}else x.children[0].onclick=[()=>{q.ci='';save();set();alr();ui.cicfg();},()=>ui.ciedt()][j];
+						});
 					};
-				return(
-					x==undefined?
-					main().then(y=>y&&y.dat.length?e2p(osi().add(y)).then(()=>{q.ci=y.name;save();set();}):0):
-					e2p(osi().get(x)).then(y=>main(y.target.result)).then(y=>y&&y.dat.length?(x==y.name?e2p(osi().put(y)):e2p(osi().add(y)).then(()=>e2p(osi().delete(x)))).then(()=>{if(q.ci==x){q.ci=y.name;save();}set();}):0)
-				);
+					ui.loading().then(()=>main=()=>{});
+					e2p(osi().getAllKeys()).then(main).catch(errfx);
+				},
+				ciedt(x){
+					const selfx=(y,z='')=>`<option value="${y}"${z}>${y}</option>`,
+						row=(y=['C5',{name:texts.fsel}],i='')=>`<div class="ss"><p class="grid btn" style="--bp:-400% 0;" onclick="this.parentNode.remove();"></p><select>${new Array(61).fill().map((_,i)=>{i+=36;return selfx(nn2n(i),i==n2nn(y[0])?'selected':'');})}</select><div class="file btn" data-name="${y[1].name}"><input type="file" data-i="${i}" accept=".mp3,.ogg,.m4a,.wav,.flac" onchange="this.parentNode.dataset.name=this.files[0].name;"></div></div>`,
+						main=(y={name:'',dat:[]})=>{
+							const p=yn(`<input class="style input" value="${y.name}" placeholder="${texts.cin}"><hr>${y.dat.map(row).join('')}<p class="grid btn ss" style="--bp:-500% 0;"></p><hr>`)
+								.then(z=>{
+									z={
+										name:alcp().firstChild.value||y.name||new Date().toLocaleString(),
+										dat:[...alcp().querySelectorAll('div.ss')].reduce((a,z)=>{
+											const f=z.children[2].firstChild.files[0]||(z.children[2].firstChild.dataset.i?y.dat[+z.children[2].firstChild.dataset.i][1]:null);
+											if(f)a.push([z.children[1].value,f]);return a;
+										},[])
+									};
+									alr();return z;
+								}),
+								btn=alcp().querySelectorAll('hr')[1].previousElementSibling;
+							btn.onclick=()=>btn.insertAdjacentHTML('beforebegin',row());
+							if(y.dat.length==0)btn.onclick();
+							return p;
+						};
+					(
+						x==undefined?
+						main().then(y=>y&&y.dat.length?e2p(osi().add(y)).then(()=>{q.ci=y.name;save();set();}):0):
+						e2p(osi().get(x)).then(y=>main(y.target.result)).then(y=>y&&y.dat.length?(x==y.name?e2p(osi().put(y)):e2p(osi().add(y)).then(()=>e2p(osi().delete(x)))).then(()=>{if(q.ci==x){q.ci=y.name;save();}set();}):0)
+					).then(()=>{alr();ui.cicfg();}).catch(errfx);
+				},
+				files(){
+					let main=e=>{
+						alr();e=e.target.result;
+						const fx=(x)=>`<div><p class="grid btn" style="--bp:-300% 0;"></p><div>${x}\n<p class="grid btn" style="--bp:-400% -300%;"></p><p class="grid btn" style="--bp:-300% -300%;"></p><p class="grid btn" style="--bp:-700% -300%;"></p><p class="grid btn" style="--bp:-200% -300%;"></p></div></div>`;
+						alert(`<div class="items fsc">${e.map(fx).join('')}</div>`);
+						alcp().querySelectorAll('.ss').forEach((x,i)=>{});
+					};
+					ui.loading().then(()=>main=()=>{});
+					e2p(oss().getAllKeys()).then(main).catch(errfx);
+				}
 			},
 			load=()=>({instr:imenu.instr.value=0,sc:q.sc=0,rev:q.rev=0,del:q.del=.1,kbs:q.kbs=88,amb:q.amb=-1,reci:q.reci=0,ci:q.ci=''}=JSON.parse(localStorage.instr_stat||'{}')),
-			save=()=>localStorage.instr_stat=JSON.stringify({instr:+imenu.instr.value,sc:q.sc,rev:q.rev,del:q.del,kbs:q.kbs,amb:q.amb,reci:q.reci,ci:q.ci}),
+			save=()=>localStorage.instr_stat=JSON.stringify({instr:+imenu.instr.value,sc:q.sc,hrev:q.rev,del:q.del,kbs:q.kbs,amb:q.amb,reci:q.reci,ci:q.ci}),
 			conv=x=>{
 				const a2r=Object.fromEntries(d.i2n[0].map(Array)),
 					fx01=(y,n=0,d=1)=>y.map((z,i)=>typeof z=='string'?z.split(',').filter(w=>w in a2r).map(w=>[a2r[w],n+i,d]):fx01(z,(n+i)*z.length,d*z.length)).flat();
@@ -389,8 +412,8 @@
 		scd.children[0].onclick=()=>{q.sc--;scale(true);save();};
 		scd.children[1].onclick=()=>{q.sc=0;scale(true);save();};
 		scd.children[2].onclick=()=>{q.sc++;scale(true);save();};
-		cibtn.onclick=cicfg;
-		cfgbtn.onclick=cfg;
+		cibtn.onclick=ui.cicfg;
+		cfgbtn.onclick=ui.cfg;
 		infobtn.onclick=()=>alert(texts.info);
 		alert=x=>{albox.insertAdjacentHTML('beforeend',`<div class="fade"><p onclick="alr(this.parentNode);"></p><pre class="style">${x}</pre></div>`);albox.lastElementChild.offsetWidth;albox.lastElementChild.classList.remove('fade');};
 		onresize=cset;
