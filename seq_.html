@@ -45,7 +45,7 @@
 		:disabled+.grid,.grid.d,.d .grid{filter:grayscale(1)opacity(.7);pointer-events:none;}
 		.btn:active{transform:scale(.85);}.btn:not(:active){transition:transform .2s;}
 		.s64{--size:64px;}.s40{--size:40px;}
-		.spin{--bp:-200% 0;animation:2s linear spin infinite;}.spin::before{background-color:#0000;}
+		.spin{--bp:-200% 0;--col:#0000;animation:2s linear spin infinite;}
 		.clock::before{--bp:-200% -0%;filter:saturate(.3);}.clock::after{content:"";transition:.2s;transform:rotate(var(--rot,45deg));filter:drop-shadow(0 0 2px #aef);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M6 6h1v1h-1z' fill='%23caf0f6'/%3E%3C/svg%3E");}
 		.clock.d::after,.d .clock::after{--rot:initial;}
 
