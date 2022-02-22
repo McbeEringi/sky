@@ -398,13 +398,10 @@
 							/*templrary*/const play=x=>{x.sc+=69+q.octave+q.sc;x.bpm=60/x.bpm;const fx=(y,n=0,d=1)=>y.forEach((z,i)=>typeof z=='string'?z.split(',').forEach(w=>{if(w)trigger(+w+x.sc,0,actx.currentTime+x.bpm*(n+i)/d)}):setTimeout(()=>fx(z,(n+i)*z.length,d*z.length)));fx(x.scores);};
 							x.children[0].onclick=()=>e2p(oss().get(e[i])).then(f=>/*conv templrary*/play(f.target.result));
 							[
-								()=>{
-									yn(`<div class="tac">${gb(4,['s64','--col:#0000;'])}</div><input class="style input tac" value="${e[i]}">`)
-										.then(()=>e2p(oss().get(e[i])))
-										.then(e=>{const name=alcp().querySelector('input').value;alr();return e2p(oss().add({...e.target.result,name}));})
-										.then(()=>e2p(oss().delete(e[i]))).then(()=>{alr();ui.files();}).catch(errfx);
-									alcp().querySelector('input').focus();
-								},//ren
+								()=>yn(`<div class="tac">${gb(4,['s64','--col:#0000;'])}</div><input class="style input tac" value="${e[i]}">`)
+									.then(()=>e2p(oss().get(e[i])))
+									.then(e=>{const name=alcp().querySelector('input').value;alr();return e2p(oss().add({...e.target.result,name}));})
+									.then(()=>e2p(oss().delete(e[i]))).then(()=>{alr();ui.files();}).catch(errfx),//ren
 								()=>e2p(oss().get(e[i])).then(e=>e2p(oss().add({...e.target.result,name:texts.copy(e.target.result.name)}))).then(()=>{alr();ui.files();}).catch(errfx),//dup
 								()=>{
 									alert(`<div class="tac">${gb(7,['s64','--col:#0000;'])}\n${texts.wip}</div>`)
