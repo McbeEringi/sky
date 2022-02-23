@@ -62,7 +62,7 @@
 		#albox>div{position:fixed;top:0;left:0;width:100%;height:100%;transition:.2s;background-color:#0004;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
 		#albox>div>p{width:100%;height:100%;margin:0;}
 		#albox>div>pre{position:absolute;background-color:#000c;top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);margin:0;padding:16px;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);white-space:pre-wrap;overflow:auto;overflow-x:hidden;overflow-wrap:break-word;}
-		#albox>div.fade{opacity:0;pointer-events:none;visibility:hidden;}
+		#albox>div.fade{opacity:0;pointer-events:none;}
 
 		.items{display:grid;max-width:100%;width:100vw;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));grid-auto-rows:1fr;grid-gap:8px;}
 		.items::after{content:"";grid-column:1/-1;}
@@ -154,7 +154,7 @@
 			osi=()=>idb.transaction('instr','readwrite').objectStore('instr'),
 			oss=()=>idb.transaction('seq','readwrite').objectStore('seq'),
 			errfx=(e={})=>{alert(`⚠️${e.name||e.target.error.name||'Error'}\n<small>${e.message||e.target.error.message||'Something went wrong :('}</small>`);console.error(e.target||e);},
-			yn=x=>new Promise(f=>{alert(`${x}<div class="s64 tac"><p class="grid btn" style="--bp:-400% 0;"></p><p class="grid btn" style="--bp:-300% 0;"></p></div>`);x=[...alcp().lastChild.children];x[0].onclick=()=>alr();x[1].onclick=()=>f();}),
+			yn=(x,y=()=>{})=>new Promise(f=>{alert(`${x}<div class="s64 tac"><p class="grid btn" style="--bp:-400% 0;"></p><p class="grid btn" style="--bp:-300% 0;"></p></div>`);x=alcp();y(x);x=[...x.lastChild.children];x[0].onclick=()=>alr();x[1].onclick=()=>f();}),
 			n2nn=x=>({c:12,d:14,e:16,f:17,g:19,a:21,b:23})[x[0].toLowerCase()]+(({'#':1,s:1})[x[1]]?x.slice(2)*12+1:x.slice(1)*12),
 			nn2n=x=>['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'][x%12]+Math.floor(x/12-1),
 			bp=i=>`${i%8*-100}% ${Math.floor(i*.125+1)*-100}%`,
@@ -399,19 +399,30 @@
 							/*templrary*/const play=x=>{x.sc+=69+q.octave+q.sc;x.bpm=60/x.bpm;const fx=(y,n=0,d=1)=>y.forEach((z,i)=>typeof z=='string'?z.split(',').forEach(w=>{if(w)trigger(+w+x.sc,0,actx.currentTime+x.bpm*(n+i)/d)}):setTimeout(()=>fx(z,(n+i)*z.length,d*z.length)));fx(x.scores);};
 							x.children[0].onclick=()=>e2p(oss().get(e[i])).then(f=>/*conv templrary*/play(f.target.result));
 							[
-								()=>yn(`<div class="tac">${gb(4,['s64','--col:#0000;'])}</div><input class="style input tac" value="${esc(e[i])}">`)
-									.then(()=>e2p(oss().get(e[i])))
-									.then(e=>{const name=alcp().querySelector('input').value;alr();return e2p(oss().add({...e.target.result,name}));})
-									.then(()=>e2p(oss().delete(e[i]))).then(()=>{alr();ui.files();}).catch(errfx),//ren
-								()=>e2p(oss().get(e[i])).then(e=>e2p(oss().add({...e.target.result,name:texts.copy(e.target.result.name)}))).then(()=>{alr();ui.files();}).catch(errfx),//dup
-								()=>{
+								async()=>{//ren
+									const a=(await e2p(oss().get(e[i]))).target.result;
+									await yn(`<div class="tac">${gb(4,['s64','--col:#0000;'])}</div><input class="style input tac" value="${esc(e[i])}">`,x=>x.querySelector('input').focus());
+									const name=alcp().querySelector('input').value;alr();
+									await e2p(oss().add({...a,name}));
+									await e2p(oss().delete(e[i]));
+									alr();ui.files();
+								},
+								async()=>{//dup
+									const a=(await e2p(oss().get(e[i]))).target.result;
+									await e2p(oss().add({...a,name:texts.copy(a.name)}));
+									alr();ui.files();
+								},
+								async()=>{//exp
+									const a=(await e2p(oss().get(e[i]))).target.result;
 									alert(`<div class="tac">${gb(7,['s64','--col:#0000;'])}\n${esc(e[i])}\n${texts.wip}</div>`)
-								},//exp
-								()=>{
-									yn(`<div class="tac">${gb(2,['s64','--col:#0000;'])}\n${esc(e[i])}\n${texts.delask}</div>`).then(()=>{alr();e2p(oss().delete(e[i]));}).then(()=>{alr();ui.files();}).catch(errfx);
-									alcp().lastChild.lastChild.style.cssText+='--col:#f44c;';
-								},//del
-							].forEach((y,i)=>x.children[1].children[i].onclick=y);
+								},
+								async()=>{//del
+									await yn(`<div class="tac">${gb(2,['s64','--col:#0000;'])}\n${esc(e[i])}\n${texts.delask}</div>`,x=>x.lastChild.lastChild.style.cssText+='--col:#f44c;');
+									alr();
+									await e2p(oss().delete(e[i]));
+									alr();ui.files();
+								}
+							].forEach((y,i)=>x.children[1].children[i].onclick=()=>y().catch(errfx));
 						});
 					};
 					ui.loading().then(()=>main=()=>{});
