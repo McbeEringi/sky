@@ -62,7 +62,7 @@
 		#albox>div{position:fixed;top:0;left:0;width:100%;height:100%;transition:.2s;background-color:#0004;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
 		#albox>div>p{width:100%;height:100%;margin:0;}
 		#albox>div>pre{position:absolute;background-color:#000c;top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);margin:0;padding:16px;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);white-space:pre-wrap;overflow:auto;overflow-x:hidden;overflow-wrap:break-word;}
-		#albox>div.fade{opacity:0;pointer-events:none;visibility:hidden;}
+		#albox>div.fade{opacity:0;pointer-events:none;}
 
 		.items{display:grid;max-width:100%;width:100vw;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));grid-auto-rows:1fr;grid-gap:8px;}
 		.items::after{content:"";grid-column:1/-1;}
@@ -400,8 +400,8 @@
 							x.children[0].onclick=()=>e2p(oss().get(e[i])).then(f=>/*conv templrary*/play(f.target.result));
 							[
 								async()=>{//ren
+									await yn(`<div class="tac">${gb(4,['s64','--col:#0000;'])}</div><input class="style input tac" value="${esc(e[i])}">`,x=>x.querySelector('input').focus());
 									const a=(await e2p(oss().get(e[i]))).target.result;
-									await yn(`<div class="tac">${gb(4,['s64','--col:#0000;'])}</div><input class="style input tac" value="${esc(e[i])}">`,x=>x.parentNode.ontransitionend=()=>{x.parentNode.ontransitionend=null;x.querySelector('input').focus();});
 									const name=alcp().querySelector('input').value;alr();
 									await e2p(oss().add({...a,name}));
 									await e2p(oss().delete(e[i]));
@@ -422,7 +422,7 @@
 									await e2p(oss().delete(e[i]));
 									alr();ui.files();
 								}
-							].forEach((y,i)=>x.children[1].children[i].onclick=()=>y().catch(errfx));
+							].forEach((y,i)=>x.children[1].children[i].onclick=()=>{y().catch(errfx);});
 						});
 					};
 					ui.loading().then(()=>main=()=>{});
