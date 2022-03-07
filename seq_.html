@@ -498,7 +498,7 @@
 		};
 		load();addEventListener('idbready',()=>{q.tex.src='img/seq_.svg';set();scale();reverb();delay();amb();});
 		if(urlq.pwa=='1'){const a=document.body.querySelector('a');a.href+='&pwa=1';a.target='';}
-		if('instr'in urlq){[...contents.children].slice(1).forEach(x=>x.hidden=true);texts.info=texts.info.replace('sky_seq','sky_instruments').replace('sky_seq] v4','sky_instr] v5');}
+		if('instr'in urlq){document.title='sky_instruments';[...contents.children].slice(1).forEach(x=>x.hidden=true);texts.info=texts.info.replace('sky_seq','sky_instruments').replace('sky_seq] v4','sky_instr] v5');}
 	</script>
 </body>
 </html>
