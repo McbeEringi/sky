@@ -19,7 +19,7 @@
 	<link rel="apple-touch-icon" href="img/sky.png">
 	<!--sw-->
 	<meta name="theme-color" content="#214"/>
-	<meta http-equiv="refresh" content="0;URL=seq_.html?instr" />
+	<script>location.href=location.href.replace(/instr_.*/,'seq_.html?instr&'+location.search.slice(1)).replace(/&$/,'');</script>
 </head>
 <body></body>
 </html>
