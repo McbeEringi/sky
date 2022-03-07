@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head prefix="og: http://ogp.me/ns#">
+	<!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-145066191-2"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','UA-145066191-2');</script>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>sky_instruments</title>
+	<meta name="Description" content="Sky:CotL. PWA(offline) compatible.">
+	<link rel="shortcut icon" type="image/svg+xml" href="img/ico/instr.svg">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="sky_instruments">
+	<meta property="og:description" content="Skyの楽器練習ができるページです">
+	<meta property="og:url" content="https://mcbeeringi.github.io/sky/instr.html">
+	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/instr.jpg">
+	<!--iOS-->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="Sky Stuff">
+	<link rel="apple-touch-icon" href="img/sky.png">
+	<!--sw-->
+	<link rel="manifest" href="skymf.json">
+	<meta name="theme-color" content="#214"/>
+	<script>
+		if('serviceWorker'in navigator&&location.protocol.includes('https'))window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});},{once:true});
+	</script>
+</head>
+<body>
+	<script src="style.js"></script>
+	<style>html,body,iframe{width:100%;height:100%;border:0;border-radius:0;margin:0;overflow:hidden;}</style>
+	<iframe src="seq_.html?instr"></iframe>
+	<script>bg.remove();const e=document.body.querySelector('iframe'),fx=()=>document.activeElement.closest('iframe')||e.focus();setInterval(fx,2000);fx();</script>
+</body>
+</html>

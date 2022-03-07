@@ -126,7 +126,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2202230\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2203070\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',default:'default',cnew:'create new…',cin:'instr name',fsel:'choose file',
@@ -212,7 +212,9 @@
 			deln=actx.createDelay(1),
 			cset=()=>{
 				Object.assign(kc.style,{maxWidth:q.kbs*q.grid[0]+'px',maxHeight:q.kbs*q.grid[1]+'px',marginTop:`min(${q.kbs/2}px,${50/q.grid[0]}%)`});
-				kc.width=Math.min(kc.parentNode.clientWidth,q.kbs*q.grid[0])*devicePixelRatio;q.size=kc.width/q.grid[0];kc.height=q.size*q.grid[1];
+				q.size=Math.min(kc.parentNode.clientWidth,q.kbs*q.grid[0])/q.grid[0];//q.size=Math.min(q.size,Math.min(kc.parentNode.clientHeight,q.kbs*(q.grid[1]+.5))/(q.grid[1]+.5));
+				kc.width=q.size*q.grid[0]*devicePixelRatio;kc.height=q.size*q.grid[1]*devicePixelRatio;
+				kctx.scale(devicePixelRatio,devicePixelRatio);
 				draw(true);
 			},
 			set=(i=+imenu.instr.value)=>{
@@ -268,7 +270,7 @@
 				if(!q.gflag)return;
 				if(t)t=performance.now()-t;
 				const mix=(x,y,a)=>x*(1-a)+y*a,
-					r=12*devicePixelRatio,a=q.size*.784,ar=a-r-r,ah=a/2,
+					r=12,a=q.size*.784,ar=a-r-r,ah=a/2,
 					rs=(x=0,y=0,c=1,s=1)=>{
 						const rs=r*s,as=a*s,ars=ar*s,arc=ars*c,rc=rs*c,sign=+(Math.sign(c)<0);
 						return new Path2D(`M${x} ${y}m${-arc/2-rc} ${-ars/2}
@@ -496,6 +498,7 @@
 		};
 		load();addEventListener('idbready',()=>{q.tex.src='img/seq_.svg';set();scale();reverb();delay();amb();});
 		if(urlq.pwa=='1'){const a=document.body.querySelector('a');a.href+='&pwa=1';a.target='';}
+		if('instr'in urlq){[...contents.children].slice(1).forEach(x=>x.hidden=true);texts.info=texts.info.replace('sky_seq','sky_instruments').replace('sky_seq] v4','sky_instr] v5');}
 	</script>
 </body>
 </html>

@@ -18,9 +18,8 @@ const cacheName='cache2202130',STATIC_DATA=[
 	//wings
 	'wings.html?pwa=1',
 	//instr
-	'instr.html?pwa=1','com.css','com.js',
+	'instr.html?pwa=1',
 	'img/instr.svg','img/sel.svg',
-	'https://mcbeeringi.github.io/src/toggle.css',
 	'audio/instr/musicbox/a3.mp3',
 	'audio/instr/musicbox/a4.mp3',
 	'audio/instr/musicbox/a5.mp3',
@@ -33,6 +32,8 @@ const cacheName='cache2202130',STATIC_DATA=[
 	'https://cdn.jsdelivr.net/npm/tone/build/Tone.js',
 	'seq.html?pwa=1',
 	'seq.js','img/seq.svg'
+
+	//'instr_.html?pwa=1','seq_.html?instr','img/instr.svg'//,'img/sel.svg',
 ],
 noCache=[
 	'analytics',
