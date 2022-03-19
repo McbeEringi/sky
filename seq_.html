@@ -126,7 +126,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2203070\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2203190\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',default:'default',cnew:'create new…',cin:'instr name',fsel:'choose file',
@@ -243,14 +243,21 @@
 					});
 					cset();
 					if(!q.scf)scd.classList.add('d');else scd.classList.remove('d');
-					Promise.all(d.instr[i][2].map(x=>
-						Promise.all(Object.entries(x).map(async y=>{
-							y[1]=await(await fetch(d.instr[i][0]+y[1])).arrayBuffer();
-							y[1]=await new Promise((f,r)=>actx.decodeAudioData(y[1],f,r));
-							y[0]=n2nn(y[0]);
-							return y;
-						}))
-					)).then(x=>{q.abuff=x;kc.style.opacity=1;}).catch(errfx);
+					Promise.all([
+						Promise.all(d.instr[i][2].map(x=>
+							Promise.all(Object.entries(x).map(async y=>{
+								y[1]=await(await fetch(d.instr[i][0]+y[1])).arrayBuffer();
+								y[1]=await new Promise((f,r)=>actx.decodeAudioData(y[1],f,r));
+								y[0]=n2nn(y[0]);
+								return y;
+							}))
+						)).then(x=>q.abuff=x),
+						Promise.all(new Array(d.instr[i][4]||0).fill().map(async(x,j)=>{
+							x=await(await fetch(d.instr[i][0]+`fret${j}.mp3`)).arrayBuffer();
+							x=await new Promise((f,r)=>actx.decodeAudioData(x,f,r));
+							return x;
+						})).then(x=>q.fret=x)
+					]).then(()=>kc.style.opacity=1).catch(errfx);
 				}
 			},
 			fire=e=>{
@@ -262,6 +269,13 @@
 						i=Math.floor(p[0])+Math.floor(p[1])*q.grid[0],
 						trg=!q.gflag.some(x=>x);
 					trigger(69+q.i2n[i]+q.octave+q.sc*q.scf,q.i2p[i]);
+					if(q.fret.length){
+						const r=Math.random()*10;
+						if(r<1){
+							const abs=actx.createBufferSource();abs.buffer=q.fret[Math.floor(r*q.fret.length)];
+							abs.connect(deln);abs.start(actx.currentTime+.85);
+						}
+					}
 					q.gflag[i]=q.flip;
 					if(trg)draw();
 				});
