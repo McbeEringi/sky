@@ -87,7 +87,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2203190\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_instr] v5 build:2203191\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',default:'default',cnew:'create new…',cin:'instr name',fsel:'choose file',
@@ -168,7 +168,7 @@
 				kc.style.opacity='';
 				if(i==0&&q.ci){
 					e2p(osi().get(q.ci)).then(e=>{
-						Object.assign(q,{octave:0,i2n:d.i2n[0],i2p:d.i2p[d.p[0]],gflag:new Array(d.i2n[0].length).fill(0),grid:d.k2g[d.g[0]],c:true,scf:true});
+						Object.assign(q,{abuff:null,octave:0,i2n:d.i2n[0],i2p:d.i2p[d.p[0]],gflag:new Array(d.i2n[0].length).fill(0),grid:d.k2g[d.g[0]],c:true,scf:true,fret:[]});
 						mico.setAttribute('style',`--bp:${bp(i)};`);
 						cset();
 						scd.classList.remove('d');
@@ -181,6 +181,7 @@
 					}).then(x=>{q.abuff=[x];kc.style.opacity=1;}).catch(errfx);
 				}else{
 					Object.assign(q,{
+						abuff:null,
 						octave:d.instr[i][1]*12,
 						i2n:d.i2n[d.instr[i][3]],
 						i2p:d.i2p[d.p[d.instr[i][3]]],
