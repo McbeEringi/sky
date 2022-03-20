@@ -416,8 +416,7 @@
 							fx=x=>`<div><p class="grid btn" style="--bp:-400% -100%;"></p><div>${esc(x)}\n${[4,3,7,2].map(y=>gb(y)).join('')}</div></div>`;
 						alert(`${texts.sheets}<hr><div class="items">${e.map(fx).join('')}</div>`);
 						alcp().querySelectorAll('.items>*').forEach((x,i)=>{
-							/*templrary*/const play=x=>{x.sc+=69+q.octave+q.sc;x.bpm=60/x.bpm;const fx=(y,n=0,d=1)=>y.forEach((z,i)=>typeof z=='string'?z.split(',').forEach(w=>{if(w)trigger(+w+x.sc,0,actx.currentTime+x.bpm*(n+i)/d)}):setTimeout(()=>fx(z,(n+i)*z.length,d*z.length)));fx(x.scores);};
-							x.children[0].onclick=()=>e2p(oss().get(e[i])).then(f=>/*conv templrary*/play(f.target.result));
+							x.children[0].onclick=()=>e2p(oss().get(e[i])).then(f=>conv(f.target.result));
 							[
 								async()=>{//ren
 									await yn(`<div class="tac">${gb(4,['s64','--col:#0000;'])}</div><input class="style input tac" value="${esc(e[i])}">`,x=>x.querySelector('input').focus());
@@ -453,9 +452,10 @@
 			save=()=>localStorage.instr_stat=JSON.stringify({instr:+imenu.instr.value,sc:q.sc,rev:q.rev,del:q.del,kbs:q.kbs,amb:q.amb,reci:q.reci,ci:q.ci}),
 			conv=x=>{
 				const a2r=Object.fromEntries(d.i2n[0].map(Array)),
-					fx01=(y,n=0,d=1)=>y.map((z,i)=>typeof z=='string'?z.split(',').filter(w=>w in a2r).map(w=>[a2r[w],n+i,d]):fx01(z,(n+i)*z.length,d*z.length)).flat();
-				x=({ver:1,name:x.name,sc:x.sc,bpm:x.bpm,scores:[{instr:x.instr||0,gain:1,score:fx01(x.scores)}]})//score:[...[note,tnum,tden]]
-				x.scores[0].score.forEach(y=>trigger(69+q.i2n[y[0]]+q.octave+q.sc+x.sc,0,actx.currentTime+60/x.bpm*y[1]/y[2]));
+					fx01=(y,n=0,d=1)=>y.map((z,i)=>typeof z=='string'?z.split(',')/*.filter(w=>w in a2r)*/.map(w=>[/*a2r[*/+w/*]*/,n+i,d]):fx01(z,(n+i)*z.length,d*z.length)).flat();
+				x=({ver:1,name:x.name,sc:x.sc,bpm:x.bpm,scores:[{instr:x.instr||0,gain:1,score:fx01(x.scores)}]});//score:[...[note,tnum,tden]]
+				console.log(q.main=x);alr();
+				x.scores[0].score.forEach(y=>trigger(69+/*q.i2n[*/y[0]/*]*/+q.octave+q.sc+x.sc,0,actx.currentTime+60/x.bpm*y[1]/y[2]));
 				return x;
 			};
 			//const fullscr=(x=document.body)=>{x.requestFullscreen=x.requestFullscreen||x.webkitRequestFullscreen;x.requestFullscreen();};
