@@ -188,7 +188,8 @@
 						gflag:new Array(d.i2n[d.instr[i][3]].length).fill(0),
 						grid:d.k2g[d.g[d.instr[i][3]]],
 						c:d.g[d.instr[i][3]]==0,
-						scf:d.instr[i][3]!=1
+						scf:d.instr[i][3]!=1,
+						fret:null
 					});
 					mico.setAttribute('style',`--bp:${bp(i)};`);
 					cset();
@@ -211,7 +212,7 @@
 				}
 			},
 			fire=e=>{
-				if(!q.abuff)return;
+				if(!q.abuff||!q.fret)return;
 				e.preventDefault();
 				const bcr=kc.getBoundingClientRect();
 				(e.changedTouches?[...e.changedTouches]:[e]).forEach(x=>{
