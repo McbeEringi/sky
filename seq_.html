@@ -127,7 +127,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2203191\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2203290\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',default:'default',cnew:'create new…',cin:'instr name',fsel:'choose file',
@@ -301,7 +301,7 @@
 						if(t)x=Math.max(x-t,0);
 						i=[i%q.grid[0],Math.floor(i/q.grid[0])];
 						const p=i.map(y=>(y+.5)*q.size),c=Math.cos(x/q.flip*2*Math.PI),s=mix(1,.8,x/q.flip);
-						kctx.clearRect(p[0]-ah,p[1]-ah,a,a);
+						kctx.clearRect(...i.map(y=>y*q.size),q.size,q.size);
 						kctx.fill(rs(...p,c,s));
 						kctx.drawImage(q.tex, q.c&&i[0]==i[1]*2?0:128*(2-i[0]%2),0,128,128, p[0]-ah*c*s,p[1]-ah*s,a*c*s,a*s);
 					}
