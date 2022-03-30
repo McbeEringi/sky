@@ -214,10 +214,10 @@
 			revn=actx.createConvolver(),gn0=actx.createGain(),gn1=actx.createGain(),
 			deln=actx.createDelay(1),
 			cset=()=>{
+				const pr=devicePixelRatio;
 				Object.assign(kc.style,{maxWidth:q.kbs*q.grid[0]+'px',maxHeight:q.kbs*q.grid[1]+'px',marginTop:`min(${q.kbs/2}px,${50/q.grid[0]}%)`});
 				q.size=Math.min(kc.parentNode.clientWidth,q.kbs*q.grid[0])/q.grid[0];//q.size=Math.min(q.size,Math.min(kc.parentNode.clientHeight,q.kbs*(q.grid[1]+.5))/(q.grid[1]+.5));
-				kc.width=q.size*q.grid[0]*devicePixelRatio;kc.height=q.size*q.grid[1]*devicePixelRatio;
-				kctx.scale(devicePixelRatio,devicePixelRatio);
+				kc.width=q.size*q.grid[0]*pr;kc.height=q.size*q.grid[1]*pr;kctx.scale(pr,pr);
 				draw(true);
 			},
 			set=(i=+imenu.instr.value)=>{
@@ -303,10 +303,10 @@
 					if(all||x){
 						if(t)x=Math.max(x-t,0);
 						i=[i%q.grid[0],Math.floor(i/q.grid[0])];
-						const p=i.map(y=>(y+.5)*q.size),c=Math.cos(x/q.flip*2*Math.PI),s=mix(1,.8,x/q.flip);
+						const p=i.map(y=>(y+.5)*q.size),c=Math.cos(x/q.flip*2*Math.PI),s=mix(1,.8,x/q.flip),o=q.tex.width*.125;
 						kctx.clearRect(...i.map(y=>y*q.size),q.size,q.size);
 						kctx.fill(rs(...p,c,s));
-						kctx.drawImage(q.tex, q.c&&i[0]==i[1]*2?0:128*(2-i[0]%2),0,128,128, p[0]-ah*c*s,p[1]-ah*s,a*c*s,a*s);
+						kctx.drawImage(q.tex, q.c&&i[0]==i[1]*2?0:o*(2-i[0]%2),0,o,o, p[0]-ah*c*s,p[1]-ah*s,a*c*s,a*s);
 					}
 					return x;
 				});
@@ -515,12 +515,15 @@
 			recbtn.classList.remove('d');
 		}
 
-		q.tex.onload=()=>{
-			const c=document.createElement('canvas');c.width=q.tex.naturalWidth;c.height=q.tex.naturalHeight;
-			c.getContext('2d').drawImage(q.tex,0,0);q.tex=c;draw(true);
-			document.body.insertAdjacentHTML('beforeend',`<style>.grid::before{background-image:url(${c.toDataURL()});}</style>`);
-		};
-		load();addEventListener('idbready',()=>{q.tex.src='img/seq_.svg';set();scale();reverb();delay();amb();});
+		Object.assign(q.tex,{
+			onload:()=>{
+				const c=document.createElement('canvas');c.width=q.tex.naturalWidth;c.height=q.tex.naturalHeight;
+				c.getContext('2d').drawImage(q.tex,0,0,c.width,c.height);q.tex=c;draw(true);
+				document.body.insertAdjacentHTML('beforeend',`<style>.grid::before{background-image:url(${c.toDataURL()});}</style>`);
+			},
+			src:'img/seq_.svg'
+		});
+		load();addEventListener('idbready',()=>{set();scale();reverb();delay();amb();});
 		if(urlq.pwa=='1'){const a=document.body.querySelector('a');a.href+='&pwa=1';a.target='';}
 		if('instr'in urlq){document.title='sky_instruments';[...contents.children].slice(1).forEach(x=>x.hidden=true);texts.info=texts.info.replace('sky_seq','sky_instruments').replace('sky_seq] v4','sky_instr] v5');}
 	</script>

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="512" viewBox="0 0 1024 512">
 	<desc>sky seq sprite</desc>
 	<style>
-		g>*{fill:#0000;stroke:#fea;stroke-width:3;filter:url(#sh);font-family:sans-serif;font-size:80px;stroke-linecap:round;stroke-linejoin:round;}
+		g>*{fill:none;stroke:#fea;stroke-width:3;filter:url(#sh);font-family:sans-serif;font-size:80px;stroke-linecap:round;stroke-linejoin:round;}
 		g{filter:none;}
 	</style>
 	<defs>
