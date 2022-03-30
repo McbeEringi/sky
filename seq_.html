@@ -39,7 +39,7 @@
 
 		.grid{appearance:none;border:0;padding:0;background:none;display:inline-block;width:var(--size);height:var(--size);margin:0;vertical-align:middle;position:relative;overflow:hidden;touch-action:manipulation;cursor:pointer;outline:0;}
 		.grid::before,.grid::after,.grid *{content:"";display:block;width:78.4%;height:78.4%;position:absolute;top:0;left:0;margin:10.8%;border-radius:17%;}
-		.grid::before{background:var(--bp)/800% var(--col) url(img/seq_.svg);}.grid::after{content:none;}
+		.grid::before{background:var(--bp_,var(--bp))/800% var(--col) url(img/seq_.svg);}.grid::after{content:none;}
 		input:focus+.grid::before,.grid:focus::before{box-shadow:0 0 0 1.5px #aef;}
 		.grid.tex::before{background-image:url(img/tex.webp);}.nowebp .grid.tex::before{background-image:url(img/tex.png);}
 		:checked+.grid::after,.grid.a::after{content:"";box-sizing:border-box;border:calc(var(--size)*.13328) solid #00000001;border-image:url(img/sel.svg) 33.333%;}:checked+.grid,.grid.a{transform:rotateY(360deg);transition:transform .5s;}
@@ -55,7 +55,7 @@
 		.file::after{content:attr(data-name);pointer-events:none;line-height:var(--size);padding:0 1ex;}
 		.input{border-radius:4px;border:0;background-color:var(--col);font-size:medium;margin:4px 0;padding:4px 1ex;max-width:100%;box-sizing:border-box;vertical-align:middle;}
 
-		label[for=drwcb]{position:absolute;right:0;bottom:0;--size:48px;}label[for=drwcb]::before{transition:transform .5s;}#drwcb:checked~label[for=drwcb]::before{transform:rotateY(360deg);--bp:-400% 0;}
+		label[for=drwcb]{position:absolute;right:0;bottom:0;--size:48px;}label[for=drwcb]::before{transition:transform .5s;}#drwcb:checked~* label[for=drwcb]::before{transform:rotateY(360deg);--bp_:-400% 0;}
 		.drawer{width:calc(var(--size)*3.3);max-width:100%;height:100%;padding-bottom:56px;box-sizing:border-box;position:absolute;top:0;right:0;overflow-y:auto;background-color:var(--col);transform:translateX(100%);visibility:hidden;transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 		.drawer hr{border:0;}.drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		#drwcb:checked~* .drawer{transform:translateX(0);visibility:unset;}
@@ -104,6 +104,7 @@
 				</a><p class="grid btn tex" id="infobtn">
 				</p>
 			</div>
+			<label for="drwcb" class="grid" id="idrwl"></label>
 		</div>
 		<hr>
 		<div>
@@ -115,19 +116,20 @@
 				<p class="grid btn" style="--bp:0 -300%;" onclick="ui.files();">
 				</p>
 				<hr>
-				<p class="grid btn tex" onclick="alert(texts.info);">
+				<a class="grid btn" style="--bp:-100% -100%;" href="manual/index.html?m=seq" target="_blank">
+				</a><p class="grid btn tex" onclick="alert(texts.info);">
 				</p>
 			</div>
+			<label for="drwcb" class="grid" style="--bp:-700% 0;"></label>
 		</div>
 	</div>
 
-	<label for="drwcb" class="grid"></label>
 	<div id="albox"></div>
 
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2203290\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2203310\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',default:'default',cnew:'create new…',cin:'instr name',fsel:'choose file',
@@ -220,6 +222,7 @@
 			},
 			set=(i=+imenu.instr.value)=>{
 				kc.style.opacity='';
+				idrwl.setAttribute('style',`--bp:${bp(i)};`);
 				if(i==0&&q.ci){
 					e2p(osi().get(q.ci)).then(e=>{
 						Object.assign(q,{abuff:null,octave:0,i2n:d.i2n[0],i2p:d.i2p[d.p[0]],gflag:new Array(d.i2n[0].length).fill(0),grid:d.k2g[d.g[0]],c:true,scf:true,fret:[]});
@@ -273,7 +276,7 @@
 						trg=!q.gflag.some(x=>x);
 					trigger(69+q.i2n[i]+q.octave+q.sc*q.scf,q.i2p[i]);
 					if(q.fret.length){
-						const r=Math.random()*10;
+						const r=Math.random()*20;
 						if(r<1){
 							const abs=actx.createBufferSource();abs.buffer=q.fret[Math.floor(r*q.fret.length)];
 							abs.connect(deln);abs.start(actx.currentTime+.85);
@@ -417,7 +420,13 @@
 							fx=x=>`<div><p class="grid btn" style="--bp:-400% -100%;"></p><div>${esc(x)}\n${[4,3,7,2].map(y=>gb(y)).join('')}</div></div>`;
 						alert(`${texts.sheets}<hr><div class="items">${e.map(fx).join('')}</div>`);
 						alcp().querySelectorAll('.items>*').forEach((x,i)=>{
-							x.children[0].onclick=()=>e2p(oss().get(e[i])).then(f=>conv(f.target.result));
+							x.children[0].onclick=()=>e2p(oss().get(e[i])).then(y=>{
+								q.main=conv(y.target.result);
+								alr();
+								q.main.scores[0].score.forEach(z=>trigger(69+/*q.i2n[*/z[0]/*]*/+q.octave+q.sc+q.main.sc,0,actx.currentTime+60/q.main.bpm*z[1]/z[2]));
+								scri.textContent=JSON.stringify(q.main,null,'\t').split('\n').reduce((a,z,_)=>{a.a+=(((_=/^\t{5,}/.test(z))||a.x)?z.replace(/^\t*/,''):('\n'+z));a.x=_;return a;},{a:'',x:false}).a.slice(1);
+								scri.style.whiteSpace='pre';
+							});
 							[
 								async()=>{//ren
 									await yn(`<div class="tac">${gb(4,['s64','--col:#0000;'])}</div><input class="style input tac" value="${esc(e[i])}">`,x=>x.querySelector('input').focus());
@@ -452,12 +461,9 @@
 			load=()=>({instr:imenu.instr.value=0,sc:q.sc=0,rev:q.rev=0,del:q.del=.1,kbs:q.kbs=88,amb:q.amb=-1,reci:q.reci=0,ci:q.ci=''}=JSON.parse(localStorage.instr_stat||'{}')),
 			save=()=>localStorage.instr_stat=JSON.stringify({instr:+imenu.instr.value,sc:q.sc,rev:q.rev,del:q.del,kbs:q.kbs,amb:q.amb,reci:q.reci,ci:q.ci}),
 			conv=x=>{
-				const a2r=Object.fromEntries(d.i2n[0].map(Array)),
-					fx01=(y,n=0,d=1)=>y.map((z,i)=>typeof z=='string'?z.split(',')/*.filter(w=>w in a2r)*/.map(w=>[/*a2r[*/+w/*]*/,n+i,d]):fx01(z,(n+i)*z.length,d*z.length)).flat();
-				x=({ver:1,name:x.name,sc:x.sc,bpm:x.bpm,scores:[{instr:x.instr||0,gain:1,score:fx01(x.scores)}]});//score:[...[note,tnum,tden]]
-				console.log(q.main=x);alr();
-				x.scores[0].score.forEach(y=>trigger(69+/*q.i2n[*/y[0]/*]*/+q.octave+q.sc+x.sc,0,actx.currentTime+60/x.bpm*y[1]/y[2]));
-				return x;
+				//const a2r=Object.fromEntries(d.i2n[0].map(Array));
+				const fx01=(y,n=0,d=1)=>y.map((z,i)=>typeof z=='string'?z.split(',').filter(y=>y).map(w=>[+w,n+i,d]):fx01(z,(n+i)*z.length,d*z.length)).flat();
+				return{ver:1,name:x.name,sc:x.sc,bpm:x.bpm,scores:[{instr:x.instr||0,gain:1,score:fx01(x.scores)}]};//score:[...[note,tnum,tden]]
 			};
 			//const fullscr=(x=document.body)=>{x.requestFullscreen=x.requestFullscreen||x.webkitRequestFullscreen;x.requestFullscreen();};
 			
@@ -472,6 +478,7 @@
 				_=>{}
 			][cpage()]();
 		});
+	(	drwcb.onchange=()=>idrwl.classList[drwcb.checked?'remove':'add']('tex'))();
 		imenu.onchange=()=>{set();save();};
 		scd.children[0].onclick=()=>{q.sc--;scale(true);save();};
 		scd.children[1].onclick=()=>{q.sc=0;scale(true);save();};

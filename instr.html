@@ -222,7 +222,7 @@
 						trg=!q.gflag.some(x=>x);
 					trigger(69+q.i2n[i]+q.octave+q.sc*q.scf,q.i2p[i]);
 					if(q.fret.length){
-						const r=Math.random()*10;
+						const r=Math.random()*20;
 						if(r<1){
 							const abs=actx.createBufferSource();abs.buffer=q.fret[Math.floor(r*q.fret.length)];
 							abs.connect(deln);abs.start(actx.currentTime+.85);
