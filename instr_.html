@@ -13,7 +13,11 @@
 	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/instr.jpg">
 	<meta name="theme-color" content="#214"/>
 	<style>@media(prefers-color-scheme:dark){:root{background-color:#000;}}</style>
-	<script>location.href=location.href.replace(/instr_.*/,'seq_.html?instr&'+location.search.slice(1)).replace(/&$/,'');</script>
+	<script>//location.href=location.href.replace(/instr_.*/,'seq_.html?instr&'+location.search.slice(1)).replace(/&$/,'');</script>
 </head>
-<body></body>
+<body>
+	<style>html,body,iframe{width:100%;height:100%;margin:0;overflow:hidden;border:0;border-radius:0;}</style>
+	<iframe src="seq_.html?instr" id="ifr"></iframe>
+	<script>const x=location.search.slice(1);if(x)ifr.src+='&'+x;ifr.focus();</script>
+</body>
 </html>
