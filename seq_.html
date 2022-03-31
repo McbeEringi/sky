@@ -29,7 +29,7 @@
 	<script src="style.js"></script>
 	<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'img/tex.webp'});</script>
 	<style>
-		:root{--size:80px;--bp:0 0;--col:#3338;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
+		:root{--size:64px;--bp:0 0;--col:#3338;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
 		html,body{height:100%;margin:0;overflow:hidden;}
 		body>input,#contents>div>input{display:none;}
 		#contents{height:100%;overflow:auto;scroll-snap-type:y mandatory;}
@@ -43,9 +43,9 @@
 		input:focus+.grid::before,.grid:focus::before{box-shadow:0 0 0 1.5px #aef;}
 		.grid.tex::before{background-image:url(img/tex.webp);}.nowebp .grid.tex::before{background-image:url(img/tex.png);}
 		:checked+.grid::after,.grid.a::after{content:"";box-sizing:border-box;border:calc(var(--size)*.13328) solid #00000001;border-image:url(img/sel.svg) 33.333%;}:checked+.grid,.grid.a{transform:rotateY(360deg);transition:transform .5s;}
-		:disabled+.grid,.grid.d,.d .grid{filter:grayscale(1)opacity(.7);pointer-events:none;}
+		:disabled+.grid,.grid.d,.d .grid{filter:grayscale(1)opacity(.5);pointer-events:none;}
 		.btn:active{transform:scale(.85);}.btn:not(:active){transition:transform .2s;}
-		.s64{--size:64px;}.s40{--size:40px;}
+		.s40{--size:40px;}
 		.spin{--bp:-200% 0;--col:#0000;animation:2s linear spin infinite;}
 		.clock::before{--bp:-200% -0%;filter:saturate(.3);}.clock::after{content:"";transition:.2s;transform:rotate(var(--rot,45deg));filter:drop-shadow(0 0 2px #aef);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M6 6h1v1h-1z' fill='%23caf0f6'/%3E%3C/svg%3E");}
 		.clock.d::after,.d .clock::after{--rot:initial;}
@@ -56,7 +56,7 @@
 		.input{border-radius:4px;border:0;background-color:var(--col);font-size:medium;margin:4px 0;padding:4px 1ex;max-width:100%;box-sizing:border-box;vertical-align:middle;}
 
 		label[for=drwcb]{position:absolute;right:0;bottom:0;--size:48px;}label[for=drwcb]::before{transition:transform .5s;}#drwcb:checked~* label[for=drwcb]::before{transform:rotateY(360deg);--bp_:-400% 0;}
-		.drawer{width:calc(var(--size)*3.3);max-width:100%;height:100%;padding-bottom:56px;box-sizing:border-box;position:absolute;top:0;right:0;overflow-y:auto;background-color:var(--col);transform:translateX(100%);visibility:hidden;transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+		.drawer{--size:80px;width:calc(var(--size)*3.3);max-width:100%;height:100%;padding-bottom:56px;box-sizing:border-box;position:absolute;top:0;right:0;overflow-y:auto;background-color:var(--col);transform:translateX(100%);visibility:hidden;transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 		.drawer hr{border:0;}.drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		#drwcb:checked~* .drawer{transform:translateX(0);visibility:unset;}
 
@@ -112,12 +112,16 @@
 				<canvas id="dc"></canvas>
 				<div id="scr"><div id="scri">0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789</div></div>
 			</div>
+			<div>
+				<p class="grid btn" id="playbtn" style="--bp:-400% -200%;">
+				</p>
+			</div>
 			<div class="drawer tac">
 				<p class="grid btn" style="--bp:0 -300%;" onclick="ui.files();">
 				</p>
 				<hr>
 				<a class="grid btn" style="--bp:-100% -100%;" href="manual/index.html?m=seq" target="_blank">
-				</a><p class="grid btn tex" onclick="alert(texts.info);">
+				</a><p class="grid btn tex" id="infobtn_">
 				</p>
 			</div>
 			<label for="drwcb" class="grid" style="--bp:-700% 0;"></label>
@@ -129,7 +133,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2203310\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2204010\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',default:'default',cnew:'create new…',cin:'instr name',fsel:'choose file',
@@ -159,7 +163,7 @@
 			osi=()=>idb.transaction('instr','readwrite').objectStore('instr'),
 			oss=()=>idb.transaction('seq','readwrite').objectStore('seq'),
 			errfx=(e={})=>{alert(`⚠️${e.name||e.target.error.name||'Error'}\n<small>${e.message||e.target.error.message||'Something went wrong :('}</small>`);console.error(e.target||e);},
-			yn=(x,y=()=>{})=>new Promise(f=>{alert(`${x}<div class="s64 tac"><p class="grid btn" style="--bp:-400% 0;"></p><p class="grid btn" style="--bp:-300% 0;"></p></div>`);x=alcp();y(x);x=[...x.lastChild.children];x[0].onclick=()=>alr();x[1].onclick=()=>f();}),
+			yn=(x,y=()=>{})=>new Promise(f=>{alert(`${x}<div class="tac"><p class="grid btn" style="--bp:-400% 0;"></p><p class="grid btn" style="--bp:-300% 0;"></p></div>`);x=alcp();y(x);x=[...x.lastChild.children];x[0].onclick=()=>alr();x[1].onclick=()=>f();}),
 			n2nn=x=>({c:12,d:14,e:16,f:17,g:19,a:21,b:23})[x[0].toLowerCase()]+(({'#':1,s:1})[x[1]]?x.slice(2)*12+1:x.slice(1)*12),
 			nn2n=x=>['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'][x%12]+Math.floor(x/12-1),
 			bp=i=>`${i%8*-100}% ${Math.floor(i*.125+1)*-100}%`,
@@ -389,20 +393,20 @@
 				},
 				ciedt(x){
 					const selfx=(y,z='')=>`<option value="${y}"${z}>${y}</option>`,
-						row=(y=['C5',{name:texts.fsel}],i='')=>`<div class="s40"><p class="grid btn" style="--bp:-400% 0;" onclick="this.parentNode.remove();"></p><select class="style input">${new Array(61).fill().map((_,i)=>{i+=36;return selfx(nn2n(i),i==n2nn(y[0])?'selected':'');})}</select><div class="file btn" data-name="${y[1].name}"><input type="file" data-i="${i}" accept=".mp3,.ogg,.m4a,.wav,.flac" onchange="this.parentNode.dataset.name=this.files[0].name;"></div></div>`,
+						row=(y=['C5',{name:texts.fsel}],i='')=>`<div><p class="grid btn" style="--bp:-400% 0;" onclick="this.parentNode.remove();"></p><select class="style input">${new Array(61).fill().map((_,i)=>{i+=36;return selfx(nn2n(i),i==n2nn(y[0])?'selected':'');})}</select><div class="file btn" data-name="${y[1].name}"><input type="file" data-i="${i}" accept=".mp3,.ogg,.m4a,.wav,.flac" onchange="this.parentNode.dataset.name=this.files[0].name;"></div></div>`,
 						main=(y={name:'',dat:[]})=>{
-							const p=yn(`<input class="style input" value="${esc(y.name)}" placeholder="${texts.cin}"><hr>${y.dat.map(row).join('')}<p class="grid btn s40" style="--bp:-500% 0;"></p><hr>`)
+							const p=yn(`<input class="style input" value="${esc(y.name)}" placeholder="${texts.cin}"><hr><div class="s40">${y.dat.map(row).join('')}<p class="grid btn" style="--bp:-500% 0;"></p></div><hr>`)
 								.then(z=>{
 									z={
 										name:alcp().firstChild.value||y.name||new Date().toLocaleString(),
-										dat:[...alcp().querySelectorAll('div.s40')].reduce((a,z)=>{
+										dat:[...alcp().children[2].children].slice(0,-1).reduce((a,z)=>{
 											const f=z.children[2].firstChild.files[0]||(z.children[2].firstChild.dataset.i?y.dat[+z.children[2].firstChild.dataset.i][1]:null);
 											if(f)a.push([z.children[1].value,f]);return a;
 										},[])
 									};
 									alr();return z;
 								}),
-								btn=alcp().querySelectorAll('hr')[1].previousElementSibling;
+								btn=alcp().children[2].lastChild;
 							btn.onclick=()=>btn.insertAdjacentHTML('beforebegin',row());
 							if(y.dat.length==0)btn.onclick();
 							return p;
@@ -423,13 +427,12 @@
 							x.children[0].onclick=()=>e2p(oss().get(e[i])).then(y=>{
 								q.main=conv(y.target.result);
 								alr();
-								q.main.scores[0].score.forEach(z=>trigger(69+/*q.i2n[*/z[0]/*]*/+q.octave+q.sc+q.main.sc,0,actx.currentTime+60/q.main.bpm*z[1]/z[2]));
 								scri.textContent=JSON.stringify(q.main,null,'\t').split('\n').reduce((a,z,_)=>{a.a+=(((_=/^\t{5,}/.test(z))||a.x)?z.replace(/^\t*/,''):('\n'+z));a.x=_;return a;},{a:'',x:false}).a.slice(1);
 								scri.style.whiteSpace='pre';
 							});
 							[
 								async()=>{//ren
-									await yn(`<div class="tac">${gb(4,['s64','--col:#0000;'])}</div><input class="style input tac" value="${esc(e[i])}">`,x=>x.querySelector('input').focus());
+									await yn(`<div class="tac">${gb(4,['','--col:#0000;'])}</div><input class="style input tac" value="${esc(e[i])}">`,x=>x.querySelector('input').focus());
 									const a=(await e2p(oss().get(e[i]))).target.result;
 									const name=alcp().querySelector('input').value;alr();
 									await e2p(oss().add({...a,name}));
@@ -443,10 +446,10 @@
 								},
 								async()=>{//exp
 									const a=(await e2p(oss().get(e[i]))).target.result;
-									alert(`<div class="tac">${gb(7,['s64','--col:#0000;'])}\n${esc(e[i])}\n${texts.wip}</div>`)
+									alert(`<div class="tac">${gb(7,['','--col:#0000;'])}\n${esc(e[i])}\n${texts.wip}</div>`)
 								},
 								async()=>{//del
-									await yn(`<div class="tac">${gb(2,['s64','--col:#0000;'])}\n${esc(e[i])}\n${texts.delask}</div>`,x=>x.lastChild.lastChild.style.cssText+='--col:#f44c;');
+									await yn(`<div class="tac">${gb(2,['','--col:#0000;'])}\n${esc(e[i])}\n${texts.delask}</div>`,x=>x.lastChild.lastChild.style.cssText+='--col:#f44c;');
 									alr();
 									await e2p(oss().delete(e[i]));
 									alr();ui.files();
@@ -464,6 +467,9 @@
 				//const a2r=Object.fromEntries(d.i2n[0].map(Array));
 				const fx01=(y,n=0,d=1)=>y.map((z,i)=>typeof z=='string'?z.split(',').filter(y=>y).map(w=>[+w,n+i,d]):fx01(z,(n+i)*z.length,d*z.length)).flat();
 				return{ver:1,name:x.name,sc:x.sc,bpm:x.bpm,scores:[{instr:x.instr||0,gain:1,score:fx01(x.scores)}]};//score:[...[note,tnum,tden]]
+			},
+			play=()=>{
+				if(q.main)q.main.scores[0].score.forEach(z=>trigger(69+z[0]+q.octave+q.sc+q.main.sc,0,actx.currentTime+60/q.main.bpm*z[1]/z[2]));
 			};
 			//const fullscr=(x=document.body)=>{x.requestFullscreen=x.requestFullscreen||x.webkitRequestFullscreen;x.requestFullscreen();};
 			
@@ -478,14 +484,15 @@
 				_=>{}
 			][cpage()]();
 		});
-	(	drwcb.onchange=()=>idrwl.classList[drwcb.checked?'remove':'add']('tex'))();
+		(drwcb.onchange=()=>idrwl.classList[drwcb.checked?'remove':'add']('tex'))();
 		imenu.onchange=()=>{set();save();};
 		scd.children[0].onclick=()=>{q.sc--;scale(true);save();};
 		scd.children[1].onclick=()=>{q.sc=0;scale(true);save();};
 		scd.children[2].onclick=()=>{q.sc++;scale(true);save();};
 		cibtn.onclick=ui.cicfg;
 		cfgbtn.onclick=ui.cfg;
-		infobtn.onclick=()=>alert(texts.info);
+		infobtn_.onclick=infobtn.onclick=()=>alert(texts.info);
+		playbtn.onclick=play;
 		alert=x=>{albox.insertAdjacentHTML('beforeend',`<div class="fade"><p onclick="alr(this.parentNode);"></p><pre class="style">${x}</pre></div>`);albox.lastChild.offsetWidth;albox.lastChild.classList.remove('fade');};
 		onresize=cset;
 		document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='visible'&&actx.state=='suspended')actx.resume();});
