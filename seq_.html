@@ -377,8 +377,8 @@
 				cicfg(){
 					let main=e=>{
 						alr();e=e.target.result;
-						const fx=(x,y=[3,false,true])=>`<div><p class="grid ${x==q.ci||(y[1]&&!q.ci)?'a d':'btn'}" style="--bp:-${y[0]}00% 0;"></p><div>${esc(x)}${y[2]?'\n<p class="grid tex btn" style="--bp:-100% 0;"></p><p class="grid btn" style="--bp:-400% 0;"></p>':''}</div></div>`
-						alert(`${texts.ci}<hr><div class="items">`+e.map(x=>fx(x)).join('')+fx(texts.default,[3,true])+fx(texts.cnew,[5])+'</div>');
+						const fx=(x,y=[4,1,false,true])=>`<div><p class="grid ${x==q.ci||y[2]?'a d':'btn'}" style="--bp:-${y[0]}00% -${y[1]}00%;"></p><div>${esc(x)}${y[3]?'\n<p class="grid tex btn" style="--bp:-100% 0;"></p><p class="grid btn" style="--bp:-400% 0;"></p>':''}</div></div>`
+						alert(`${texts.ci}<hr><div class="items">`+e.map(x=>fx(x)).join('')+fx(texts.default,[4,1,!q.ci])+fx(texts.cnew,[5,0])+'</div>');
 						alcp().querySelectorAll('.items>*').forEach((x,i)=>{
 							const j=i-e.length;
 							if(j<0){
@@ -456,14 +456,18 @@
 								}
 							].forEach((y,i)=>x.children[1].children[i].onclick=()=>{y().catch(errfx);});
 						});
-						if(!alcp().querySelectorAll('.items>*').length)
-							alcp().querySelector('.items').appendChild(Object.assign(document.createElement('button'),{
-								textContent:'import samples',className:'style',style:'border:0;',
+						if(!alcp().querySelectorAll('.items>*').length){
+							const div=document.createElement('div');
+							div.append(Object.assign(document.createElement('p'),{
+								className:'grid',style:'--bp:-600% -300%;',
 								onclick:(_,x=(y,os=oss())=>Promise.all(y.map(z=>e2p(os.add(z)))).then(()=>{alr();alr();ui.files();}))=>{
 									ui.loading().then(()=>x=()=>{});
 									fetch('sample.json').then(x=>x.json()).then(x).catch(errfx);
 								}
 							}));
+							div.insertAdjacentHTML('beforeend','<div>import sample</div>');
+							alcp().querySelector('.items').append(div);
+						}
 					};
 					ui.loading().then(()=>main=()=>{});
 					e2p(oss().getAllKeys()).then(main).catch(errfx);
