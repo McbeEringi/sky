@@ -133,7 +133,7 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2204010\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_seq</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v4 build:2204011\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',default:'default',cnew:'create new…',cin:'instr name',fsel:'choose file',
@@ -308,7 +308,7 @@
 						if(t)x=Math.max(x-t,0);
 						i=[i%q.grid[0],Math.floor(i/q.grid[0])];
 						const p=i.map(y=>(y+.5)*q.size),c=Math.cos(x/q.flip*2*Math.PI),s=mix(1,.8,x/q.flip),o=q.tex.width*.125;
-						kctx.clearRect(...i.map(y=>y*q.size),q.size,q.size);
+						kctx.clearRect(p[0]-ah-1,p[1]-ah-1,a+2,a+2);
 						kctx.fill(rs(...p,c,s));
 						kctx.drawImage(q.tex, q.c&&i[0]==i[1]*2?0:o*(2-i[0]%2),0,o,o, p[0]-ah*c*s,p[1]-ah*s,a*c*s,a*s);
 					}
@@ -429,7 +429,7 @@
 								alr();
 								scri.textContent=JSON.stringify(q.main,null,'\t').split('\n').reduce((a,z,_)=>{a.a+=(((_=/^\t{5,}/.test(z))||a.x)?z.replace(/^\t*/,''):('\n'+z));a.x=_;return a;},{a:'',x:false}).a.slice(1);
 								scri.style.whiteSpace='pre';
-							});
+							}).catch(errfx);
 							[
 								async()=>{//ren
 									await yn(`<div class="tac">${gb(4,['','--col:#0000;'])}</div><input class="style input tac" value="${esc(e[i])}">`,x=>x.querySelector('input').focus());
@@ -456,6 +456,14 @@
 								}
 							].forEach((y,i)=>x.children[1].children[i].onclick=()=>{y().catch(errfx);});
 						});
+						if(!alcp().querySelectorAll('.items>*').length)
+							alcp().querySelector('.items').appendChild(Object.assign(document.createElement('button'),{
+								textContent:'import samples',className:'style',style:'border:0;',
+								onclick:(_,x=(y,os=oss())=>Promise.all(y.map(z=>e2p(os.add(z)))).then(()=>{alr();alr();ui.files();}))=>{
+									ui.loading().then(()=>x=()=>{});
+									fetch('sample.json').then(x=>x.json()).then(x).catch(errfx);
+								}
+							}));
 					};
 					ui.loading().then(()=>main=()=>{});
 					e2p(oss().getAllKeys()).then(main).catch(errfx);
