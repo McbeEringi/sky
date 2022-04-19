@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="og:http://ogp.me/ns#">
+<head>
+	<script async src="https://mcbeeringi.github.io/src/gas.js"></script>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>McbeEringi sky</title>
+	<meta name="description" content="description goes here...">
+	<link rel="shortcut icon" type="image/svg+xml" href="img/ico/main.svg">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="McbeEringi sky">
+	<meta property="og:description" content="description goes here...">
+	<meta property="og:url" content="https://mcbeeringi.github.io/">
+	<meta property="og:image" content="https://mcbeeringi.github.io/sky/alpha/img/ico/main.png">
+	<!--iOS-->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="Sky Stuff">
+	<link rel="apple-touch-icon" href="img/ico/main.png">
+	<!--sw-->
+	<link rel="manifest" href="src/mf.json">
+	<meta name="theme-color" content="#214"/>
+	<script>
+		if('serviceWorker'in navigator&&location.protocol.includes('https'))addEventListener('load',()=>navigator.serviceWorker.register('src/sw.js').then(x=>console.log('sw registered',x)),{once:true});
+	</script>
+
+	<script src="src/style.js" async></script>
+	<link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+
+</body>
+</html>

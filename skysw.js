@@ -35,6 +35,7 @@ const cacheName='cache2204190',STATIC_DATA=[
 ],
 noCache=[
 	'_.html',
+	'alpha',
 	'stuff'
 ];
 
