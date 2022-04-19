@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cacheName='cache2203270',STATIC_DATA=[
+const cacheName='cache2204190',STATIC_DATA=[
 	'style.js',
 	'img/sky.svg','img/sky_.svg','img/sky.png','img/sky_192.png',
 	'img/tex.webp',
@@ -32,13 +32,9 @@ const cacheName='cache2203270',STATIC_DATA=[
 	'https://cdn.jsdelivr.net/npm/tone/build/Tone.js',
 	'seq.html?pwa=1',
 	'seq.js','img/seq.svg'
-
-	//'instr_.html?pwa=1','seq_.html?instr','img/instr.svg'//,'img/sel.svg',
 ],
 noCache=[
-	'gas.js',
-	'seq_',
-	'instr_',
+	'_.html',
 	'stuff'
 ];
 

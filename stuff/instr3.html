@@ -41,7 +41,7 @@
 
 		.grid{display:inline-block;width:var(--size);height:var(--size);margin:0;vertical-align:top;position:relative;overflow:hidden;}
 		.grid::before,.grid::after,.grid *{content:"";display:block;width:78.4%;height:78.4%;position:absolute;margin:10.8%;border-radius:17%;}
-		.grid::before{background:var(--bp)/800% #3338 url(../img/instr.svg);}.grid::after{content:none;}
+		.grid::before{background:var(--bp)/800% #3338 url(instr.svg);}.grid::after{content:none;}
 		.grid.anm::before{animation:flip .4s linear;}
 		.grid.tex::before{background-image:url(../img/tex.webp);}.nowebp .grid.tex::before{background-image:url(../img/tex.png);}
 		:checked+.grid::after,.grid.a::after{content:"";box-sizing:border-box;border:calc(var(--size)*.13328) solid #fff;border-image:url(../img/sel.svg) 33.333%;}:checked+.grid,.grid.a{transform:rotateY(360deg);transition:.5s;}
@@ -68,7 +68,7 @@
 			body>[for=drwcb]{display:block;width:100%;height:100%;position:absolute;top:0;left:0;}
 			.btnw{top:unset;bottom:0;transform-origin:bottom right;}#drawer{padding-top:unset;padding-bottom:48px;}
 		}
-		#drwcb:checked~.btnw>#mico::before{transform:rotateY(360deg);background-image:url(../img/instr.svg);--bp:-400% 0;}#drwcb:checked~#drawer{transform:translateX(0);visibility:unset;}#drwcb:checked~[for=drwcb]{pointer-events:auto;}
+		#drwcb:checked~.btnw>#mico::before{transform:rotateY(360deg);background-image:url(instr.svg);--bp:-400% 0;}#drwcb:checked~#drawer{transform:translateX(0);visibility:unset;}#drwcb:checked~[for=drwcb]{pointer-events:auto;}
 
 		label[for=alcb],#albox{position:fixed;pointer-events:none;opacity:0;transition:.2s;}
 		label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0008;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
@@ -374,7 +374,7 @@
 					ctx.drawImage(img,0,0);
 					document.body.insertAdjacentHTML('beforeend',`<style>.grid::before{background-image:url(${c.toDataURL()});}</style>`);
 				};
-				img.src='../img/instr.svg';
+				img.src='instr.svg';
 			}
 	</script>
 </body>

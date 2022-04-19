@@ -5,19 +5,19 @@
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>sky_seq</title>
+	<title>sky_seqi</title>
 	<meta name="Description" content="Sky:CotL. PWA(offline) compatible.">
-	<link rel="shortcut icon" type="image/svg+xml" href="img/ico/seq_.svg">
+	<link rel="shortcut icon" type="image/svg+xml" href="../img/ico/instr.svg">
 	<meta property="og:type" content="website">
-	<meta property="og:title" content="sky_seq">
+	<meta property="og:title" content="sky_seqi">
 	<meta property="og:description" content="Skyの 楽器練習 楽譜作成 ができるページです">
-	<meta property="og:url" content="https://mcbeeringi.github.io/sky/seq_.html">
-	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/seq_.jpg">
+	<meta property="og:url" content="https://mcbeeringi.github.io/sky/stuff/seqi.html">
+	<meta property="og:image" content="https://mcbeeringi.github.io/sky/ico/instr.jpg">
 	<!--iOS-->
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="default">
 	<meta name="apple-mobile-web-app-title" content="Sky Stuff">
-	<link rel="apple-touch-icon" href="img/sky.png">
+	<link rel="apple-touch-icon" href="../img/sky.png">
 	<!--sw-->
 	<link rel="manifest" href="skymf.json">
 	<meta name="theme-color" content="#214"/>
@@ -26,8 +26,8 @@
 	</script>
 </head>
 <body>
-	<script src="style.js"></script>
-	<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'img/tex.webp'});</script>
+	<script src="../style.js"></script>
+	<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'../img/tex.webp'});</script>
 	<style>
 		:root{--size:64px;--bp:0 0;--col:#3338;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
 		html,body{height:100%;margin:0;overflow:hidden;}
@@ -39,10 +39,10 @@
 
 		.grid{appearance:none;border:0;padding:0;background:none;display:inline-block;width:var(--size);height:var(--size);margin:0;vertical-align:middle;position:relative;overflow:hidden;touch-action:manipulation;cursor:pointer;outline:0;}
 		.grid::before,.grid::after,.grid *{content:"";display:block;width:78.4%;height:78.4%;position:absolute;top:0;left:0;margin:10.8%;border-radius:17%;}
-		.grid::before{background:var(--bp_,var(--bp))/800% var(--col) url(img/seq_.svg);}.grid::after{content:none;}
+		.grid::before{background:var(--bp_,var(--bp))/800% var(--col) url(seqi.svg);}.grid::after{content:none;}
 		input:focus+.grid::before,.grid:focus::before{box-shadow:0 0 0 1.5px #aef;}
-		.grid.tex::before{background-image:url(img/tex.webp);}.nowebp .grid.tex::before{background-image:url(img/tex.png);}
-		:checked+.grid::after,.grid.a::after{content:"";box-sizing:border-box;border:calc(var(--size)*.13328) solid #00000001;border-image:url(img/sel.svg) 33.333%;}:checked+.grid,.grid.a{transform:rotateY(360deg);transition:transform .5s;}
+		.grid.tex::before{background-image:url(../img/tex.webp);}.nowebp .grid.tex::before{background-image:url(../img/tex.png);}
+		:checked+.grid::after,.grid.a::after{content:"";box-sizing:border-box;border:calc(var(--size)*.13328) solid #00000001;border-image:url(../img/sel.svg) 33.333%;}:checked+.grid,.grid.a{transform:rotateY(360deg);transition:transform .5s;}
 		:disabled+.grid,.grid.d,.d .grid{filter:grayscale(1)opacity(.5);pointer-events:none;}
 		.btn:active{transform:scale(.85);}.btn:not(:active){transition:transform .2s;}
 		.s40{--size:40px;}
@@ -100,7 +100,7 @@
 				<p class="grid btn tex" style="--bp:-100% 0;" id="cfgbtn">
 				</p><p class="grid btn tex" style="--bp:0% -100%;" id="cibtn">
 				</p><p id="recbtn" class="grid btn d" style="--bp:0 -100%;">
-				</p><a class="grid btn" style="--bp:-100% -100%;" href="manual/index.html?m=instr" target="_blank">
+				</p><a class="grid btn" style="--bp:-100% -100%;" href="../manual/index.html?m=instr" target="_blank">
 				</a><p class="grid btn tex" id="infobtn">
 				</p>
 			</div>
@@ -120,7 +120,7 @@
 				<p class="grid btn" style="--bp:0 -300%;" onclick="ui.files();">
 				</p>
 				<hr>
-				<a class="grid btn" style="--bp:-100% -100%;" href="manual/index.html?m=seq" target="_blank">
+				<a class="grid btn" style="--bp:-100% -100%;" href="../manual/index.html?m=seq" target="_blank">
 				</a><p class="grid btn tex" id="infobtn_">
 				</p>
 			</div>
@@ -170,26 +170,26 @@
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['ds'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			d={
 				instr:[
-					['audio/instr/musicbox/',1,[stdli(4,6,{a3:'a3.mp3',ds7:'ds7.mp3'})],0],
-					['audio/instr/harp/',-1,[stdli(3,5)],0],//210503
-					['audio/instr/percussion/',0,[{a4:'0.mp3',as4:'1.mp3',b4:'2.mp3',c5:'3.mp3',a5:'4.mp3',as5:'5.mp3',b5:'6.mp3',c6:'7.mp3'}],1],
-					['audio/instr/contrabass/',-2,[stdli(2,4)],0],//211009
-					['audio/instr/horn/',-1,[stdli(3,5)],0],//211009
-					['audio/instr/piano/',0,[stdli(4,6)],0],//220127 +10db
-						['',0,[{ds5:'audio/instr/musicbox/ds6.mp3',a5:'audio/instr/musicbox/a6.mp3'},{ds5:'audio/instr/glock/ds5.mp3',a5:'audio/instr/glock/a5.mp3'}],2],
-						['audio/instr/bell2/',1,[{c4:'c4.mp3',d4:'d4.mp3',g4:'g4.mp3',a4:'a4.mp3'},{c4:'c4_.mp3',d4:'d4_.mp3',g4:'g4_.mp3',a4:'a4_.mp3'}],2],
-					['audio/instr/flute/',0,[stdli(4,6)],0],//211009
-					['audio/instr/quena/',0,[stdli(4,6)],0],//211009
-					['audio/instr/guitar/',-1,[stdli(3,5)],0,4],//main:210503 fret:211009
-					['audio/instr/ukulele/',-1,[stdli(3,5)],0],//211009
-					['audio/instr/piano/',1,[stdli(5,7)],0],//220127 +10db
-					['audio/instr/glock/',0,[stdli(4,6)],0],//210529
-					['audio/instr/handpan/',-1,[stdli(3)],3],
-					['audio/instr/dundun/',0,[{a4:'0.mp3',as4:'1.mp3',b4:'2.mp3',c5:'3.mp3',a5:'4.mp3',as5:'5.mp3',b5:'6.mp3',c6:'7.mp3'}],1],
-					['audio/instr/pipa/',-1,[stdli(3,5)],0],//210529
-					['audio/instr/bugle/',0,[stdli(4,6)],0],//210529
-						['audio/instr/ocarina/',0,[stdli(4,6)],0],
-					['audio/instr/kalimba/',0,[stdli(4,6)],0]//211025
+					['../audio/instr/musicbox/',1,[stdli(4,6,{a3:'a3.mp3',ds7:'ds7.mp3'})],0],
+					['../audio/instr/harp/',-1,[stdli(3,5)],0],//210503
+					['../audio/instr/percussion/',0,[{a4:'0.mp3',as4:'1.mp3',b4:'2.mp3',c5:'3.mp3',a5:'4.mp3',as5:'5.mp3',b5:'6.mp3',c6:'7.mp3'}],1],
+					['../audio/instr/contrabass/',-2,[stdli(2,4)],0],//211009
+					['../audio/instr/horn/',-1,[stdli(3,5)],0],//211009
+					['../audio/instr/piano/',0,[stdli(4,6)],0],//220127 +10db
+						['',0,[{ds5:'../audio/instr/musicbox/ds6.mp3',a5:'../audio/instr/musicbox/a6.mp3'},{ds5:'../audio/instr/glock/ds5.mp3',a5:'../audio/instr/glock/a5.mp3'}],2],
+						['../audio/instr/bell2/',1,[{c4:'c4.mp3',d4:'d4.mp3',g4:'g4.mp3',a4:'a4.mp3'},{c4:'c4_.mp3',d4:'d4_.mp3',g4:'g4_.mp3',a4:'a4_.mp3'}],2],
+					['../audio/instr/flute/',0,[stdli(4,6)],0],//211009
+					['../audio/instr/quena/',0,[stdli(4,6)],0],//211009
+					['../audio/instr/guitar/',-1,[stdli(3,5)],0,4],//main:210503 fret:211009
+					['../audio/instr/ukulele/',-1,[stdli(3,5)],0],//211009
+					['../audio/instr/piano/',1,[stdli(5,7)],0],//220127 +10db
+					['../audio/instr/glock/',0,[stdli(4,6)],0],//210529
+					['../audio/instr/handpan/',-1,[stdli(3)],3],
+					['../audio/instr/dundun/',0,[{a4:'0.mp3',as4:'1.mp3',b4:'2.mp3',c5:'3.mp3',a5:'4.mp3',as5:'5.mp3',b5:'6.mp3',c6:'7.mp3'}],1],
+					['../audio/instr/pipa/',-1,[stdli(3,5)],0],//210529
+					['../audio/instr/bugle/',0,[stdli(4,6)],0],//210529
+						['../audio/instr/ocarina/',0,[stdli(4,6)],0],
+					['../audio/instr/kalimba/',0,[stdli(4,6)],0]//211025
 				],
 				i2n:[
 					[-9,-7,-5,-4,-2,0,2,3,5,7,8,10,12,14,15],
@@ -540,7 +540,7 @@
 				c.getContext('2d').drawImage(q.tex,0,0,c.width,c.height);q.tex=c;draw(true);
 				document.body.insertAdjacentHTML('beforeend',`<style>.grid::before{background-image:url(${c.toDataURL()});}</style>`);
 			},
-			src:'img/seq_.svg'
+			src:'seqi.svg'
 		});
 		load();addEventListener('idbready',()=>{set();scale();reverb();delay();amb();});
 		if(urlq.pwa=='1'){const a=document.body.querySelector('a');a.href+='&pwa=1';a.target='';}
