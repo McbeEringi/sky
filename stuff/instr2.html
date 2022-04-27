@@ -151,7 +151,7 @@
 		}[window.navigator.language.slice(0,2)]),
 		amb={c:-1,dat:{}},
 		reverb=new Tone.Reverb().toDestination(),
-		mrn=new Tone.Player('../audio/metronome.mp3').connect(reverb),
+		mrn=new Tone.Player('audio/metronome.mp3').connect(reverb),
 		revset=(w=rev[0],d=rev[1])=>{rev=[w,d];reverb.wet.value=w;reverb.decay=Math.pow(2,d);},
 		stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 		cidft=['../audio/instr/musicbox/',1,[stdli(4,6,{a3:'a3.mp3','d#7':'ds7.mp3'})],0],

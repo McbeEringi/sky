@@ -159,7 +159,7 @@
 			let synth,synth_,kbmode=0,sc=0,env={dat:[],c:0},recorder,cinstr='';
 			alert=x=>{albox.textContent=x;alcb.checked=true;};
 			const reverb=new Tone.Reverb({wet:0,decay:.001}).toDestination(),
-			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'../audio/'}).toDestination(),
+			sfx=new Tone.Players({urls:{op:'open.mp3',cl:'close.mp3',cs:'choose.mp3'},baseUrl:'audio/'}).toDestination(),
 			stdli=(a,b=a+1,s={})=>{for(let i=a;i<=b;i++){s['d#'+i]=`ds${i}.mp3`;s['a'+i]=`a${i}.mp3`;}return s;},
 			texts=Object.assign({
 				info:'= Audio =\nTone.js Salamander(cc-by Alexander Holm),\nrecord by @McbeEringi\n\nPowerd by Tone.js\nauthor:@McbeEringi\nbuild:2108140\nMIT License',
