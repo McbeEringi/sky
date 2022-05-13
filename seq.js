@@ -3,7 +3,7 @@ let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg,isc,synt
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 if(!window.requestIdleCallback)window.requestIdleCallback=x=>setTimeout(x);
 const texts={
-	build:'2110120',
+	build:'2205130',
 	title:'Enter title',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
@@ -323,12 +323,31 @@ dbfx={
 	},
 	exp:i=>{
 		dbfx.get(i,e=>{
-			alert(`${texts.exp(e.target.result.name)}\n<input class="style input" value="${urlfx.o(e.target.result)}">\n<button class="grid bg" style="--bp:-300% -200%;">copy</button>	<button class="grid bg" style="--bp:-400% -300%;">tweet</button>	<button class="grid bg" style="--bp:-700% -200%;">share</button>`);
+			alert(`${texts.exp(e.target.result.name)}\n<input class="style input" value="${urlfx.o({...e.target.result})}">\n<button class="grid bg" style="--bp:-100% -100%;">copy</button>	<button class="grid bg" style="--bp:-400% -300%;">tweet</button>	<button class="grid bg" style="--bp:-700% 0;">smf midi</button>	<button class="grid bg" style="--bp:-700% -200%;">share</button>`);
 			let b=albox.querySelectorAll('button'),el=albox.querySelector('input');b[0].focus();
 			b[0].onclick=()=>navigator.clipboard.writeText(el.value).then(browse);
 			b[1].onclick=()=>{window.open(`https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_seq&url=${encodeURIComponent(el.value)}`);browse();};
-			if(navigator.share)b[2].onclick=()=>navigator.share({title:`sky_seq ${e.target.result.name}`,text:`${e.target.result.name}\n Created w/ #sky_seq `,url:el.value});
-			else{b[2].remove();albox.lastChild.remove();}
+			b[2].onclick=()=>{
+				alert('Standard MIDI File export\ndownloading assets...');
+				fetch('https://mcbeeringi.github.io/src/smf.js').then(x=>x.text()).then(x=>{
+					const midi=Function(x+`return json2midi`)(),
+						a=document.createElement('a');
+					a.download=e.target.result.name+'.mid';
+					console.log(e.target.result);
+
+					a.href=URL.createObjectURL(midi({
+						header:{format:0,precision:480},
+						tracks:[[
+							{dt:0,name:'meta',type:0x51}
+						]]
+					}));
+					a.click();
+					setTimeout(URL.revokeObjectURL,20000,a.href);
+					browse();
+				}).catch(e=>alert(`Error\n${e.target.error}`));
+			};
+			if(navigator.share)b[3].onclick=()=>navigator.share({title:`sky_seq ${e.target.result.name}`,text:`${e.target.result.name}\n Created w/ #sky_seq `,url:el.value});
+			else{b[3].remove();albox.lastChild.remove();}
 		});
 	},
 	sam:fx=>fetch('sample.json').then(x=>x.json()).then(x=>

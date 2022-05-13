@@ -71,7 +71,7 @@
 		label[for=alcb],#albox{position:fixed;pointer-events:none;opacity:0;transition:.2s;}
 		label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0004;z-index:3;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
 		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
-		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#2228;text-align:center;white-space:pre-wrap;overflow:scroll;overflow-x:hidden;z-index:4;}
+		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#2228;text-align:center;white-space:pre-wrap;overflow:auto;overflow-x:hidden;z-index:4;}
 		#albox .grid{backdrop-filter:none;-webkit-backdrop-filter:none;}
 		#alfcb:checked~#albox{width:100%;height:100%;text-align:unset;white-space:unset;}#alfcb:checked~label[for=alcb]::before{content:"";display:block;width:48px;height:48px;position:absolute;top:0;right:0;--bp:-500% -100%;}
 		#albox .items{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));grid-gap:8px;}
