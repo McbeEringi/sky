@@ -333,18 +333,18 @@ dbfx={
 					const midi=Function(x+`return json2midi`)(),
 						a=document.createElement('a');
 					a.download=e.target.result.name+'.mid';
-					console.log(e.target.result);
-
 					a.href=URL.createObjectURL(midi({
 						header:{format:0,precision:480},
 						tracks:[[
-							{dt:0,name:'meta',type:0x51}
+							{dt:0,name:'meta',type:0x51,data:((x,l)=>new Array(l--).fill().map((_,i)=>(x>>(8*(l-i)))&0xff))(Math.round(60000000/e.target.result.bpm),3)},
+							{dt:0,name:'meta',type:0x59,data:new Uint8Array([e.target.result.sc,0])},
+							{dt:480,name:'meta',type:0x2f,data:[]}
 						]]
 					}));
 					a.click();
 					setTimeout(URL.revokeObjectURL,20000,a.href);
 					browse();
-				}).catch(e=>alert(`Error\n${e.target.error}`));
+				}).catch(e=>alert(`Error\n${e}`));
 			};
 			if(navigator.share)b[3].onclick=()=>navigator.share({title:`sky_seq ${e.target.result.name}`,text:`${e.target.result.name}\n Created w/ #sky_seq `,url:el.value});
 			else{b[3].remove();albox.lastChild.remove();}
