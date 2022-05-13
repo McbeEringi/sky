@@ -56,7 +56,9 @@ instr_li=[//[baseurl, octave, map, (map2)]
 	null,
 	null,
 	['pipa',-1,stdli(3,5)],
-	['bugle',0,stdli(4,6)]
+	['bugle',0,stdli(4,6)],
+	null,
+	['kalimba',0,stdli(4,6)]
 ],
 syset=()=>{
 	let x=main.instr;
@@ -339,10 +341,12 @@ dbfx={
 						conv=(x,l=480,o=0)=>x.flatMap((y,i)=>Array.isArray(y)?conv(y,Math.round(l/y.length),l*i+o):y.split(',').flatMap(z=>z?[{dt:l*i+o,ch:0,name:'noteOn',note:+z+69+e.target.result.sc,vel:100},{dt:l*(i+2)+o,ch:0,name:'noteOn',note:+z+69+e.target.result.sc,vel:0}]:[]));
 					a.download=e.target.result.name+'.mid';
 					a.href=URL.createObjectURL(midi({
-						header:{format:0,precision:480},
+						header:{format:0,division:480},
 						tracks:[[
+							{dt:0,name:'meta',type:0x03,data:new TextEncoder().encode(e.target.result.name)},
 							{dt:0,name:'meta',type:0x51,data:((x,l)=>new Array(l--).fill().map((_,i)=>(x>>(8*(l-i)))&0xff))(Math.round(60000000/e.target.result.bpm),3)},
 							{dt:0,name:'meta',type:0x59,data:new Uint8Array([e.target.result.sc,0])},
+							{dt:0,name:'prg',prg:[0x0a,0x2e,,0x2b,0x3b,0x00,,,0x49,0x4b,0x19,0x18,0x01,0x09,,,0x6a,0x38,,0x6c][e.target.result.instr]},
 							...conv(e.target.result.scores).sort((a,b)=>Math.sign(a.dt-b.dt)).reduce((a,x)=>{x.dt=-a[0]+(a[0]=x.dt);a.push(x);return a;},[0]).slice(1),
 							{dt:960,name:'meta',type:0x2f,data:[]}
 						]]
@@ -469,7 +473,7 @@ scr.onclick=e=>{
 	if(tstat())sytar(ind2n(calced.note[curpos].ind));
 };
 instrbtn.onclick=()=>{
-	alert([0,1,3,4,5,8,9,10,11,12,13,16,17].map(x=>`<button class="grid bg tex" style="--bp:-${mod(x,8)}00% -${Math.floor(x*.125)+1}00%" data-i="${x}">${instr_li[x][0]}</button>`).join(''));
+	alert(instr_li.map((x,i)=>x?`<button class="grid bg tex" style="--bp:-${mod(i,8)}00% -${Math.floor(i*.125)+1}00%" data-i="${i}">${x[0]}</button>`:'').join(''));
 	albox.querySelector(`[data-i="${main.instr}"]`).focus();
 	albox.querySelectorAll('button').forEach(x=>x.onclick=()=>{x.focus();main.instr=Number(x.dataset.i);syset();});
 };
