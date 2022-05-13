@@ -3,7 +3,7 @@ let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg,isc,synt
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 if(!window.requestIdleCallback)window.requestIdleCallback=x=>setTimeout(x);
 const texts={
-	build:'2205140',
+	build:'2205141',
 	notice:'MIDI export is now supported!\ngo <p class="grid bg" style="--bp:0 -200%;"></p>→<p class="grid bg" style="--bp:-700% -200%;"></p>→<p class="grid bg" style="--bp:-700% 0;"></p>',
 	title:'Enter title',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,expmidi:'export as MIDI File',
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
@@ -338,7 +338,8 @@ dbfx={
 				fetch('https://mcbeeringi.github.io/src/smf.js').then(x=>x.text()).then(w=>{
 					const midi=Function(w+`return json2midi`)(),
 						a=document.createElement('a'),
-						conv=(x,l=480,o=0)=>x.flatMap((y,i)=>Array.isArray(y)?conv(y,Math.round(l/y.length),l*i+o):y.split(',').flatMap(z=>z?[{dt:l*i+o,ch:0,name:'noteOn',note:+z+69+e.target.result.sc,vel:100},{dt:l*(i+2)+o,ch:0,name:'noteOn',note:+z+69+e.target.result.sc,vel:0}]:[]));
+						note=69+e.target.result.sc+instr_li[e.target.result.instr||0][1]*12,
+						conv=(x,l=480,o=0)=>x.flatMap((y,i)=>Array.isArray(y)?conv(y,Math.round(l/y.length),l*i+o):y.split(',').flatMap(z=>z?[{dt:l*i+o,ch:0,name:'noteOn',note:+z+note,vel:100},{dt:l*(i+2)+o,ch:0,name:'noteOn',note:+z+note,vel:0}]:[]));
 					a.download=e.target.result.name+'.mid';
 					a.href=URL.createObjectURL(midi({
 						header:{format:0,division:480},
@@ -346,7 +347,7 @@ dbfx={
 							{dt:0,name:'meta',type:0x03,data:new TextEncoder().encode(e.target.result.name)},
 							{dt:0,name:'meta',type:0x51,data:((x,l)=>new Array(l--).fill().map((_,i)=>(x>>(8*(l-i)))&0xff))(Math.round(60000000/e.target.result.bpm),3)},
 							{dt:0,name:'meta',type:0x59,data:new Uint8Array([e.target.result.sc,0])},
-							{dt:0,name:'prg',prg:[0x0a,0x2e,,0x2b,0x3b,0x00,,,0x49,0x4b,0x19,0x18,0x01,0x09,,,0x6a,0x38,,0x6c][e.target.result.instr]},
+							{dt:0,name:'prg',prg:[0x0a,0x2e,,0x2b,0x3b,0x00,,,0x49,0x4b,0x19,0x18,0x01,0x09,,,0x6a,0x38,,0x6c][e.target.result.instr]||0},
 							...conv(e.target.result.scores).sort((a,b)=>Math.sign(a.dt-b.dt)).reduce((a,x)=>{x.dt=-a[0]+(a[0]=x.dt);a.push(x);return a;},[0]).slice(1),
 							{dt:960,name:'meta',type:0x2f,data:[]}
 						]]
