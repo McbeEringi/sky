@@ -338,7 +338,7 @@ dbfx={
 				fetch('https://mcbeeringi.github.io/src/smf.js').then(x=>x.text()).then(w=>{
 					const midi=Function(w+`return json2midi`)(),
 						a=document.createElement('a'),
-						note=69+e.target.result.sc+instr_li[e.target.result.instr||0][1]*12,
+						note=69+e.target.result.sc+(instr_li[e.target.result.instr]||[,0])[1]*12,
 						conv=(x,l=480,o=0)=>x.flatMap((y,i)=>Array.isArray(y)?conv(y,Math.round(l/y.length),l*i+o):y.split(',').flatMap(z=>z?[{dt:l*i+o,ch:0,name:'noteOn',note:+z+note,vel:100},{dt:l*(i+2)+o,ch:0,name:'noteOn',note:+z+note,vel:0}]:[]));
 					a.download=e.target.result.name+'.mid';
 					a.href=URL.createObjectURL(midi({
