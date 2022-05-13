@@ -3,8 +3,9 @@ let main,calced,tims={},curpos=0,ecur,sel,urstack,clips=[],from_url,cfg,isc,synt
 alert=(x,f)=>{alcb.checked=true;alfcb.checked=f;albox.textContent='';albox.insertAdjacentHTML('beforeend',x);};
 if(!window.requestIdleCallback)window.requestIdleCallback=x=>setTimeout(x);
 const texts={
-	build:'2205130',
-	title:'Enter title',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,
+	build:'2205140',
+	notice:'MIDI export is now supported!\ngo <p class="grid bg" style="--bp:0 -200%;"></p>→<p class="grid bg" style="--bp:-700% -200%;"></p>→<p class="grid bg" style="--bp:-700% 0;"></p>',
+	title:'Enter title',save:'Saved.',osave:'Overwrite saved.',copy:' copy',imp:'load from URL',exp:x=>`export "${x}" as URL`,expmidi:'export as MIDI File',
 	nodat:'No saved data found',sample:'Download sample',load:'Loading…',
 	err:x=>`⚠️\nfailed to ${['read','write'][x]} datas\n\n`,saveq:'Do you want to save the current data?',delq:x=>`Are you sure you want to delete "${x}"?`,
 	buiq:'All data will be over written.\nThis operation is irreversible.\nAre you sure you want to continue?',
@@ -13,7 +14,8 @@ const texts={
 	usg:'usage',ntab:'Open in New Tab',
 	...{
 		ja:{
-			title:'タイトルを入力',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',imp:'URLから読み込む',exp:x=>`「${x}」をURLに書き出す`,
+			notice:'MIDIファイルの書き出しを実装しました!\n<p class="grid bg" style="--bp:0 -200%;"></p>→<p class="grid bg" style="--bp:-700% -200%;"></p>→<p class="grid bg" style="--bp:-700% 0;"></p> から使用できます',
+			title:'タイトルを入力',save:'保存しました!',osave:'上書き保存しました!',copy:'のコピー',imp:'URLから読み込む',exp:x=>`「${x}」をURLに書き出す`,expmidi:'MIDIファイルに書き出す',
 			nodat:'保存されたデータはありません',sample:'サンプルをダウンロード',load:'読み込み中…',
 			err:x=>`⚠️\nデータの${['読み出し','書き込み'][x]}に失敗しました\n\n`,saveq:'現在のデータを保存しますか？',delq:x=>`「${x}」を削除してよろしいですか？`,
 			buiq:'全てのデータは上書きされます。\nこの操作は元に戻せません。\n本当にこの操作を続けますか?',
@@ -323,22 +325,26 @@ dbfx={
 	},
 	exp:i=>{
 		dbfx.get(i,e=>{
-			alert(`${texts.exp(e.target.result.name)}\n<input class="style input" value="${urlfx.o({...e.target.result})}">\n<button class="grid bg" style="--bp:-100% -100%;">copy</button>	<button class="grid bg" style="--bp:-400% -300%;">tweet</button>	<button class="grid bg" style="--bp:-700% 0;">smf midi</button>	<button class="grid bg" style="--bp:-700% -200%;">share</button>`);
+			alert(`${texts.exp(e.target.result.name)}\n<input class="style input" value="${urlfx.o({...e.target.result})}">\n<button class="grid bg" style="--bp:-100% -100%;">copy</button>	<button class="grid bg" style="--bp:-400% -300%;">tweet</button>	<button class="grid bg" style="--bp:-700% -200%;">share</button><hr>${texts.expmidi}\n<button class="grid bg" style="--bp:-700% 0;">smf midi</button>`);
 			let b=albox.querySelectorAll('button'),el=albox.querySelector('input');b[0].focus();
 			b[0].onclick=()=>navigator.clipboard.writeText(el.value).then(browse);
 			b[1].onclick=()=>{window.open(`https://twitter.com/share?text=${encodeURIComponent(e.target.result.name)}&hashtags=sky_seq&url=${encodeURIComponent(el.value)}`);browse();};
-			b[2].onclick=()=>{
+			if(navigator.share)b[2].onclick=()=>navigator.share({title:`sky_seq ${e.target.result.name}`,text:`${e.target.result.name}\n Created w/ #sky_seq `,url:el.value});
+			else{b[2].previousSibling.remove();b[2].remove();}
+			b[3].onclick=()=>{
 				alert('Standard MIDI File export\ndownloading assets...');
-				fetch('https://mcbeeringi.github.io/src/smf.js').then(x=>x.text()).then(x=>{
-					const midi=Function(x+`return json2midi`)(),
-						a=document.createElement('a');
+				fetch('https://mcbeeringi.github.io/src/smf.js').then(x=>x.text()).then(w=>{
+					const midi=Function(w+`return json2midi`)(),
+						a=document.createElement('a'),
+						conv=(x,l=480,o=0)=>x.flatMap((y,i)=>Array.isArray(y)?conv(y,Math.round(l/y.length),l*i+o):y.split(',').flatMap(z=>z?[{dt:l*i+o,ch:0,name:'noteOn',note:+z+69+e.target.result.sc,vel:100},{dt:l*(i+2)+o,ch:0,name:'noteOn',note:+z+69+e.target.result.sc,vel:0}]:[]));
 					a.download=e.target.result.name+'.mid';
 					a.href=URL.createObjectURL(midi({
 						header:{format:0,precision:480},
 						tracks:[[
 							{dt:0,name:'meta',type:0x51,data:((x,l)=>new Array(l--).fill().map((_,i)=>(x>>(8*(l-i)))&0xff))(Math.round(60000000/e.target.result.bpm),3)},
 							{dt:0,name:'meta',type:0x59,data:new Uint8Array([e.target.result.sc,0])},
-							{dt:480,name:'meta',type:0x2f,data:[]}
+							...conv(e.target.result.scores).sort((a,b)=>Math.sign(a.dt-b.dt)).reduce((a,x)=>{x.dt=-a[0]+(a[0]=x.dt);a.push(x);return a;},[0]).slice(1),
+							{dt:960,name:'meta',type:0x2f,data:[]}
 						]]
 					}));
 					a.click();
@@ -346,8 +352,6 @@ dbfx={
 					browse();
 				}).catch(e=>alert(`Error\n${e}`));
 			};
-			if(navigator.share)b[3].onclick=()=>navigator.share({title:`sky_seq ${e.target.result.name}`,text:`${e.target.result.name}\n Created w/ #sky_seq `,url:el.value});
-			else{b[3].remove();albox.lastChild.remove();}
 		});
 	},
 	sam:fx=>fetch('sample.json').then(x=>x.json()).then(x=>
