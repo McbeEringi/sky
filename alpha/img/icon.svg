@@ -1,13 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 16 16">
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64">
 	<desc>app icon</desc>
 	<defs>
 		<linearGradient id="bg" x1="0" y1="1" x2="0" y2="0">
-			<stop offset="20%" stop-color="#214"/><stop offset="100%" stop-color="#415"/>
+			<stop offset="0" stop-color="#214"/><stop offset="1" stop-color="#415"/>
 		</linearGradient>
 		<filter id="sh">
 			<feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#f00"/>
 		</filter>
 	</defs>
-	<path d="M0,0h16v16h-16Z" fill="url(#bg)"/>
-	<path d="M0,0m8,8Z" style="fill:#0000;stroke:#fea;stroke-width:.25;filter:url(#sh);stroke-linecap:round;stroke-linejoin:round;"/>
-</svg>
+	<path d="M0,0h64v64h-64Z" fill="url(#bg)"/>
+	<path d="
+		M32,32
+		m12,0q-12,0,-12-13q0,13,-12,13q12,0,12,13q0,-13,12,-13Zm-12,0
+		m7,-4a8,8,0,1,1,-14,0m7,4
+		m9,-5a10,10,0,1,1,-18,0m9,5
+		m-20,-10a20,20,0,1,0,40,0
+	" style="fill:none;stroke:#fea;stroke-width:.5;filter:url(#sh);stroke-linecap:round;stroke-linejoin:round;"/>
+</svg></svg>
