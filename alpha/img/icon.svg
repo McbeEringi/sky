@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 16 16">
+	<desc>app icon</desc>
+	<defs>
+		<linearGradient id="bg" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="20%" stop-color="#214"/><stop offset="100%" stop-color="#415"/>
+		</linearGradient>
+		<filter id="sh">
+			<feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#f00"/>
+		</filter>
+	</defs>
+	<path d="M0,0h16v16h-16Z" fill="url(#bg)"/>
+	<path d="M0,0m8,8Z" style="fill:#0000;stroke:#fea;stroke-width:.25;filter:url(#sh);stroke-linecap:round;stroke-linejoin:round;"/>
+</svg>
