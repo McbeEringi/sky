@@ -1,0 +1,29 @@
+{
+	"name":"Sky Stuff",
+	"short_name":"Sky Stuff",
+	"description":"by @McbeEringi",
+	"icons":[{
+			"src":"img/sky.png",
+			"sizes":"512x512",
+			"type":"image/png"
+		},{
+			"src":"img/sky_192.png",
+			"sizes":"192x192",
+			"type":"image/png",
+			"purpose":"any maskable"
+		}],
+	"scope":"/sky/",
+	"start_url":"index.html?pwa=0",
+	"display":"fullscreen",
+	"theme_color":"#214",
+	"background_color":"#222",
+	"categories":["games","music","utilities"],
+	"orientation":"any",
+	"shortcuts": [
+		{
+			"name":"sky_instruments",
+			"url":"instr.html?pwa=0",
+			"icons":[{"src":"img/ico/instr.jpg","sizes":"192x192"}]
+		}
+  ]
+}
