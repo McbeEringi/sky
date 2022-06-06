@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64">
+	<desc>app icon transparent</desc>
+	<path d="
+		M32,32
+		m13,0q-13,0,-13-14q0,14,-13,14q13,0,13,14q0,-14,13,-14Zm-13,0
+		m8,-7a10,10,0,1,1,-16,0m8,7
+		m11,-6a12,12,0,1,1,-22,0m11,6
+		m22,-10a22,22,0,1,1,-44,0
+	" style="fill:none;stroke:#fea2;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;"/>
+</svg>
