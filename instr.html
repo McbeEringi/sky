@@ -105,19 +105,19 @@
 	<script>
 		'use strict';
 		const texts=Object.assign({
-				info:'<h1>sky_instruments</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v5 build:2204190\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+				info:'<h1>sky_instruments</h1><hr>In game sounds\n<small>recorded by @McbeEringi</small><hr><p>[sky_seq] v5 build:2206190\n<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 				rev:'reverb',delay:'delay',kbs:'key size',
 				amb:'ambient',ambl:['none','hotspring','home','forest','vault'],
 				ci:'custom instruments',default:'default',cnew:'create new…',cin:'instr name',fsel:'choose file',
 				delask:`Are you sure to delete it?`,wip:'WIP',cfg:'setting',
-				reci:'Use video recorder\n(experimental)'
+				reci:'Use video recorder\n(experimental)',uifb:'UI feedback'
 			},{
 				ja:{
 					rev:'リバーブ',delay:'遅延',kbs:'キーのサイズ',
 					amb:'環境音',ambl:['なし','温泉','ホーム','雨林','書庫'],
 					ci:'カスタム楽器',default:'デフォルト',cnew:'新規作成…',cin:'楽器名',fsel:'ファイルを選択',
 					delask:`本当に削除してよろしいですか?`,wip:'工事中…',cfg:'設定',
-					reci:'録画機能の使用(試験的)'
+					reci:'録画機能の使用(試験的)',uifb:'UIフィードバック'
 				}
 			}[navigator.language.slice(0,2)]),
 			alc=()=>[...albox.querySelectorAll('#albox>:not(.fade)')].pop(),
@@ -312,15 +312,15 @@
 			},
 			scale=s=>{
 				scd.children[1].setAttribute('style',`--rot:${q.sc*30+45}deg;`);
-				if(s){const t=actx.currentTime+.05;[72,76,79].forEach((y,i)=>trigger(y+q.octave+q.sc,0,t+i*.05));}
+				if(s&&q.uifb){const t=actx.currentTime+.05;[72,76,79].forEach((y,i)=>trigger(y+q.octave+q.sc,0,t+i*.05));}
 			},
 			reverb=s=>{
 				gn0.gain.value=q.rev;gn1.gain.value=1-q.rev;
-				if(s){const t=actx.currentTime+.05;(q.scf?[72,74,76,79,84]:[69,81]).forEach((x,i)=>trigger(x+q.octave+q.sc*q.scf,0,t+i*.05));}
+				if(s&&q.uifb){const t=actx.currentTime+.05;(q.scf?[72,74,76,79,84]:[69,81]).forEach((x,i)=>trigger(x+q.octave+q.sc*q.scf,0,t+i*.05));}
 			},
 			delay=s=>{
 				deln.delayTime.value=q.del;
-				if(s){const t=actx.currentTime+.05,l=actx.outputLatency||0;(q.scf?[72,79]:[69,81]).forEach((x,i)=>trigger(x+q.octave+q.sc*q.scf,0,t+(q.del+l)*i));}
+				if(s&&q.uifb){const t=actx.currentTime+.05,l=actx.outputLatency||0;(q.scf?[72,79]:[69,81]).forEach((x,i)=>trigger(x+q.octave+q.sc*q.scf,0,t+(q.del+l)*i));}
 			},
 			ui={
 				loading(x){alert('<p class="grid tex spin"></p>');const e=alc().firstChild,fx=e.onclick;return new Promise(f=>e.onclick=()=>f(fx()));},
@@ -332,6 +332,7 @@
 						<label>${texts.rev}\n<input type="range" class="style" min="0" max="1" step="0.0625" value="${q.rev}"></label>
 						<label>${texts.delay}\n<input type="range" class="style" min="0" max=".2" step="0.0125" value="${q.del}"></label>
 						<label>${texts.reci}\n<input type="checkbox"${q.reci?' checked':''}${recbtn.classList.contains('a')?' disabled':''}></label>
+						<label>${texts.uifb}\n<input type="checkbox"${q.uifb?' checked':''}></label>
 					</div>`);
 					const inp=alcp().querySelectorAll('input'),sel=alcp().querySelector('select');
 					inp[0].oninput =()=>{q.kbs=+inp[0].value;cset();save();};
@@ -339,6 +340,7 @@
 					inp[1].onchange=()=>{q.rev=+inp[1].value;reverb(true);save();};
 					inp[2].onchange=()=>{q.del=+inp[2].value;delay(true);save();};
 					inp[3].onchange=()=>{q.reci=+inp[3].checked;save();};
+					inp[4].onchange=()=>{q.uifb=+inp[4].checked;save();};
 				},
 				cicfg(){
 					let main=e=>{
@@ -384,8 +386,8 @@
 					).then(()=>{alr();ui.cicfg();}).catch(errfx);
 				},
 			},
-			load=()=>({instr:imenu.instr.value=0,sc:q.sc=0,rev:q.rev=0,del:q.del=.1,kbs:q.kbs=88,amb:q.amb=-1,reci:q.reci=0,ci:q.ci=''}=JSON.parse(localStorage.instr_stat||'{}')),
-			save=()=>localStorage.instr_stat=JSON.stringify({instr:+imenu.instr.value,sc:q.sc,rev:q.rev,del:q.del,kbs:q.kbs,amb:q.amb,reci:q.reci,ci:q.ci});
+			load=()=>({instr:imenu.instr.value=0,sc:q.sc=0,rev:q.rev=0,del:q.del=.1,kbs:q.kbs=88,amb:q.amb=-1,reci:q.reci=0,uifb:q.uifb=1,ci:q.ci=''}=JSON.parse(localStorage.instr_stat||'{}')),
+			save=()=>localStorage.instr_stat=JSON.stringify({instr:+imenu.instr.value,sc:q.sc,rev:q.rev,del:q.del,kbs:q.kbs,amb:q.amb,reci:q.reci,uifb:q.uifb,ci:q.ci});
 			
 		['touchstart','mousedown'].forEach(x=>kc.addEventListener(x,fire));
 		document.addEventListener('keydown',e=>{
