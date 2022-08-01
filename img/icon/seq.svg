@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 128 128">
+	<desc>sky seq icon</desc>
+	<defs>
+		<linearGradient id="bg" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="20%" stop-color="#214"/><stop offset="100%" stop-color="#415"/>
+		</linearGradient>
+		<filter id="sh">
+			<feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#f00"/>
+		</filter>
+	</defs>
+	<style>rect{fill:none;stroke:#fea;stroke-width:3;}</style>
+	<path d="M0,0h128v128h-128" fill="url(#bg)"/>
+	<g filter="url(#sh)">
+		<rect x="68" y="24" width="36" height="36" rx="12" ry="12"/>
+		<rect x="24" y="68" width="36" height="36" rx="12" ry="12"/>
+		<rect x="68" y="68" width="36" height="36" rx="12" ry="12"/>
+	</g>
+</svg>

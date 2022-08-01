@@ -1,22 +1,36 @@
 <!DOCTYPE html>
-<html>
-<head>
-<script async src="https://mcbeeringi.github.io/src/gas.js"></script>
-
+<html lang="en">
+<head prefix="og:http://ogp.me/ns#">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>McbeEringi sky_404</title>
-	<link rel="shortcut icon" type="image/svg+xml" href="https://mcbeeringi.github.io/sky/img/sky.svg">
+	<title>Sky Stuff - 404</title>
+	<meta name="Description" content="404 Not Found">
+	<link rel="icon" type="image/jpeg" href="img/icon.jpg">
+	<link rel="icon" type="image/svg+xml" href="img/icon.svg">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Sky Stuff">
+	<meta property="og:description" content="A web app for Sky:CotL">
+	<meta property="og:url" content="https://mcbeeringi.github.io/sky/index.html">
+	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/icon.png">
+	<!--iOS-->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="Sky Stuff">
+	<link rel="apple-touch-icon" href="img/icon.png">
+	<!--PWA-->
+	<link rel="manifest" href="mf.json">
+	<meta name="theme-color" content="#214">
 </head>
 <body>
-	<script src="https://mcbeeringi.github.io/sky/style.js"></script>
-	<style>:root{text-align:center;}</style>
-
-	<p>McbeEringi sky</p>
-	<hr>
-	<h1 style="font-size:500%;">404</h1>
-	<h2>Page not found :(</h2>
-	<hr>
-	<a href="/">Back to top page</a>
+	<script src="https://mcbeeringi.github.io/sky/util.js"></script>
+	<div style="text-align:center;">
+		Sky Stuff
+		<hr>
+		<h1 style="font-size:500%;">404</h1>
+		<h2>Not Found</h2>
+		<hr>
+		<a href="/sky/" id="a">Back to Top</a>
+	</div>
+	<script>a.textContent=texts.back2top;</script>
 </body>
 </html>

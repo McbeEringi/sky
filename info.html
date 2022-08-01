@@ -1,183 +1,135 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head prefix="og: http://ogp.me/ns#">
-<script async src="https://mcbeeringi.github.io/src/gas.js"></script>
-
+<html lang="en">
+<head prefix="og:http://ogp.me/ns#">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>sky_info</title>
-	<meta name="Description" content="Sky treasure candle">
-	<link rel="shortcut icon" type="image/svg+xml" href="img/ico/info.svg">
+	<meta name="Description" content="McbeEringi Sky Stuff sky_info">
+	<link rel="icon" type="image/jpeg" href="img/icon/info.jpg">
+	<link rel="icon" type="image/svg+xml" href="img/icon/info.svg">
 	<meta property="og:type" content="website">
 	<meta property="og:title" content="sky_info">
-	<meta property="og:description" content="Skyの大キャン予報です">
+	<meta property="og:description" content="A web app for Sky:CotL">
 	<meta property="og:url" content="https://mcbeeringi.github.io/sky/info.html">
-	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/info.jpg">
+	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/icon/info.jpg">
 	<!--iOS-->
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="default">
 	<meta name="apple-mobile-web-app-title" content="Sky Stuff">
-	<link rel="apple-touch-icon" href="img/sky.png">
-	<!--sw-->
-	<link rel="manifest" href="skymf.json">
-	<meta name="theme-color" content="#214"/>
-	<script>
-		if('serviceWorker'in navigator&&location.protocol.includes('https'))window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});},{once:true});
-	</script>
+	<link rel="apple-touch-icon" href="img/icon.png">
+	<!--PWA-->
+	<link rel="manifest" href="mf.json">
+	<meta name="theme-color" content="#214">
 </head>
 <body>
-	<script src="style.js"></script>
+	<script src="util.js"></script>
 	<style>
-		:root{tab-size:4em;font-size:16px;}img{width:100%;height:auto;}
-		pre{white-space:pre-wrap;font-family:'M PLUS Rounded 1c',sans-serif;}
-		br+img{max-width:512px;background:#8888;}
-		input[type=checkbox]{display:none;}input[type=checkbox]+div{background:#8888;}input[type=checkbox]:not(:checked)+div{display:none;}label{display:block;margin:8px 0;}input[type=checkbox]+div>div{display:inline-block;}.clear_fix::after{content:"";clear:both;display:block;}
-		.ib>*{display:inline-block;max-width:512px;min-width:256px;width:100%;vertical-align:top;}
+		#time{white-space:pre-wrap;font-size:small;}
+		img{width:100%;max-width:320px;height:auto;}
+		#out>div{display:inline-block;padding:4px;box-sizing:border-box;vertical-align:top;}
+		#wings label{display:block;border-bottom:2px solid var(--w);}
+		#wings>*{display:inline-block;vertical-align:top;}
 	</style>
-
-	<h1>Sky_info</h1>
-	<pre id="time">Please enable JavaScript to use this app.</pre>
-	<hr>
-	<div class="ib">
-		<div>
-			<h2>today</h2>
-			<pre id="_0t"></pre>
-			<img id="_0i" width="4" height="3" alt="today"><img id="_0i_" width="4" height="3" style="display:none;">
-		</div>
-		<div>
-			<h2>tomorrow</h2>
-			<pre id="_1t"></pre>
-			<img id="_1i" width="4" height="3" alt="tomorrow"><img id="_1i_" width="4" height="3" style="display:none;">
-		</div>
+	<div class="flex">
+		<h1>sky_info</h1>
+		<button class="btn a1" style="--bp:-100% 0;" onclick="gcfg();">General Config</button>
 	</div>
 	<hr>
-	<div style="user-select:none;-webkit-user-select:none;" id="gallery">
+	<h2 id="tctxt">Treasure Candles</h2>
+	<p id="time"></p>
+	<label><span id="rdtxt">Refresh Date</span>: <input type="date" id="inp" class="input"></label>
+	<div id="out"></div>
+	<div id="gallery" class="items" style="--items:128px;"></div>
+	<hr>
+	<h2 id="wltxt">Winged Lights</h2>
+	<div class="flex">
+		<h3 id="wc"></h3>
+		<button class="btn" style="--bp:-100% -100%;" onclick="yn(texts.delask).p.then(x=>(x==1&&(wcbcl(),save(),count())));">clear</button>
 	</div>
-	<span id="ogal"></span> (<a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area#The_Spirits_of_the_Office">Sky Wiki</a>)<br>
-	大キャンドル参考元: <a href="https://twitter.com/sky_tea11">ティー</a>様 <br><!--/status/1356572540437635073-->
+	<div id="wings"></div>
+	<hr>
+	参考: <br>
+	<a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area#The_Spirits_of_the_Office">Sky Wiki</a><br>
+	<a href="https://twitter.com/sky_tea11">ティー</a>様 <br><!--/status/1356572540437635073-->
 	<p>
-		[sky_info] build:2111020 <br>
+		[sky_info] build:2207271 <br>
 		<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
 	</p>
 
 	<script>
 		'use strict';
 		let imgf=new Image();imgf.onerror=()=>imgf='JPG';imgf.onload=()=>imgf=null;imgf.src='img/candle/00.webp';
-		const jpgfall=()=>{if(typeof imgf=='string')document.querySelectorAll('img[src$="webp"]').forEach(e=>{if(e.src)e.src=e.src.replace('webp',imgf);});};
+		const jpgfb=()=>{if(typeof imgf=='string')document.querySelectorAll('img[src$="webp"]').forEach(e=>{if(e.src)e.src=e.src.replace('webp',imgf);});};
 
-		const o_dic={
-			ja:['無念','社畜','ピザ','つぼ','ネコ','宇宙','散歩']
-		}[window.navigator.language.slice(0,2)]||['Doom','Worker','Pizza','Vase','Cat','Space','Stroll'],
-		//https://twitter.com/sky_tea11/status/1234038235149426689/photo/1
-		//https://twitter.com/i/events/1176090791342567424
-		c_dic ={
-			ja:[
-				['~草原~',['入口左手前','丸石奥','鳥の塔右奥','洞窟入口'],['入口右奥','丸石右','4島中央','神殿内'],['入口左奥','鳥の塔中央','洞窟内','鯉池']],
-				['~雨林~',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
-				['~峡谷~',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
-				['~捨て地~',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
-				['~書庫~',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
-			]
-		}[window.navigator.language.slice(0,2)]||[
-			['~Daylight Prairie~',['social space left front','beyond the rock','birdnest right beyond','cave entrance'],['social space right beyond','right of the rock','center of village','in the shrine'],['social space left beyond','birdnest center','in cave','koi pond']],
-			['~Hidden Forest~',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
-			['~Valley of Triumph~',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
-			['~Golden Wasteland~',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
-			['~Vault of Knowledge~',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
-		],
-		texts=Object.assign({
-			ct:'current time',st:'  server time',dst:'(Daylight Saving Time)',
-			dtc:'DOUBLE TREASURE CANDLES ~Jan 3rd\n\n',
-			o:'Office Spirit'
-		},{
-			ja:{
-				ct:'　　現在時刻',st:'サーバー時刻',dst:'(サマータイム)',
-				dtc:'大キャン2倍 ~1/3\n\n',
-				o:'オフィス精霊'
-			}
-		}[window.navigator.language.slice(0,2)]),
-		calendar={
-			2020:{
-				12:{
-					21:[2,0,1],
-					22:[3,1,2],
-					23:[4,0,1],
-					24:[0,1,2],
-					25:[1,1,2],
-					26:[2,0,1],
-					27:[3,0,2],
-					28:[4,0,1],
-					29:[0,0,2],
-					30:[1,0,2],
-					31:[2,0,1]
-				}
+		texts={
+			...texts,
+			ct:'Current Time',st:'  Server Time',dst:'(Daylight Saving Time)',rd:'Refresh Date',o:'Office Spirit',delask:'Are you sure you want to reset the wings?',
+			cls:[
+				['~Daylight Prairie~',['social space left front','beyond the rock','birdnest right beyond','cave entrance'],['social space right beyond','right of the rock','center of village','in the shrine'],['social space left beyond','birdnest center','in cave','koi pond']],
+				['~Hidden Forest~',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
+				['~Valley of Triumph~',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
+				['~Golden Wasteland~',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
+				['~Vault of Knowledge~',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
+			],
+			ols:['Doom','Worker','Pizza','Vase','Cat','Space','Stroll'],
+			wls:{
+				孤島:{孤島:['岩上','船','砂漠右小部屋','坂上','島'],預言:Array.from('水地風火',x=>x+'の試練')},
+				草原:{丸石:['左小部屋','丸石上','門手前'],鳥の塔:['神殿側','楽園側'],洞窟:['入口側','神殿側'],村:['左','奥','中央'],八人:['木'],神殿上:['下','上'],楽園:['手前浮島','山頂','間欠泉脇','海月','滝','梯子','蟹','奥浮島'],},
+				雨林:{開拓地:['木','門'],川と蟹:['左小部屋','出口','左奥木上','右手前木上'],晴れ間:['木裏','円盤'],洞窟:['右下小部屋','左上','左上小部屋','出口左'],墓地:['橋','櫓','木'],神殿奥:['左'],大樹:['木','地下'],風の街道:['中央']},
+				峡谷:{入口:['左'],広場:['中央','地下'],天球儀:['上','下'],空レース:['渡り廊下','櫓'],陸レース:['路地'],競技場:['ゴール前','左像上'],神殿:['左部屋'],夢見:['温泉下','左山','リフト上'],隠者:['窓','洞穴'],劇場:['舞台裏']},
+				捨て地:{倒壊した祠:['門上','左'],初ｴﾋﾞﾁｬﾝ:['右台','出口右'],ｴﾋﾞﾁｬﾝx4:['土管','頭蓋骨','出口','投石台上'],難破船:['壁','船','配管'],戦場:['砦上','出口右'],神殿:['神殿'],方舟:['舟','洞窟'],深淵:['塔','隠し部屋']},
+				書庫:{書架:['壺','梯子'],一階:['梯子'],三階:['東屋'],四階:['下','上'],五階:['骨'],六階:['像前'],砂漠:['壺','灯籠','冠'],},
+				その他:{暴風域:['小屋',...Array.from('123456789',x=>'通路'+x)],砕ケル闇:['クエスト2']}
 			},
-			2021:{
-				1:{
-					1 :[3,0,1],2 :[4,0,1],3 :[0,0,1],
-					6 :[3,1],  7 :[4,1],  8 :[0,1],
-					11:[3,2],  12:[4,0],  13:[0,2],
-					16:[3,0],  17:[4,1],  18:[0,0],
-					21:[3,1],  22:[4,0],  23:[0,1],
-					26:[3,2],  27:[4,1],  28:[0,2],
-					31:[3,0]
+			...{
+				ja:{
+					ct:'　　現在時刻',st:'サーバー時刻',dst:'(サマータイム)',rd:'更新日時',o:'オフィス精霊',delask:'すべての羽の記録をリセットします。よろしいですか?',tc:'大キャン',wl:'羽',
+					cls:[
+						['~草原~',['入口左手前','丸石奥','鳥の塔右奥','洞窟入口'],['入口右奥','丸石右','4島中央','神殿内'],['入口左奥','鳥の塔中央','洞窟内','鯉池']],
+						['~雨林~',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
+						['~峡谷~',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
+						['~捨て地~',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
+						['~書庫~',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
+					],
+					ols:['無念','社畜','ピザ','つぼ','ネコ','宇宙','散歩']
 				}
-			}
-		},
-		limited=(x,i)=>{
-			let cal;
-			try{cal=calendar[x.getFullYear()][x.getMonth()+1][x.getDate()];}catch(e){return 1;}
-			window[`_${i}t`].textContent=`${cal[2]+1?texts.dtc:''}${c_dic[cal[0]][0]}\n${c_dic[cal[0]][cal[1]+1]}\n${c_dic[cal[0]][cal[2]+1]||''}`;
-			window[`_${i}i`].src=`img/candle/${cal[0]}${cal[1]}.webp`;
-			if(cal[2]!=undefined){window[`_${i}i_`].style.display='inline';window[`_${i}i_`].src=`img/candle/${cal[0]}${cal[2]}.webp`;}
+			}[window.navigator.language.slice(0,2)]
 		};
+		rdtxt.textContent=texts.rd;tctxt.textContent=texts.tc;wltxt.textContent=texts.wl;
+		inp.onchange=()=>{if(!inp.value)return;
+			const t=new Date(inp.value),c=[((t.getTime()-new Date('2020/11/4 00:00').getTime())/864e5|0)%5],o=(t.getDate()-1)%7;c[1]=(((t.getDate()-1)/5)|0)%[3,3,2,3,2][c[0]];
+			const e=['div','img'].map(x=>document.createElement(x));
+			e[0].insertAdjacentHTML('beforeend',`${t.toLocaleDateString()}<br>${texts.cls[c[0]][0]}<br>${texts.cls[c[0]][c[1]+1]}<br>${texts.o}: ${texts.ols[o]}<br>`);
+			e[1].src=`img/tc/${c.join('')}.webp`;e[1].alt='image: '+texts.cls[c[0]][c[1]+1];e[1].width=4;e[1].height=3;
+			e[0].append(e[1]);out.prepend(e[0]);[...out.children].slice(3).forEach(x=>x.remove());jpgfb();
+		};
+		gallery.insertAdjacentHTML('beforeend',texts.cls.map((x,i)=>`<label><button class="btn" style="--bp:0 -300%;">${x[0]}</button>${x[0]}(${x.length-1})</label>`).join(''));
+		gallery.querySelectorAll('button').forEach((x,i)=>x.onclick=()=>alert(texts.cls[i].slice(1).map((y,j)=>`${y}<br><img src="img/tc/${i}${j}.webp" alt="image: ${y}" width="4" height="3">`).join('<hr>')));
 
-		gallery.insertAdjacentHTML('beforeend',c_dic.map((x,i)=>`<label><input type="checkbox">${x[0]}(${x.length-1})▶︎<div>${x.slice(1).map((y,j)=>`<div>${JSON.stringify(y)}<br><img src="img/candle/${i}${j}.webp" width="4" height="3"></div>`).join('')}</div></label>`).join(''));
-		jpgfall();
-		ogal.textContent=`${texts.o}: ${JSON.stringify(o_dic)}`
+		wings.insertAdjacentHTML('beforeend',Object.entries(texts.wls).map(x=>(x[1]=Object.entries(x[1]).map(y=>y[1].map(z=>`<li><label><input type="checkbox">${y[0]} - ${z}</label></li>`).join('')).join('</ul><ul>'),`<div class="ib"><h2>${x[0]}</h2><ul>${x[1]}</ul></div>`)).join(''));
+		const wcb=[...wings.children].map(x=>[...x.querySelectorAll('input')]),
+			save=()=>localStorage.sky_wings=wcb.map(x=>x.map(y=>+y.checked).join('')).join(','),
+			wcbcl=()=>wcb.flat().forEach(x=>x.checked=false),
+			count=()=>wc.textContent=`${((localStorage.sky_wings||'').match(/1/g)||[]).length}/${wcb.flat().length}`;
+		wcbcl();
+		(localStorage.sky_wings||'').split(',').map((x,i)=>Array.from(x,(y,j)=>wcb[i][j].checked=+y));
+		count();
+		wcb.flat().forEach(x=>x.onchange=()=>(save(),count()));
 
-		let hbuf;
-		const c_fx=t=>{let s=[Math.floor((t.getTime()-new Date('2020/11/4 00:00').getTime())/86400000)%5];s[1]=Math.floor((t.getDate()-1)/5)%[3,3,2,3,2][s[0]];return s;},
-		core=(t,i)=>{
-			if(limited(t,i)){
-				let x = c_fx(t);
-				window[`_${i}t`].textContent=`${c_dic[x[0]][0]}\n${c_dic[x[0]][x[1]+1]}`;
-				window[`_${i}i`].src=`img/candle/${x.join('')}.webp`;
-			}
-			window[`_${i}t`].textContent+=`\n${texts.o}: ${o_dic[(t.getDate()-1)%7]}`;
-		},
-		main=()=>{
+		const clock=()=>{
 			let local=new Date();
 			const year=local.getFullYear(),dt=local.getTimezoneOffset()*6e4;
 			let server=new Date(Date.now()+dt-8*36e5),
-				from=new Date(year,2,15-new Date(year,2,1).getDay(),2,0),//3月第二日曜2時~11月第一日曜2時
-				to=new Date(year,10,8-new Date(year,10,1).getDay(),2,0),
+				from=new Date(year,2 ,15-new Date(year,2 ,1).getDay(),2,0),// 3 月第2日曜2時~
+				to  =new Date(year,10,8 -new Date(year,10,1).getDay(),2,0),//~11月第1日曜2時
 				dst=from.getTime()<=server&&server<to.getTime();
 			if(dst)server=new Date(Date.now()+dt-7*36e5);
-			time.textContent=`${texts.ct}: ${local.toLocaleString()}\n${texts.st}: ${server.toLocaleString()} ${dst?texts.dst:''}`;
-			if(hbuf!=server.getHours()){
-				hbuf=server.getHours();
-				console.log('exe');
-				core(server,0);
-				server.setDate(server.getDate()+1);
-				core(server,1);
-			}
-			jpgfall();
-		};main();
-		setTimeout(()=>setInterval(main,1000),1000-new Date().getMilliseconds());
-
-		/*
-		const main=()=>{
-			let t=new Date();
-			const year=t.getFullYear(),dt=t.getTimezoneOffset()*6e4;
-			t=new Date(Date.now()+dt-8*36e5);
-			let from=new Date(year,2,15-new Date(year,2,1).getDay(),2,0),//3月第二日曜2時~11月第一日曜2時
-				to=new Date(year,10,8-new Date(year,10,1).getDay(),2,0);
-			if(from.getTime()<=t&&t<to.getTime())t=new Date(Date.now()+dt-7*36e5);
-			log.textContent=t.toLocaleString();
+			time.textContent=`${texts.ct}: ${local.toLocaleString()}\n${texts.st}: ${server.toLocaleString()}${dst?'\n'+texts.dst:''}`;
+			inp.value||(inp.value=`${server.getFullYear()}-${(server.getMonth()+1+'').padStart(2,0)}-${(server.getDate()+'').padStart(2,0)}`,inp.onchange());
 		};
-		setInterval(main,200);
-		*/
+		inp.value='';
+		(clock(),setTimeout(()=>(clock(),setInterval(clock,1000)),1000-Date.now()%1000));
+		jpgfb();
 	</script>
 </body>
 </html>

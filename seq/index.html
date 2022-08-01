@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head prefix="og: http://ogp.me/ns#">
+	<script async src="https://mcbeeringi.github.io/src/gas.js"></script>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>sky_seq</title>
+	<meta name="description" content="sky_seq">
+	<link rel="shortcut icon" type="image/svg+xml" href="img/ico/seq.svg">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="sky_seq">
+	<meta property="og:description" content="Skyの楽譜が作れるページです">
+	<meta property="og:url" content="https://mcbeeringi.github.io/sky/seq.html">
+	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/ico/seq.jpg">
+	<!--iOS-->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="Sky Stuff">
+	<link rel="apple-touch-icon" href="img/sky.png">
+	<!--sw-->
+	<link rel="manifest" href="skymf.json">
+	<meta name="theme-color" content="#214"/>
+	<script>
+		if('serviceWorker'in navigator&&location.protocol.includes('https'))window.addEventListener('load',()=>{navigator.serviceWorker.register('skysw.js').then((reg)=>{console.log('skysw Registered',reg);});},{once:true});
+	</script>
+	<link rel="preload" href="https://cdn.jsdelivr.net/npm/tone/build/Tone.js" as="script">
+</head>
+<body>
+	<script src="style.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/tone/build/Tone.js" defer></script>
+	<script src="seq.js" defer></script>
+	<link rel="stylesheet" href="https://mcbeeringi.github.io/src/toggle.css" media="print" onload="this.media='all'">
+	<script>Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:'../img/atlas1.webp'});</script>
+	<style>
+		:root{user-select:none;-webkit-user-select:none;}[contenteditable],.usa{user-select:auto;-webkit-user-select:auto;}
+		html,body{height:100%;margin:0;position:relative;}body>input{display:none;}
+		.input{color:#aef;background-color:#0000;max-width:100%;box-sizing:border-box;margin:4px 0;border:none;border-radius:0;border-bottom:2px solid #8888;font-size:large;text-align:center;transition:.2s;}
+		.input::placeholder{color:#fff8;}.input:focus{outline:none;border-bottom:2px solid #aef;}input[type=range]{vertical-align:middle;}
+
+		.disp{position:relative;background:#000a repeating-linear-gradient(#fffc,#fffc 16px,#fff8 16px,#fff8 48px,#fffa 48px,#fffa 64px,#fff8 64px,#fff8 80px,#fffa 80px,#fffa 96px,#fff8 96px,#fff8 112px);}.disp>*{vertical-align:bottom;}
+		.disp::after{content:"CBAGFEDCBAGFEDC";overflow-wrap:break-word;position:absolute;top:0;left:0;line-height:16px;width:12px;font-size:12px;color:#0008;text-shadow:0 0 4px #fff8;z-index:2;}
+		#name_{position:absolute;bottom:0;right:8px;line-height:32px;font-size:24px;text-shadow:none;color:#0004;}
+		#c{width:100%;height:240px;position:relative;pointer-events:none;z-index:1;image-rendering:crisp-edges;}
+		#scr{width:100%;height:100%;position:absolute;top:0;overflow-x:scroll;z-index:2;scrollbar-width:thin;scrollbar-color:#0008 #0000;}#scr::webkit-scrollbar{background-color:#0000;height:8px;}#scr::webkit-scrollbar-thumb{background-color:#0008;border-radius:8px;}
+		#scrw{height:100%;padding:0 50vw;}
+		.cfg{position:absolute;top:0;right:0;transform-origin:top right;transform:scale(.9);z-index:2;}.cfg *{position:absolute;right:0;}
+		#cfgcb{display:none;}#cfgcb+*+*{width:156px;opacity:0;pointer-events:none;transition:.2s;}#cfgcb+*+* .grid{transform:scale(.8);}
+		#cfgcb:checked+*+*{opacity:1;pointer-events:auto;}#cfgcb:checked+*+* .grid{transform:scale(1);}
+
+		.ui{max-width:260px;margin:8px 0;}
+		.grid{position:relative;display:inline-block;width:48px;height:48px;margin:2px;background-color:#0006;font-size:0;border-radius:25%;box-shadow:0 0 8px #0008;text-align:center;vertical-align:middle;border:none;outline:none;padding:0;transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:manipulation;}
+		.grid:not(input){cursor:pointer;}.grid:active{background-color:#8888;box-shadow:0 0 8px #0006;}.grid.a{box-shadow:0 0 2px 4px #fea inset;}.grid:disabled,.grid.dis{filter:grayscale(1)opacity(.7);pointer-events:none;}.grid:focus:not(*[tabindex^="-"]){box-shadow:0 0 8px #0008,0 0 0 2px #aef;}
+		.showtxt,.icotxt{color:#caf0f6;font-size:18px;}.icotxt{--bp:-200% 0;color:#fea;font-size:26px;line-height:42px;text-shadow:0 0 2px #f00;}
+
+		.kb{position:relative;height:100vh;}
+		#kb{max-width:400px;margin:0 auto;border-radius:8px;background-color:#0004;font-size:0;touch-action:none;}
+		#kb>div{display:inline-block;position:relative;width:20%;--bp:-100% 0;overflow:hidden;will-change:opacity;}
+		#kb>div:nth-of-type(5n-3),#kb>div:nth-of-type(5n-1){--bp:-200% 0;}#kb>div:nth-of-type(7n+1){--bp:0 0;}
+		#kb>div::before{content:"";display:block;padding-top:100%;}
+		#kb>div::after {content:"";display:block;position:absolute;top:8%;left:8%;width:84%;height:84%;will-change:transform;}#kb>div.a::after{transform:scale(.8)rotateY(360deg);transition:transform .4s linear;}
+		#kb>div>p{margin:0;position:absolute;top:0;left:0;width:100%;height:100%;will-change:transform;}#kb>div.a>p{transform:scale(.8);}
+		#kb>div:not(.a)>p,#kb>div:not(.a)>p::before,#kb>div:not(.a)>p::after{transition:.2s;}
+		#kb>div>p::before,#kb>div>p::after{content:"";display:block;position:absolute;top:8%;left:8%;width:84%;height:84%;border-radius:20%;background-color:#0004;will-change:opacity;}
+		#kb>div>p::before{box-shadow:0 0 8px  #0006,0 0 0   0   #000c inset;opacity:1;}#kb>div.a>p::before{opacity:0;}
+		#kb>div>p::after {box-shadow:0 0 16px #aef6,0 0 2px 4px #aefc inset;opacity:0;}#kb>div.a>p::after {opacity:1;}
+
+		#palette{box-sizing:border-box;max-width:372px;padding:4px;border-radius:8px;background-color:#0004;margin:0 auto;}
+		#clip{background-color:#0004;border-radius:4px;padding:4px;margin:8px 0;}
+		#clip *{background-color:#0004;border-radius:4px;margin:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;}#clip :first-child{border:2px solid #aefc;}
+
+		label[for=alcb],#albox{position:fixed;pointer-events:none;opacity:0;transition:.2s;}
+		label[for=alcb]{top:0;left:0;width:100%;height:100%;background-color:#0004;z-index:3;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+		#alcb:checked~label[for=alcb],#alcb:checked~#albox{pointer-events:auto;opacity:1;}
+		#albox{top:50%;left:50%;max-width:calc(100% - 64px);max-height:calc(100% - 64px);padding:16px;margin:0;border-radius:16px;box-sizing:border-box;transform:translate(-50%,-50%);background-color:#2228;text-align:center;white-space:pre-wrap;overflow:auto;overflow-x:hidden;z-index:4;}
+		#albox .grid{backdrop-filter:none;-webkit-backdrop-filter:none;}
+		#alfcb:checked~#albox{width:100%;height:100%;text-align:unset;white-space:unset;}#alfcb:checked~label[for=alcb]::before{content:"";display:block;width:48px;height:48px;position:absolute;top:0;right:0;--bp:-500% -100%;}
+		#albox .items{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));grid-gap:8px;}
+		#albox .items>*{background-color:#8884;color:#eee;box-sizing:border-box;padding:4px;border:none;border-radius:8px;font-size:large;cursor:pointer;transition:.2s;}
+		#albox .items>*:active{background-color:#888c;}#albox .items>*:focus{outline:none;box-shadow:0 0 0 2px #aef;}
+		#albox .items>*>p{margin:4px 0 6px;text-align:left;}#albox .items>*>div{float:right;}#albox .items .grid{width:40px;height:40px;}
+		#albox iframe{width:100%;max-width:640px;height:50%;border:0;border-radius:8px;}
+
+		#emode:checked~.kb,#emode:not(:checked)~#palette{display:none;}#emode:checked~* label[for=emode]{transform:rotateZ(90deg);}
+		#stw{display:none;}#stcb:checked~* #stw{display:unset;}
+		#kb>div::after,#alfcb:checked~label[for=alcb]::before,.bg{background-image:url(seq.svg);background-size:800%;background-position:var(--bp);}
+		.bg.tex{background-image:url(../img/atlas1.webp);}.nowebp .bg.tex{background-image:url(../img/atlas1.png);}
+	</style>
+	<input type="checkbox" tabindex="-1" id="emode">
+	<input type="checkbox" tabindex="-1" id="alcb">
+	<input type="checkbox" tabindex="-1" id="alfcb">
+	<input type="checkbox" tabindex="-1" id="stcb">
+	<div class="disp">
+		<span id="name_">Loading assets<br>Please wait…</span>
+		<canvas id="c"><br>JavaScript seems disabled</canvas>
+		<div id="scr"><div id="scrw"></div></div>
+		<div class="cfg">
+			<input type="checkbox" id="cfgcb">
+			<label for="cfgcb" class="grid bg" style="--bp:-700% 0;"></label>
+			<div>
+				<p class="grid bg tex" style="--bp:-000% -100%;" id="instrbtn"></p>
+				<br><p class="grid bg" style="--bp:-700% -100%;" onclick="bpm_.value=Number(bpm_.value)-6;bpmset();">
+				</p><input class="grid bg showtxt style" style="--bp:-200% -300%;" id="bpm_"><p class="grid bg" style="--bp:-600% -100%;" onclick="bpm_.value=Number(bpm_.value)+6;bpmset();">
+				</p><p class="grid bg" style="--bp:-700% -100%;" onclick="sc_.value--;scset();">
+				</p><input class="grid bg showtxt style" style="--bp:-100% -300%;" id="sc_"><p class="grid bg" style="--bp:-600% -100%;" onclick="sc_.value++;scset();">
+				</p><p class="grid bg" style="--bp:-700% -100%;" onclick="arp_.value--;arpset();">
+				</p><input class="grid bg showtxt style" style="--bp:-300% -300%;" id="arp_"><p class="grid bg" style="--bp:-600% -100%;" onclick="arp_.value++;arpset();">">
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="ui">
+							<p id="playbtn" class="grid bg" style="--bp:-300% 0;">play/pause
+		</p><p id="stopbtn" class="grid bg" style="--bp:-400% 0;">stop
+		</p><p id="prevbtn" class="grid bg" style="--bp:-500% 0;transform:scaleX(-1);">prev
+		</p><p id="nextbtn" class="grid bg" style="--bp:-500% 0;">next
+		</p><label  for="emode"  class="grid bg" style="--bp:0 -300%;">mode
+		</label ><p id="undobtn" class="grid bg" style="--bp:-600% 0;">undo
+		</p><p id="redobtn" class="grid bg" style="--bp:-600% 0;transform:scaleX(-1);">redo
+		</p><p id="filebtn" class="grid bg" style="--bp:0 -200%;">file
+		</p><p id="savebtn" class="grid bg" style="--bp:-500% -200%;">save
+		</p><p id="infobtn" class="grid bg icotxt">𝚒
+		</p><span id="stw"><p id="st0btn" class="grid bg showtxt" style="--bp:-100% -300%;">⬆︎
+		</p><p id="st1btn" class="grid bg showtxt" style="--bp:-100% -300%;">⬇︎
+		</p><p id="st2btn" class="grid bg showtxt" style="--bp:-100% -300%;">↑
+		</p><p id="st3btn" class="grid bg showtxt" style="--bp:-100% -300%;">↓
+		</p></span>
+	</div>
+	<div class="kb">
+		<div id="kb"><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div><div><p></p></div></div>
+		<p class="grid bg" style="--bp:-300% 0;position:absolute;bottom:0;right:0;" onclick="playbtn.onclick();">play/pause</p>
+	</div>
+	<div id="palette">
+							<p id="slbtn" class="grid bg" style="--bp:-300% -100%;">select
+		</p><p id="cxbtn" class="grid bg" style="--bp:0 -100%;">cut
+		</p><p id="ccbtn" class="grid bg" style="--bp:-100% -100%;">copy
+		</p><p id="cvbtn" class="grid bg" style="--bp:-200% -100%;">paste
+		</p><p id="rmbtn" class="grid bg" style="--bp:-500% -300%;">remove
+		</p><p id="icbtn" class="grid bg" style="--bp:-600% -100%;">cell
+		</p><p id="iwbtn" class="grid bg" style="--bp:-600% -300%;">wrap
+		</p>
+		<div id="clip"></div>
+	</div>
+	<label for="alcb"></label>
+	<pre id="albox" class="style">ﾐﾅｲﾃﾞ(／ω\)</pre>
+</body>
+</html>

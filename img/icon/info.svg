@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 128 128">
+	<desc>info icon</desc>
+	<defs>
+		<linearGradient id="bg" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="20%" stop-color="#214"/><stop offset="100%" stop-color="#415"/>
+		</linearGradient>
+		<filter id="sh">
+			<feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#f00"/>
+		</filter>
+	</defs>
+	<path d="M0,0h128v128h-128" fill="url(#bg)"/>
+	<path d="
+		M30,98l7,-19q2,-6,11,-1q2,1,4,-4q1,-2,3,-2q3,0,0,6q-2,3,6,6q6,3,3,8l-5,10
+		M86,98l-18,-14q-3,-3,1,-8q4,-5,-1,-8q-3,-2,-1,-4q1,-1,4,2q3,4,7,-1q5,-6,8,-4l21,19
+		M57,56q8,-6,14,3q-8,-78,-14,-3z
+	" style="fill:none;stroke:#fea;stroke-width:3;filter:url(#sh);stroke-linecap:round;stroke-linejoin:round;"/>
+	<!--<image href="https://mcbeeringi.github.io/sky/img/tex.png" width="1024" height="512"/>-->
+</svg>

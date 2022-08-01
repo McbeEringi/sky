@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 128 128">
+	<desc>instr icon</desc>
+	<defs>
+		<linearGradient id="bg" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="20%" stop-color="#214"/><stop offset="100%" stop-color="#415"/>
+		</linearGradient>
+		<filter id="sh">
+			<feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#f00"/>
+		</filter>
+	</defs>
+	<path d="M0,0h128v128h-128" fill="url(#bg)"/>
+	<path d="M0,0m64,9l55,55l-55,55l-55,-55zm39,55a39,39,0,1,0,0,.0001z" style="fill:none;stroke:#fea;stroke-width:3;filter:url(#sh);stroke-linecap:round;stroke-linejoin:round;"/>
+</svg>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og:http://ogp.me/ns#">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>sky_manual</title>
+	<meta name="Description" content="McbeEringi Sky Stuff sky_manual">
+	<link rel="icon" type="image/jpeg" href="img/icon/manual.jpg">
+	<link rel="icon" type="image/svg+xml" href="img/icon/manual.svg">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="sky_manual">
+	<meta property="og:description" content="A web app for Sky:CotL">
+	<meta property="og:url" content="https://mcbeeringi.github.io/sky/manual.html">
+	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/icon/manual.jpg">
+	<!--iOS-->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="Sky Stuff">
+	<link rel="apple-touch-icon" href="img/icon.png">
+	<!--PWA-->
+	<link rel="manifest" href="mf.json">
+	<meta name="theme-color" content="#214">
+</head>
+<body>
+	<script src="util.js"></script>
+	<style>
+		.wrap{line-height:250%;}
+		.wrap .btn{--btn:48px;}strong{color:var(--l);text-shadow:0 0 .5ex var(--r0);}.play{--bp:0 -300%;}
+		summary{font-size:large;border-bottom:4px solid var(--g);}details{background-color:var(--g);padding:8px;margin:8px;border-radius:8px;}
+		.btn.logo{--btn:64px;}.btn.logo::before{background:center/cover var(--img);}
+	</style>
+	<div class="flex">
+		<h1>sky_manual</h1>
+		<button class="btn a1" style="--bp:-100% 0;" onclick="gcfg();">General Config</button>
+	</div>
+	<hr>
+	<div class="wrap">
+		Skyでの楽器の練習や攻略に役立つアプリ群です。<br>
+		ホーム画面に追加することでオフラインでの使用が可能となります。
+		<details>
+			<summary>オフラインでの動作について</summary>
+			アプリをホーム画面に追加すると同時に最低限必要なファイルが「オフラインキャッシュ」として保存されます。<br>
+			具体的には<a href="https://developer.mozilla.org/ja/docs/Web/API/Cache">Cache API</a>という技術を用いて保存します。<br>
+			これはオフライン環境でアプリを起動するために必要なデータであり、使用している技術が異なることからも分かるようにユーザーが作成したデータとは関係ありません。<br>
+			追加でインターネットから読み込まれたファイルはオフラインキャッシュに追加されていきます。<br>
+			一般設定>オフラインキャッシュ>確認<br>
+			からオフラインキャッシュのバージョンが確認できます。<br>
+			一般設定>オフラインキャッシュ>強制更新<br>
+			からオフラインキャッシュの強制更新できます。<br>
+			この操作でユーザーの作成したデータが消えることはありません。
+		</details>
+		<details>
+			<summary><strong>重要: 保存したデータとキャッシュについて</strong></summary>
+			先に結論から言うと
+			<ul>
+				<li><strong>むやみにキャッシュ削除しないで!!</strong></li>
+				<li><strong>心配ならバックアップ(WIP)とって!!</strong></li>
+			</ul>
+			です。<br>
+			説明します。<br>
+			<br>
+			ユーザーが作成したデータはURLエクスポート等を除きすべて端末上に保存されます。<br>
+			具体的には<a href="https://developer.mozilla.org/ja/docs/Web/API/IndexedDB_API">IndexedDB API</a>という技術を用いて保存します。<br>
+			また設定画面等から入力された設定値等小さなデータは、よりアクセス速度の速い<a href="https://developer.mozilla.org/ja/docs/Web/API/Web_Storage_API">LocalStorage</a>という技術を用いて保存します。<br>
+			これらはどちらも端末の設定でキャッシュと表現されることが多いです。<br>
+			したがって<strong>キャッシュの削除は作成したデータをも削除しえます</strong>。<br>
+			(前項のオフラインキャッシュとは無関係ですので強制更新でユーザーの作成したデータが消えることはありません。)<br>
+			キャッシュを削除する場合は予めバックアップ(WIP)を作成することを強くお勧めします。
+
+		</details>
+
+		<h2>各アプリ説明</h2>
+		<details>
+			<summary><p class="btn logo" style="--img:url(img/icon/instr.svg);">instr</p> sky_instruments</summary>
+			主に楽器の練習に特化したアプリです。<br>
+			用意した音源での楽器の作成も可能です。
+			<details>
+				<summary>楽器の変更</summary>
+				画面右下のボタンを推すことでメニューが開き、そこから楽器を変更することができます。
+			</details>
+			<details>
+				<summary>調の変更</summary>
+				メニューにある<br>
+				<p class="btn" style="--bp:-300% -100%;">-</p><p class="btn clock" style="--bp:-100% 0;">0</p><p class="btn" style="--bp:-200% -100%;">+</p><br>
+				を操作して調を変更することができます。<br>
+				左から「♭」「♮」「♯」です。
+			</details>
+			<details>
+				<summary>各種設定</summary>
+				メニュー→ <p class="btn a1" style="--bp:-100% 0;"></p><br>
+				の設定画面から各種設定が可能です。<br>
+				<p class="btn a1" style="--bp:-100% 0;"></p>一般設定<br>
+				からその他背景等サイト共通の設定も可能です。
+			</details>
+			<details>
+				<summary>カスタム楽器</summary>
+				メニュー→ <p class="btn a1" style="--bp:-100% 0;"></p>→　(カスタム楽器)<p class="btn" style="--bp:-200% -100%;"></p>新規作成…<br>
+				楽器名と新規作成が表示されたダイアログが開いたらさらに<br>
+				<p class="btn" style="--bp:-200% -100%;"></p>新規作成…<br>
+				を押して音源ファイルとその音名を定義します。<br>
+				音源ファイルは音名で指定した音名<strong>として</strong>再生されます。<br>
+				音名と指定したファイルが再生されたことを確認したらダイアログを閉じれば、新たにリストに追加されたうえで元のダイアログに戻ります。<br>
+				すべての音源の作成が完了したらダイアログを閉じてください。<br>
+				この<strong>ダイアログを閉じることで初めて楽器の設定が保存されます。</strong><br>
+				<br>
+				⚠️がついている音源は古いフォーマットです。<br>
+				端末によっては正常に動作しないことがありますのでその場合は音源を一度削除してもう一度作成してください。
+			</details>
+			<details>
+				<summary>MIDI機器との接続</summary>
+				<a href="https://caniuse.com/?search=web%20midi">Chrome系列のブラウザ</a>では端末に接続したMIDI機器からの演奏が可能です。<br>
+				現時点では新たに機器を接続した場合はぺーじを再度読み込む必要があります。
+			</details>
+		</details>
+		<details>
+			<summary><p class="btn logo" style="--img:url(img/icon/info.svg);">info</p> sky_info</summary>
+			大キャンと羽にまつわる情報を確認できるアプリです。
+			<details>
+				<summary>大キャン予報</summary>
+				<label>更新時刻: <input type="date" class="input"></label><br>
+				から日付を選択することでその日の大キャンの位置を確認することができます。<br>
+				キャンドル二倍期間やその周辺では食い違うことがあります。<br>
+				その場合は下の<p class="btn" style="--bp:0 -300%;"></p>ボタンからパターンを確認することができます。
+			</details>
+			<details>
+				<summary>羽</summary>
+				常に取得できる状態にある羽根の一覧です。<br>
+				チェックボックスに入れた値は保存され上部のカウンターから確認できます。<br>
+				カウンター右の<p class="btn" style="--bp:-100% -100%;"></p>からリセットが可能です。
+			</details>
+		</details>
+	</div>
+	<hr>
+	<p>
+		[sky_manual] build:2207270<br>
+		<a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense
+	</p>
+</body>
+</html>

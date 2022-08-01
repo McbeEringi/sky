@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64">
+	<desc>app icon</desc>
+	<defs>
+		<linearGradient id="bg" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="#214"/><stop offset="1" stop-color="#415"/>
+		</linearGradient>
+		<filter id="sh">
+			<feDropShadow dx="0" dy="0" stdDeviation="1" flood-color="#f00"/>
+		</filter>
+	</defs>
+	<path d="M0,0h64v64h-64Z" fill="url(#bg)"/>
+	<path d="
+		M32,32
+		m13,0q-13,0,-13-14q0,14,-13,14q13,0,13,14q0,-14,13,-14Zm-13,0
+		m8,-7a10,10,0,1,1,-16,0m8,7
+		m11,-6a12,12,0,1,1,-22,0m11,6
+		m22,-10a22,22,0,1,1,-44,0
+	" style="fill:none;stroke:#fea;stroke-width:1;filter:url(#sh);stroke-linecap:round;stroke-linejoin:round;"/>
+</svg>
