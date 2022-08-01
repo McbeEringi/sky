@@ -12,5 +12,10 @@
 	"theme_color":"#214",
 	"background_color":"#222",
 	"categories":["games","music","utilities"],
-	"orientation":"any"
+	"orientation":"any",
+	"shortcuts":[
+		{"name":"sky_instruments","short_name":"instr","url":"instr.html?pwa","icons":[{ "src":"img/icon/instr.jpg","sizes":"256x256"}]},
+		{"name":"sky_info","short_name":"info","url":"info.html?pwa","icons":[{ "src":"img/icon/info.jpg","sizes":"256x256"}]},
+		{"name":"sky_manual","short_name":"help","url":"manual.html?pwa","icons":[{ "src":"img/icon/seq.jpg","sizes":"256x256"}]}
+	]
 }
