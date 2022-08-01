@@ -1,23 +1,23 @@
-# sky
-"Sky: Children of the Light" web tools  
-PWA, Offline support  
+# Sky Stuff
+Web Apps for Sky:CotL  
+Offline support with PWA  
 [page link](https://mcbeeringi.github.io/sky)  
 
-![img](img/teaser.png)  
+![img](img/teaser.png) 
+- general
+	- custom background image
+	- custom ambient sound
+
 - sky_instruments
-	- various instruments
-	- custom
-		- key
-		- reverb effect
-		- delay
-		- instruments
-	- ambient sounds
+	- various and customizable instruments
+	- custom key
+	- reverb effect
+	- delay adjustment
 	- inpage recording
 
 - sky_seq
-	- custom
-		- key
-		- bpm
+	- key
+	- bpm
 	- range selection copy & paste
 	- clipboard history
 	- undo & redo
@@ -27,6 +27,7 @@ PWA, Offline support
 - sky_info
 	- treasure candles
 	- office spirits
+	- winged light check list
 
 under MIT License  
 [twitter](https://twitter.com/mcbeeringi)  
