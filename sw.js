@@ -1,6 +1,6 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cname='2207310',
+const cname='2208020',
 cstore=[
 	'util.js','img/teaser.png',
 	'img/icon.svg','img/icon_.svg','img/icon.png','img/icon192.png',
