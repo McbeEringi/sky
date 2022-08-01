@@ -190,7 +190,7 @@ requestAnimationFrame(w=>{const img=new Image();img.onload=()=>{
 	document.head.insertAdjacentHTML('beforeend',[[draw([w.w,w.h]),'portrait'],[draw([w.h,w.w]),'landscape']].map(x=>`<link rel="apple-touch-startup-image" href="${x[0]}" media="(orientation:${x[1]})">`).join(''));
 };img.src=root+'img/teaser.png';});
 {const bg_=()=>gq.bgi==0&&bgiset();setTimeout(()=>{bg_();setInterval(bg_,36e5);},36e5-(Date.now()%36e5));bgiset();}
-['touchstart','mousedown'].forEach(x=>addEventListener(x,()=>(actx.state=='suspended'&&actx.resume())));bga.out.forEach(x=>bga.g.connect(x));bgaset();
+addEventListener('visibilitychange',()=>(document.visibilityState=='visible'&&(actx.state=='suspended'&&actx.resume(),bgiset())));bga.out.forEach(x=>bga.g.connect(x));bgaset();
 if('pwa'in urlq&&document.referrer)addEventListener('DOMContentLoaded',()=>document.body.insertAdjacentHTML('beforeend','<button class="btn" style="--bp:-400% -100%;--btn:48px;position:fixed;bottom:0;left:0;" onclick="history.back();">back</button>'),{once:true});
 if('pwa'in urlq)addEventListener('DOMContentLoaded',()=>document.querySelectorAll('a:not([href^=http])').forEach(e=>(e.ontouchstart||(e.ontouchstart=_=>_),e.href+='?pwa',e.removeAttribute('target'))),{once:true});
 onbeforeunload=()=>ourls.forEach(URL.revokeObjectURL);
