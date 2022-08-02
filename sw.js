@@ -2,7 +2,7 @@
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
 const cname='2208020',
 cstore=[
-	'util.js','img/teaser.png',
+	'util.js',
 	'img/icon.svg','img/icon_.svg','img/icon.png','img/icon192.png',
 	'img/icon/instr.svg','img/icon/info.svg','img/icon/seq.svg','img/icon/manual.svg',
 	'https://mcbeeringi.github.io/src/toggle.css',

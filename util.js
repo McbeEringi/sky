@@ -186,7 +186,7 @@ tex.onload=()=>{
 	c.getContext('2d').drawImage(tex,0,0,c.width,c.height);tex=c;dispatchEvent(new Event('texready'));
 	document.body.insertAdjacentHTML('beforeend',`<style>.btn::before{background-image:url(${c.toDataURL()});}</style>`);
 };tex.src=root+'img/atlas0.svg';
-requestAnimationFrame(w=>{const img=new Image();img.onload=()=>{
+navigator.standalone==false&&requestAnimationFrame(w=>{const img=new Image();img.onload=()=>{
 	w={c:document.createElement('canvas'),w:screen.width*devicePixelRatio,h:screen.height*devicePixelRatio};
 	const draw=([cw,ch])=>{
 		w.c.width=cw;w.c.height=ch;const ctx=w.c.getContext('2d'),{width:iw,height:ih}=img,s=Math.min(cw/iw,ch/ih);
