@@ -33,7 +33,6 @@
 		.drawer{width:calc(var(--btn)*4.3);max-width:100%;height:100%;padding-bottom:56px;box-sizing:border-box;position:absolute;top:0;right:0;overflow-y:auto;background-color:var(--g);transform:translateX(5%);visibility:hidden;opacity:0;transition:.2s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 		.drawer hr{border:0;backdrop-filter:none;-webkit-backdrop-filter:none;}.drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		#drwcb:checked~.drawer{transform:translateX(0);visibility:initial;opacity:1;}
-		.prevfl{display:inline-block;box-sizing:border-box;max-width:100%;}.p16{padding:16px;}
 		#kc{display:block;margin:0 auto;width:100%;touch-action:none;cursor:pointer;}
 	</style>
 
@@ -124,20 +123,20 @@
 										const div=document.createElement('div'),ch=['button','div'].map(z=>document.createElement(z)),ch_=['div','button','button'].map(z=>document.createElement(z)),ch_0=()=>ch_[0].textContent=`${x[1].data?'':'⚠️'}${x[0]}: ${esc(x[1].name)}`;
 										ch_0();
 										ch_[1].classList.add('btn','a1');ch_[1].setAttribute('style','--bp:-100% 0;');ch_[1].textContent='config';
-										ch_[1].onclick=async z=>(z=alert(`<label class="prevfl p16">${texts.keysig}: <select>${opt(x[0])}</select></label><br><label class="prevfl p16">${texts.afile}: <button>${esc(x[1].name)}</button></label>`),z.e.querySelector('button').onclick=()=>play(x[1],z.p).catch(errfx),await z.p,stop(),x[0]=z.e.querySelector('select').value,ch_0());
+										ch_[1].onclick=async z=>(z=alert(`<div class="items"><label><div>${texts.keysig}<br><select>${opt(x[0])}</select></div></label><label><div>${texts.afile}<br><button>${esc(x[1].name)}</button></div></label></div>`),z.e.querySelector('button').onclick=()=>play(x[1],z.p).catch(errfx),await z.p,stop(),x[0]=z.e.querySelector('select').value,ch_0());
 										ch_[2].classList.add('btn');ch_[2].setAttribute('style','--bp:-100% -100%;');ch_[2].textContent='delete';ch_[2].onclick=async()=>await yn(`<div class="tac">${texts.delask(x[0]+': '+esc(x[1].name))}</div>`).p==1&&(div.remove(),a.dat[i]=null);
 										ch[0].classList.add('btn');ch[0].setAttribute('style','--bp:0 -300%;');ch[0].textContent='preview';ch[0].onclick=()=>play(x[1],e_.p).catch(errfx);
 										ch[1].append(...ch_);div.append(...ch);return div;
 									};
 								add.classList.add('btn');add.setAttribute('style','--bp:-200% -100%;');add.textContent='add';
-								add.onclick=async (z,ret)=>(z=alert(`<label class="prevfl p16">${texts.keysig}: <select>${opt()}</select></label><br><label class="prevfl p16">${texts.afile}: <input type="file" accept="audio/aac,audio/flac,audio/mpeg,audio/ogg,audio/opus,audio/wav,audio/webm" class="prevfl"></label>`),
+								add.onclick=async (z,ret)=>(z=alert(`<div class="items"><label><div>${texts.keysig}<br><select>${opt()}</select></div></label><label><div>${texts.afile}<br><input type="file" accept="audio/aac,audio/flac,audio/mpeg,audio/ogg,audio/opus,audio/wav,audio/webm"></div></label></div>`),
 									ret=z.e.querySelector('input'),ret.onchange=()=>play(ret.files[0],z.p).catch(errfx),await z.p,stop(),(ret=ret.files[0])&&(ret=[z.e.querySelector('select').value,{name:ret.name,data:await ret.arrayBuffer()}],label.before(cell(ret,a.dat.push(ret)-1))));
 								label.append(add);label.insertAdjacentHTML('beforeend',texts.cnew);
 								e_.e.firstElementChild.value=a.name;
 								ls.textContent='';ls.append(...a.dat.map(cell),label);
 								await e_.p;stop();
 								const a_={name:e_.e.firstElementChild.value||a.name||new Date().toLocaleString(),dat:a.dat.filter(x=>x)};
-								a_.name==a.name?(await e2p(os('instr').put(a_)),q.ci=q.ci):(await e2p(os('instr').add(a_)),await e2p(os('instr').delete(a.name)),q.ci==a.name&&(q.ci=a_.name,save()));
+								a_.name==a.name?(await e2p(os('instr').put(a_)),q.ci&&q.ci==a.name&&(q.ci=q.ci)):(await e2p(os('instr').add(a_)),await e2p(os('instr').delete(a.name)),q.ci&&q.ci==a.name&&save(q.ci=a_.name));
 								showci();
 							},
 							delfx=async i=>(await yn(`<div class="tac">${texts.delask(esc(w[i]))}</div>`).p==1&&(await e2p(os('instr').delete(w[i])),q.ci==w[i]&&(q.ci='',save()),showci()));
@@ -263,7 +262,7 @@
 
 		texts={
 			...texts,
-			info:'<h1>sky_instruments</h1><hr>In game sounds<br><small>recorded by @McbeEringi</small><hr><p>[sky_instr] v6 build:2208010<br><a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+			info:'<h1>sky_instruments</h1><hr>In game sounds<br><small>recorded by @McbeEringi</small><hr><p>[sky_instr] v6 build:2208020<br><a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 			cfg:'Config',kbs:'Key Size',kbp:'Key Position',rev:'Reverb',del:'Delay',rcv:'Captures Keyboard<br>(experimental)',fbs:'Feedback Sound',mrn:'Metronome',bpm:'BPM',
 			ci:'Custom Instruments',default:'Default',cnew:'Create New…',cin:'Instrument Name',keysig:'Key Sig Name',afile:'Audio Source',
 			delask:x=>`Are you sure you want to delete<br>"${x}" ?`,

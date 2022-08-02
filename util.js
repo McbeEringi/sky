@@ -53,7 +53,12 @@ const urlq=Object.fromEntries(location.search.slice(1).split('&').filter(y=>y).m
 	gcfg=()=>{
 		const e=alert(`<div class="flex">
 				<h2>${texts.gcfg}</h2>
-				<a class="btn" style="--bp:-400% -200%;" href="${root}manual.html">manual</a>
+				<div>
+					<a class="btn" style="--bp:-700% 0;" href="https://twitter.com/McbeEringi" target="_blank">Twitter</a>
+					<a class="btn" style="--bp:-600% 0;" href="https://discord.gg/BJsbqSZX7s" target="_blank">Discord</a>
+					<a class="btn" style="--bp:-700% -100%;" href="https://docs.google.com/forms/d/e/1FAIpQLScPm_U4P3Uk6uEmD95VQDQRgRcbmq8vvPgXP-kdH1v0OX3SEA/viewform?usp=sf_link" target="_blank">Forms</a>			
+					<a class="btn" style="--bp:-400% -200%;" href="${root}manual.html">manual</a>
+				</div>
 			</div>
 			<hr>
 			<h3>${texts.bgi}</h3>
