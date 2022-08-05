@@ -84,7 +84,6 @@
 			},
 			cfg=()=>{
 				const e=alert(`<h2>${texts.cfg}</h2><hr>
-					<h3>${texts.cfg}</h3>
 					<div class="items">
 						<label><div>${texts.rev}<br><input type="range" min="0" max="1" step="0.0625" value="${q.rev}" oninput="save(q.rev=this.value);"></div></label>
 						<label><div>${texts.del}<br><input type="range" min="0" max=".2" step="0.0125" value="${q.del}" oninput="[72,79].forEach((x,i)=>trigger(x+q.octave+q.sc,{abi:0,t:actx.currentTime+.05+this.value*i,out:[actx.destination]}));save(q.del=this.value);"></div></label>
@@ -115,27 +114,31 @@
 								let abs;
 								const play=async (x,p)=>{p.then(()=>p=null);abs&&(abs.onended=null,abs.stop());const s=actx.createBufferSource(),y=x.data?x.data.slice(0):await new Response(x).arrayBuffer();s.buffer=await new Promise((f,r)=>actx.decodeAudioData(y,f,r));p&&(s.connect(actx.destination),s.onended=()=>abs=null,s.start(),abs=s);},
 									stop=()=>abs&&abs.stop(),
-									opt=(x='A4')=>new Array(60).fill().map((_,j)=>`<option value="${j=nn2n(j+=36)}"${x==j?' selected':''}>${j}</option>`).join(''),
-									e_=alert(`<input class="input" placeholder="${texts.cin}"><hr><div class="items">${texts.loading}</div>`),
-									ls=e_.e.querySelector('.items'),add=document.createElement('button'),label=document.createElement('label'),
+									opt=(x,y,z)=>`<option value="${x}"${y?' selected':''}>${z}</option>`,
+									sig=(x='A4')=>new Array(60).fill().map((_,j)=>opt(j=nn2n(j+=36),x==j,j)).join(''),
+									e_=alert(`<h2>${texts.ci} ${texts.cfg}</h2><hr><div class="items">
+											<label><div>${texts.cin}<br><input class="input" placeholder="${texts.cin}"></div></label>
+											<label><div>${texts.kbi}<br><select class="input">${[0,3,4].map(i=>opt(...[i,!i,texts.kbili[i]])).join('')}</select></div></label>
+										</div><h3>${texts.afile}</h3><div class="items ls">${texts.loading}</div>`),
+									ls=e_.e.querySelector('.items.ls'),add=document.createElement('button'),label=document.createElement('label'),ninp=e_.e.querySelector('input'),kbi=e_.e.querySelector('select'),
 									a=w.length==i?{name:'',dat:[]}:(await e2p(os('instr').get(w[i]))).target.result,
 									cell=(x,i)=>{
 										const div=document.createElement('div'),ch=['button','div'].map(z=>document.createElement(z)),ch_=['div','button','button'].map(z=>document.createElement(z)),ch_0=()=>ch_[0].textContent=`${x[1].data?'':'⚠️'}${x[0]}: ${esc(x[1].name)}`;
 										ch_0();
 										ch_[1].classList.add('btn','a1');ch_[1].setAttribute('style','--bp:-100% 0;');ch_[1].textContent='config';
-										ch_[1].onclick=async z=>(z=alert(`<div class="items"><label><div>${texts.keysig}<br><select>${opt(x[0])}</select></div></label><label><div>${texts.afile}<br><button>${esc(x[1].name)}</button></div></label></div>`),z.e.querySelector('button').onclick=()=>play(x[1],z.p).catch(errfx),await z.p,stop(),x[0]=z.e.querySelector('select').value,ch_0());
+										ch_[1].onclick=async z=>(z=alert(`<div class="items"><label><div>${texts.keysig}<br><select>${sig(x[0])}</select></div></label><label><div>${texts.afile}<br><button>${esc(x[1].name)}</button></div></label></div>`),z.e.querySelector('button').onclick=()=>play(x[1],z.p).catch(errfx),await z.p,stop(),x[0]=z.e.querySelector('select').value,ch_0());
 										ch_[2].classList.add('btn');ch_[2].setAttribute('style','--bp:-100% -100%;');ch_[2].textContent='delete';ch_[2].onclick=async()=>await yn(`<div class="tac">${texts.delask(x[0]+': '+esc(x[1].name))}</div>`).p==1&&(div.remove(),a.dat[i]=null);
 										ch[0].classList.add('btn');ch[0].setAttribute('style','--bp:0 -300%;');ch[0].textContent='preview';ch[0].onclick=()=>play(x[1],e_.p).catch(errfx);
 										ch[1].append(...ch_);div.append(...ch);return div;
 									};
 								add.classList.add('btn');add.setAttribute('style','--bp:-200% -100%;');add.textContent='add';
-								add.onclick=async (z,ret)=>(z=alert(`<div class="items"><label><div>${texts.keysig}<br><select>${opt()}</select></div></label><label><div>${texts.afile}<br><input type="file" accept="audio/aac,audio/flac,audio/mpeg,audio/ogg,audio/opus,audio/wav,audio/webm"></div></label></div>`),
+								add.onclick=async (z,ret)=>(z=alert(`<div class="items"><label><div>${texts.keysig}<br><select>${sig()}</select></div></label><label><div>${texts.afile}<br><input type="file" accept="audio/aac,audio/flac,audio/mpeg,audio/ogg,audio/opus,audio/wav,audio/webm"></div></label></div>`),
 									ret=z.e.querySelector('input'),ret.onchange=()=>play(ret.files[0],z.p).catch(errfx),await z.p,stop(),(ret=ret.files[0])&&(ret=[z.e.querySelector('select').value,{name:ret.name,data:await ret.arrayBuffer()}],label.before(cell(ret,a.dat.push(ret)-1))));
 								label.append(add);label.insertAdjacentHTML('beforeend',texts.cnew);
-								e_.e.firstElementChild.value=a.name;
+								ninp.value=a.name;'i'in a&&(kbi.value=a.i);
 								ls.textContent='';ls.append(...a.dat.map(cell),label);
 								await e_.p;stop();
-								const a_={name:e_.e.firstElementChild.value||a.name||new Date().toLocaleString(),dat:a.dat.filter(x=>x)};
+								const a_={name:ninp.value||a.name||new Date().toLocaleString(),dat:a.dat.filter(x=>x),i:+kbi.value};
 								a_.name==a.name?(await e2p(os('instr').put(a_)),q.ci&&q.ci==a.name&&(q.ci=q.ci)):(await e2p(os('instr').add(a_)),await e2p(os('instr').delete(a.name)),q.ci&&q.ci==a.name&&save(q.ci=a_.name));
 								showci();
 							},
@@ -220,17 +223,17 @@
 				set ci(w){q.tmp.ci=w;q.instr=q.instr;},get ci(){return q.tmp.ci;},
 				set instr(w){(async()=>{
 					const id=q.tmp.instr_=Symbol(),p={
-						_fx:(i,x)=>q.tmp.instr_==id&&(p[i]=x,kctx.clearRect(0,0,kc.width,kc.height),kctx.strokeStyle='#aef',kctx.lineWidth=q.tmp.kbs/8,
-							kctx.beginPath(),kctx.arc(q.tmp.kbs/2,q.tmp.kbs/2,q.tmp.kbs/4,-.25*2*Math.PI,(Object.values(p).reduce((a,_)=>_[1]?a+(_[0]/_[1])/p._l:a,0)-.25)*2*Math.PI),kctx.stroke()
+						_fx:(i,x)=>q.tmp.instr_==id&&(x&&(p[i]=x),kctx.clearRect(0,0,kc.width,kc.height),kctx.strokeStyle='#aef',kctx.lineWidth=q.tmp.kbs/8,
+							kctx.beginPath(),kctx.arc(q.tmp.kbs/2,q.tmp.kbs/2,q.tmp.kbs/4,-.25*2*Math.PI,(Object.values(p).reduce((a,y)=>y[1]?a+(y[0]/y[1])/p._l:a,1/p._l)-.25)*2*Math.PI),kctx.stroke()
 						)
 					};
-					setRadio('isel',w=+w||0,isel);drwbtn.setAttribute('style',`--bp:${bp(w)};`);kctx.clearRect(0,0,kc.width,kc.height);
-					w=(idb.name&&!w&&q.tmp.ci)?(w=(await e2p(os('instr').get(q.tmp.ci))).target.result,{root:w.name,oct:0,d:[w.dat],i:0}):{...d.instr[w]};delete q.tmp.instr;scd.classList[w.i==1?'add':'remove']('d');
-					const lp=w.loop&&Function('return'+await(await fetch('audio/instr/'+w.root+w.loop)).text())()||{};
-					p._l=w.d.reduce((a,x)=>a+Object.keys(x).length,w.fret?w.fret.length:0);
+					setRadio('isel',w=+w||0,isel);drwbtn.setAttribute('style',`--bp:${bp(w)};`);
+					w=(idb.name&&!w&&q.tmp.ci)&&(w=(await e2p(os('instr').get(q.tmp.ci))).target.result,w&&{root:w.name,oct:0,d:[w.dat],i:w.i||0})||{...d.instr[w]};
+					delete q.tmp.instr;scd.classList[w.i==1?'add':'remove']('d');p._l=w.d.reduce((a,x)=>a+Object.keys(x).length,w.fret?w.fret.length:0)+1;p._fx(q.draw=false);
+					w.loop&&(w.loop=Function('return'+await(await fetch('audio/instr/'+w.root+w.loop)).text())()||{});
 					w.d=await Promise.all(w.d.map(x=>Promise.all((Array.isArray(x)?x:Object.entries(x)).map(async y=>(
 						y[1].name||(y[1]={name:y[1],data:await(progress(await fetch('audio/instr/'+w.root+y[1]),(...z)=>p._fx(y[1],z))).arrayBuffer()}),y[1].data||(y[1]={name:y[1].name,data:await new Response(y[1]).arrayBuffer()}),
-						({n:n2nn(y[0]),d:await new Promise((f,r)=>actx.decodeAudioData(y[1].data,f,r)),...(lp[y[1].name.match(/^\w+/)]||{})})
+						({n:n2nn(y[0]),d:await new Promise((f,r)=>actx.decodeAudioData(y[1].data,f,r)),...(w.loop&&w.loop[y[1].name.match(/^\w+/)]||{})})
 					)))));
 					w.fret&&(w.fret=await Promise.all(w.fret.map(async x=>(x=await(progress(await fetch('audio/instr/'+w.root+x),(...z)=>p._fx(x,z))).arrayBuffer(),await new Promise((f,r)=>actx.decodeAudioData(x,f,r))))));
 					q.tmp.instr_==id&&(q.tmp.instr=w,q.kbs=q.kbs,console.log(w));
@@ -262,15 +265,15 @@
 
 		texts={
 			...texts,
-			info:'<h1>sky_instruments</h1><hr>In game sounds<br><small>recorded by @McbeEringi</small><hr><p>[sky_instr] v6 build:2208020<br><a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
+			info:'<h1>sky_instruments</h1><hr>In game sounds<br><small>recorded by @McbeEringi</small><hr><p>[sky_instr] v6 build:2208060<br><a href="https://twitter.com/mcbeeringi">@McbeEringi</a> MITLicense</p>',
 			cfg:'Config',kbs:'Key Size',kbp:'Key Position',rev:'Reverb',del:'Delay',rcv:'Captures Keyboard<br>(experimental)',fbs:'Feedback Sound',mrn:'Metronome',bpm:'BPM',
-			ci:'Custom Instruments',default:'Default',cnew:'Create New…',cin:'Instrument Name',keysig:'Key Sig Name',afile:'Audio Source',
+			ci:'Custom Instruments',default:'Default',cnew:'Create New…',cin:'Instrument Name',keysig:'Key Sig Name',afile:'Audio Source',kbi:'Keyboard Type',kbili:['Normal','Drums','Bells','Handpans','Spark Emotes'],
 			delask:x=>`Are you sure you want to delete<br>"${x}" ?`,
 			nyan:'Nyan',
 			...{
 				ja:{
 					cfg:'設定',kbs:'鍵盤サイズ',kbp:'鍵盤位置',rev:'リバーブ',del:'遅延',rcv:'鍵盤録画の使用(試験的)',fbs:'操作音',mrn:'メトロノーム',
-					ci:'カスタム楽器',default:'デフォルト',cnew:'新規作成…',cin:'楽器名',keysig:'音名',afile:'音源',
+					ci:'カスタム楽器',default:'デフォルト',cnew:'新規作成…',cin:'楽器名',keysig:'音名',afile:'音源',kbi:'鍵盤タイプ',kbili:['ノーマル','打楽器系','ベル系','ハンドパン','花火エモ'],
 					delask:x=>`本当に<br>「${x}」<br>を削除してよろしいですか?`,
 					nyan:'ﾆｬｰﾝ'
 				}
