@@ -34,6 +34,9 @@
 		.drawer hr{border:0;backdrop-filter:none;-webkit-backdrop-filter:none;}.drawer hr::before{content:"";display:block;margin:0 auto;width:4px;height:4px;background:#8888;border-radius:50%;}
 		#drwcb:checked~.drawer{transform:translateX(0);visibility:initial;opacity:1;}
 		#kc{display:block;margin:0 auto;width:100%;touch-action:none;cursor:pointer;}
+
+		@supports(color:highlight){input[type="checkbox"]:checked.toggle{background-color:highlight;}}
+		@supports(accent-color:#888){input[type="checkbox"]:checked.toggle{background-color:var(--s);}}
 	</style>
 
 	<canvas id="kc" width="512" height="512"></canvas>
@@ -223,7 +226,7 @@
 				set ci(w){q.tmp.ci=w;q.instr=q.instr;},get ci(){return q.tmp.ci;},
 				set instr(w){(async()=>{
 					const id=q.tmp.instr_=Symbol(),p={
-						_fx:(i,x)=>q.tmp.instr_==id&&(x&&(p[i]=x),kctx.clearRect(0,0,kc.width,kc.height),kctx.strokeStyle='#aef',kctx.lineWidth=q.tmp.kbs/8,
+						_fx:(i,x)=>q.tmp.instr_==id&&(x&&(p[i]=x),kctx.clearRect(0,0,kc.width,kc.height),kctx.strokeStyle=getComputedStyle(kc).getPropertyValue('--s'),kctx.lineWidth=q.tmp.kbs/8,
 							kctx.beginPath(),kctx.arc(q.tmp.kbs/2,q.tmp.kbs/2,q.tmp.kbs/4,-.25*2*Math.PI,(Object.values(p).reduce((a,y)=>y[1]?a+(y[0]/y[1])/p._l:a,1/p._l)-.25)*2*Math.PI),kctx.stroke()
 						)
 					};

@@ -110,9 +110,9 @@ Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src
 document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap" media="print" onload="this.media='all'"><style>
 @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
 :root,.input,.btn{
-	--bc:#222;--fc:#fff;--l:#fea;--b0:#7af;--b1:#acf;--b2:#def;--p0:#a7f;--p1:#caf;--p2:#edf;--r0:#f00;--r1:#f44;
+	--bc:#222;--fc:#fff;--l:#fea;--s:#aef;--b0:#7af;--b1:#acf;--b2:#def;--p0:#a7f;--p1:#caf;--p2:#edf;--r0:#f00;--r1:#f44;
 	--g:#2228;--w:#fff8;--btn:64px;--bp:0 0;--items:200px;
-	background-color:var(--bc);color:var(--fc);font-family:'Zen Maru Gothic',sans-serif;text-shadow:0 0 .5ex var(--bc);
+	background-color:var(--bc);color:var(--fc);accent-color:var(--s);font-family:'Zen Maru Gothic',sans-serif;text-shadow:0 0 .5ex var(--bc);
 }
 *{-webkit-tap-highlight-color:#0000;}
 :link{color:var(--b2);}:link:hover{color:var(--b1);}:link:active{color:var(--b0);}:visited{color:var(--p2);}:visited:hover{color:var(--p1);}:visited:active{color:var(--p0);}
