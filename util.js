@@ -148,9 +148,8 @@ hr{border:1px solid var(--w);border-radius:1px;backdrop-filter:blur(2px);-webkit
 .items::after{content:"";grid-column:1/-1;}
 .items input[type=radio]{position:absolute;opacity:0;pointer-events:none;}
 .items *{max-width:100%;margin:0;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal;word-break:keep-all;}
-.items>*{box-sizing:border-box;padding:4px;display:flex;align-items:center;position:relative;}
-.items>* .btn{--btn:40px;max-width:initial;}
-.items>*>.btn{--btn:56px;flex-shrink:0;align-self:start;}
+.items>*{box-sizing:border-box;padding:4px;display:flex;align-items:center;position:relative;}.items>*>*{flex:1 1 auto;}
+.items>* .btn{--btn:40px;max-width:initial;}.items>*>.btn{--btn:56px;flex:0 0 auto;align-self:start;}
 
 .flex{display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;}.flex>*{flex:0 0 auto;}
 </style>
