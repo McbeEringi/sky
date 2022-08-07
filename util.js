@@ -53,7 +53,7 @@ const urlq=Object.fromEntries(location.search.slice(1).split('&').filter(y=>y).m
 	gcfg=()=>{
 		const e=alert(`<div class="flex">
 				<h2>${texts.gcfg}</h2>
-				<a class="btn" style="--bp:-400% -200%;" href="${root}manual.html">manual</a>
+				<a class="btn" style="--bp:-400% -200%;" href="${root}manual.html" target="_blank">manual</a>
 			</div>
 			<hr>
 			<h3>${texts.bgi}</h3>
@@ -84,7 +84,7 @@ const urlq=Object.fromEntries(location.search.slice(1).split('&').filter(y=>y).m
 			</div>
 		`).e;
 		setRadio('bgir',gq.bgi,e);forRadio('bgir',x=>x.onchange=()=>(gsave(gq.bgi=+x.value),bgiset()));
-		e.querySelector('.bgicode').onclick=()=>alert(`<a href="https://developer.mozilla.org/docs/Web/CSS/gradient">background-image</a>:<br><textarea class="input" rows="8" cols="40" oninput="(gsave(gq.bgicode=this.value),gq.bgi==2&&bgiset());">${gq.bgicode}</textarea>`).e.querySelector('textarea').focus();
+		e.querySelector('.bgicode').onclick=()=>alert(`<a href="https://developer.mozilla.org/docs/Web/CSS/gradient" target="_blank">background-image</a>:<br><textarea class="input" rows="8" cols="40" oninput="(gsave(gq.bgicode=this.value),gq.bgi==2&&bgiset());">${gq.bgicode}</textarea>`).e.querySelector('textarea').focus();
 		setRadio('bgar',gq.bga,e);forRadio('bgar',x=>x.onchange=()=>(gsave(gq.bga=+x.value),bgaset()));
 	},
 	actx=new(window.AudioContext||webkitAudioContext)(),
@@ -99,7 +99,8 @@ const urlq=Object.fromEntries(location.search.slice(1).split('&').filter(y=>y).m
 	getRadio=(x,e=document)=>e.querySelector(`input[type=radio][name=${x}]:checked`),
 	forRadio=(x,y,e=document)=>e.querySelectorAll(`input[type=radio][name=${x}]`).forEach(y),
 	os=(x='stuff')=>idb.transaction(x,'readwrite').objectStore(x),
-	e2p=x=>new Promise((f,r)=>Object.assign(x,{onsuccess:f,onerror:r}));
+	e2p=x=>new Promise((f,r)=>Object.assign(x,{onsuccess:f,onerror:r})),
+	pwa_a=(x=document)=>x.querySelectorAll('a').forEach(e=>(e.ontouchstart||(e.ontouchstart=_=>_),'pwa'in urlq&&(e.removeAttribute('target'),e.href.includes('://')||e.href.includes('?pwa')||(e.href+='?pwa'))));
 gload();
 idb.onupgradeneeded=e=>{console.log('IDB UPG',e=idb.result);[['stuff'],['seq',{keyPath:'name'}],['instr',{keyPath:'name'}]].forEach(x=>e.objectStoreNames.contains(x[0])||e.createObjectStore(...x));};
 idb.onsuccess=e=>{console.log('IDB OK',idb=idb.result);e=()=>dispatchEvent(new Event('idbready'));if(document.readyState=='loading')addEventListener('DOMContentLoaded',e,{once:true});else e();bgiset();bgaset();};
@@ -162,7 +163,7 @@ alert=x=>{
 			wrap.ontransitionend=()=>wrap.remove();wrap.classList.add('fade');f(y);
 			const e_=getAlert().pop();e_&&(e_.ontransitionend=()=>(e_.focus(),e_.ontransitionend=null));
 		};
-		e.insertAdjacentHTML('beforeend',x);e.tabIndex=0;
+		e.insertAdjacentHTML('beforeend',x);e.tabIndex=0;pwa_a(e);
 		wrap.append(bg,e);document.body.append(wrap);e.focus();
 		wrap.offsetWidth;wrap.classList.remove('fade');
 	});
@@ -191,7 +192,7 @@ navigator.standalone==false&&requestAnimationFrame(w=>{const img=new Image();img
 {const bg_=()=>gq.bgi==0&&bgiset();setTimeout(()=>{bg_();setInterval(bg_,36e5);},36e5-(Date.now()%36e5));bgiset();}
 ['touchstart','mousedown'].forEach(x=>addEventListener(x,()=>(actx.state=='suspended'&&actx.resume())));bga.out.forEach(x=>bga.g.connect(x));bgaset();
 addEventListener('pageshow',e=>(e.persisted&&(gload(),bgiset(),bgaset())));
-if('pwa'in urlq&&document.referrer)addEventListener('DOMContentLoaded',()=>document.body.insertAdjacentHTML('beforeend','<button class="btn" style="--bp:-400% -100%;--btn:48px;position:fixed;bottom:0;left:0;" onclick="history.back();">back</button>'),{once:true});
-if('pwa'in urlq)addEventListener('DOMContentLoaded',()=>document.querySelectorAll('a:not([href^=http])').forEach(e=>(e.ontouchstart||(e.ontouchstart=_=>_),e.href+='?pwa',e.removeAttribute('target'))),{once:true});
+'pwa'in urlq&&document.referrer&&addEventListener('DOMContentLoaded',()=>document.body.insertAdjacentHTML('beforeend','<button class="btn" style="--bp:-400% -100%;--btn:48px;position:fixed;bottom:0;left:0;" onclick="history.back();">back</button>'),{once:true});
+addEventListener('DOMContentLoaded',()=>pwa_a(),{once:true});
 onbeforeunload=()=>ourls.forEach(URL.revokeObjectURL);
 
