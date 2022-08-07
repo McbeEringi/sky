@@ -112,7 +112,7 @@ document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="http
 :root,.input,.btn{
 	--bc:#222;--fc:#fff;--l:#fea;--s:#aef;--o:#f80;--b0:#7af;--b1:#acf;--b2:#def;--p0:#a7f;--p1:#caf;--p2:#edf;--r0:#f00;--r1:#f44;
 	--g:#2228;--w:#fff8;--btn:64px;--bp:0 0;--items:200px;
-	background-color:var(--bc);color:var(--fc);accent-color:var(--o);font-family:'Zen Maru Gothic',sans-serif;text-shadow:0 0 .5ex var(--bc);
+	background-color:var(--bc);color:var(--fc);accent-color:var(--o);font-family:'Zen Maru Gothic',sans-serif;font-size:inherit;text-shadow:0 0 .5ex var(--bc);
 }
 *{-webkit-tap-highlight-color:#0000;}
 :link{color:var(--b2);}:link:hover{color:var(--b1);}:link:active{color:var(--b0);}:visited{color:var(--p2);}:visited:hover{color:var(--p1);}:visited:active{color:var(--p0);}
