@@ -25,7 +25,7 @@
 	<script src="util.js"></script>
 	<style>
 		#time{white-space:pre-wrap;font-size:small;}
-		img:not(#bgi){width:100%;max-width:320px;height:auto;}
+		img:not(#bgi){width:100%;max-width:320px;height:auto;border-radius:8px;}
 		#tcout>div{display:inline-block;padding:4px;box-sizing:border-box;vertical-align:top;}
 		#wings{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));}
 		#wings ul label{display:block;border-bottom:2px solid var(--w);}
@@ -55,7 +55,7 @@
 	<a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area#The_Spirits_of_the_Office" target="_blank">Sky Wiki</a><br>
 	<a href="https://twitter.com/sky_tea11" target="_blank">ティー</a>様 <br><!--/status/1356572540437635073-->
 	<p>
-		[sky_info] build:2208090 <br>
+		[sky_info] build:2208091 <br>
 		<a href="https://twitter.com/mcbeeringi" target="_blank">@McbeEringi</a> MITLicense
 	</p>
 
@@ -98,6 +98,7 @@
 				}
 			}[window.navigator.language.slice(0,2)]
 		};
+		const gallery=(x,y)=>alert(`<h2>${x}</h2><hr><div class="items" style="--items:240px;">`+y.map(z=>`<div><p><img src="${z.url}" alt="image: ${z.title}" width="4" height="3">${z.title}</p></div>`).join('')+'</div>')
 		rdtxt.textContent=texts.rd;tctxt.textContent=texts.tc;wltxt.textContent=texts.wl;
 		tcin.onchange=()=>{if(!tcin.value)return;
 			const t=new Date(tcin.value),c=[((t.getTime()-new Date('2020/11/4 00:00').getTime())/864e5|0)%5],o=(t.getDate()-1)%7;c[1]=(((t.getDate()-1)/5)|0)%[3,3,2,3,2][c[0]];
@@ -107,7 +108,7 @@
 			e[0].append(e[1]);tcout.prepend(e[0]);[...tcout.children].slice(3).forEach(x=>x.remove());jpgfb();
 		};
 		tcg.insertAdjacentHTML('beforeend',texts.cls.map((x,i)=>`<label><button class="btn" style="--bp:0 -300%;">${x[0]}</button>${x[0]} (${x.length-1})</label>`).join(''));
-		tcg.querySelectorAll('button').forEach((x,i)=>x.onclick=()=>alert(texts.cls[i].slice(1).map((y,j)=>`${y}<br><img src="img/tc/${i}${j}.webp" alt="image: ${y}" width="4" height="3">`).join('<hr>')));
+		tcg.querySelectorAll('button').forEach((x,i)=>x.onclick=()=>gallery(texts.cls[i][0],texts.cls[i].slice(1).map((y,j)=>({title:y,url:`img/tc/${i}${j}.webp`}))));
 
 		wings.insertAdjacentHTML('beforeend',Object.entries(texts.wls).map(x=>(x[1]=Object.entries(x[1]).map(y=>y[1].map(z=>`<li><label><input type="checkbox">${y[0]} - ${z}</label></li>`).join('')).join('</ul><ul>'),`<div class="ib"><label><h2><input type="checkbox">${x[0]}</h2></label><ul>${x[1]}</ul></div>`)).join(''));
 		const wcb=[...wings.children].map(x=>[...x.querySelectorAll('ul input')]),acb=[...wings.querySelectorAll('h2 input')],
@@ -121,7 +122,7 @@
 		acb.forEach((x,i)=>x.onclick=async e=>(e.preventDefault(),await yn('<div class="tac"></button><p class="btn" style="--bp:-600% -500%;--g:#0000;">change</p></div>'+texts.rlmask).p==1&&(wcb[i].forEach(y=>y.checked=!x.checked),wcb[i][0].onclick())));
 		wcb.forEach((x,i)=>x.forEach(y=>y.onclick=()=>(save(),acbset(i),count())));
 		wlg.insertAdjacentHTML('beforeend',Object.keys(texts.wls).map((x,i)=>`<label><button class="btn" style="--bp:0 -300%;">${x}</button>${x} (${wcb[i].length})</label>`).join(''));
-		wlg.querySelectorAll('button').forEach((x,i)=>x.onclick=()=>alert(wcb[i].map((y,j)=>`${y=y.parentElement.textContent}<br><img src="img/wl/${['dawn','day','rain','sunset','dusk','vault','others'][i]}/${j}.jpg" alt="image: ${y}" width="4" height="3">`).join('<hr>')));
+		wlg.querySelectorAll('button').forEach((x,i)=>x.onclick=()=>gallery(Object.keys(texts.wls)[i],wcb[i].map((y,j)=>({title:y.parentElement.textContent,url:`img/wl/${['dawn','day','rain','sunset','dusk','vault','others'][i]}/${j}.jpg`}))));
 
 		const clock=()=>{
 			let local=new Date();
