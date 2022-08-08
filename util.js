@@ -100,7 +100,7 @@ const urlq=Object.fromEntries(location.search.slice(1).split('&').filter(y=>y).m
 	forRadio=(x,y,e=document)=>e.querySelectorAll(`input[type=radio][name=${x}]`).forEach(y),
 	os=(x='stuff')=>idb.transaction(x,'readwrite').objectStore(x),
 	e2p=x=>new Promise((f,r)=>Object.assign(x,{onsuccess:f,onerror:r})),
-	pwa_a=(x=document)=>x.querySelectorAll('a').forEach(e=>(e.ontouchstart||(e.ontouchstart=_=>_),'pwa'in urlq&&(e.removeAttribute('target'),new RegExp('://|\\?pwa').test(e.getAttribute('href'))||(e.href+='?pwa'))));
+	pwa_a=(x=document)=>x.querySelectorAll('a[href]').forEach(e=>(e.ontouchstart||(e.ontouchstart=_=>_),'pwa'in urlq&&(e.removeAttribute('target'),new RegExp('://|\\?pwa').test(e.getAttribute('href'))||(e.href+='?pwa'))));
 gload();
 idb.onupgradeneeded=e=>{console.log('IDB UPG',e=idb.result);[['stuff'],['seq',{keyPath:'name'}],['instr',{keyPath:'name'}]].forEach(x=>e.objectStoreNames.contains(x[0])||e.createObjectStore(...x));};
 idb.onsuccess=e=>{console.log('IDB OK',idb=idb.result);e=()=>dispatchEvent(new Event('idbready'));if(document.readyState=='loading')addEventListener('DOMContentLoaded',e,{once:true});else e();bgiset();bgaset();};
