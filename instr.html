@@ -223,7 +223,7 @@
 				][x])
 			},
 			q={
-				set ci(w){q.tmp.ci=w;q.instr=q.instr;},get ci(){return q.tmp.ci;},
+				set ci(w){q.tmp.ci=w;q.instr||(q.instr=q.instr);},get ci(){return q.tmp.ci;},
 				set instr(w){(async()=>{
 					const id=q.tmp.instr_=Symbol(),p={
 						_fx:(i,x)=>q.tmp.instr_==id&&(x&&(p[i]=x),kctx.clearRect(0,0,kc.width,kc.height),kctx.strokeStyle=getComputedStyle(kc).getPropertyValue('--s'),kctx.lineWidth=q.tmp.kbs/8,
