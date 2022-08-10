@@ -61,8 +61,8 @@
 
 	<script>
 		'use strict';
-		let imgf=new Image();imgf.onerror=()=>imgf='JPG';imgf.onload=()=>imgf=null;imgf.src='img/candle/00.webp';
-		const jpgfb=()=>{if(typeof imgf=='string')document.querySelectorAll('img[src$="webp"]').forEach(e=>{if(e.src)e.src=e.src.replace('webp',imgf);});};
+		let imgf=new Image(),jpgfb=()=>{if(typeof imgf=='string')document.querySelectorAll('img[src$="webp"]').forEach(e=>e.src=e.src.replace('webp',imgf));};
+		imgf.onerror=()=>(imgf='JPG',jpgfb());imgf.onload=()=>imgf=null;imgf.src='img/candle/00.webp';
 
 		texts={
 			...texts,
@@ -108,7 +108,7 @@
 			e[0].append(e[1]);tcout.prepend(e[0]);[...tcout.children].slice(3).forEach(x=>x.remove());jpgfb();
 		};
 		tcg.insertAdjacentHTML('beforeend',texts.cls.map((x,i)=>`<label><button class="btn" style="--bp:0 -300%;">${x[0]}</button>${x[0]} (${x.length-1})</label>`).join(''));
-		tcg.querySelectorAll('button').forEach((x,i)=>x.onclick=()=>gallery(texts.cls[i][0],texts.cls[i].slice(1).map((y,j)=>({title:y,url:`img/tc/${i}${j}.webp`}))));
+		tcg.querySelectorAll('button').forEach((x,i)=>x.onclick=()=>jpgfb(gallery(texts.cls[i][0],texts.cls[i].slice(1).map((y,j)=>({title:y,url:`img/tc/${i}${j}.webp`})))));
 
 		wings.insertAdjacentHTML('beforeend',Object.entries(texts.wls).map(x=>(x[1]=Object.entries(x[1]).map(y=>y[1].map(z=>`<li><label><input type="checkbox">${y[0]} - ${z}</label></li>`).join('')).join('</ul><ul>'),`<div class="ib"><label><h2><input type="checkbox">${x[0]}</h2></label><ul>${x[1]}</ul></div>`)).join(''));
 		const wcb=[...wings.children].map(x=>[...x.querySelectorAll('ul input')]),acb=[...wings.querySelectorAll('h2 input')],
