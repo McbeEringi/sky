@@ -98,7 +98,7 @@
 				}
 			}[window.navigator.language.slice(0,2)]
 		};
-		const gallery=(x,y)=>alert(`<h2>${x}</h2><hr><div class="items" style="--items:240px;">`+y.map(z=>`<div><p><img src="${z.url}" alt="image: ${z.title}" width="4" height="3">${z.title}</p></div>`).join('')+'</div>')
+		const gallery=(x,y)=>alert(`<h2>${x}</h2><hr><div class="items" style="--items:240px;">`+y.map(z=>`<div><p><img src="${z.url}" alt="image: ${z.title}" width="4" height="3"><br>${z.title}</p></div>`).join('')+'</div>')
 		rdtxt.textContent=texts.rd;tctxt.textContent=texts.tc;wltxt.textContent=texts.wl;
 		tcin.onchange=()=>{if(!tcin.value)return;
 			const t=new Date(tcin.value),c=[((t.getTime()-new Date('2020/11/4 00:00').getTime())/864e5|0)%5],o=(t.getDate()-1)%7;c[1]=(((t.getDate()-1)/5)|0)%[3,3,2,3,2][c[0]];
