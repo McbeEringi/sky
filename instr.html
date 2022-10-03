@@ -174,7 +174,7 @@
 					q.pointers.set(x.identifier||'mouse',{i,x:x.clientX,y:x.clientY,stop});q.kb[i]=stop?2:1;draw(true);
 				});
 			},
-			trgrel=(e,b)=>(e.changedTouches?[...e.changedTouches]:[e]).forEach(x=>(x.id=x.identifier||'mouse',q.pointers.has(x.id))&&(x.tmp=q.pointers.get(x.id))&&(b||Math.hypot(x.tmp.x-x.clientX,x.tmp.y-x.clientY)>16)&&(x.tmp.stop&&x.tmp.stop(),q.tmp.instr.loop&&(q.kb[x.tmp.i]=1,draw(true)),q.pointers.delete(x.id))),
+			trgrel=(e,b)=>(e.changedTouches?[...e.changedTouches]:[e]).forEach(x=>(x.id=x.identifier||'mouse',q.pointers.has(x.id))&&(x.tmp=q.pointers.get(x.id))&&(b||Math.hypot(x.tmp.x-x.clientX,x.tmp.y-x.clientY)>16)&&(x.tmp.stop&&(x.tmp.stop(),q.kb[x.tmp.i]=1,draw(true)),q.pointers.delete(x.id))),
 			kbtex=document.createElement('canvas'),ktctx=kbtex.getContext('2d'),
 			kctx=kc.getContext('2d'),
 			revn=actx.createConvolver(),gn0=actx.createGain(),gn1=actx.createGain(),
@@ -271,7 +271,7 @@
 
 		texts={
 			...texts,
-			info:'<h1>sky_instruments</h1><hr>In game sounds<br><small>recorded by @McbeEringi</small><hr><p>[sky_instr] v6 build:2210030<br><a href="https://twitter.com/mcbeeringi" target="_blank">@McbeEringi</a> MITLicense</p>',
+			info:'<h1>sky_instruments</h1><hr>In game sounds<br><small>recorded by @McbeEringi</small><hr><p>[sky_instr] v6 build:2210031<br><a href="https://twitter.com/mcbeeringi" target="_blank">@McbeEringi</a> MITLicense</p>',
 			cfg:'Config',kbs:'Key Size',kbp:'Key Position',rev:'Reverb',del:'Delay',rcv:'Captures Keyboard<br>(experimental)',fbs:'Feedback Sound',mrn:'Metronome',bpm:'BPM',
 			ci:'Custom Instruments',default:'Default',cnew:'Create New…',cin:'Instrument Name',keysig:'Key Sig Name',afile:'Audio Source',kbi:'Keyboard Type',kbili:['Normal','Drums','Bells','Handpans','Spark Emotes'],sus:'Sustain',
 			delask:x=>`Are you sure you want to delete<br>"${x}" ?`,
