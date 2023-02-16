@@ -105,7 +105,7 @@ gload();
 idb.onupgradeneeded=e=>{console.log('IDB UPG',e=idb.result);[['stuff'],['seq',{keyPath:'name'}],['instr',{keyPath:'name'}]].forEach(x=>e.objectStoreNames.contains(x[0])||e.createObjectStore(...x));};
 idb.onsuccess=e=>{console.log('IDB OK',idb=idb.result);e=()=>dispatchEvent(new Event('idbready'));if(document.readyState=='loading')addEventListener('DOMContentLoaded',e,{once:true});else e();bgiset();bgaset();};
 idb.onerror=e=>{console.log('IDB ERR',idb,e);idb={};alert(texts.idberr);};
-navigator.requestMIDIAccess&&navigator.requestMIDIAccess().then(x=>(midi=x,dispatchEvent(new Event('midiready')))).catch(errfx);
+navigator.requestMIDIAccess&&navigator.requestMIDIAccess().then(x=>(midi=x,dispatchEvent(new Event('midiready'))));//.catch(errfx);
 Object.assign(new Image(),{onerror:()=>document.body.classList.add('nowebp'),src:root+'img/atlas1.webp'});
 document.body.insertAdjacentHTML('afterbegin',`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap" media="print" onload="this.media='all'"><style>
 @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
