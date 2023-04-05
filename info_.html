@@ -25,6 +25,7 @@
 	<script src="util.js"></script>
 	<style>
 		img:not(#bgi){width:100%;max-width:320px;height:auto;border-radius:8px;}
+		#cal{display:grid;grid-template-columns:repeat(7,auto);overflow:auto;}
 		#wings{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));}
 		#wings ul label{display:block;border-bottom:2px solid var(--w);}
 		#wings h2 input{margin:16px;transform:scale(2);vertical-align:middle;}
@@ -34,10 +35,13 @@
 		<h1>sky_info</h1>
 		<button class="btn a1" style="--bp:-100% 0;" onclick="gcfg();">General Config</button>
 	</div>
-	<hr>
 	<p id="tlog"></p>
 	<hr>
-	<input type="date" id="tinp">
+	<div>
+		<h2 id="eftxt">Events Forecast</h2>
+		<input type="date" id="tinp">
+		<div id="cal"></div>	
+	</div>
 	<hr>
 	<div>
 		<h2 id="wltxt">Winged Lights</h2>
@@ -57,24 +61,26 @@
 		</ul>
 	</p>
 	<p>
-		[sky_info] build:2304050 <br>
+		[sky_info] build:2304060 <br>
 		<a href="https://twitter.com/mcbeeringi" target="_blank">@McbeEringi</a> MITLicense
 	</p>
 
 	<script>
 		'use strict';
+		let imgf=Object.assign(new Image(),{onload:_=>imgf=null,onerror:_=>jpgfb(imgf='JPG'),src:'img/tc/00.webp'});
+
 		texts={
 			...texts,
-			ct:'Current Time',st:'  Server Time',dst:'(DST)',rd:'Refresh Date',o:'Office Spirit',delask:x=>`Are you sure you want to reset all the ${x} records?`,tc:'Treasure Candles',wl:'Winged Lights',rlmask:x=>`Are you sure you want to change all the ${x} records in this realm?`,
-			cls:[
-				['Daylight Prairie',['social space left front','beyond the rock','birdnest right beyond','cave entrance'],['social space right beyond','right of the rock','center of village','in the shrine'],['social space left beyond','birdnest center','in cave','koi pond']],
-				['Hidden Forest',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
-				['Valley of Triumph',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
-				['Golden Wasteland',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
-				['Vault of Knowledge',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
-			],
-			ols:['Doom','Worker','Pizza','Vase','Cat','Space','Stroll'],
-			wls:{
+			ct:'Current Time',st:' Server Time ',dst:'(DST)',ef:'Events Forecast',os:'Office Spirit',tc:'Treasure Candles',wl:'Winged Lights',sd:'Shard of Darkness',delask:x=>`Are you sure you want to reset all the ${x} records?`,rlmask:x=>`Are you sure you want to change all the ${x} records in this realm?`,
+			tca:{
+				Prairie:[['social space left front','beyond the rock','birdnest right beyond','cave entrance'],['social space right beyond','right of the rock','center of village','in the shrine'],['social space left beyond','birdnest center','in cave','koi pond']],
+				Forest:[['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
+				Valley:[['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
+				Wasteland:[['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
+				Vault:[['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
+			},
+			osa:['Doom','Worker','Pizza','Vase','Cat','Space','Stroll'],
+			wla:{
 				孤島:{孤島:['岩上','船','砂漠右小部屋','坂上','島'],預言:Array.from('水地風火',x=>x+'の試練')},
 				草原:{丸石:['左小部屋','丸石上','門手前'],鳥の塔:['神殿側','楽園側'],洞窟:['入口側','神殿側'],村:['左','奥','中央'],八人:['木'],神殿上:['下','上'],楽園:['手前浮島','山頂','間欠泉脇','海月','滝','梯子','蟹','奥浮島'],},
 				雨林:{開拓地:['木','門'],川と蟹:['左小部屋','出口','左奥木上','右手前木上'],晴れ間:['木裏','円盤'],洞窟:['右下小部屋','左上','左上小部屋','出口左'],墓地:['橋','櫓','木'],神殿奥:['左'],大樹:['木','地下'],風の街道:['中央']},
@@ -83,34 +89,87 @@
 				書庫:{書架:['壺','梯子'],一階:['梯子'],三階:['東屋'],四階:['下','上'],五階:['骨'],六階:['像前'],砂漠:['壺','灯籠','冠'],保存庫:['檻']},
 				その他:{暴風域:['小屋',...Array.from('123456789',x=>'通路'+x)],砕ケル闇:[...'123']}
 			},
+			sda:{
+				Prairie:['Birds🔶2.5','Sanctuary🔶3.5','Caves🔶2.0','Butterfly🔷','Village🔷'],
+				Forest:['Treehouse🔶3.5','Elevated Clearing🔶3.5','End🔶2.5','Brook🔷','Boneyard🔷'],
+				Valley:['Village of Dreams🔶2.5','Hermit Valley🔶3.5','Village of Dreams🔶2.5','Ice Rink🔷','Ice Rink🔷'],
+				Wasteland:['Crab🔶2.5','Ark🔶3.5','Graveyard🔶2.0','Broken Temple🔷','Battlefield🔷'],
+				Vault:['Cove🔶3.5','Cove🔶3.5','Cove🔶3.5','Desert🔷','Desert🔷'],
+			},
+			sdta:[
+				'02:28~06:28,08:28~12:28,14:28~18:28',
+				'03:38~07:38,09:38~13:38,15:38~19:38',
+				'07:48~11:48,13:48~17:48,19:48~23:48',
+				'01:58~05:58,09:58~13:58,17:58~21:58',
+				'02:18~06:18,10:18~14:18,18:18~22:18'
+			].map(w=>(w=w.split(',').map(x=>x.split('~').map(y=>y.split(':').map(z=>+z))),t=>(t=[t.getFullYear(),t.getMonth(),t.getDate()],w.map(x=>x.map(y=>(y=st2t(new Date(...t,...y)),y&&y.toLocaleTimeString().slice(0,-3))).join('~'))))),
 			...{
 				ja:{
-					ct:'　　現在時刻',st:'サーバー時刻',dst:'(サマータイム)',rd:'更新日時',o:'オフィス精霊',delask:x=>`すべての${x}の記録をリセットします。よろしいですか?`,tc:'大キャン',wl:'光の翼',rlmask:x=>`この地方の${x}の記録をすべて変更します。よろしいですか?`,
-					cls:[
-						['草原',['入口左手前','丸石奥','鳥の塔右奥','洞窟入口'],['入口右奥','丸石右','4島中央','神殿内'],['入口左奥','鳥の塔中央','洞窟内','鯉池']],
-						['雨林',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
-						['峡谷',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
-						['捨て地',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
-						['書庫',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
-					],
-					ols:['無念','社畜','ピザ','つぼ','ネコ','宇宙','散歩']
+					ct:'　　現在時刻',st:'サーバー時刻',dst:'(サマータイム)',ef:'イベント予報',os:'オフィス精霊',tc:'大キャン',wl:'光の翼',sd:'闇の破片',delask:x=>`すべての${x}の記録をリセットします。よろしいですか?`,rlmask:x=>`この地方の${x}の記録をすべて変更します。よろしいですか?`,
+					tca:{
+						草原:[['入口左手前','丸石奥','鳥の塔右奥','洞窟入口'],['入口右奥','丸石右','4島中央','神殿内'],['入口左奥','鳥の塔中央','洞窟内','鯉池']],
+						雨林:[['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
+						峡谷:[['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
+						捨て地:[['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
+						書庫:[['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
+					},
+					osa:['無念','社畜','ピザ','つぼ','ネコ','宇宙','散歩'],
+					sda:{
+						草原:['鳥の塔🔶2.5','楽園🔶3.5','洞窟🔶2.0','丸石🔷','村🔷'],
+						雨林:['大樹🔶3.5','晴れ間🔶3.5','神殿奥🔶2.5','川と蟹🔷','墓地🔷'],
+						峡谷:['夢見🔶2.5','隠者🔶3.5','夢見🔶2.5','広場🔷','広場🔷'],
+						捨て地:['座礁船🔶2.5','方舟🔶3.5','ｴﾋﾞﾁｬﾝx4🔶2.0','倒壊した祠🔷','戦場🔷'],
+						書庫:['座礁船🔶3.5','座礁船🔶3.5','座礁船🔶3.5','砂漠🔷','砂漠🔷'],
+					}
 				}
 			}[window.navigator.language.slice(0,2)]
 		};
 
 		const
+		jpgfb=_=>{if(typeof imgf=='string')document.querySelectorAll('img[src$="webp"]').forEach(e=>e.src=e.src.replace('webp',imgf));},
+		gallery=(x,y)=>alert(`<h2>${x}</h2><hr><div class="items" style="--items:240px;">`+y.map(z=>`<div><p><img src="${z.url}" alt="image: ${z.title}" width="4" height="3"><br>${z.title}</p></div>`).join('')+'</div>'),
 		t2st=t=>((
-			y=t.getFullYear(),dt=t.getTimezoneOffset()*6e4,t_=new Date(Date.now()+dt-8*36e5),
+			y=t.getFullYear(),dt=t.getTimezoneOffset()*6e4,t_=new Date(t.getTime()+dt-8*36e5),
 			dst=new Date(y,2,15-new Date(y,2,1).getDay(),2,0).getTime()<=t_&&t_<new Date(y,10,8-new Date(y,10,1).getDay(),2,0).getTime()// 3月第2日曜2時~11月第1日曜2時
-		)=>(dst&&(t_=new Date(Date.now()+dt-7*36e5)),t_.dst=dst,t_))(),
-		gallery=(x,y)=>alert(`<h2>${x}</h2><hr><div class="items" style="--items:240px;">`+y.map(z=>`<div><p><img src="${z.url}" alt="image: ${z.title}" width="4" height="3"><br>${z.title}</p></div>`).join('')+'</div>');
+		)=>(dst&&(t_=new Date(t.getTime()+dt-7*36e5)),t_.dst=dst,t_))(),
+		st2t=t=>((
+			y=t.getFullYear(),dt=t.getTimezoneOffset()*6e4,
+			tk=[[y,2,15-new Date(y,2,1).getDay()],[y,10,8-new Date(y,10,1).getDay()]].flatMap((x,i)=>[new Date(...x,[2,3][i],0),new Date(...x,[3,2][i],0)].map(_=>_.getTime()))
+		)=>(t=t.getTime(),(t<=tk[0]||tk[3]<t)&&new Date(t+8*36e5-dt)||(tk[1]<t&&t<=tk[2])&&new Date(t+7*36e5-dt)))(),
+		osi=t=>(t.getDate()-1)%7,
+		tci=t=>(x=>({area:x,pattern:(((t.getDate()-1)/5)|0)%[3,3,2,3,2][x]}))((t.getTime()/864e5-18569.625|0)%5),// 18569.625==new Date('2020/11/4 00:00').getTime()/864e5
+		sdi=t=>(x=>(x=x%2?(x+3)/2%3:x/2%2+3,![[3,4],[2,4],[0,2],[0,1],[1],[],[3]][t.getDay()].includes(x)&&{area:(t.getDate()-1)%5,pattern:x}))(t.getDate());// https://twitter.com/sky_tea11/status/1630705656717012993
+
 
 
 		// clock
 		(w=>(w(),setTimeout(_=>(w(),setInterval(w,1000)),1e3-Date.now()%1e3)))((_,t=new Date(),st=t2st(t))=>tlog.innerHTML=`${texts.ct}: ${t.toLocaleString()}<br>${texts.st}: ${st.toLocaleString()}${st.dst?' '+texts.dst:''}`);
 
-		// calender
-		(t=>tinp.value=[(t.getFullYear()+'').padStart(2,0),(t.getMonth()+1+'').padStart(2,0),(t.getDate()+'').padStart(2,0)].join('-'))(new Date());
+		// events
+		(t=>tinp.value=[(t.getFullYear()+'').padStart(2,0),(t.getMonth()+1+'').padStart(2,0),(t.getDate()+'').padStart(2,0)].join('-'))(t2st(new Date()));
+		eftxt.textContent=texts.ef,
+		(tinp.onchange=t=>(
+			t=tinp.value.split('-').reduce((a,x,i)=>(a['ymd'[i]]=+x,a),{}),
+			cal.textContent='',
+			cal.append(...[...Array(new Date(new Date(t.y,t.m).getTime()-1).getDate())].reduce((a,x,i)=>(
+				i=({t:new Date(t.y,t.m-1,i+1),p:[a.i%7,a.i++/7|0],i}),
+				x=document.createElement('p'),
+				x.classList.add('input'),
+				x.style.gridArea=[i.p[1]+1,i.p[0]+1].join('/'),
+				x.style.backgroundImage=`url(img/tc/${Object.values(tci(i.t)).join('')}.webp)`,
+				x.style.backgroundSize=`cover`,
+				x.innerHTML=`${i.t.toLocaleDateString()},
+				<br>${texts.os}:${texts.osa[osi(i.t)]},
+				<br>${texts.tc}:${(x=>'['+Object.keys(texts.tca)[x.area]+']'+Object.values(texts.tca)[x.area][x.pattern])(tci(i.t))},
+				<br>${texts.sd}:${(x=>x&&'['+Object.keys(texts.sda)[x.area]+']'+Object.values(texts.sda)[x.area][x.pattern]+'<br>'+'ABCDE'[x.pattern]+texts.sdta[x.pattern](i.t))(sdi(i.t))}`,
+				a.a.push(x),
+				i.i+1==t.d&&(x.style.borderColor='var(--l)'),
+				a
+			),{
+				i:new Date(t.y,t.m-1).getDay(),
+				a:[]
+			}).a)
+		))();
 
 		// wings
 		((
@@ -127,10 +186,10 @@
 			count(),
 			acb.forEach((x,i)=>x.onclick=async e=>(e.preventDefault(),await yn('<div class="tac"></button><p class="btn" style="--bp:-600% -500%;--g:#0000;">change</p></div>'+texts.rlmask).p==1&&(wcb[i].forEach(y=>y.checked=!x.checked),wcb[i][0].onclick()))),
 			wcb.forEach((x,i)=>x.forEach(y=>y.onclick=()=>(save(),acbset(i),count()))),
-			wlg.insertAdjacentHTML('beforeend',Object.keys(texts.wls).map((x,i)=>`<label><button class="btn" style="--bp:0 -300%;">${x}</button>${x} (${wcb[i].length})</label>`).join('')),
-			wlg.querySelectorAll('button').forEach((x,i)=>x.onclick=()=>gallery(Object.keys(texts.wls)[i],wcb[i].map((y,j)=>({title:y.parentElement.textContent,url:`img/wl/${['dawn','day','rain','sunset','dusk','vault','others'][i]}/${j}.jpg`}))))
+			wlg.insertAdjacentHTML('beforeend',Object.keys(texts.wla).map((x,i)=>`<label><button class="btn" style="--bp:0 -300%;">${x}</button>${x} (${wcb[i].length})</label>`).join('')),
+			wlg.querySelectorAll('button').forEach((x,i)=>x.onclick=()=>gallery(Object.keys(texts.wla)[i],wcb[i].map((y,j)=>({title:y.parentElement.textContent,url:`img/wl/${['dawn','day','rain','sunset','dusk','vault','others'][i]}/${j}.jpg`}))))
 		))(
-			wings.innerHTML=Object.entries(texts.wls).map(x=>(x[1]=Object.entries(x[1]).map(y=>y[1].map(z=>`<li><label><input type="checkbox">${y[0]} - ${z}</label></li>`).join('')).join('</ul><ul>'),`<div class="ib"><label><h2><input type="checkbox">${x[0]}</h2></label><ul>${x[1]}</ul></div>`)).join('')
+			wings.innerHTML=Object.entries(texts.wla).map(x=>(x[1]=Object.entries(x[1]).map(y=>y[1].map(z=>`<li><label><input type="checkbox">${y[0]} - ${z}</label></li>`).join('')).join('</ul><ul>'),`<div class="ib"><label><h2><input type="checkbox">${x[0]}</h2></label><ul>${x[1]}</ul></div>`)).join('')
 		);
 	</script>
 </body>
