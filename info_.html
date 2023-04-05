@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head prefix="og:http://ogp.me/ns#">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>sky_info</title>
+	<meta name="Description" content="McbeEringi Sky Stuff sky_info">
+	<link rel="icon" type="image/jpeg" href="img/icon/info.jpg">
+	<link rel="icon" type="image/svg+xml" href="img/icon/info.svg">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="sky_info">
+	<meta property="og:description" content="A web app for Sky:CotL">
+	<meta property="og:url" content="https://mcbeeringi.github.io/sky/info.html">
+	<meta property="og:image" content="https://mcbeeringi.github.io/sky/img/icon/info.jpg">
+	<!--iOS-->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="Sky Stuff">
+	<link rel="apple-touch-icon" href="img/icon.png">
+	<!--PWA-->
+	<link rel="manifest" href="mf.json">
+	<meta name="theme-color" content="#214">
+</head>
+<body>
+	<script src="util.js"></script>
+	<style>
+		img:not(#bgi){width:100%;max-width:320px;height:auto;border-radius:8px;}
+		#wings{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));}
+		#wings ul label{display:block;border-bottom:2px solid var(--w);}
+		#wings h2 input{margin:16px;transform:scale(2);vertical-align:middle;}
+		#wings>*{display:block;background-color:var(--g);border-radius:8px;}
+	</style>
+	<div class="flex">
+		<h1>sky_info</h1>
+		<button class="btn a1" style="--bp:-100% 0;" onclick="gcfg();">General Config</button>
+	</div>
+	<hr>
+	<p id="tlog"></p>
+	<hr>
+	<input type="date" id="tinp">
+	<hr>
+	<div>
+		<h2 id="wltxt">Winged Lights</h2>
+		<div class="flex">
+			<h3 id="wc"></h3>
+			<button class="btn" style="--bp:-100% -100%;" onclick="yn('<div class=\'tac\'></button><p class=\'btn\' style=\'--bp:-200% -500%;--g:#0000;\'>delete</p></div>'+texts.delask(texts.wl)).p.then(x=>(x==1&&(cbcl(),save(),count())));">clear</button>
+		</div>
+		<div id="wings"></div>
+		<div id="wlg" class="items" style="--items:160px;"></div>	
+	</div>
+	<hr>
+	<p>
+		参考(敬称略): <br>
+		<ul>
+			<li><a href="https://sky-children-of-the-light.fandom.com/wiki/Secret_Area#The_Spirits_of_the_Office" target="_blank">Sky Wiki</a></li>
+			<li><a href="https://twitter.com/sky_tea11" target="_blank">@sky_tea11</a></li>
+		</ul>
+	</p>
+	<p>
+		[sky_info] build:2304050 <br>
+		<a href="https://twitter.com/mcbeeringi" target="_blank">@McbeEringi</a> MITLicense
+	</p>
+
+	<script>
+		'use strict';
+		texts={
+			...texts,
+			ct:'Current Time',st:'  Server Time',dst:'(DST)',rd:'Refresh Date',o:'Office Spirit',delask:x=>`Are you sure you want to reset all the ${x} records?`,tc:'Treasure Candles',wl:'Winged Lights',rlmask:x=>`Are you sure you want to change all the ${x} records in this realm?`,
+			cls:[
+				['Daylight Prairie',['social space left front','beyond the rock','birdnest right beyond','cave entrance'],['social space right beyond','right of the rock','center of village','in the shrine'],['social space left beyond','birdnest center','in cave','koi pond']],
+				['Hidden Forest',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
+				['Valley of Triumph',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
+				['Golden Wasteland',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
+				['Vault of Knowledge',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
+			],
+			ols:['Doom','Worker','Pizza','Vase','Cat','Space','Stroll'],
+			wls:{
+				孤島:{孤島:['岩上','船','砂漠右小部屋','坂上','島'],預言:Array.from('水地風火',x=>x+'の試練')},
+				草原:{丸石:['左小部屋','丸石上','門手前'],鳥の塔:['神殿側','楽園側'],洞窟:['入口側','神殿側'],村:['左','奥','中央'],八人:['木'],神殿上:['下','上'],楽園:['手前浮島','山頂','間欠泉脇','海月','滝','梯子','蟹','奥浮島'],},
+				雨林:{開拓地:['木','門'],川と蟹:['左小部屋','出口','左奥木上','右手前木上'],晴れ間:['木裏','円盤'],洞窟:['右下小部屋','左上','左上小部屋','出口左'],墓地:['橋','櫓','木'],神殿奥:['左'],大樹:['木','地下'],風の街道:['中央']},
+				峡谷:{入口:['左'],広場:['中央','地下'],天球儀:['上','下'],空レース:['渡り廊下','櫓'],陸レース:['路地'],競技場:['ゴール前','左像上'],神殿:['左部屋'],夢見:['温泉下','左山','リフト上'],隠者:['窓','洞穴'],劇場:['舞台裏']},
+				捨て地:{倒壊した祠:['門上','左'],初ｴﾋﾞﾁｬﾝ:['右台','出口右'],ｴﾋﾞﾁｬﾝx4:['土管','頭蓋骨','出口','投石台上'],難破船:['壁','船','配管'],戦場:['砦上','出口右'],神殿:['神殿'],方舟:['舟','洞窟'],深淵:['塔','隠し部屋']},
+				書庫:{書架:['壺','梯子'],一階:['梯子'],三階:['東屋'],四階:['下','上'],五階:['骨'],六階:['像前'],砂漠:['壺','灯籠','冠'],保存庫:['檻']},
+				その他:{暴風域:['小屋',...Array.from('123456789',x=>'通路'+x)],砕ケル闇:[...'123']}
+			},
+			...{
+				ja:{
+					ct:'　　現在時刻',st:'サーバー時刻',dst:'(サマータイム)',rd:'更新日時',o:'オフィス精霊',delask:x=>`すべての${x}の記録をリセットします。よろしいですか?`,tc:'大キャン',wl:'光の翼',rlmask:x=>`この地方の${x}の記録をすべて変更します。よろしいですか?`,
+					cls:[
+						['草原',['入口左手前','丸石奥','鳥の塔右奥','洞窟入口'],['入口右奥','丸石右','4島中央','神殿内'],['入口左奥','鳥の塔中央','洞窟内','鯉池']],
+						['雨林',['入口右手前','開拓地船','川&蟹木','晴れ間池'],['入口左奥','開拓地奥木','墓所中央','神殿後'],['入口右奥','川&蟹出口','墓所橋','晴れ間奥']],
+						['峡谷',['入口左','スケート橋','天球儀入口','ゴール左'],['入口右奥','スケート氷','天球儀出口','ゴール右']],
+						['捨て地',['入口後ろ','祠出口','投石台手前','戦場砦右奥'],['入口左奥','祠闇花','投石台中央','難破船後端'],['入口右奥','投石台出口','難破船先端','戦場砦上']],
+						['書庫',['1F手前','1F奥','2F奥','6F手前'],['1F右','2F扉左','4F祠','6F奥']],
+					],
+					ols:['無念','社畜','ピザ','つぼ','ネコ','宇宙','散歩']
+				}
+			}[window.navigator.language.slice(0,2)]
+		};
+
+		const
+		t2st=t=>((
+			y=t.getFullYear(),dt=t.getTimezoneOffset()*6e4,t_=new Date(Date.now()+dt-8*36e5),
+			dst=new Date(y,2,15-new Date(y,2,1).getDay(),2,0).getTime()<=t_&&t_<new Date(y,10,8-new Date(y,10,1).getDay(),2,0).getTime()// 3月第2日曜2時~11月第1日曜2時
+		)=>(dst&&(t_=new Date(Date.now()+dt-7*36e5)),t_.dst=dst,t_))(),
+		gallery=(x,y)=>alert(`<h2>${x}</h2><hr><div class="items" style="--items:240px;">`+y.map(z=>`<div><p><img src="${z.url}" alt="image: ${z.title}" width="4" height="3"><br>${z.title}</p></div>`).join('')+'</div>');
+
+
+		// clock
+		(w=>(w(),setTimeout(_=>(w(),setInterval(w,1000)),1e3-Date.now()%1e3)))((_,t=new Date(),st=t2st(t))=>tlog.innerHTML=`${texts.ct}: ${t.toLocaleString()}<br>${texts.st}: ${st.toLocaleString()}${st.dst?' '+texts.dst:''}`);
+
+		// calender
+		(t=>tinp.value=[(t.getFullYear()+'').padStart(2,0),(t.getMonth()+1+'').padStart(2,0),(t.getDate()+'').padStart(2,0)].join('-'))(new Date());
+
+		// wings
+		((
+			_,
+			wcb=[...wings.children].map(x=>[...x.querySelectorAll('ul input')]),acb=[...wings.querySelectorAll('h2 input')],
+			save=()=>localStorage.sky_wings=wcb.map(x=>x.map(y=>+y.checked).join('')).join(','),
+			cbcl=()=>wcb.flat().concat(acb).forEach(x=>x.checked=false),
+			acbset=i=>(x=>(acb[i].indeterminate=x-(x|0),acb[i].checked=x|0))(wcb[i].filter(x=>x.checked).length/wcb[i].length),
+			count=()=>wc.textContent=`${((localStorage.sky_wings||'').match(/1/g)||[]).length}/${wcb.flat().length}`
+		)=>(
+			wltxt.textContent=texts.wl,
+			cbcl(),
+			(localStorage.sky_wings||'').split(',').map((x,i)=>(Array.from(x,(y,j)=>wcb[i][j].checked=+y),acbset(i))),
+			count(),
+			acb.forEach((x,i)=>x.onclick=async e=>(e.preventDefault(),await yn('<div class="tac"></button><p class="btn" style="--bp:-600% -500%;--g:#0000;">change</p></div>'+texts.rlmask).p==1&&(wcb[i].forEach(y=>y.checked=!x.checked),wcb[i][0].onclick()))),
+			wcb.forEach((x,i)=>x.forEach(y=>y.onclick=()=>(save(),acbset(i),count()))),
+			wlg.insertAdjacentHTML('beforeend',Object.keys(texts.wls).map((x,i)=>`<label><button class="btn" style="--bp:0 -300%;">${x}</button>${x} (${wcb[i].length})</label>`).join('')),
+			wlg.querySelectorAll('button').forEach((x,i)=>x.onclick=()=>gallery(Object.keys(texts.wls)[i],wcb[i].map((y,j)=>({title:y.parentElement.textContent,url:`img/wl/${['dawn','day','rain','sunset','dusk','vault','others'][i]}/${j}.jpg`}))))
+		))(
+			wings.innerHTML=Object.entries(texts.wls).map(x=>(x[1]=Object.entries(x[1]).map(y=>y[1].map(z=>`<li><label><input type="checkbox">${y[0]} - ${z}</label></li>`).join('')).join('</ul><ul>'),`<div class="ib"><label><h2><input type="checkbox">${x[0]}</h2></label><ul>${x[1]}</ul></div>`)).join('')
+		);
+	</script>
+</body>
+</html>
