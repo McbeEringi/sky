@@ -25,7 +25,7 @@
 	<script src="util.js"></script>
 	<style>
 		img:not(#bgi){width:100%;max-width:320px;height:auto;border-radius:8px;}
-		#cal{display:grid;grid-template-columns:repeat(7,auto);overflow:auto;}
+		#cal{display:grid;grid-template-columns:repeat(7,auto);overflow:auto;gap:4px;}#cal>p{margin:0;font-size:small;}
 		#wings{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));}
 		#wings ul label{display:block;border-bottom:2px solid var(--w);}
 		#wings h2 input{margin:16px;transform:scale(2);vertical-align:middle;}
@@ -40,6 +40,8 @@
 	<div>
 		<h2 id="eftxt">Events Forecast</h2>
 		<input type="date" id="tinp">
+		<div id="efc"></div>
+		<h3 id="calm"></h3>
 		<div id="cal"></div>	
 	</div>
 	<hr>
@@ -150,20 +152,35 @@
 		eftxt.textContent=texts.ef,
 		(tinp.onchange=t=>(
 			t=tinp.value.split('-').reduce((a,x,i)=>(a['ymd'[i]]=+x,a),{}),
+			calm.textContent=new Intl.DateTimeFormat(void 0,{month:'long'}).format(new Date(t.y,t.m-1)),
 			cal.textContent='',
 			cal.append(...[...Array(new Date(new Date(t.y,t.m).getTime()-1).getDate())].reduce((a,x,i)=>(
 				i=({t:new Date(t.y,t.m-1,i+1),p:[a.i%7,a.i++/7|0],i}),
 				x=document.createElement('p'),
 				x.classList.add('input'),
 				x.style.gridArea=[i.p[1]+1,i.p[0]+1].join('/'),
-				x.style.backgroundImage=`url(img/tc/${Object.values(tci(i.t)).join('')}.webp)`,
+				// x.style.backgroundImage=`url(img/tc/${Object.values(tci(i.t)).join('')}.webp)`,
 				x.style.backgroundSize=`cover`,
-				x.innerHTML=`${i.t.toLocaleDateString()},
-				<br>${texts.os}:${texts.osa[osi(i.t)]},
-				<br>${texts.tc}:${(x=>'['+Object.keys(texts.tca)[x.area]+']'+Object.values(texts.tca)[x.area][x.pattern])(tci(i.t))},
-				<br>${texts.sd}:${(x=>x&&'['+Object.keys(texts.sda)[x.area]+']'+Object.values(texts.sda)[x.area][x.pattern]+'<br>'+'ABCDE'[x.pattern]+texts.sdta[x.pattern](i.t))(sdi(i.t))}`,
+				x.innerHTML=`${i.t.getDate()}<br>${texts.osa[osi(i.t)]} ${Object.keys(texts.tca)[tci(i.t).area]} ${(x=>x?(x.pattern<3?'🔶':'🔷')+'ABCDE'[x.pattern]:'なし')(sdi(i.t))}`,
+				x.onclick=_=>jpgfb(alert(`<h2>${texts.ef}@${i.t.toLocaleDateString()}</h2><hr>
+					<h3>${texts.os}: ${texts.osa[osi(i.t)]}</h3>
+					<h3>${texts.tc}: ${Object.keys(texts.tca)[tci(i.t).area]}</h3>
+					<img src="img/tc/${Object.values(tci(i.t)).join('')}.webp" alt="tc_img" width="4" height="3"><br>
+					${(x=>Object.values(texts.tca)[x.area][x.pattern])(tci(i.t))}
+					<h3>${texts.sd}: ${sdi(i.t)?'ABCDE'[sdi(i.t).pattern]+'パターン@'+Object.keys(texts.sda)[sdi(i.t).area]:'なし'}</h3>
+					${sdi(i.t)?'<h4>'+Object.values(texts.sda)[sdi(i.t).area][sdi(i.t).pattern]+'</h4>':''}
+					${sdi(i.t)?texts.sdta[sdi(i.t).pattern](i.t).join('<br>'):''}`)),
 				a.a.push(x),
-				i.i+1==t.d&&(x.style.borderColor='var(--l)'),
+				i.i+1==t.d&&(
+					x.style.borderColor='var(--l)',
+					efc.innerHTML=`${texts.os}: ${texts.osa[osi(i.t)]}
+					<br>${texts.tc}: ${Object.keys(texts.tca)[tci(i.t).area]}
+					<br><img src="img/tc/${Object.values(tci(i.t)).join('')}.webp" alt="tc_img" width="4" height="3">
+					<br>${(x=>Object.values(texts.tca)[x.area][x.pattern])(tci(i.t))}
+					<br>${texts.sd}: ${sdi(i.t)?'ABCDE'[sdi(i.t).pattern]+Object.keys(texts.sda)[sdi(i.t).area]:'なし'}
+					<br>${sdi(i.t)?Object.values(texts.sda)[sdi(i.t).area][sdi(i.t).pattern]+'<br>':''}
+					${sdi(i.t)?texts.sdta[sdi(i.t).pattern](i.t).join(', '):''}`
+				),
 				a
 			),{
 				i:new Date(t.y,t.m-1).getDay(),
