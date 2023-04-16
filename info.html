@@ -47,7 +47,7 @@
 		<h2 class="wltxt">Winged Lights</h2>
 		<div class="flex">
 			<h3 id="wc"></h3>
-			<button class="btn" style="--bp:-100% -100%;" onclick="yn('<div class=\'tac\'></button><p class=\'btn\' style=\'--bp:-200% -500%;--g:#0000;\'>delete</p></div>'+texts.delask(texts.wl)).p.then(x=>(x==1&&(cbcl(),save(),count())));">clear</button>
+			<button class="btn" style="--bp:-100% -100%;">clear</button>
 		</div>
 		<div id="wings"></div>
 	</div>
@@ -66,7 +66,7 @@
 		</ul>
 	</p>
 	<p>
-		[sky_info] build:2304080 <br>
+		[sky_info] build:2304160 <br>
 		<a href="https://twitter.com/mcbeeringi" target="_blank">@McbeEringi</a> MITLicense
 	</p>
 
@@ -211,10 +211,11 @@
 			count=()=>wc.textContent=`${((localStorage.sky_wings||'').match(/1/g)||[]).length}/${wcb.flat().length}`
 		)=>(
 			document.querySelectorAll('.wltxt').forEach(x=>x.textContent=texts.wl),
+			document.querySelector('.wltxt+.flex>.btn').onclick=_=>yn(`<div class="tac"></button><p class="btn" style="--bp:-200% -500%;--g:#0000;">delete</p></div>`+texts.delask(texts.wl)).p.then(x=>(x==1&&(cbcl(),save(),count()))),
 			cbcl(),
 			(localStorage.sky_wings||'').split(',').map((x,i)=>(Array.from(x,(y,j)=>wcb[i][j].checked=+y),acbset(i))),
 			count(),
-			acb.forEach((x,i)=>x.onclick=async e=>(e.preventDefault(),await yn('<div class="tac"></button><p class="btn" style="--bp:-600% -500%;--g:#0000;">change</p></div>'+texts.rlmask).p==1&&(wcb[i].forEach(y=>y.checked=!x.checked),wcb[i][0].onclick()))),
+			acb.forEach((x,i)=>x.onclick=async e=>(e.preventDefault(),await yn('<div class="tac"></button><p class="btn" style="--bp:-600% -500%;--g:#0000;">change</p></div>'+texts.rlmask(texts.wl)).p==1&&(wcb[i].forEach(y=>y.checked=!x.checked),wcb[i][0].onclick()))),
 			wcb.forEach((x,i)=>x.forEach(y=>y.onclick=()=>(save(),acbset(i),count()))),
 			// gallery
 			wlg.insertAdjacentHTML('beforeend',Object.keys(texts.wla).map((x,i)=>`<label><button class="btn" style="--bp:0 -300%;">${x}</button>${x} (${wcb[i].length})</label>`).join('')),
