@@ -22,7 +22,7 @@ const urlq=Object.fromEntries(location.search.slice(1).split('&').filter(y=>y).m
 	gsave=()=>localStorage.sky_gcfg=JSON.stringify({bgicode:gq.bgicode,bgialt:gq.bgialt,bgi:gq.bgi,bgagain:gq.bgagain,bgafade:gq.bgafade,bga:gq.bga}),
 	bgiset=(x=-1)=>{
 		const bgcol=['#dca,#ac8','#bde,#ac8','#f80,#fb7','#112,#126','#bbc,#ac8'],//morn day dusk night cloud
-		url=root+'img/photo/remembrance.jpg',
+		url=root+'img/photo/revival.jpg',
 		set=(y=`url(${url})`)=>bg.style.backgroundImage=y;
 		({
 			0:()=>{bgi.hidden=false;set(`linear-gradient(${bgcol[~x?x:[3,3,3,3,3,0,0,0,0,4,1,1,1,1,1,1,4,2,2,2,2,3,3,3][new Date().getHours()]]})`);},
